@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/backend
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=effbiuser
+      - DB_PASSWORD=effortless
+      - DB_NAME=effbi-db
+      - POSTGRES_URI=postgresql://effbiuser:effortless@db:5432/effbi-db
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=effbiuser
+      - POSTGRES_PASSWORD=effortless
+      - POSTGRES_DB=effbi-db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
