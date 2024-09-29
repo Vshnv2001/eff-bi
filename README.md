@@ -26,7 +26,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-#### Setup Database
+#### Run Backend and Database Servers Together
 
 From the root of repo, run the following to start the docker containers
 
