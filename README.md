@@ -34,6 +34,8 @@ From the root of repo, run the following to start the docker containers
 docker-compose up --build -d
 ```
 
+Go to `http://127.0.0.1:8000/api/health/` to see if the server is running
+
 If you want to stop the docker containers, run the following
 
 ```bash
