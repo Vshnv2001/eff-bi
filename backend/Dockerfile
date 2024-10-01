@@ -1,17 +1,20 @@
-FROM python:3.9-slim
+# Use the official Python image as a base
+FROM python:3.10
 
-WORKDIR /backend
+# Set the working directory
+WORKDIR /app
 
+# Copy the requirements file
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
+# Install the dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install uvicorn[standard] for better performance and watchfiles for hot reloading
-RUN pip install --no-cache-dir uvicorn[standard] watchfiles
-
+# Copy the project files
 COPY . .
 
+# Expose the port the app runs on
 EXPOSE 8000
 
-# Use uvicorn with --reload flag for hot reloading
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Command to run migrations and then start the Django server
+CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver_plus 0.0.0.0:8000"]
