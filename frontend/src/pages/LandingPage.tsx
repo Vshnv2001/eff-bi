@@ -3,8 +3,8 @@ import Hero from "../components/Hero/Hero";
 const LandingPage = () => {
     return <div>
         <Hero/>
-
-        Landing Page</div>;
+        Landing Page
+        </div>;
   };
   
   export default LandingPage;

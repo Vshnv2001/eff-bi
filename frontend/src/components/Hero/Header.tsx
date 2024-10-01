@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import GradientButton from "../Buttons/GradientButton";
 
 const Header: React.FC = () => {
   const [animateEffortless, setAnimateEffortless] = useState(false);
   const [animateVisualisations, setAnimateVisualisations] = useState(false);
   const [animateDescription, setAnimateDescription] = useState(false);
+  const [animateButton, setAnimateButton] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -13,10 +15,14 @@ const Header: React.FC = () => {
         setAnimateVisualisations(true);
 
         setTimeout(() => {
-            setAnimateDescription(true);
-          }, 100);
-      }, 100);
-    }, 100);
+          setAnimateDescription(true);
+
+          setTimeout(() => {
+            setAnimateButton(true);
+          }, 300);
+        }, 100); 
+      }, 100); 
+    }, 100); 
   }, []);
 
   return (
@@ -56,17 +62,13 @@ const Header: React.FC = () => {
               Experience no-code data visualization.
             </span>
           </p>
-
-          <a
-            href="#"
-            className={`overflow-hidden px-10 py-3 mt-10 w-40 max-w-full text-base font-medium leading-none bg-indigo-600 rounded bg-blend-normal max-md:px-5 transform transition-transform duration-1000 ease-in-out delay-400 ${
-              animateVisualisations
-                ? "translate-y-0 opacity-100"
-                : "translate-y-[100%] opacity-0"
+          <div
+            className={`mt-6 transform transition-opacity duration-1000 ease-in-out ${
+              animateButton ? "opacity-100" : "opacity-0"
             }`}
           >
-            Get Started
-          </a>
+            <GradientButton text="Get Started" />
+          </div>
         </div>
       </div>
     </header>
