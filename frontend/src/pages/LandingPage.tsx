@@ -4,6 +4,7 @@ import Steps from "../components/Steps/Steps";
 import Display from "../components/Display/Display";
 import Features from "../components/Features/Features";
 import Reviews from "../components/Reviews/Reviews";
+import Advertise from "../components/Advertise/Advertise";
 
 const LandingPage = () => {
   return (
@@ -14,6 +15,7 @@ const LandingPage = () => {
       <Display />
       <Features />
       <Reviews />
+      <Advertise />
     </div>
   );
 };
