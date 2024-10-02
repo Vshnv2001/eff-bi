@@ -7,7 +7,7 @@ import {
 import SuperTokens, { SuperTokensWrapper } from "supertokens-auth-react";
 import { getSuperTokensRoutesForReactRouterDom } from "supertokens-auth-react/ui";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
-import { PreBuiltUIList, SuperTokensConfig, ComponentWrapper } from "./components/Authentication/config";
+import { PreBuiltUIList, SuperTokensConfig, ComponentWrapper } from "./components/Authentication/Authentication";
 import MainLayout from "./layouts/MainLayout";
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";

@@ -1,16 +1,17 @@
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import { EmailPasswordPreBuiltUI } from "supertokens-auth-react/recipe/emailpassword/prebuiltui";
 import Session from "supertokens-auth-react/recipe/session";
+import { BACKEND_API_PORT, BACKEND_API_URL, FRONTEND_API_PORT, FRONTEND_API_URL } from "../../config";
 
 export function getApiDomain() {
-    const apiPort = import.meta.env.VITE_BACKEND_PORT || 8000;
-    const apiUrl = import.meta.env.VITE_BACKEND_URL || `http://localhost:${apiPort}`;
+    const apiPort = BACKEND_API_PORT || 8000;
+    const apiUrl = BACKEND_API_URL || `http://localhost:${apiPort}`;
     return apiUrl;
 }
 
 export function getWebsiteDomain() {
-    const websitePort = import.meta.env.VITE_FRONTEND_PORT || 3000;
-    const websiteUrl = import.meta.env.VITE_FRONTEND_URL || `http://localhost:${websitePort}`;
+    const websitePort = FRONTEND_API_PORT || 3000;
+    const websiteUrl = FRONTEND_API_URL || `http://localhost:${websitePort}`;
     return websiteUrl;
 }
 
