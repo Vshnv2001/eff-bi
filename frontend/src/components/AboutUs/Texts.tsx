@@ -1,10 +1,10 @@
-interface Feature {
+interface Text {
     icon: string;
     title: string;
     description: string;
   }
   
-  const features: Feature[] = [
+  const Texts: Text[] = [
     {
       icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/d36df0fc30b2c1d18480f2ea480fb9dcbf81b74a49eaaa1e8f58afafd53cfe12?apiKey=605ddb38b3184de6b494a658ff50786d&",
       title: "Optimized Performance",
@@ -22,4 +22,4 @@ interface Feature {
     },
   ];
 
-  export default features;
+  export default Texts;

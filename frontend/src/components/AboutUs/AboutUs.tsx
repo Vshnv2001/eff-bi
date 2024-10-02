@@ -1,5 +1,5 @@
-import FeatureCard from "./FeatureCard";
-import features from "./Features";
+import TextCard from "./TextCard";
+import Texts from "./Texts";
 
 const AboutUs = () => {
   return (
@@ -13,8 +13,8 @@ const AboutUs = () => {
       </div>
 
       <div className="flex flex-wrap gap-6 items-start max-w-full bg-blend-normal min-h-[107px] w-full max-md:mt-10 p-6">
-        {features.map((feature, index) => (
-          <FeatureCard key={index} {...feature} />
+        {Texts.map((text, index) => (
+          <TextCard key={index} {...text} />
         ))}
       </div>
     </div>

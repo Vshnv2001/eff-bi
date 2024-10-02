@@ -1,10 +1,10 @@
-interface FeatureCardProps {
+interface TextCardProps {
   icon: string;
   title: string;
   description: string;
 }
 
-const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description }) => {
+const TextCard: React.FC<TextCardProps> = ({ icon, title, description }) => {
   return (
     <article className="flex flex-col grow shrink p-4 bg-blend-normal w-[328px]">
       <div className="flex gap-3 max-w-full text-lg font-medium tracking-normal leading-loose">
@@ -23,4 +23,4 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description }) =
   );
 };
 
-export default FeatureCard;
+export default TextCard;

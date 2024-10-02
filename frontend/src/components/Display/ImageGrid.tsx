@@ -47,8 +47,6 @@ const ImageGrid: React.FC = () => {
         {images.slice(4).map((image, index) => (
           <ImageItem key={index} src={image.src} alt={image.alt} />
         ))}
-        <div className="flex shrink-0 h-72 rounded-2xl min-w-[240px] w-[316px]" />
-        <div className="flex shrink-0 h-72 rounded-2xl min-w-[240px] w-[316px]" />
       </div>
     </section>
   );
