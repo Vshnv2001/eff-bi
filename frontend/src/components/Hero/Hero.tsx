@@ -34,9 +34,9 @@ const Hero: React.FC = () => {
         }}
       ></div>
 
-      <section className="flex items-col justify-center w-full h-screen">
-          <Header />
-      </section>
+      <div className="flex items-center justify-center w-full h-screen">
+        <Header />
+      </div>
     </main>
   );
 };
