@@ -1,17 +1,22 @@
-FROM python:3.9-slim
+# setting up base image
+FROM python:3.11.4-slim-bullseye
 
-WORKDIR /backend
+# prevents python buffering stdout and stderr
+ENV PYTHONUNBUFFERED 1
 
-COPY requirements.txt .
+# prevents python from writing .pyc files to disc
+ENV PYTHONDONTWRITEBYTECODE 1
 
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
+# sets up the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions 
+WORKDIR /app
 
-# Install uvicorn[standard] for better performance and watchfiles for hot reloading
-RUN pip install --no-cache-dir uvicorn[standard] watchfiles
+# copies files and directories from current directory to WORKDIR
+COPY . /app/
 
-COPY . .
+# install system dependencies
+RUN apt-get update 
 
-EXPOSE 8000
-
-# Use uvicorn with --reload flag for hot reloading
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# install dependencies
+RUN pip install --upgrade pip
+COPY ./requirements.txt /app/
+RUN pip install -r requirements.txt
