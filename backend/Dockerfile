@@ -1,24 +1,22 @@
-# Use the official Python image as a base
-FROM python:3.10
+# setting up base image
+FROM python:3.11.4-slim-bullseye
 
-# Set the working directory
+# prevents python buffering stdout and stderr
+ENV PYTHONUNBUFFERED 1
+
+# prevents python from writing .pyc files to disc
+ENV PYTHONDONTWRITEBYTECODE 1
+
+# sets up the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions 
 WORKDIR /app
 
-# Copy the requirements file
-COPY requirements.txt .
+# copies files and directories from current directory to WORKDIR
+COPY . /app/
 
-# Install the dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# install system dependencies
+RUN apt-get update 
 
-# Copy the project files
-COPY . .
-
-# Expose the port the app runs on
-EXPOSE 8000
-
-RUN python manage.py makemigrations
-
-# Command to run migrations and then start the Django server
-CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver_plus 0.0.0.0:8000"]
-
-
+# install dependencies
+RUN pip install --upgrade pip
+COPY ./requirements.txt /app/
+RUN pip install -r requirements.txt

@@ -6,7 +6,7 @@ from django.http import JsonResponse, HttpResponse
 from .models import User, Organization
 
 def health_check(request):
-    return JsonResponse({'message': 'Server is running'}, status=200)
+    return JsonResponse({'message': 'Server is running successfully'}, status=200)
 
 def create_user(request):
     return JsonResponse({'message': 'User created successfully'}, status=201)

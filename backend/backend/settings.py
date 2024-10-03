@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-p0ma1%8_5dc8mgfh&r#0#k9yn3u+&v+)3m8kab-xzc1a^6#k9q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'effbi_api',
+    'rest_framework',
+    'livereload',
 ]
 
 MIDDLEWARE = [
@@ -81,7 +83,7 @@ DATABASES = {
         'NAME': 'effbi-db',
         'USER': 'effbiuser',
         'PASSWORD': 'effortless',
-        'HOST': 'db',  # Use the container name or IP
+        'HOST': 'postgres_db',  # Use the container name or IP
         'PORT': '5432',  # Default PostgreSQL port
     }
 }
