@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -80,11 +81,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'effbi-db',
-        'USER': 'effbiuser',
-        'PASSWORD': 'effortless',
-        'HOST': 'postgres_db',  # Use the container name or IP
-        'PORT': '5432',  # Default PostgreSQL port
+        'NAME': os.environ.get('DB_NAME', 'effbi-db'),
+        'USER': os.environ.get('DB_USER', 'effbiuser'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'effortless'),
+        'HOST': os.environ.get('DB_HOST', 'db'),  # Changed from 'postgres_db' to 'db'
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 

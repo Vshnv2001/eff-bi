@@ -8,3 +8,4 @@ sqlparse==0.5.1
 tornado==6.4.1
 typing_extensions==4.12.2
 Werkzeug==3.0.4
+livereload==2.7.0
