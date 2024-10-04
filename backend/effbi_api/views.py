@@ -16,16 +16,65 @@ def health_check(request):
 
 @api_view(["POST"])
 def create_user(request):
-    return JsonResponse({'message': 'User created successfully'}, status=201)
-    
-def get_user(request, user_id):
-    return JsonResponse({'message': 'User retrieved successfully'}, status=200)
+    try:
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return JsonResponse(
+                {'message': 'User created successfully', 'user': serializer.data}, status=status.HTTP_201_CREATED
+            )
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(["GET"])
+def get_user_details(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        serializer = UserSerializer(user)
+        return JsonResponse({'message': 'User retrieved successfully', 'user': serializer.data}, status=200)
+
+    except User.DoesNotExist:
+        return JsonResponse({'error': f'No user with id:{user_id} exists'}, status=status.HTTP_404_NOT_FOUND)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(["PATCH"])
 def update_user(request, user_id):
-    return JsonResponse({'message': 'User updated successfully'}, status=200)
+    try:
+        user = User.objects.get(id=user_id)
+        serializer = UserSerializer(instance=user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(
+                {'message': 'User updated successfully', 'user': serializer.data}, status=status.HTTP_200_OK
+            )
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    except User.DoesNotExist:
+        return JsonResponse({'error': f'No user with id:{user_id} exists'}, status=status.HTTP_404_NOT_FOUND)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(["DELETE"])
 def delete_user(request, user_id):
-    return JsonResponse({'message': 'User deleted successfully'}, status=200)
+    try:
+        user = User.objects.get(id=user_id)
+        user.delete()
+        return JsonResponse({'message': 'User deleted successfully'}, status=status.HTTP_200_OK)
+
+    except User.DoesNotExist:
+        return JsonResponse({'error': f'No user with id:{user_id} exists'}, status=status.HTTP_404_NOT_FOUND)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 def get_users_by_organization(request, org_id):
     return JsonResponse({'message': 'Users retrieved successfully'}, status=200)
