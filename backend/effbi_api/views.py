@@ -58,10 +58,6 @@ def user_details(request, user_id):
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-def get_users_by_organization(request, org_id):
-    return JsonResponse({'message': 'Users retrieved successfully'}, status=200)
-
-
 @api_view(["POST"])
 def create_organization(request):
     try:
@@ -102,6 +98,23 @@ def organization_details(request, org_id):
             print(organization)
             organization.delete()
             return JsonResponse({'message': 'Organization deleted successfully'}, status=200)
+
+    except Organization.DoesNotExist:
+        return JsonResponse({'error': f'No organization with id:{org_id} exists'}, status=status.HTTP_404_NOT_FOUND)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(["GET"])
+def get_users_by_organization(request, org_id):
+    try:
+        organization = Organization.objects.get(id=org_id)
+        users = User.objects.filter(organization=org_id)
+        serializer = UserSerializer(users, many=True)
+        return JsonResponse(
+            {'message': 'Users retrieved successfully', 'users': serializer.data}, status=status.HTTP_200_OK
+        )
 
     except Organization.DoesNotExist:
         return JsonResponse({'error': f'No organization with id:{org_id} exists'}, status=status.HTTP_404_NOT_FOUND)
