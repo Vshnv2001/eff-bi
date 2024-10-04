@@ -78,13 +78,33 @@ def create_organization(request):
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-def get_organization(request, org_id):
-    return JsonResponse({'message': 'Organization retrieved successfully'}, status=200)
+@api_view(["GET", "PATCH", "DELETE"])
+def organization_details(request, org_id):
+    try:
+        organization = Organization.objects.get(id=org_id)
 
-def update_organization(request, org_id):
-    return JsonResponse({'message': 'Organization updated successfully'}, status=200)
+        if request.method == "GET":
+            serializer = OrganizationSerializer(organization)
+            return JsonResponse(
+                {'message': 'Organization retrieved successfully', 'organization': serializer.data}, status=200
+            )
 
-def delete_organization(request, org_id):
-    return JsonResponse({'message': 'Organization deleted successfully'}, status=200)
+        elif request.method == "PATCH":
+            serializer = OrganizationSerializer(instance=organization, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(
+                    {'message': 'Organization updated successfully', 'organization': serializer.data}, status=200
+                )
+            return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        elif request.method == "DELETE":
+            print(organization)
+            organization.delete()
+            return JsonResponse({'message': 'Organization deleted successfully'}, status=200)
 
+    except Organization.DoesNotExist:
+        return JsonResponse({'error': f'No organization with id:{org_id} exists'}, status=status.HTTP_404_NOT_FOUND)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

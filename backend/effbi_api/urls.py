@@ -7,7 +7,5 @@ urlpatterns = [
     path("users/<int:user_id>/", views.user_details, name="user_details"),
     path("users/org/<int:org_id>/", views.get_users_by_organization, name="get_users_by_organization"),
     path("organizations/", views.create_organization, name="create_organization"),
-    path("organizations/<int:org_id>/", views.get_organization, name="get_organization"),
-    path("organizations/<int:org_id>/", views.update_organization, name="update_organization"),
-    path("organizations/<int:org_id>/", views.delete_organization, name="delete_organization"),
+    path("organizations/<int:org_id>/", views.organization_details, name="organization_details"),
 ]
