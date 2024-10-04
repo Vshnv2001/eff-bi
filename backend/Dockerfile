@@ -15,4 +15,4 @@ EXPOSE 8000
 
 RUN pip install django-livereload-server
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["sh", "-c", "python manage.py migrate effbi_api zero && rm -rf effbi_api/migrations/*.py && touch effbi_api/migrations/__init__.py && python manage.py makemigrations effbi_api && python manage.py migrate effbi_api && python manage.py runserver_plus 0.0.0.0:8000"]

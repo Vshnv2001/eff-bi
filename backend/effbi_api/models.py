@@ -32,6 +32,7 @@ class Organization(models.Model):
 class OrgTables(models.Model):
     id = models.AutoField(primary_key=True)
     organization = models.ForeignKey('Organization', on_delete=models.CASCADE)
+    # organization_name = models.CharField(max_length=100, default='')
     table_name = models.CharField(max_length=100)
     table_schema = models.TextField()
     column_descriptions = models.JSONField()
