@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': 'effbi-db',
         'USER': 'effbiuser',
         'PASSWORD': 'effortless',
-        'HOST': 'postgres_db',  # Use the container name or IP
+        'HOST': 'db',  # Use the container name or IP
         'PORT': '5432',  # Default PostgreSQL port
     }
 }

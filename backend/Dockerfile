@@ -1,22 +1,18 @@
-# setting up base image
-FROM python:3.11.4-slim-bullseye
+FROM python:3.9-slim
 
-# prevents python buffering stdout and stderr
-ENV PYTHONUNBUFFERED 1
+WORKDIR /backend
 
-# prevents python from writing .pyc files to disc
-ENV PYTHONDONTWRITEBYTECODE 1
+COPY requirements.txt .
 
-# sets up the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD instructions 
-WORKDIR /app
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-# copies files and directories from current directory to WORKDIR
-COPY . /app/
+# Install uvicorn[standard] for better performance and watchfiles for hot reloading
+RUN pip install --no-cache-dir uvicorn[standard] watchfiles
 
-# install system dependencies
-RUN apt-get update 
+COPY . .
 
-# install dependencies
-RUN pip install --upgrade pip
-COPY ./requirements.txt /app/
-RUN pip install -r requirements.txt
+EXPOSE 8000
+
+RUN pip install django-livereload-server
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
