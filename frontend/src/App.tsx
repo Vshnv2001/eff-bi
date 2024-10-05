@@ -16,9 +16,28 @@ import MainLayout from "./layouts/MainLayout";
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import * as reactRouterDom from "react-router-dom";
+import CustomUiList from "./components/Authentication/CustomUIList";
 
 SuperTokens.init(SuperTokensConfig);
 
+const router = createBrowserRouter(
+  createRoutesFromElements(
+      <Route path="/" element={<MainLayout />}>
+          <Route path="/auth" element={<CustomUiList />} />
+          <Route
+              index
+              element={
+                  <SessionAuth>
+                      <LandingPage />
+                  </SessionAuth>
+              }
+          />
+          <Route path="*" element={<NotFoundPage />} />
+      </Route>
+  )
+);
+
+/*
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<MainLayout />}>
@@ -37,6 +56,7 @@ const router = createBrowserRouter(
     </Route>
   )
 );
+*/
 
 const App = () => {
   return (
