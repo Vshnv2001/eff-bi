@@ -1,10 +1,12 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { signUp, signIn, doesEmailExist } from "supertokens-web-js/recipe/emailpassword";
 
 const CustomUiList = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isSignUp, setIsSignUp] = useState(true);
+    const navigate = useNavigate();
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -27,7 +29,7 @@ const CustomUiList = () => {
             } else if (response.status === "SIGN_UP_NOT_ALLOWED") {
                 window.alert(response.reason);
             } else {
-                window.location.href = "/homepage";
+                navigate("/homepage");
             }
         } catch (err) {
             window.alert("Oops! Something went wrong.");
@@ -47,7 +49,7 @@ const CustomUiList = () => {
             } else if (response.status === "WRONG_CREDENTIALS_ERROR") {
                 window.alert("Email password combination is incorrect.");
             } else {
-                window.location.href = "/homepage";
+                navigate("/homepage");
             }
         } catch (err) {
             window.alert("Oops! Something went wrong.");
@@ -76,22 +78,53 @@ const CustomUiList = () => {
     };
 
     return (
-        <div style={{ maxWidth: "400px", margin: "auto" }}>
-            <h2>{isSignUp ? "Sign Up" : "Sign In"}</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Email:</label>
-                    <input type="email" value={email} onChange={handleEmailChange} required />
+        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+            <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+                <h2 className="text-2xl font-bold text-center mb-6">{isSignUp ? "Sign Up" : "Sign In"}</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700">Email:</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={handleEmailChange}
+                            required
+                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700">Password:</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={handlePasswordChange}
+                            required
+                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200"
+                    >
+                        {isSignUp ? "Sign Up" : "Sign In"}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setIsSignUp(!isSignUp)}
+                        className="w-full mt-4 py-2 px-4 bg-gray-300 text-gray-800 font-semibold rounded-lg hover:bg-gray-400 transition duration-200"
+                    >
+                        {isSignUp ? "Switch to Sign In" : "Switch to Sign Up"}
+                    </button>
+                </form>
+                <div className="mt-4 text-center">
+                    <button
+                        onClick={() => navigate("/forgot-password")}
+                        className="text-blue-500 hover:underline"
+                    >
+                        Forgot Password?
+                    </button>
                 </div>
-                <div>
-                    <label>Password:</label>
-                    <input type="password" value={password} onChange={handlePasswordChange} required />
-                </div>
-                <button type="submit">{isSignUp ? "Sign Up" : "Sign In"}</button>
-                <button type="button" onClick={() => setIsSignUp(!isSignUp)}>
-                    {isSignUp ? "Switch to Sign In" : "Switch to Sign Up"}
-                </button>
-            </form>
+            </div>
         </div>
     );
 };
