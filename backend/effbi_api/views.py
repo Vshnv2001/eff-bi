@@ -2,11 +2,9 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from rest_framework import status
 from rest_framework.decorators import api_view
-
-# Create your views here.
-
-from .models import User, Organization
+from .models import User, Organization, OrgTables
 from .serializer import UserSerializer, OrganizationSerializer
+from .helpers.table_preprocessing import get_database_schemas_and_tables, get_column_descriptions
 
 
 @api_view(["GET"])
@@ -61,6 +59,8 @@ def user_details(request, user_id):
 @api_view(["POST"])
 def create_organization(request):
     try:
+        # TODO: might need to change this as create_org might not have db uri at that point
+        # depend on our user flow
         serializer = OrganizationSerializer(data=request.data)
         if serializer.is_valid():
             organization = serializer.save()
@@ -119,5 +119,41 @@ def get_users_by_organization(request, org_id):
     except Organization.DoesNotExist:
         return JsonResponse({'error': f'No organization with id:{org_id} exists'}, status=status.HTTP_404_NOT_FOUND)
 
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(["POST"])
+def create_connection(request):
+    # TODO: if uri not given during create_organ api call then need to commit
+    # to database in this function
+    try:
+        uri = request.data.get('uri', None)
+        org_id = request.data.get('org_id', None)
+
+        if not uri or not org_id:
+            return JsonResponse({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+        db_data = get_database_schemas_and_tables(uri)
+        organization = Organization.objects.get(id=org_id)
+    
+        if not db_data:
+            print("No data retrieved from the database.")
+            return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        for schema_name, tables in db_data.items():
+            for table_name, table_info in tables.items():
+                
+                column_types = {col_name: col_type for col_name, col_type in zip(table_info['columns'], table_info['types'])}
+                column_descriptions = get_column_descriptions(table_name, schema_name, uri)
+
+                org_table = OrgTables(
+                    table_name=table_name,
+                    table_schema=schema_name,
+                    column_descriptions=column_descriptions,  
+                    column_types=column_types,
+                    organization=organization
+                )
+                org_table.save()
+            return JsonResponse({'message': 'meta data created and saved'}, status=201)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
