@@ -1,6 +1,4 @@
 backend/venv/
 frontend/node_modules
 **/__pycache__/
-.env
 backend/effbi_api/migrations/*.py
-

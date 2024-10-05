@@ -1,5 +1,10 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
+from rest_framework.views import APIView
+from django.utils.decorators import method_decorator
+from supertokens_python.recipe.multitenancy.syncio import list_all_tenants
+from supertokens_python.recipe.session.framework.django.syncio import verify_session
+from .models import User, Organization
 from rest_framework import status
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
@@ -7,6 +12,31 @@ from .models import User, Organization, OrgTables
 from .serializer import UserSerializer, OrganizationSerializer
 from .helpers.table_preprocessing import get_database_schemas_and_tables, get_column_descriptions
 
+class SessionInfoAPI(APIView):
+    @method_decorator(verify_session())
+    def get(self, request, format=None):
+        session_ = request.supertokens
+        return JsonResponse(
+            {
+                "sessionHandle": session_.get_handle(),
+                "userId": session_.get_user_id(),
+                "accessTokenPayload": session_.get_access_token_payload(),
+            }
+        )
+
+class TenantsAPI(APIView):
+    def get(self, request, format=None):
+        tenantReponse = list_all_tenants()
+
+        tenantsList = []
+
+        for tenant in tenantReponse.tenants:
+            tenantsList.append(tenant.to_json())
+
+        return JsonResponse({
+            "status": "OK",
+            "tenants": tenantsList,
+        })
 
 @api_view(["GET"])
 def health_check(request):
@@ -73,6 +103,9 @@ def create_organization(request):
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+def delete_organization(request, org_id):
+    return JsonResponse({'message': 'Organization deleted successfully'}, status=200)
+
 @api_view(["GET", "PATCH", "DELETE"])
 def organization_details(request, org_id):
     try:
@@ -104,7 +137,7 @@ def organization_details(request, org_id):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
+ 
 @api_view(["GET"])
 def get_users_by_organization(request, org_id):
     try:
