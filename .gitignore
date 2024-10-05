@@ -2,3 +2,4 @@ backend/venv/
 frontend/node_modules
 **/__pycache__/
 backend/effbi_api/migrations/*.py
+frontend/package-lock.json

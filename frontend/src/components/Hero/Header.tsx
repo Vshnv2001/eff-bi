@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import GradientButton from "../Buttons/GradientButton";
 
 const Header: React.FC = () => {
   const [animateEffortless, setAnimateEffortless] = useState(false);
@@ -68,7 +67,6 @@ const Header: React.FC = () => {
                 animateButton ? "opacity-100" : "opacity-0"
               }`}
             >
-              <GradientButton text="Get Started" />
             </div>
           </div>
         </div>
