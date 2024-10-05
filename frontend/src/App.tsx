@@ -32,6 +32,7 @@ const router = createBrowserRouter(
           </SessionAuth>
         }
       />
+
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )
