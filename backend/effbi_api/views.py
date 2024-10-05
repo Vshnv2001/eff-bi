@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from rest_framework import status
 from rest_framework.decorators import api_view
+from django.shortcuts import get_object_or_404
 from .models import User, Organization, OrgTables
 from .serializer import UserSerializer, OrganizationSerializer
 from .helpers.table_preprocessing import get_database_schemas_and_tables, get_column_descriptions
@@ -59,8 +60,6 @@ def user_details(request, user_id):
 @api_view(["POST"])
 def create_organization(request):
     try:
-        # TODO: might need to change this as create_org might not have db uri at that point
-        # depend on our user flow
         serializer = OrganizationSerializer(data=request.data)
         if serializer.is_valid():
             organization = serializer.save()
@@ -124,17 +123,18 @@ def get_users_by_organization(request, org_id):
 
 @api_view(["POST"])
 def create_connection(request):
-    # TODO: if uri not given during create_organ api call then need to commit
-    # to database in this function
     try:
         uri = request.data.get('uri', None)
         org_id = request.data.get('org_id', None)
 
         if not uri or not org_id:
-            return JsonResponse({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({'error': "Both uri and org_id are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        organization = get_object_or_404(Organization, id=org_id)
+        organization.uri = uri
+        organization.save()
         
         db_data = get_database_schemas_and_tables(uri)
-        organization = Organization.objects.get(id=org_id)
     
         if not db_data:
             print("No data retrieved from the database.")
