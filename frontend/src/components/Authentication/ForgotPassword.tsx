@@ -1,14 +1,21 @@
 import React, { useState } from "react";
 import { sendPasswordResetEmail } from "supertokens-web-js/recipe/emailpassword";
+import { Link } from "react-router-dom"; // Make sure you have react-router-dom installed
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
+        setErrorMessage("");
+        setSuccessMessage("");
     };
 
     const sendEmailClicked = async () => {
+        setLoading(true); // Set loading to true
         try {
             let response = await sendPasswordResetEmail({
                 formFields: [{ id: "email", value: email }]
@@ -17,20 +24,22 @@ const ForgotPassword = () => {
             if (response.status === "FIELD_ERROR") {
                 response.formFields.forEach(formField => {
                     if (formField.id === "email") {
-                        window.alert(formField.error);
+                        setErrorMessage(formField.error);
                     }
                 });
             } else if (response.status === "PASSWORD_RESET_NOT_ALLOWED") {
-                window.alert("Password reset is not allowed for this account.");
+                setErrorMessage("Password reset is not allowed for this account.");
             } else {
-                window.alert("Please check your email for the password reset link.");
+                setSuccessMessage("Please check your email for the password reset link.");
             }
         } catch (err: any) {
             if (err.isSuperTokensGeneralError === true) {
-                window.alert(err.message);
+                setErrorMessage(err.message);
             } else {
-                window.alert("Oops! Something went wrong.");
+                setErrorMessage("Oops! Something went wrong.");
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -38,6 +47,23 @@ const ForgotPassword = () => {
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
                 <h2 className="text-2xl font-bold text-center mb-6">Forgot Password</h2>
+                
+                {errorMessage && (
+                    <div className="mb-4 p-2 text-red-700">
+                        {errorMessage}
+                    </div>
+                )}
+                {successMessage && !loading && (
+                    <div className="mb-4 p-2 text-green-700">
+                        {successMessage}
+                    </div>
+                )}
+                {loading && (
+                    <div className="mb-4 p-2 text-blue-700">
+                        Loading...
+                    </div>
+                )}
+
                 <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700">Email:</label>
                     <input
@@ -54,6 +80,15 @@ const ForgotPassword = () => {
                 >
                     Send Password Reset Email
                 </button>
+                
+                {/* Back to Login/Signup Link */}
+                {!loading && (
+                    <div className="mt-4 text-center">
+                        <Link to="/" className="text-blue-600 hover:underline">
+                            Back to Login/Signup
+                        </Link>
+                    </div>
+                )}
             </div>
         </div>
     );

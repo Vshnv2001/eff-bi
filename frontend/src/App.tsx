@@ -9,20 +9,20 @@ import { SessionAuth } from "supertokens-auth-react/recipe/session";
 import {
   SuperTokensConfig,
   ComponentWrapper,
-} from "./components/Authentication/Authentication";
+} from "./components/Authentication/AuthenticationConfig";
 import ForgotPassword from "./components/Authentication/ForgotPassword";
 import ResetPassword from "./components/Authentication/ResetPassword";
 import MainLayout from "./layouts/MainLayout";
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import CustomUiList from "./components/Authentication/CustomUIList";
+import Authentication from "./components/Authentication/CustomUIList";
 
 SuperTokens.init(SuperTokensConfig);
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<MainLayout />}>
-      <Route path="/auth" element={<CustomUiList />} />
+      <Route path="/auth" element={<Authentication />} />
       <Route
         index
         element={
@@ -33,7 +33,7 @@ const router = createBrowserRouter(
       />
       <Route path="/auth/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/reset-password" element={<ResetPassword />} />
-      <Route path="/auth" element={<CustomUiList />} />
+      <Route path="/auth" element={<Authentication />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )

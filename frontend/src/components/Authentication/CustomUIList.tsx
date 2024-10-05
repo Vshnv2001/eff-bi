@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signUp, signIn, doesEmailExist } from "supertokens-web-js/recipe/emailpassword";
 
-const CustomUiList = () => {
+const Authentication = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isSignUp, setIsSignUp] = useState(true);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [inputError, setInputError] = useState({ email: false, password: false });
     const navigate = useNavigate();
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,17 +24,29 @@ const CustomUiList = () => {
                 formFields: [{ id: "email", value: email }, { id: "password", value: password }]
             });
 
+            // Reset input error states
+            setInputError({ email: false, password: false });
+
             if (response.status === "FIELD_ERROR") {
                 response.formFields.forEach(formField => {
-                    window.alert(formField.error);
+                    if (formField.id === "email") {
+                        setErrorMessage(formField.error);
+                        setInputError(prev => ({ ...prev, email: true }));
+                    } else if (formField.id === "password") {
+                        setErrorMessage(formField.error);
+                        setInputError(prev => ({ ...prev, password: true }));
+                    }
                 });
             } else if (response.status === "SIGN_UP_NOT_ALLOWED") {
-                window.alert(response.reason);
+                setErrorMessage(response.reason);
+                setInputError(prev => ({ ...prev, email: true })); 
             } else {
-                navigate("/homepage");
+                setErrorMessage("");
+                navigate("/");
             }
         } catch (err) {
-            window.alert("Oops! Something went wrong.");
+            setErrorMessage("Oops! Something went wrong.");
+            setInputError({ email: true, password: true });
         }
     };
 
@@ -42,17 +56,29 @@ const CustomUiList = () => {
                 formFields: [{ id: "email", value: email }, { id: "password", value: password }]
             });
 
+            // Reset input error states
+            setInputError({ email: false, password: false });
+
             if (response.status === "FIELD_ERROR") {
                 response.formFields.forEach(formField => {
-                    window.alert(formField.error);
+                    if (formField.id === "email") {
+                        setErrorMessage(formField.error);
+                        setInputError(prev => ({ ...prev, email: true })); // Set email error
+                    } else if (formField.id === "password") {
+                        setErrorMessage(formField.error);
+                        setInputError(prev => ({ ...prev, password: true })); // Set password error
+                    }
                 });
             } else if (response.status === "WRONG_CREDENTIALS_ERROR") {
-                window.alert("Email password combination is incorrect.");
+                setErrorMessage("Email password combination is incorrect.");
+                setInputError({ email: true, password: true }); // Shake both on wrong credentials
             } else {
-                navigate("/homepage");
+                setErrorMessage(""); // Clear error on success
+                navigate("/");
             }
         } catch (err) {
-            window.alert("Oops! Something went wrong.");
+            setErrorMessage("Oops! Something went wrong.");
+            setInputError({ email: true, password: true }); // Shake both on catch
         }
     };
 
@@ -60,15 +86,20 @@ const CustomUiList = () => {
         try {
             let response = await doesEmailExist({ email });
             if (response.doesExist) {
-                window.alert("Email already exists. Please sign in instead.");
+                setErrorMessage("This email already exists. Please sign in instead.");
+                setInputError({ email: true, password: false }); // Shake only email
             }
         } catch (err) {
-            window.alert("Oops! Something went wrong.");
+            setErrorMessage("Oops! Something went wrong.");
+            setInputError({ email: true, password: true }); // Shake both on catch
         }
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setErrorMessage(""); // Clear previous error
+        setInputError({ email: false, password: false }); // Reset input errors
+
         if (isSignUp) {
             await checkEmail();
             await signUpClicked();
@@ -81,6 +112,14 @@ const CustomUiList = () => {
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
                 <h2 className="text-2xl font-bold text-center mb-6">{isSignUp ? "Sign Up" : "Sign In"}</h2>
+                
+                {/* Error Message Box */}
+                {errorMessage && (
+                    <div className="mb-4 p-2 text-red-700 max-w-full w-full">
+                        {errorMessage}
+                    </div>
+                )}
+
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">Email:</label>
@@ -89,7 +128,7 @@ const CustomUiList = () => {
                             value={email}
                             onChange={handleEmailChange}
                             required
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className={`mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none ${inputError.email ? 'animate-shake border-red-500' : ''}`}
                         />
                     </div>
                     <div className="mb-4">
@@ -99,7 +138,7 @@ const CustomUiList = () => {
                             value={password}
                             onChange={handlePasswordChange}
                             required
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className={`mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none ${inputError.password ? 'animate-shake border-red-500' : ''}`}
                         />
                     </div>
                     <button
@@ -118,7 +157,7 @@ const CustomUiList = () => {
                 </form>
                 <div className="mt-4 text-center">
                     <button
-                        onClick={() => navigate("/forgot-password")}
+                        onClick={() => navigate("/auth/forgot-password")}
                         className="text-blue-500 hover:underline"
                     >
                         Forgot Password?
@@ -129,4 +168,4 @@ const CustomUiList = () => {
     );
 };
 
-export default CustomUiList;
+export default Authentication;
