@@ -29,14 +29,20 @@ const router = createBrowserRouter(
         element={
           <SessionAuth>
             <LandingPage />
+          </SessionAuth>
+        }
+      />
+
+      <Route
+        path="/upload"
+        element={
+          <SessionAuth>
             <UploadPage />
           </SessionAuth>
         }
       />
-      <Route path="/auth" element={<Authentication />} />
       <Route path="/auth/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/reset-password" element={<ResetPassword />} />
-      <Route path="/upload" element={<UploadPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )
