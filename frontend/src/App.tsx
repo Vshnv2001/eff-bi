@@ -10,12 +10,13 @@ import {
   SuperTokensConfig,
   ComponentWrapper,
 } from "./components/Authentication/AuthenticationConfig";
+import Authentication from "./components/Authentication/CustomUIList";
 import ForgotPassword from "./components/Authentication/ForgotPassword";
 import ResetPassword from "./components/Authentication/ResetPassword";
 import MainLayout from "./layouts/MainLayout";
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import Authentication from "./components/Authentication/CustomUIList";
+import UploadPage from "./pages/UploadPage";
 
 SuperTokens.init(SuperTokensConfig);
 
@@ -28,12 +29,14 @@ const router = createBrowserRouter(
         element={
           <SessionAuth>
             <LandingPage />
+            <UploadPage />
           </SessionAuth>
         }
       />
+      <Route path="/auth" element={<Authentication />} />
       <Route path="/auth/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/reset-password" element={<ResetPassword />} />
-      <Route path="/auth" element={<Authentication />} />
+      <Route path="/upload" element={<UploadPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )

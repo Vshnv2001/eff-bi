@@ -3,9 +3,9 @@ import Navbar from "../components/Navbar/Navbar";
 
 const MainLayout = () => {
   return (
-    <div>
+    <div className="flex flex-col h-screen overflow-hidden">
       <Navbar />
-      <div>
+      <div className="flex-grow overflow-auto">
         <Outlet />
       </div>
     </div>
