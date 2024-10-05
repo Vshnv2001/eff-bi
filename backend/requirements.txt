@@ -11,3 +11,5 @@ tornado==6.4.1
 typing_extensions==4.12.2
 Werkzeug==3.0.4
 livereload==2.7.0
+django-cors-headers==4.4.0
+supertokens-python==0.24.3
