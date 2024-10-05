@@ -18,6 +18,7 @@ const Chat: React.FC = () => {
 
   return (
     <div className="relative overflow-hidden h-screen">
+      {/* Background image fixed in place */}
       <div
         className="absolute top-0 left-0 w-full h-full bg-fixed bg-center bg-cover"
         style={{
@@ -25,6 +26,7 @@ const Chat: React.FC = () => {
         }}
       ></div>
 
+      {/* Fade overlay */}
       <div
         className="absolute top-0 left-0 w-full h-full"
         style={{
