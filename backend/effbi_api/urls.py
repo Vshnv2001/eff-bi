@@ -10,4 +10,5 @@ urlpatterns = [
     path("users/org/<int:org_id>/", views.get_users_by_organization, name="get_users_by_organization"),
     path("organizations/", views.create_organization, name="create_organization"),
     path("organizations/<int:org_id>/", views.organization_details, name="organization_details"),
+    path("connection/", views.create_connection, name="create_connection")
 ]

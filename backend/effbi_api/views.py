@@ -7,7 +7,10 @@ from supertokens_python.recipe.session.framework.django.syncio import verify_ses
 from .models import User, Organization
 from rest_framework import status
 from rest_framework.decorators import api_view
+from django.shortcuts import get_object_or_404
+from .models import User, Organization, OrgTables
 from .serializer import UserSerializer, OrganizationSerializer
+from .helpers.table_preprocessing import get_database_schemas_and_tables, get_column_descriptions
 
 class SessionInfoAPI(APIView):
     @method_decorator(verify_session())
@@ -148,5 +151,42 @@ def get_users_by_organization(request, org_id):
     except Organization.DoesNotExist:
         return JsonResponse({'error': f'No organization with id:{org_id} exists'}, status=status.HTTP_404_NOT_FOUND)
 
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(["POST"])
+def create_connection(request):
+    try:
+        uri = request.data.get('uri', None)
+        org_id = request.data.get('org_id', None)
+
+        if not uri or not org_id:
+            return JsonResponse({'error': "Both uri and org_id are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        organization = get_object_or_404(Organization, id=org_id)
+        organization.uri = uri
+        organization.save()
+        
+        db_data = get_database_schemas_and_tables(uri)
+    
+        if not db_data:
+            print("No data retrieved from the database.")
+            return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        for schema_name, tables in db_data.items():
+            for table_name, table_info in tables.items():
+                
+                column_types = {col_name: col_type for col_name, col_type in zip(table_info['columns'], table_info['types'])}
+                column_descriptions = get_column_descriptions(table_name, schema_name, uri)
+
+                org_table = OrgTables(
+                    table_name=table_name,
+                    table_schema=schema_name,
+                    column_descriptions=column_descriptions,  
+                    column_types=column_types,
+                    organization=organization
+                )
+                org_table.save()
+            return JsonResponse({'message': 'meta data created and saved'}, status=201)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
