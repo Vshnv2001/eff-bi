@@ -1,7 +1,7 @@
 asgiref==3.8.1
 Django==4.2.16
 django-extensions==3.2.3
-django-livereload-server==0.5.1
+django-livereload-server==0.5.0
 djangorestframework==3.15.2
 livereload==2.7.0
 MarkupSafe==2.1.5

@@ -17,7 +17,8 @@ import MainLayout from "./layouts/MainLayout";
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import UploadPage from "./pages/UploadPage";
-
+import DBSettingsPage from "./pages/DBSettingsPage";
+import OrgSettingsPage from "./pages/OrgSettingsPage";
 SuperTokens.init(SuperTokensConfig);
 
 const router = createBrowserRouter(
@@ -41,6 +42,8 @@ const router = createBrowserRouter(
           </SessionAuth>
         }
       />
+      <Route path="/settings/database" element={<DBSettingsPage />} />
+      <Route path="/settings/organization" element={<OrgSettingsPage />} />
       <Route path="/auth/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/reset-password" element={<ResetPassword />} />
       <Route path="*" element={<NotFoundPage />} />
@@ -59,3 +62,30 @@ const App = () => {
 };
 
 export default App;
+
+
+// import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
+// import MainLayout from "./layouts/MainLayout";
+// import LandingPage from "./pages/LandingPage";
+// import NotFoundPage from "./pages/NotFoundPage";
+// import LoginPage from "./pages/LoginPage";
+// import SettingsPage from "./pages/SettingsPage";
+
+// const router = createBrowserRouter(
+//   createRoutesFromElements(
+//     <Route path="/" element={<MainLayout />}>
+//       <Route path="/login" element={<LoginPage />} />
+//       <Route path="/settings" element={<SettingsPage />} />
+//       <Route index element={<LandingPage />} />
+//       <Route path="*" element={<NotFoundPage />} />
+//     </Route>
+//   )
+// );
+
+// const App = () => {
+//   return (
+//         <RouterProvider router={router} />
+//   );
+// };
+
+// export default App;
