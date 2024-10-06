@@ -1,8 +1,10 @@
 import psycopg2
 from openai import OpenAI
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-
-client = OpenAI()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def get_database_schemas_and_tables(db_url):
     try:

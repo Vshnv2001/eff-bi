@@ -7,6 +7,7 @@ import {
   ThemeProvider,
   Button,
 } from "@material-tailwind/react";
+import axios from "axios";
 
 const databases = [
   { id: "mysql", name: "MySQL", logo: "https://www.vectorlogo.zone/logos/mysql/mysql-ar21.svg" },
@@ -25,9 +26,23 @@ const darkTheme = {
   },
 };
 
-export default function SettingsPage() {
+export default function DBSettingsPage() {
   const [selectedDb, setSelectedDb] = useState("");
   const [selectedDbUri, setSelectedDbUri] = useState("");
+
+  const handleSave = async () => {
+    console.log("Selected Database:", selectedDb);
+    console.log("Database URI:", selectedDbUri);
+    if (!selectedDbUri) {
+      console.error("Database URI is required");
+      return;
+    }
+    await axios.post(`http://localhost:8000/api/connection/`, {
+      uri: selectedDbUri,
+      org_id: 1,
+    });
+  };
+
   return (
     <ThemeProvider value={darkTheme}>
       <div className="min-h-screen bg-gray-900 text-gray-100 p-8">
@@ -86,7 +101,7 @@ export default function SettingsPage() {
             />
           </div>
           <div className="flex justify-center mt-12">
-            <Button color="blue" className="w-full">
+            <Button color="blue" className="w-full" onClick={handleSave}>
               Save
             </Button>
           </div>

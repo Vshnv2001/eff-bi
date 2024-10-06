@@ -3,4 +3,3 @@ frontend/node_modules
 frontend/package-lock.json
 **/__pycache__/
 .env
-backend/effbi_api/migrations/*.py

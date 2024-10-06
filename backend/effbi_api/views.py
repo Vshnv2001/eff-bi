@@ -159,6 +159,9 @@ def create_connection(request):
     try:
         uri = request.data.get('uri', None)
         org_id = request.data.get('org_id', None)
+        
+        print(uri)
+        print(org_id)
 
         if not uri or not org_id:
             return JsonResponse({'error': "Both uri and org_id are required"}, status=status.HTTP_400_BAD_REQUEST)
