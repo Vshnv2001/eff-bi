@@ -12,12 +12,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-from corsheaders.defaults import default_headers
-from typing import List
-from supertokens_python import get_all_cors_headers
-from supertokens_python import init
-from .config import supertokens_config, app_info, recipe_list
-from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -48,8 +42,6 @@ INSTALLED_APPS = [
     'effbi_api',
     'rest_framework',
     'livereload',
-    'corsheaders',
-    'supertokens_python',
 ]
 
 MIDDLEWARE = [
@@ -60,8 +52,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'supertokens_python.framework.django.django_middleware.middleware'
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -140,25 +130,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-init(
-    supertokens_config=supertokens_config,
-    app_info=app_info,
-    framework="django",
-    recipe_list=recipe_list,
-    mode='wsgi'
-)
-
-CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000"
-]
-
-CORS_ALLOW_CREDENTIALS = True
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000"
-]
-
-CORS_ALLOW_HEADERS: List[str] = list(default_headers) + [
-    "Content-Type"
-] + get_all_cors_headers()

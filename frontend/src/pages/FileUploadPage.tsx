@@ -6,10 +6,24 @@ import axios from "axios";
 type ParsedData = Record<string, any>;
 
 declare global {
-    interface Window {
-        worker?: Worker;
-    }
+  interface Window {
+    worker?: Worker;
+  }
 }
+
+const Alert: React.FC<{ message: string; onClose: () => void }> = ({
+  message,
+  onClose,
+}) => (
+  <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4 rounded-md">
+    <div className="flex justify-between">
+      <p>{message}</p>
+      <button onClick={onClose} className="text-yellow-700 font-bold">
+        X
+      </button>
+    </div>
+  </div>
+);
 
 const FileUpload: React.FC = () => {
   const [data, setData] = useState<ParsedData[]>([]);
@@ -17,6 +31,7 @@ const FileUpload: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
   const [rowsToShow, setRowsToShow] = useState<number>(100);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
 
   useEffect(() => {
     return () => {
@@ -49,7 +64,6 @@ const FileUpload: React.FC = () => {
       }
 
       if (fileType.includes("csv")) {
-        // Handle CSV parsing in the main thread
         Papa.parse(fileData as string, {
           header: true,
           chunkSize: 1024,
@@ -58,6 +72,7 @@ const FileUpload: React.FC = () => {
           },
           complete: () => {
             setLoading(false);
+            if (data.length > 100) setShowAlert(true);
           },
           error: () => {
             setError("Error parsing CSV file.");
@@ -65,12 +80,15 @@ const FileUpload: React.FC = () => {
           },
         });
       } else if (fileType.includes("sheet") || fileType.includes("excel")) {
-        // Handle Excel in the Web Worker
         if (window.Worker) {
-          const worker = new Worker(new URL("./fileParserWorker.ts", import.meta.url));
+          const worker = new Worker(
+            new URL(
+              "../components/FileParser/FileParserWorker.tsx",
+              import.meta.url
+            )
+          );
           window.worker = worker;
 
-          // Pass XLSX library to worker
           (worker as any).XLSX = XLSX;
 
           worker.postMessage({ fileData, fileType });
@@ -80,6 +98,7 @@ const FileUpload: React.FC = () => {
             if (type === "complete") {
               setData(data);
               setLoading(false);
+              if (data.length > 100) setShowAlert(true);
             } else if (type === "error") {
               setError(errorMsg);
               setLoading(false);
@@ -114,7 +133,7 @@ const FileUpload: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-light-blue-100 p-6">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-8xl h-full">
         <h2 className="text-2xl font-bold text-center mb-6">Upload a File</h2>
         <input
           type="file"
@@ -124,16 +143,21 @@ const FileUpload: React.FC = () => {
         />
 
         {error && <div className="mb-4 text-red-600">{error}</div>}
-        {loading && <div className="text-center text-blue-600 mb-4">Loading...</div>}
+        {loading && (
+          <div className="text-center text-blue-600 mb-4">Loading...</div>
+        )}
 
         {data.length > 0 && (
           <>
-            <div className="overflow-y-auto max-h-64 mb-4 border border-gray-300">
-              <table className="min-w-full bg-white">
+            <div className="overflow-y-auto max-h-80 mb-4 border border-gray-300">
+              <table className="min-w-full bg-white table-auto">
                 <thead>
                   <tr className="bg-gray-200">
                     {Object.keys(data[0]).map((key) => (
-                      <th key={key} className="p-4 border-b text-left font-semibold">
+                      <th
+                        key={key}
+                        className="p-4 border-b text-left font-semibold"
+                      >
                         {key}
                       </th>
                     ))}
@@ -166,12 +190,21 @@ const FileUpload: React.FC = () => {
               onClick={handleUploadToDatabase}
               disabled={uploading}
               className={`block w-full p-2 bg-blue-600 text-white rounded-md font-semibold ${
-                uploading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+                uploading
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-blue-700"
               }`}
             >
               {uploading ? "Uploading..." : "Upload to Database"}
             </button>
           </>
+        )}
+
+        {showAlert && (
+          <Alert
+            message="Your data is too big, so click 'Load More' to view more rows."
+            onClose={() => setShowAlert(false)}
+          />
         )}
       </div>
     </div>

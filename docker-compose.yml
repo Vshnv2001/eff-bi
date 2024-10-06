@@ -15,8 +15,6 @@ services:
       - DB_PASSWORD=effortless
       - DB_NAME=effbi-db
       - POSTGRES_URI=postgresql://effbiuser:effortless@db:5432/effbi-db
-    env_file:
-      - .env
     depends_on:
       - db
 

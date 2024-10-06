@@ -1,5 +1,4 @@
 # eff-bi
-
 Full-Stack GenAI Application to replace the long wait for BI developers to get executives the insights they need, powered by LLMs.
 
 ## Development
@@ -7,7 +6,6 @@ Full-Stack GenAI Application to replace the long wait for BI developers to get e
 ### Backend
 
 #### Requirements
-
 - Python 3.10+
 - pip
 - Docker, Docker Compose
@@ -36,13 +34,6 @@ From the root of repo, run the following to start the docker containers
 docker-compose up --build -d
 ```
 
-If you make any changes to the models, please run the following from the root directory.
-This will create a new migration in the migrations file
-
-```bash
-python manage.py makemigrations --name=<unique name of migration>
-```
-
 Go to `http://127.0.0.1:8000/api/health/` to see if the server is running
 
 If you want to stop the docker containers, run the following
@@ -51,10 +42,10 @@ If you want to stop the docker containers, run the following
 docker-compose down
 ```
 
+
 ### Frontend
 
 #### Requirements
-
 - Node.js 18+
 - npm
 
@@ -70,3 +61,8 @@ npm install
 ```bash
 npm run dev
 ```
+
+
+
+
+
