@@ -17,6 +17,7 @@ import MainLayout from "./layouts/MainLayout";
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import UploadPage from "./pages/UploadPage";
+import FileUpload from "./pages/FileUploadPage";
 
 SuperTokens.init(SuperTokensConfig);
 
@@ -41,6 +42,7 @@ const router = createBrowserRouter(
           </SessionAuth>
         }
       />
+      <Route path="/file/upload/" element={<FileUpload/>}/>
       <Route path="/auth/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/reset-password" element={<ResetPassword />} />
       <Route path="*" element={<NotFoundPage />} />
