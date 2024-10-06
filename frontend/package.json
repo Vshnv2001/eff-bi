@@ -19,6 +19,7 @@
     "@types/node": "^16.11.56",
     "@types/react": "^18.0.18",
     "@types/react-dom": "^18.0.6",
+    "@visx/stats": "^3.5.0",
     "@visx/visx": "^3.11.0",
     "axios": "^1.7.7",
     "papaparse": "^5.4.1",

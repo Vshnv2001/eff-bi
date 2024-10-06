@@ -18,7 +18,7 @@ export type BarsProps = {
   events?: boolean;
 };
 
-export default function BarChart({ width, height, events = false }: BarsProps) {
+export default function BarChartTemplate({ width, height, events = false }: BarsProps) {
   // State for tooltip
   const [tooltipData, setTooltipData] = useState<LetterFrequency | null>(null);
   const [tooltipLeft, setTooltipLeft] = useState<number>(0);
