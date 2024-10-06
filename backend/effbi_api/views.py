@@ -10,7 +10,8 @@ from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from .models import User, Organization, OrgTables
 from .serializer import UserSerializer, OrganizationSerializer
-from .helpers.table_preprocessing import get_database_schemas_and_tables, get_column_descriptions
+from .helpers.table_preprocessing import get_database_schemas_and_tables, process_table
+import concurrent.futures
 
 class SessionInfoAPI(APIView):
     @method_decorator(verify_session())
@@ -102,10 +103,6 @@ def create_organization(request):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-def delete_organization(request, org_id):
-    return JsonResponse({'message': 'Organization deleted successfully'}, status=200)
-
 @api_view(["GET", "PATCH", "DELETE"])
 def organization_details(request, org_id):
     try:
@@ -127,9 +124,9 @@ def organization_details(request, org_id):
             return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         elif request.method == "DELETE":
-            print(organization)
+            # print(organization)
             organization.delete()
-            return JsonResponse({'message': 'Organization deleted successfully'}, status=200)
+            return JsonResponse({'message': f'Organization with id:{org_id} deleted successfully'}, status=204)
 
     except Organization.DoesNotExist:
         return JsonResponse({'error': f'No organization with id:{org_id} exists'}, status=status.HTTP_404_NOT_FOUND)
@@ -166,8 +163,9 @@ def create_connection(request):
         if not uri or not org_id:
             return JsonResponse({'error': "Both uri and org_id are required"}, status=status.HTTP_400_BAD_REQUEST)
 
+        # update organization with uri
         organization = get_object_or_404(Organization, id=org_id)
-        organization.uri = uri
+        organization.database_uri = uri
         organization.save()
         
         db_data = get_database_schemas_and_tables(uri)
@@ -176,20 +174,32 @@ def create_connection(request):
             print("No data retrieved from the database.")
             return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-        for schema_name, tables in db_data.items():
-            for table_name, table_info in tables.items():
-                
-                column_types = {col_name: col_type for col_name, col_type in zip(table_info['columns'], table_info['types'])}
-                column_descriptions = get_column_descriptions(table_name, schema_name, uri)
-
-                org_table = OrgTables(
-                    table_name=table_name,
-                    table_schema=schema_name,
-                    column_descriptions=column_descriptions,  
-                    column_types=column_types,
-                    organization=organization
-                )
+        tasks = []
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            for schema_name, tables in db_data.items():
+                for table_name, table_info in tables.items():
+                    task = executor.submit(process_table, schema_name, table_name, table_info, uri, organization)
+                    tasks.append(task)
+            
+            for future in concurrent.futures.as_completed(tasks):
+                org_table = future.result()
                 org_table.save()
-            return JsonResponse({'message': 'meta data created and saved'}, status=201)
+
+        return JsonResponse({'message': 'meta data created and saved'}, status=201)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+
+@api_view(["POST"])
+def query_databases(request):
+    text = request.data.get('text', None)
+    org_id = request.data.get('org_id', None)
+    user_id = request.data.get('user_id', None)
+
+    if not text or not org_id or not user_id:
+        return JsonResponse({'error': "Text, user_id and org_id are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # TODO: implement text to sql, execute sql, return ans
+    # TODO: use websockets to stream the data to user
+    # TODO: store history of the user's NLP and generated sql query
+    return JsonResponse({'message': 'data generated!'}, status=200)
