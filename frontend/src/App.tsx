@@ -1,4 +1,3 @@
-/*
 import {
   Route,
   createBrowserRouter,
@@ -6,25 +5,25 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import SuperTokens, { SuperTokensWrapper } from "supertokens-auth-react";
-import { getSuperTokensRoutesForReactRouterDom } from "supertokens-auth-react/ui";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
 import {
-  PreBuiltUIList,
   SuperTokensConfig,
   ComponentWrapper,
-} from "./components/Authentication/Authentication";
+} from "./components/Authentication/AuthenticationConfig";
+import Authentication from "./components/Authentication/Authentication";
+import ForgotPassword from "./components/Authentication/ForgotPassword";
+import ResetPassword from "./components/Authentication/ResetPassword";
 import MainLayout from "./layouts/MainLayout";
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import * as reactRouterDom from "react-router-dom";
+import UploadPage from "./pages/UploadPage";
 
 SuperTokens.init(SuperTokensConfig);
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<MainLayout />}>
-      {getSuperTokensRoutesForReactRouterDom(reactRouterDom, PreBuiltUIList)}
-
+      <Route path="/auth" element={<Authentication />} />
       <Route
         index
         element={
@@ -33,6 +32,17 @@ const router = createBrowserRouter(
           </SessionAuth>
         }
       />
+
+      <Route
+        path="/upload"
+        element={
+          <SessionAuth>
+            <UploadPage />
+          </SessionAuth>
+        }
+      />
+      <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+      <Route path="/auth/reset-password" element={<ResetPassword />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )

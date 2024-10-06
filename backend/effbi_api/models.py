@@ -21,7 +21,7 @@ class Organization(models.Model):
     name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    database_uri = models.CharField(max_length=255)
+    database_uri = models.CharField(max_length=255, default="")
     
     class Meta:
         db_table = "organizations"

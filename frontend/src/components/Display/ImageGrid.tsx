@@ -47,7 +47,7 @@ const ImageGrid: React.FC = () => {
             const target = entry.target as HTMLElement;
             target.classList.remove("scale-110", "opacity-0");
             target.classList.add("scale-100", "opacity-100");
-            observer.unobserve(target); // Stop observing once it has faded in
+            observer.unobserve(target);
           }
         });
       });
