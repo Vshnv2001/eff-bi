@@ -43,4 +43,3 @@ class OrgTables(models.Model):
         managed = True
         app_label = "effbi_api"
     
-    
