@@ -52,8 +52,6 @@ import {
   Card,
   CardContent,
   Typography,
-  CardActions,
-  Tooltip,
 } from "@mui/material";
 
 const chartComponents = [
@@ -169,217 +167,28 @@ const chartComponents = [
   },
 ];
 
+const chartStyle = {
+  margin: "16px", // Set a standard margin for each card
+  height: "400px", // Set a standard height for the charts
+  width: "100%", // Ensure charts take the full width of the container
+};
+
 export default function Page(): React.JSX.Element {
-    return (
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Product Trends by Month</Typography>
-                <LineChartTemplate
-                  title={"Hello"}
-                  series={lineChartSeries}
-                  categories={lineChartCategories}
-                  height={350}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-    
-          <Grid item xs={12} sm={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Bar Chart</Typography>
-                <BarChartTemplate
-                  chartSeries={chartSeriesBar}
-                  categories={categoriesBar}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-    
-          <Grid item xs={12} sm={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Horizontal Bar Chart</Typography>
-                <HorizontalBarChartTemplate
-                  chartSeries={chartSeriesBar}
-                  categories={categoriesBar}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-    
-          <Grid item xs={12} sm={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Donut Chart</Typography>
-                <DonutChartTemplate
-                  chartSeries={pieChartSeries}
-                  labels={pieChartLabels}
-                  sx={{ height: "100%" }}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-    
-          <Grid item xs={12} sm={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Area Chart</Typography>
-                <AreaChartTemplate
-                  chartSeries={areaChartSeries}
-                  labels={areaChartLabels}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-    
-          <Grid item xs={12} sm={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Stacked Group Bar Chart</Typography>
-                <StackedGroupBarChartTemplate
-                  chartSeries={chartSeriesStacked}
-                  categories={categoriesStacked}
-                  sx={{ width: "100%", maxWidth: 600, margin: "0 auto" }}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-    
-          <Grid item xs={12} sm={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Pyramid Bar Chart</Typography>
-                <PyramidBarChartTemplate
-                  chartSeries={chartSeriesPyramid}
-                  categories={categoriesPyramid}
-                  sx={{ maxWidth: 600, margin: "auto" }}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-    
-          <Grid item xs={12} sm={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Line Column Chart</Typography>
-                <LineColumnChartTemplate
-                  columnData={columnData}
-                  lineData={lineData}
-                  labels={labels}
-                  columnName="Website Blog"
-                  lineName="Social Media"
-                  chartTitle="Traffic Sources"
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-    
-          <Grid item xs={12} sm={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Multiple Y-Axis Line Chart</Typography>
-                <MultipleYAxisLineChartTemplate
-                  incomeData={incomeData}
-                  cashflowData={cashflowData}
-                  revenueData={revenueData}
-                  categories={categories}
-                  chartTitle="XYZ - Stock Analysis (2009 - 2016)"
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-    
-          <Grid item xs={12} sm={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Pie Chart</Typography>
-                <PieChartTemplate
-                  series={pieChartSeriesData}
-                  labels={pieChartLabelsData}
-                  chartWidth={380}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-    
-          <Grid item xs={12} sm={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Radar Chart</Typography>
-                <RadarChartTemplate
-                  series={radarChartSeriesData}
-                  categories={radarChartCategoriesData}
-                  chartHeight={350}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-    
-          <Grid item xs={12} sm={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Radar Chart Multiple</Typography>
-                <RadarChartMultipleTemplate
-                  series={radarChartMultipleSeriesData}
-                  categories={radarChartMultipleCategoriesData}
-                  chartHeight={350}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-    
-          <Grid item xs={12} sm={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Radar Polar Chart</Typography>
-                <RadarChartPolarTemplate
-                  series={radarPolarSeriesData}
-                  chartWidth={380}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-    
-          <Grid item xs={12} sm={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Scatter Chart</Typography>
-                <ScatterChartTemplate
-                  series={scatterChartSeriesData}
-                  chartHeight={350}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-    
-          <Grid item xs={12} sm={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Candlestick Chart</Typography>
-                <CandlestickTemplate
-                  data={candleStickData}
-                  title="Bitcoin Candlestick Chart"
-                  height={400}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-    
-          <Grid item xs={12} sm={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">Box Plot Chart</Typography>
-                <BoxPlotTemplate
-                  data={boxPlotData}
-                  title="Dynamic BoxPlot Chart"
-                  height={400}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
+  return (
+    <Grid container spacing={2}>
+      {chartComponents.map(({ component: ChartComponent, props }, index) => (
+        <Grid item xs={12} sm={6} key={index}>
+          <Card sx={chartStyle}>
+            <CardContent>
+              <Typography variant="h6">{props.title || "Chart"}</Typography>
+              {/* Apply the standard height to each chart */}
+              <ChartComponent
+                {...{ ...props as any, height: 400 }}
+              />
+            </CardContent>
+          </Card>
         </Grid>
-      );
+      ))}
+    </Grid>
+  );
 }

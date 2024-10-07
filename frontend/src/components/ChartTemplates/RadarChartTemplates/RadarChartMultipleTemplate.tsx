@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import ApexCharts from 'apexcharts';
-import { ApexOptions } from 'apexcharts';
+import React, { useEffect } from "react";
+import ApexCharts from "apexcharts";
+import { ApexOptions } from "apexcharts";
 
 interface RadarChartProps {
   series: { name: string; data: number[] }[];
@@ -18,7 +18,7 @@ const RadarChartMultipleTemplate: React.FC<RadarChartProps> = ({
       series: series,
       chart: {
         height: chartHeight,
-        type: 'radar',
+        type: "radar",
         dropShadow: {
           enabled: true,
           blur: 1,
@@ -27,7 +27,7 @@ const RadarChartMultipleTemplate: React.FC<RadarChartProps> = ({
         },
       },
       title: {
-        text: 'Radar Chart - Multi Series',
+        text: "Radar Chart - Multi Series",
       },
       stroke: {
         width: 2,
@@ -46,7 +46,10 @@ const RadarChartMultipleTemplate: React.FC<RadarChartProps> = ({
       },
     };
 
-    const chart = new ApexCharts(document.querySelector("#radar-chart"), options);
+    const chart = new ApexCharts(
+      document.querySelector("#radar-chart-multiple"),
+      options
+    );
     chart.render();
 
     return () => {
@@ -54,7 +57,7 @@ const RadarChartMultipleTemplate: React.FC<RadarChartProps> = ({
     };
   }, [series, categories, chartHeight]);
 
-  return <div id="radar-chart" />;
+  return <div id="radar-chart-multiple" />;
 };
 
 export default RadarChartMultipleTemplate;
