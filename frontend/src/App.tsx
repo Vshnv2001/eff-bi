@@ -19,6 +19,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import UploadPage from "./pages/UploadPage";
 import DBSettingsPage from "./pages/DBSettingsPage";
 import OrgSettingsPage from "./pages/OrgSettingsPage";
+import DBAccessPermissionsPage from "./pages/DBAccessPermissionsPage";
 SuperTokens.init(SuperTokensConfig);
 
 const router = createBrowserRouter(
@@ -44,6 +45,10 @@ const router = createBrowserRouter(
       />
       <Route path="/settings/database" element={<DBSettingsPage />} />
       <Route path="/settings/organization" element={<OrgSettingsPage />} />
+      <Route
+        path="/settings/access-permissions"
+        element={<DBAccessPermissionsPage />}
+      />
       <Route path="/auth/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/reset-password" element={<ResetPassword />} />
       <Route path="*" element={<NotFoundPage />} />
@@ -62,7 +67,6 @@ const App = () => {
 };
 
 export default App;
-
 
 // import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
 // import MainLayout from "./layouts/MainLayout";
