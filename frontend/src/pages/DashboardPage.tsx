@@ -168,9 +168,9 @@ const chartComponents = [
 ];
 
 const chartStyle = {
-  margin: "16px", // Set a standard margin for each card
-  height: "400px", // Set a standard height for the charts
-  width: "100%", // Ensure charts take the full width of the container
+  margin: "16px",
+  height: "400px",
+  width: "100%",
 };
 
 export default function Page(): React.JSX.Element {
@@ -181,7 +181,6 @@ export default function Page(): React.JSX.Element {
           <Card sx={chartStyle}>
             <CardContent>
               <Typography variant="h6">{props.title || "Chart"}</Typography>
-              {/* Apply the standard height to each chart */}
               <ChartComponent
                 {...{ ...props as any, height: 400 }}
               />
