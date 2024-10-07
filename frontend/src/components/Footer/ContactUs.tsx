@@ -5,7 +5,7 @@ import {
   FaInstagram,
   FaGooglePlusG,
 } from "react-icons/fa";
-import emailjs, { EmailJSResponseStatus } from "emailjs-com";
+import emailjs, { EmailJSResponseStatus } from "@emailjs/browser";
 
 const Footer: React.FC = () => {
   const [name, setName] = useState("");
