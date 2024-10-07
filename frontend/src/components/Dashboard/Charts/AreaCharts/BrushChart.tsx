@@ -1,4 +1,4 @@
-import BrushChartTemplate from "../Templates/BrushChartTemplate";
+import BrushChartTemplate from "../../Templates/AreaChartTemplates/BrushChartTemplate";
 
 const BrushChart = () => {
   const chartWidth = 400;

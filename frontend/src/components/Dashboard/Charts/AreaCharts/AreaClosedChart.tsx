@@ -1,6 +1,6 @@
-import AreaClosedTemplate from "../Templates/AreaClosedTemplate";
+import AreaClosedTemplate from "../../Templates/AreaChartTemplates/AreaClosedTemplate";
 
-const AreaClosed = () => {
+const AreaClosedChart = () => {
   const chartWidth = 400;
   const chartHeight = 400;
   return (
@@ -10,4 +10,4 @@ const AreaClosed = () => {
   );
 };
 
-export default AreaClosed;
+export default AreaClosedChart;

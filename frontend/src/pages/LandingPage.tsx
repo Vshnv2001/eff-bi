@@ -7,7 +7,6 @@ import Reviews from "../components/Reviews/Reviews";
 import Chat from "../components/Footer/Chat";
 import ContactUs from "../components/Footer/ContactUs";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
-import RadialBarChart from "../components/Dashboard/Charts/RadialBarChart";
 
 const LandingPage = () => {
   const sessionContext = useSessionContext();
@@ -18,7 +17,7 @@ const LandingPage = () => {
 
   return (
     <div>        
-      <RadialBarChart />
+
       <Hero />
       <AboutUs />
       <Steps />

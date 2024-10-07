@@ -1,4 +1,3 @@
-import React from 'react';
 import LaptopDisplay from './LaptopDisplay';
 import TextSection from './TextSection';
 

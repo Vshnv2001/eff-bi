@@ -1,4 +1,4 @@
-import BarChartTemplate from "../Templates/BarChartTemplate"
+import BarChartTemplate from "../../Templates/BarChartTemplates/BarChartTemplate"
 
 const BarChart = () => {
     const chartWidth = 400;

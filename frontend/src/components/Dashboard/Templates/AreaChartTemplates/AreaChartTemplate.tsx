@@ -1,4 +1,3 @@
-import React from 'react';
 import { Group } from '@visx/group';
 import { AreaClosed } from '@visx/shape';
 import { AxisLeft, AxisBottom, AxisScale } from '@visx/axis';

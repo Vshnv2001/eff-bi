@@ -1,4 +1,4 @@
-import RadialBarTemplate from "../Templates/RadialBarTemplate";
+import RadialBarTemplate from "../../Templates/BarChartTemplates/RadialBarTemplate";
 
 const RadialBarChart = () => {
   const chartWidth = 400;
