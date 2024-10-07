@@ -17,7 +17,7 @@ import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import type { ApexOptions } from "apexcharts";
 
-import { Chart } from "../Chart";
+import { Chart } from "./Chart";
 
 export interface SalesProps {
   chartSeries: { name: string; data: number[] }[];
@@ -98,7 +98,7 @@ export function BarChartTemplate({
           endIcon={<ArrowRightIcon fontSize="var(--icon-fontSize-md)" />}
           size="small"
         >
-          Overview
+          View Data
         </Button>
       </CardActions>
     </Card>
@@ -110,16 +110,24 @@ function useChartOptions(categories: string[]): ApexOptions {
 
   const columnWidth = Math.max(40, 100 / categories.length);
 
+  const generateBlueShades = (count: number): string[] => {
+    const shades: string[] = [];
+    for (let i = 0; i < count; i++) {
+      const lightness = 40 + i * (60 / count);
+      shades.push(`hsl(210, 100%, ${lightness}%)`);
+    }
+    return shades;
+  };
+
+  const colors = generateBlueShades(categories.length);
+
   return {
     chart: {
       background: "transparent",
       stacked: false,
       toolbar: { show: false },
     },
-    colors: [
-      theme.palette.primary.main,
-      alpha(theme.palette.primary.main, 0.25),
-    ],
+    colors: colors,
     dataLabels: { enabled: false },
     fill: { opacity: 1, type: "solid" },
     grid: {

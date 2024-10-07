@@ -15,11 +15,10 @@ import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Select from "@mui/material/Select";
-import { Chart } from "../Chart";
+import { Chart } from "./Chart";
 import { ApexOptions } from "apexcharts";
 import { generateColors } from "./colorUtils";
 
-// Define the ColorTheme type
 type ColorTheme = "homogeneous" | "analogous" | "complementary" | "triadic";
 
 const iconMapping: Record<string, React.FC> = {
@@ -39,9 +38,9 @@ export function PieChartTemplate({
   sx,
 }: TrafficProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [colorTheme, setColorTheme] = React.useState<ColorTheme>("homogeneous"); // Default theme
-  const [baseColor, setBaseColor] = React.useState<string>("#ff0000"); // Default base color
-  const themeColors = generateColors(chartSeries.length, colorTheme, baseColor); // Get colors based on theme
+  const [colorTheme, setColorTheme] = React.useState<ColorTheme>("homogeneous");
+  const [baseColor, setBaseColor] = React.useState<string>("#ff0000");
+  const themeColors = generateColors(chartSeries.length, colorTheme, baseColor);
   const chartOptions = useChartOptions(labels, themeColors);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -82,22 +81,22 @@ export function PieChartTemplate({
             </Menu>
             <Select
               value={colorTheme}
-              onChange={(e) => setColorTheme(e.target.value as ColorTheme)} // Cast to ColorTheme
+              onChange={(e) => setColorTheme(e.target.value as ColorTheme)}
               variant="outlined"
               size="small"
-              sx={{ ml: 1 }} // Optional: Add margin for better spacing
+              sx={{ ml: 1 }}
             >
               <MenuItem value="homogeneous">Homogeneous</MenuItem>
               <MenuItem value="analogous">Analogous</MenuItem>
               <MenuItem value="complementary">Complementary</MenuItem>
               <MenuItem value="triadic">Triadic</MenuItem>
             </Select>
-            {/* Color Picker */}
+
             <input
               type="color"
               value={baseColor}
               onChange={(e) => setBaseColor(e.target.value)}
-              style={{ marginLeft: '8px' }} // Optional: Add margin for better spacing
+              style={{ marginLeft: "8px" }}
             />
           </div>
         }

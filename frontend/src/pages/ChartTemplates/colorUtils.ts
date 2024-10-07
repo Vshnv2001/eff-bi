@@ -29,7 +29,7 @@ function hexToRgb(hex: string): number[] {
 }
 
 function generateHomogeneousColors(baseColor: string, count: number): string[] {
-  const rgbBaseColor = hexToRgb(baseColor); // Convert hex to RGB
+  const rgbBaseColor = hexToRgb(baseColor);
   const colors: string[] = [];
 
   for (let i = 0; i < count; i++) {
@@ -45,18 +45,16 @@ function rgbToHsl(rgb: number[]): number[] {
   const [r, g, b] = rgb.map((value) => value / 255);
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
-  let h = 0, // Initialize with a default value
-    s = 0, // Initialize with a default value
+  let h = 0,
+    s = 0,
     l = (max + min) / 2;
 
   if (max === min) {
-    // If max equals min, the color is achromatic
-    s = 0; // Saturation is 0
+    s = 0;
   } else {
     const delta = max - min;
     s = l > 0.5 ? delta / (2 - max - min) : delta / (max + min);
 
-    // Calculate hue based on which RGB component is the max
     switch (max) {
       case r:
         h = (g - b) / delta + (g < b ? 6 : 0);
@@ -80,8 +78,8 @@ function generateAnalogousColors(baseColor: string, count: number): string[] {
   const colors: string[] = [];
 
   for (let i = 0; i < count; i++) {
-    const hue = (baseHue + i * 30) % 360; // Shift hue for analogous colors
-    colors.push(`hsl(${hue}, 70%, 50%)`); // HSL for vibrant colors
+    const hue = (baseHue + i * 30) % 360;
+    colors.push(`hsl(${hue}, 70%, 50%)`);
   }
 
   return colors;
@@ -95,12 +93,11 @@ function generateComplementaryColors(
   const [baseHue] = rgbToHsl(rgbBaseColor);
   const colors: string[] = [];
 
-  colors.push(`hsl(${baseHue}, 70%, 50%)`); // Base color
-  colors.push(`hsl(${(baseHue + 180) % 360}, 70%, 50%)`); // Complementary color
+  colors.push(`hsl(${baseHue}, 70%, 50%)`);
+  colors.push(`hsl(${(baseHue + 180) % 360}, 70%, 50%)`);
 
-  // Generate additional colors by modifying lightness
   for (let i = 2; i < count; i++) {
-    const lightness = i % 2 === 0 ? 40 : 60; // Alternate between two lightness values
+    const lightness = i % 2 === 0 ? 40 : 60;
     colors.push(`hsl(${baseHue}, 70%, ${lightness}%)`);
   }
 
@@ -113,14 +110,13 @@ function generateTriadicColors(baseColor: string, count: number): string[] {
   const colors: string[] = [];
 
   for (let i = 0; i < 3; i++) {
-    const hue = (baseHue + i * 120) % 360; // Shift hue for triadic colors
+    const hue = (baseHue + i * 120) % 360;
     colors.push(`hsl(${hue}, 70%, 50%)`);
   }
 
-  // Generate additional colors by adjusting the lightness
   for (let i = 3; i < count; i++) {
     const hue = (baseHue + (i % 3) * 120) % 360;
-    const lightness = 40 + (i % 2) * 10; // Alternate lightness
+    const lightness = 40 + (i % 2) * 10;
     colors.push(`hsl(${hue}, 70%, ${lightness}%)`);
   }
 
