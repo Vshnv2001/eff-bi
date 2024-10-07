@@ -1,4 +1,4 @@
-import PieChartTemplate from "../Templates/PieChartTemplate";
+import PieChartTemplate from "../../Templates/PieChartTemplates/PieChartTemplate";
 
 const PieChart = () => {
   const chartWidth = 400;

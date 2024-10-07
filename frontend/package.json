@@ -10,7 +10,12 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@emailjs/browser": "^4.0.3",
+        "@emotion/react": "^11.13.3",
+        "@emotion/styled": "^11.13.0",
         "@material-tailwind/react": "^2.1.10",
+        "@mui/icons-material": "^6.1.2",
+        "@mui/material": "^6.1.2",
         "@react-spring/web": "^9.7.4",
         "@testing-library/jest-dom": "^6.5.0",
         "@testing-library/react": "^16.0.1",
@@ -18,7 +23,6 @@
         "@visx/stats": "^3.5.0",
         "@visx/visx": "^3.11.0",
         "axios": "^1.7.7",
-        "@emailjs/browser": "^4.0.3",
         "papaparse": "^5.4.1",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
