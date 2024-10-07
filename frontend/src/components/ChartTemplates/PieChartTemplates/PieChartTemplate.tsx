@@ -15,9 +15,9 @@ import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Select from "@mui/material/Select";
-import { Chart } from "./Chart";
+import { Chart } from "../Chart";
 import { ApexOptions } from "apexcharts";
-import { generateColors } from "./colorUtils";
+import { generateColors } from "../colorUtils";
 
 type ColorTheme = "homogeneous" | "analogous" | "complementary" | "triadic";
 

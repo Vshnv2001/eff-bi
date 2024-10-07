@@ -10,7 +10,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Chart } from "./Chart";
+import { Chart } from "../Chart";
 import { ApexOptions } from "apexcharts";
 
 export interface AreaChartProps {
