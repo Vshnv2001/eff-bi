@@ -5,7 +5,7 @@ const AreaDifferenceChart = () => {
   const chartHeight = 400;
   return (
     <div>
-      <AreaDifferenceTemplate width={chartWidth} height={chartHeight}/>
+      <AreaDifferenceTemplate width={chartWidth} height={chartHeight} />
     </div>
   );
 };

@@ -1,8 +1,14 @@
-import { HtmlLabel, Label, Connector, CircleSubject, LineSubject } from '@visx/annotation';
-import { LinePath } from '@visx/shape';
+import {
+  HtmlLabel,
+  Label,
+  Connector,
+  CircleSubject,
+  LineSubject,
+} from "@visx/annotation";
+import { LinePath } from "@visx/shape";
 
-import ExampleControls from './ExampleControls';
-import findNearestDatum from './findNearestDatum';
+import ExampleControls from "./ExampleControls.tsx";
+import findNearestDatum from "./findNearestDatum.ts";
 
 export type AnnotationProps = {
   width: number;
@@ -10,10 +16,14 @@ export type AnnotationProps = {
   compact?: boolean;
 };
 
-export const orange = '#ff7e67';
-export const greens = ['#ecf4f3', '#68b0ab', '#006a71'];
+export const orange = "#ff7e67";
+export const greens = ["#ecf4f3", "#68b0ab", "#006a71"];
 
-export default function Example({ width, height, compact = false }: AnnotationProps) {
+export default function AnnotateLineChartTemplate({
+  width,
+  height,
+  compact = false,
+}: AnnotationProps) {
   return (
     <ExampleControls width={width} height={height} compact={compact}>
       {({
@@ -59,21 +69,28 @@ export default function Example({ width, height, compact = false }: AnnotationPr
             onDragEnd={({ event, ...nextPosition }) => {
               // snap Annotation to the nearest data point
               const nearestDatum = findNearestDatum({
-                accessor: subjectType === 'horizontal-line' ? getStockValue : getDate,
+                accessor:
+                  subjectType === "horizontal-line" ? getStockValue : getDate,
                 data,
-                scale: subjectType === 'horizontal-line' ? yScale : xScale,
-                value: subjectType === 'horizontal-line' ? nextPosition.y : nextPosition.x,
+                scale: subjectType === "horizontal-line" ? yScale : xScale,
+                value:
+                  subjectType === "horizontal-line"
+                    ? nextPosition.y
+                    : nextPosition.x,
               });
               const x = xScale(getDate(nearestDatum)) ?? 0;
               const y = yScale(getStockValue(nearestDatum)) ?? 0;
 
               // flip label to keep in view
               const shouldFlipDx =
-                (nextPosition.dx > 0 && x + nextPosition.dx + labelWidth > width) ||
+                (nextPosition.dx > 0 &&
+                  x + nextPosition.dx + labelWidth > width) ||
                 (nextPosition.dx < 0 && x + nextPosition.dx - labelWidth <= 0);
               const shouldFlipDy = // 100 is est. tooltip height
-                (nextPosition.dy > 0 && height - (y + nextPosition.dy) < approxTooltipHeight) ||
-                (nextPosition.dy < 0 && y + nextPosition.dy - approxTooltipHeight <= 0);
+                (nextPosition.dy > 0 &&
+                  height - (y + nextPosition.dy) < approxTooltipHeight) ||
+                (nextPosition.dy < 0 &&
+                  y + nextPosition.dy - approxTooltipHeight <= 0);
               setAnnotationPosition({
                 x,
                 y,
@@ -83,7 +100,7 @@ export default function Example({ width, height, compact = false }: AnnotationPr
             }}
           >
             <Connector stroke={orange} type={connectorType} />
-            {labelType === 'svg' ? (
+            {labelType === "svg" ? (
               <Label
                 backgroundFill="white"
                 showAnchorLine={showAnchorLine}
@@ -104,27 +121,29 @@ export default function Example({ width, height, compact = false }: AnnotationPr
                 verticalAnchor={verticalAnchor}
                 containerStyle={{
                   width: labelWidth,
-                  background: 'white',
+                  background: "white",
                   border: `1px solid ${greens[1]}`,
                   borderRadius: 2,
                   color: greens[2],
-                  fontSize: '0.55em',
-                  lineHeight: '1em',
-                  padding: '0 0.4em 0 1em',
+                  fontSize: "0.55em",
+                  lineHeight: "1em",
+                  padding: "0 0.4em 0 1em",
                   fontWeight: 200,
                 }}
               >
-                <h3 style={{ margin: '1em 0 -0.5em' }}>{title}</h3>
+                <h3 style={{ margin: "1em 0 -0.5em" }}>{title}</h3>
                 <p>{subtitle}</p>
               </HtmlLabel>
             )}
-            {subjectType === 'circle' && <CircleSubject stroke={orange} />}
-            {subjectType !== 'circle' && (
+            {subjectType === "circle" && <CircleSubject stroke={orange} />}
+            {subjectType !== "circle" && (
               <LineSubject
-                orientation={subjectType === 'vertical-line' ? 'vertical' : 'horizontal'}
+                orientation={
+                  subjectType === "vertical-line" ? "vertical" : "horizontal"
+                }
                 stroke={orange}
                 min={0}
-                max={subjectType === 'vertical-line' ? height : width}
+                max={subjectType === "vertical-line" ? height : width}
               />
             )}
           </AnnotationComponent>

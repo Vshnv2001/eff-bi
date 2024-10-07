@@ -5,7 +5,7 @@ const AreaClosedChart = () => {
   const chartHeight = 400;
   return (
     <div>
-      <AreaClosedTemplate width={chartWidth} height={chartHeight}/>
+      <AreaClosedTemplate width={chartWidth} height={chartHeight} />
     </div>
   );
 };

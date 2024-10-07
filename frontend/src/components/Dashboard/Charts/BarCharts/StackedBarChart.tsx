@@ -3,9 +3,11 @@ import StackedBarChartTemplate from "../../Templates/BarChartTemplates/StackedBa
 const StackedBarChart = () => {
   const chartWidth = 400;
   const chartHeight = 400;
-  return <div>
-    <StackedBarChartTemplate width={chartWidth} height={chartHeight} />
-  </div>;
+  return (
+    <div>
+      <StackedBarChartTemplate width={chartWidth} height={chartHeight} />
+    </div>
+  );
 };
 
 export default StackedBarChart;

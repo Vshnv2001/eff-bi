@@ -1,11 +1,13 @@
-import AnnotateLineChartTemplate from "../../Templates/AnnotateLineChartTemplate/AnnotateLineChartTemplate";
+import AnnotateLineChartTemplate from "../../Templates/LineChartTemplates/AnnotateLineChartTemplate/AnnotateLineChartTemplate";
 
 const AnnotateLineChart = () => {
   const chartWidth = 400;
   const chartHeight = 400;
-  return <div>
-    <AnnotateLineChartTemplate width={chartWidth} height={chartHeight} />
-  </div>;
+  return (
+    <div>
+      <AnnotateLineChartTemplate width={chartWidth} height={chartHeight} />
+    </div>
+  );
 };
 
 export default AnnotateLineChart;

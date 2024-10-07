@@ -1,10 +1,10 @@
 /* eslint jsx-a11y/label-has-associated-control: 'off', @typescript-eslint/no-explicit-any: 'off' */
-import React, { useEffect, useMemo, useState } from 'react';
-import appleStock, { AppleStock } from '@visx/mock-data/lib/mocks/appleStock';
-import { PickD3Scale, scaleTime, scaleLinear } from '@visx/scale';
-import { extent } from '@visx/vendor/d3-array';
-import { Annotation, EditableAnnotation } from '@visx/annotation';
-import { AnnotationProps } from './Example';
+import React, { useEffect, useMemo, useState } from "react";
+import appleStock, { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
+import { PickD3Scale, scaleTime, scaleLinear } from "@visx/scale";
+import { extent } from "@visx/vendor/d3-array";
+import { Annotation, EditableAnnotation } from "@visx/annotation";
+import { AnnotationProps } from "./Example";
 
 type ExampleControlsProps = AnnotationProps & {
   children: (props: ProvidedProps) => React.ReactNode;
@@ -14,26 +14,26 @@ type AnnotationPosition = { x: number; y: number; dx: number; dy: number };
 
 type ProvidedProps = {
   AnnotationComponent: typeof Annotation | typeof EditableAnnotation;
-  anchorLinePosition?: 'auto' | 'all' | 'none';
+  anchorLinePosition?: "auto" | "all" | "none";
   annotationPosition: AnnotationPosition;
   approxTooltipHeight: number;
-  connectorType: 'line' | 'elbow';
+  connectorType: "line" | "elbow";
   data: AppleStock[];
   editLabelPosition: boolean;
   editSubjectPosition: boolean;
   getDate: (d: AppleStock) => number;
   getStockValue: (d: AppleStock) => number;
-  horizontalAnchor?: 'start' | 'middle' | 'end';
-  labelType: 'svg' | 'html';
+  horizontalAnchor?: "start" | "middle" | "end";
+  labelType: "svg" | "html";
   labelWidth: number;
   setAnnotationPosition: (position: AnnotationPosition) => void;
   showAnchorLine: boolean;
-  subjectType: 'circle' | 'horizontal-line' | 'vertical-line';
+  subjectType: "circle" | "horizontal-line" | "vertical-line";
   subtitle: string;
   title: string;
-  verticalAnchor?: 'start' | 'middle' | 'end';
-  xScale: PickD3Scale<'time', number>;
-  yScale: PickD3Scale<'linear', number>;
+  verticalAnchor?: "start" | "middle" | "end";
+  xScale: PickD3Scale<"time", number>;
+  yScale: PickD3Scale<"linear", number>;
 };
 
 const data = appleStock.slice(-100);
@@ -54,7 +54,7 @@ export default function ExampleControls({
         domain: extent(data, (d) => getDate(d)) as number[],
         range: [0, width],
       }),
-    [width],
+    [width]
   );
   const yScale = useMemo(
     () =>
@@ -62,25 +62,27 @@ export default function ExampleControls({
         domain: extent(data, (d) => getStockValue(d)) as number[],
         range: [height - 100, 100],
       }),
-    [height],
+    [height]
   );
 
   const [editLabelPosition, setEditLabelPosition] = useState(false);
   const [editSubjectPosition, setEditSubjectPosition] = useState(false);
-  const [title, setTitle] = useState('Title');
+  const [title, setTitle] = useState("Title");
   const [subtitle, setSubtitle] = useState(
-    compact ? 'Subtitle' : 'Subtitle with deets and deets and deets and deets',
+    compact ? "Subtitle" : "Subtitle with deets and deets and deets and deets"
   );
-  const [connectorType, setConnectorType] = useState<ProvidedProps['connectorType']>('elbow');
-  const [subjectType, setSubjectType] = useState<ProvidedProps['subjectType']>('circle');
+  const [connectorType, setConnectorType] =
+    useState<ProvidedProps["connectorType"]>("elbow");
+  const [subjectType, setSubjectType] =
+    useState<ProvidedProps["subjectType"]>("circle");
   const [showAnchorLine, setShowAnchorLine] = useState(true);
-  const [labelType, setLabelType] = useState<ProvidedProps['labelType']>('svg');
-  const [verticalAnchor, setVerticalAnchor] = useState<ProvidedProps['verticalAnchor'] | 'auto'>(
-    'auto',
-  );
+  const [labelType, setLabelType] = useState<ProvidedProps["labelType"]>("svg");
+  const [verticalAnchor, setVerticalAnchor] = useState<
+    ProvidedProps["verticalAnchor"] | "auto"
+  >("auto");
   const [horizontalAnchor, setHorizontalAnchor] = useState<
-    ProvidedProps['horizontalAnchor'] | 'auto'
-  >('auto');
+    ProvidedProps["horizontalAnchor"] | "auto"
+  >("auto");
   const [labelWidth] = useState(compact ? 100 : 175);
   const [annotationPosition, setAnnotationPosition] = useState({
     x: xScale(getDate(annotateDatum)) ?? 0,
@@ -101,7 +103,9 @@ export default function ExampleControls({
     <>
       {children({
         AnnotationComponent:
-          editLabelPosition || editSubjectPosition ? EditableAnnotation : Annotation,
+          editLabelPosition || editSubjectPosition
+            ? EditableAnnotation
+            : Annotation,
         annotationPosition,
         approxTooltipHeight,
         connectorType,
@@ -110,7 +114,8 @@ export default function ExampleControls({
         editSubjectPosition,
         getDate,
         getStockValue,
-        horizontalAnchor: horizontalAnchor === 'auto' ? undefined : horizontalAnchor,
+        horizontalAnchor:
+          horizontalAnchor === "auto" ? undefined : horizontalAnchor,
         labelType,
         labelWidth,
         setAnnotationPosition,
@@ -118,7 +123,7 @@ export default function ExampleControls({
         subjectType,
         subtitle,
         title,
-        verticalAnchor: verticalAnchor === 'auto' ? undefined : verticalAnchor,
+        verticalAnchor: verticalAnchor === "auto" ? undefined : verticalAnchor,
         xScale,
         yScale,
       })}
@@ -127,12 +132,20 @@ export default function ExampleControls({
           <div>
             <label>
               <strong>Title</strong>&nbsp;&nbsp;
-              <input type="text" onChange={(e) => setTitle(e.target.value)} value={title} />
+              <input
+                type="text"
+                onChange={(e) => setTitle(e.target.value)}
+                value={title}
+              />
             </label>
             &nbsp;&nbsp;&nbsp;
             <label>
               <strong>Subtitle</strong>&nbsp;&nbsp;
-              <input type="text" onChange={(e) => setSubtitle(e.target.value)} value={subtitle} />
+              <input
+                type="text"
+                onChange={(e) => setSubtitle(e.target.value)}
+                value={subtitle}
+              />
             </label>
             &nbsp;&nbsp;&nbsp;
             <label>
@@ -158,16 +171,16 @@ export default function ExampleControls({
             <label>
               <input
                 type="radio"
-                onChange={() => setLabelType('svg')}
-                checked={labelType === 'svg'}
+                onChange={() => setLabelType("svg")}
+                checked={labelType === "svg"}
               />
               Svg
             </label>
             <label>
               <input
                 type="radio"
-                onChange={() => setLabelType('html')}
-                checked={labelType === 'html'}
+                onChange={() => setLabelType("html")}
+                checked={labelType === "html"}
               />
               Html
             </label>
@@ -177,16 +190,16 @@ export default function ExampleControls({
             <label>
               <input
                 type="radio"
-                onChange={() => setConnectorType('elbow')}
-                checked={connectorType === 'elbow'}
+                onChange={() => setConnectorType("elbow")}
+                checked={connectorType === "elbow"}
               />
               Elbow
             </label>
             <label>
               <input
                 type="radio"
-                onChange={() => setConnectorType('line')}
-                checked={connectorType === 'line'}
+                onChange={() => setConnectorType("line")}
+                checked={connectorType === "line"}
               />
               Straight line
             </label>
@@ -196,24 +209,24 @@ export default function ExampleControls({
             <label>
               <input
                 type="radio"
-                onChange={() => setSubjectType('circle')}
-                checked={subjectType === 'circle'}
+                onChange={() => setSubjectType("circle")}
+                checked={subjectType === "circle"}
               />
               Circle
             </label>
             <label>
               <input
                 type="radio"
-                onChange={() => setSubjectType('vertical-line')}
-                checked={subjectType === 'vertical-line'}
+                onChange={() => setSubjectType("vertical-line")}
+                checked={subjectType === "vertical-line"}
               />
               Vertical line
             </label>
             <label>
               <input
                 type="radio"
-                onChange={() => setSubjectType('horizontal-line')}
-                checked={subjectType === 'horizontal-line'}
+                onChange={() => setSubjectType("horizontal-line")}
+                checked={subjectType === "horizontal-line"}
               />
               Horizontal line
             </label>
@@ -223,32 +236,32 @@ export default function ExampleControls({
             <label>
               <input
                 type="radio"
-                onChange={() => setHorizontalAnchor('auto')}
-                checked={horizontalAnchor === 'auto'}
+                onChange={() => setHorizontalAnchor("auto")}
+                checked={horizontalAnchor === "auto"}
               />
               auto
             </label>
             <label>
               <input
                 type="radio"
-                onChange={() => setHorizontalAnchor('start')}
-                checked={horizontalAnchor === 'start'}
+                onChange={() => setHorizontalAnchor("start")}
+                checked={horizontalAnchor === "start"}
               />
               left
             </label>
             <label>
               <input
                 type="radio"
-                onChange={() => setHorizontalAnchor('middle')}
-                checked={horizontalAnchor === 'middle'}
+                onChange={() => setHorizontalAnchor("middle")}
+                checked={horizontalAnchor === "middle"}
               />
               middle
             </label>
             <label>
               <input
                 type="radio"
-                onChange={() => setHorizontalAnchor('end')}
-                checked={horizontalAnchor === 'end'}
+                onChange={() => setHorizontalAnchor("end")}
+                checked={horizontalAnchor === "end"}
               />
               right
             </label>
@@ -258,32 +271,32 @@ export default function ExampleControls({
             <label>
               <input
                 type="radio"
-                onChange={() => setVerticalAnchor('auto')}
-                checked={verticalAnchor === 'auto'}
+                onChange={() => setVerticalAnchor("auto")}
+                checked={verticalAnchor === "auto"}
               />
               auto
             </label>
             <label>
               <input
                 type="radio"
-                onChange={() => setVerticalAnchor('start')}
-                checked={verticalAnchor === 'start'}
+                onChange={() => setVerticalAnchor("start")}
+                checked={verticalAnchor === "start"}
               />
               top
             </label>
             <label>
               <input
                 type="radio"
-                onChange={() => setVerticalAnchor('middle')}
-                checked={verticalAnchor === 'middle'}
+                onChange={() => setVerticalAnchor("middle")}
+                checked={verticalAnchor === "middle"}
               />
               middle
             </label>
             <label>
               <input
                 type="radio"
-                onChange={() => setVerticalAnchor('end')}
-                checked={verticalAnchor === 'end'}
+                onChange={() => setVerticalAnchor("end")}
+                checked={verticalAnchor === "end"}
               />
               bottom
             </label>

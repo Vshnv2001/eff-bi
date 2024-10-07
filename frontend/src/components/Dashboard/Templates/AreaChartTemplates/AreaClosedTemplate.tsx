@@ -1,28 +1,33 @@
-import React, { useMemo, useCallback } from 'react';
-import { AreaClosed, Line, Bar } from '@visx/shape';
-import appleStock, { AppleStock } from '@visx/mock-data/lib/mocks/appleStock';
-import { curveMonotoneX } from '@visx/curve';
-import { GridRows, GridColumns } from '@visx/grid';
-import { scaleTime, scaleLinear } from '@visx/scale';
-import { withTooltip, Tooltip, TooltipWithBounds, defaultStyles } from '@visx/tooltip';
-import { WithTooltipProvidedProps } from '@visx/tooltip/lib/enhancers/withTooltip';
-import { localPoint } from '@visx/event';
-import { LinearGradient } from '@visx/gradient';
-import { max, extent, bisector } from '@visx/vendor/d3-array';
-import { timeFormat } from '@visx/vendor/d3-time-format';
+import React, { useMemo, useCallback } from "react";
+import { AreaClosed, Line, Bar } from "@visx/shape";
+import appleStock, { AppleStock } from "@visx/mock-data/lib/mocks/appleStock";
+import { curveMonotoneX } from "@visx/curve";
+import { GridRows, GridColumns } from "@visx/grid";
+import { scaleTime, scaleLinear } from "@visx/scale";
+import {
+  withTooltip,
+  Tooltip,
+  TooltipWithBounds,
+  defaultStyles,
+} from "@visx/tooltip";
+import { WithTooltipProvidedProps } from "@visx/tooltip/lib/enhancers/withTooltip";
+import { localPoint } from "@visx/event";
+import { LinearGradient } from "@visx/gradient";
+import { max, extent, bisector } from "@visx/vendor/d3-array";
+import { timeFormat } from "@visx/vendor/d3-time-format";
 
 type TooltipData = AppleStock;
 
 const stock = appleStock.slice(800);
-export const background = '#3b6978';
-export const background2 = '#204051';
-export const accentColor = '#edffea';
-export const accentColorDark = '#75daad';
+export const background = "#3b6978";
+export const background2 = "#204051";
+export const accentColor = "#edffea";
+export const accentColorDark = "#75daad";
 const tooltipStyles = {
   ...defaultStyles,
   background,
-  border: '1px solid white',
-  color: 'white',
+  border: "1px solid white",
+  color: "white",
 };
 
 // util
@@ -63,7 +68,7 @@ export default withTooltip<AreaProps, TooltipData>(
           range: [margin.left, innerWidth + margin.left],
           domain: extent(stock, getDate) as [Date, Date],
         }),
-      [innerWidth, margin.left],
+      [innerWidth, margin.left]
     );
     const stockValueScale = useMemo(
       () =>
@@ -72,12 +77,16 @@ export default withTooltip<AreaProps, TooltipData>(
           domain: [0, (max(stock, getStockValue) || 0) + innerHeight / 3],
           nice: true,
         }),
-      [margin.top, innerHeight],
+      [margin.top, innerHeight]
     );
 
     // tooltip handler
     const handleTooltip = useCallback(
-      (event: React.TouchEvent<SVGRectElement> | React.MouseEvent<SVGRectElement>) => {
+      (
+        event:
+          | React.TouchEvent<SVGRectElement>
+          | React.MouseEvent<SVGRectElement>
+      ) => {
         const { x } = localPoint(event) || { x: 0 };
         const x0 = dateScale.invert(x);
         const index = bisectDate(stock, x0, 1);
@@ -85,7 +94,11 @@ export default withTooltip<AreaProps, TooltipData>(
         const d1 = stock[index];
         let d = d0;
         if (d1 && getDate(d1)) {
-          d = x0.valueOf() - getDate(d0).valueOf() > getDate(d1).valueOf() - x0.valueOf() ? d1 : d0;
+          d =
+            x0.valueOf() - getDate(d0).valueOf() >
+            getDate(d1).valueOf() - x0.valueOf()
+              ? d1
+              : d0;
         }
         showTooltip({
           tooltipData: d,
@@ -93,7 +106,7 @@ export default withTooltip<AreaProps, TooltipData>(
           tooltipTop: stockValueScale(getStockValue(d)),
         });
       },
-      [showTooltip, stockValueScale, dateScale],
+      [showTooltip, stockValueScale, dateScale]
     );
 
     return (
@@ -107,8 +120,17 @@ export default withTooltip<AreaProps, TooltipData>(
             fill="url(#area-background-gradient)"
             rx={14}
           />
-          <LinearGradient id="area-background-gradient" from={background} to={background2} />
-          <LinearGradient id="area-gradient" from={accentColor} to={accentColor} toOpacity={0.1} />
+          <LinearGradient
+            id="area-background-gradient"
+            from={background}
+            to={background2}
+          />
+          <LinearGradient
+            id="area-gradient"
+            from={accentColor}
+            to={accentColor}
+            toOpacity={0.1}
+          />
           <GridRows
             left={margin.left}
             scale={stockValueScale}
@@ -198,8 +220,8 @@ export default withTooltip<AreaProps, TooltipData>(
               style={{
                 ...defaultStyles,
                 minWidth: 72,
-                textAlign: 'center',
-                transform: 'translateX(-50%)',
+                textAlign: "center",
+                transform: "translateX(-50%)",
               }}
             >
               {formatDate(getDate(tooltipData))}
@@ -208,5 +230,5 @@ export default withTooltip<AreaProps, TooltipData>(
         )}
       </div>
     );
-  },
+  }
 );
