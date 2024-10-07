@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
-import * as XLSX from "xlsx";
 import axios from "axios";
 
 type ParsedData = Record<string, any>;
@@ -79,37 +78,6 @@ const FileUpload: React.FC = () => {
             setLoading(false);
           },
         });
-      } else if (fileType.includes("sheet") || fileType.includes("excel")) {
-        if (window.Worker) {
-          const worker = new Worker(
-            new URL(
-              "../components/FileParser/FileParserWorker.tsx",
-              import.meta.url
-            )
-          );
-          window.worker = worker;
-
-          (worker as any).XLSX = XLSX;
-
-          worker.postMessage({ fileData, fileType });
-
-          worker.onmessage = (message) => {
-            const { type, data, message: errorMsg } = message.data;
-            if (type === "complete") {
-              setData(data);
-              setLoading(false);
-              if (data.length > 100) setShowAlert(true);
-            } else if (type === "error") {
-              setError(errorMsg);
-              setLoading(false);
-            }
-          };
-
-          worker.onerror = () => {
-            setError("An error occurred during file processing.");
-            setLoading(false);
-          };
-        }
       } else {
         setError("Unsupported file format.");
         setLoading(false);
