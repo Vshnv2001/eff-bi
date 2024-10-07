@@ -6,9 +6,9 @@ import {
   Menu,
   MenuHandler,
   MenuList,
-  MenuItem
+  MenuItem,
 } from "@material-tailwind/react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export default function EffBINavbar() {
   const navigate = useNavigate();
@@ -24,15 +24,30 @@ export default function EffBINavbar() {
           effBI
         </Typography>
         <div className="flex items-center gap-4">
-          <Button variant="text" size="sm" color="white" className="flex items-center gap-2">
+          <Button
+            variant="text"
+            size="sm"
+            color="white"
+            className="flex items-center gap-2"
+          >
             View Data
           </Button>
-          <Button variant="text" size="sm" color="white" className="flex items-center gap-2">
+          <Button
+            variant="text"
+            size="sm"
+            color="white"
+            className="flex items-center gap-2"
+          >
             Dashboards
           </Button>
           <Menu>
             <MenuHandler>
-              <Button variant="text" size="sm" color="white" className="flex items-center gap-2">
+              <Button
+                variant="text"
+                size="sm"
+                color="white"
+                className="flex items-center gap-2"
+              >
                 Settings
               </Button>
             </MenuHandler>
@@ -54,6 +69,15 @@ export default function EffBINavbar() {
                 onClick={() => navigate("/settings/organization")}
               >
                 Organization Management
+              </MenuItem>
+              <MenuItem
+                variant="text"
+                size="sm"
+                color="white"
+                className="flex items-center text-white gap-2 p-3 bg-gray-800 border-none"
+                onClick={() => navigate("/settings/access-permissions")}
+              >
+                Access Permissions
               </MenuItem>
             </MenuList>
           </Menu>

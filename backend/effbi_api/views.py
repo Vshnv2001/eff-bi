@@ -155,13 +155,12 @@ def get_users_by_organization(request, org_id):
 def create_connection(request):
     try:
         uri = request.data.get('uri', None)
-        org_id = request.data.get('org_id', None)
-        
-        print(uri)
-        print(org_id)
-
-        if not uri or not org_id:
+        user_id = request.data.get('user_id', None)
+        if not uri or not user_id:
             return JsonResponse({'error': "Both uri and org_id are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = get_object_or_404(User, id=user_id)
+        org_id = user.organization
 
         # update organization with uri
         organization = get_object_or_404(Organization, id=org_id)
@@ -218,5 +217,14 @@ def get_user_access_permissions(request):
     #     table_name 1: view,
     #     table_name 2: view, admin,
     #     table_name 3: view, admin
+    # }
+    # {
+    #     data: [
+    #         {table_name: name1,
+    #          permissions: ['View', 'Admin']},
+    #         {table_name: name2,
+    #          permissions: ['View']},
+
+    #     ]
     # }
     return JsonResponse({'message': 'data generated!'}, status=200)
