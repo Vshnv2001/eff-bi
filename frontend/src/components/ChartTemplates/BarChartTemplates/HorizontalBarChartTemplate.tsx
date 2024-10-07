@@ -17,19 +17,19 @@ import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import type { ApexOptions } from "apexcharts";
 
-import { Chart } from "./Chart";
+import { Chart } from "../Chart";
 
-export interface SalesProps {
+export interface HorizontalBarChartProps {
   chartSeries: { name: string; data: number[] }[];
   categories: string[];
   sx?: SxProps;
 }
 
-export function BarChartTemplate({
+export function HorizontalBarChartTemplate({
   chartSeries,
   categories,
   sx,
-}: SalesProps): React.JSX.Element {
+}: HorizontalBarChartProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartOptions = useChartOptions(categories);
 
@@ -87,7 +87,7 @@ export function BarChartTemplate({
           height={350}
           options={chartOptions}
           series={chartSeries}
-          type="bar"
+          type="bar" // Keeping the type as 'bar'
           width="100%"
         />
       </CardContent>
@@ -106,52 +106,48 @@ export function BarChartTemplate({
 }
 
 function useChartOptions(categories: string[]): ApexOptions {
-  const theme = useTheme();
-
-  const columnWidth = Math.max(40, 100 / categories.length);
-
-  const generateBlueShades = (count: number): string[] => {
-    const shades: string[] = [];
-    for (let i = 0; i < count; i++) {
-      const lightness = 40 + i * (60 / count);
-      shades.push(`hsl(210, 100%, ${lightness}%)`);
-    }
-    return shades;
-  };
-
-  const colors = generateBlueShades(categories.length);
-
-  return {
-    chart: {
-      background: "transparent",
-      stacked: false,
-      toolbar: { show: false },
-    },
-    colors: colors,
-    dataLabels: { enabled: false },
-    fill: { opacity: 1, type: "solid" },
-    grid: {
-      borderColor: theme.palette.divider,
-      strokeDashArray: 2,
-      xaxis: { lines: { show: false } },
-      yaxis: { lines: { show: true } },
-    },
-    legend: { show: false },
-    plotOptions: { bar: { columnWidth: `${columnWidth}%` } },
-    stroke: { colors: ["transparent"], show: true, width: 2 },
-    theme: { mode: theme.palette.mode },
-    xaxis: {
-      axisBorder: { color: theme.palette.divider, show: true },
-      axisTicks: { color: theme.palette.divider, show: true },
-      categories: categories,
-      labels: { offsetY: 5, style: { colors: theme.palette.text.secondary } },
-    },
-    yaxis: {
-      labels: {
-        formatter: (value) => (value > 0 ? `${value}K` : `${value}`),
-        offsetX: -10,
-        style: { colors: theme.palette.text.secondary },
+    const theme = useTheme();
+  
+    const generateBlueShades = (count: number): string[] => {
+      const shades: string[] = [];
+      for (let i = 0; i < count; i++) {
+        const lightness = 40 + i * (60 / count);
+        shades.push(`hsl(210, 100%, ${lightness}%)`);
+      }
+      return shades;
+    };
+  
+    const colors = generateBlueShades(categories.length);
+  
+    return {
+      chart: {
+        background: "transparent",
+        stacked: false,
+        toolbar: { show: false },
       },
-    },
-  };
-}
+      colors: colors,
+      dataLabels: { enabled: false },
+      fill: { opacity: 1, type: "solid" },
+      grid: {
+        borderColor: theme.palette.divider,
+        strokeDashArray: 2,
+        xaxis: { lines: { show: true } }, // Show grid lines on the x-axis
+        yaxis: { lines: { show: false } }, // Hide grid lines on the y-axis
+      },
+      legend: { show: false },
+      plotOptions: { bar: { horizontal: true } }, // Set horizontal to true for horizontal bars
+      stroke: { colors: ["transparent"], show: true, width: 2 },
+      theme: { mode: theme.palette.mode },
+      xaxis: {
+        categories: categories, // Set categories here for horizontal bars
+        axisBorder: { color: theme.palette.divider, show: true },
+        axisTicks: { color: theme.palette.divider, show: true },
+        labels: { offsetY: 5, style: { colors: theme.palette.text.secondary } },
+      },
+      yaxis: {
+        labels: {
+          style: { colors: theme.palette.text.secondary },
+        },
+      },
+    };
+  }  
