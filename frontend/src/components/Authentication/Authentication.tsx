@@ -152,7 +152,7 @@ const Authentication = () => {
 
       {/* Form Box */}
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6">
+        <h2 className="text-2xl text-black font-bold text-center mb-6">
           {isSignUp ? "Sign Up" : "Sign In"}
         </h2>
 
@@ -173,7 +173,7 @@ const Authentication = () => {
               value={email}
               onChange={handleEmailChange}
               required
-              className={`mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none ${
+              className={`text-black mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none ${
                 inputError.email ? "animate-shake border-red-500" : ""
               }`}
             />
@@ -189,7 +189,7 @@ const Authentication = () => {
               value={password}
               onChange={handlePasswordChange}
               required
-              className={`mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none ${
+              className={`text-black mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none ${
                 inputError.password ? "animate-shake border-red-500" : ""
               }`}
             />
@@ -207,7 +207,7 @@ const Authentication = () => {
                   value={firstName}
                   onChange={handleFirstNameChange}
                   required
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none"
+                  className="text-black mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none"
                 />
               </div>
 
@@ -220,7 +220,7 @@ const Authentication = () => {
                   value={lastName}
                   onChange={handleLastNameChange}
                   required
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none"
+                  className="text-black mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none"
                 />
               </div>
 
@@ -233,7 +233,7 @@ const Authentication = () => {
                   value={organizationId}
                   onChange={organizationIdChange}
                   required
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none"
+                  className="text-black mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none"
                 />
               </div>
             </>

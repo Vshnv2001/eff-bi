@@ -9,9 +9,16 @@ import {
   MenuItem,
 } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
+import { signOut } from "supertokens-auth-react/recipe/session";
 
 export default function EffBINavbar() {
   const navigate = useNavigate();
+
+  async function logoutClicked() {
+    await signOut();
+    navigate("/auth");
+  }
+
   return (
     <Navbar className="mx-auto max-w-screen-xl px-6 py-3 mb-10 bg-gray-800">
       <div className="flex items-center justify-between text-blue-gray-900">
@@ -50,6 +57,7 @@ export default function EffBINavbar() {
               >
                 Settings
               </Button>
+              
             </MenuHandler>
             <MenuList className="bg-gray-800">
               <MenuItem
