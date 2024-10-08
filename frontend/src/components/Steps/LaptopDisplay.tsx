@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface LaptopDisplayProps {
   content: React.ReactNode;
   label: string;

@@ -6,7 +6,6 @@ const Navbar = () => {
   const sessionContext = useSessionContext();
   const navigate = useNavigate();
 
-  // If sessionContext is loading or there's no userId, show nothing
   if (sessionContext.loading || !sessionContext.userId) {
     return null;
   }

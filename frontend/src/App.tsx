@@ -10,16 +10,22 @@ import {
   SuperTokensConfig,
   ComponentWrapper,
 } from "./components/Authentication/AuthenticationConfig";
+import { AuthProvider } from "./components/Authentication/AuthenticationContext";
 import Authentication from "./components/Authentication/Authentication";
 import ForgotPassword from "./components/Authentication/ForgotPassword";
 import ResetPassword from "./components/Authentication/ResetPassword";
 import MainLayout from "./layouts/MainLayout";
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import UploadPage from "./pages/UploadPage";
+import UploadPage from "./pages/ChatbotPage";
+import FileUpload from "./pages/FileUploadPage";
+import DashboardPage from "./pages/DashboardPage";
+import FetchUserData from "./components/Authentication/FetchUserData";
+import SaveUserData from "./components/Authentication/SaveUserData";
 import DBSettingsPage from "./pages/DBSettingsPage";
 import OrgSettingsPage from "./pages/OrgSettingsPage";
 import DBAccessPermissionsPage from "./pages/DBAccessPermissionsPage";
+
 SuperTokens.init(SuperTokensConfig);
 
 const router = createBrowserRouter(
@@ -43,6 +49,26 @@ const router = createBrowserRouter(
           </SessionAuth>
         }
       />
+
+      <Route
+        path="/auth/save"
+        element={
+          <SessionAuth>
+            <SaveUserData />
+          </SessionAuth>
+        }
+      />
+
+      <Route
+        path="/auth/fetch"
+        element={
+          <SessionAuth>
+            <FetchUserData />
+          </SessionAuth>
+        }
+      />
+
+      <Route path="/file/upload/" element={<FileUpload />} />
       <Route path="/settings/database" element={<DBSettingsPage />} />
       <Route path="/settings/organization" element={<OrgSettingsPage />} />
       <Route
@@ -51,6 +77,7 @@ const router = createBrowserRouter(
       />
       <Route path="/auth/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/reset-password" element={<ResetPassword />} />
+      <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )
@@ -58,38 +85,14 @@ const router = createBrowserRouter(
 
 const App = () => {
   return (
-    <SuperTokensWrapper>
-      <ComponentWrapper>
-        <RouterProvider router={router} />
-      </ComponentWrapper>
-    </SuperTokensWrapper>
+    <AuthProvider>
+      <SuperTokensWrapper>
+        <ComponentWrapper>
+          <RouterProvider router={router} />
+        </ComponentWrapper>
+      </SuperTokensWrapper>
+    </AuthProvider>
   );
 };
 
 export default App;
-
-// import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
-// import MainLayout from "./layouts/MainLayout";
-// import LandingPage from "./pages/LandingPage";
-// import NotFoundPage from "./pages/NotFoundPage";
-// import LoginPage from "./pages/LoginPage";
-// import SettingsPage from "./pages/SettingsPage";
-
-// const router = createBrowserRouter(
-//   createRoutesFromElements(
-//     <Route path="/" element={<MainLayout />}>
-//       <Route path="/login" element={<LoginPage />} />
-//       <Route path="/settings" element={<SettingsPage />} />
-//       <Route index element={<LandingPage />} />
-//       <Route path="*" element={<NotFoundPage />} />
-//     </Route>
-//   )
-// );
-
-// const App = () => {
-//   return (
-//         <RouterProvider router={router} />
-//   );
-// };
-
-// export default App;

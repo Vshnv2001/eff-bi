@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface TextSectionProps {
   title: string;
   description: string;
