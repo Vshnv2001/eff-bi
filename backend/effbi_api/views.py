@@ -229,3 +229,26 @@ def get_user_access_permissions(request, user_id):
     #          permissions: ['View']},
     #     ]
     # }
+    return JsonResponse({'message': 'User permissions:', 'data': data}, status=200)
+
+@api_view(["POST"])
+def add_user_access_permissions(request):
+    # request: { user_email, table_id, permission }
+    user_email = request.data.get('user_email', None)
+    # check if user exists
+    try:
+        user = User.objects.get(email=user_email)
+    except User.DoesNotExist:
+        return JsonResponse({'error': f'No user with email:{user_email} exists'}, status=status.HTTP_404_NOT_FOUND)
+
+    data = {
+        'user_id': user.id,
+        'table_id': request.data.get('table_id'),
+        'permission': request.data.get('permission')
+    }
+    serializer = UserPermissionsSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return JsonResponse({'message': 'User permissions added successfully'}, status=status.HTTP_201_CREATED)
+    else:
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
