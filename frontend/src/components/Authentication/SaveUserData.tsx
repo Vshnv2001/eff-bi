@@ -20,10 +20,10 @@ const SaveUserData: React.FC = () => {
 
       const formData = {
         id: userId,
-        email,
+        email: email,
         first_name: firstName,
         last_name: lastName,
-        organization_id: organizationId,
+        organization: organizationId,
       };
 
       console.log("form data", formData)

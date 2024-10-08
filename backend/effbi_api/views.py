@@ -47,9 +47,11 @@ def health_check(request):
 @api_view(["POST"])
 def create_user(request):
     try:
+        print(request.data)
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.save()
+            print(serializer)
+            serializer.save()
             return JsonResponse(
                 {'message': 'User created successfully', 'user': serializer.data}, status=status.HTTP_201_CREATED
             )
