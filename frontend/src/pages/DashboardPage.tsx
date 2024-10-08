@@ -1,193 +1,64 @@
-import { BarChartTemplate } from "../components/ChartTemplates/BarChartTemplates/BarChartTemplate";
-import { HorizontalBarChartTemplate } from "../components/ChartTemplates/BarChartTemplates/HorizontalBarChartTemplate";
-import { StackedGroupBarChartTemplate } from "../components/ChartTemplates/BarChartTemplates/StackGroupBarChartTemplate";
-import { DonutChartTemplate } from "../components/ChartTemplates/PieChartTemplates/DonutChartTemplate";
-import { AreaChartTemplate } from "../components/ChartTemplates/AreaChartTemplates/AreaChartTemplate";
-import { PyramidBarChartTemplate } from "../components/ChartTemplates/BarChartTemplates/PyramidBarChartTemplate";
-import LineColumnChartTemplate from "../components/ChartTemplates/LineChartTemplates/LineColumnChartTemplate";
-import MultipleYAxisLineChartTemplate from "../components/ChartTemplates/LineChartTemplates/MultipleYAxisLineChartTemplate";
-import PieChartTemplate from "../components/ChartTemplates/PieChartTemplates/PieChartTemplate";
-import RadarChartTemplate from "../components/ChartTemplates/RadarChartTemplates/RadarChartTemplate";
-import RadarChartMultipleTemplate from "../components/ChartTemplates/RadarChartTemplates/RadarChartMultipleTemplate";
-import RadarChartPolarTemplate from "../components/ChartTemplates/RadarChartTemplates/RadarChartPolarTemplate";
-import ScatterChartTemplate from "../components/ChartTemplates/LineChartTemplates/ScatterChartTemplate";
-import CandlestickTemplate from "../components/ChartTemplates/BoxPlotTemplates/CandleStickTemplate";
-import BoxPlotTemplate from "../components/ChartTemplates/BoxPlotTemplates/BoxPlotTemplate";
-import LineChartTemplate from "../components/ChartTemplates/LineChartTemplates/LineChartTemplate";
-
+import React, { useState } from "react";
 import {
-  chartSeriesPyramid,
-  categoriesPyramid,
-  chartSeriesStacked,
-  categoriesStacked,
-  chartSeriesBar,
-  categoriesBar,
-  pieChartSeries,
-  pieChartLabels,
-  areaChartSeries,
-  areaChartLabels,
-  columnData,
-  lineData,
-  labels,
-  incomeData,
-  cashflowData,
-  revenueData,
-  categories,
-  pieChartSeriesData,
-  pieChartLabelsData,
-  radarChartSeriesData,
-  radarChartCategoriesData,
-  radarChartMultipleSeriesData,
-  radarChartMultipleCategoriesData,
-  radarPolarSeriesData,
-  scatterChartSeriesData,
-  candleStickData,
-  lineChartSeries,
-  lineChartCategories,
-  boxPlotData,
-} from "../components/ChartTemplates/MockData/mockData";
-
-import {
-  Grid,
   Card,
-  CardContent,
+  CardBody,
   Typography,
-} from "@mui/material";
+  Button,
+} from "@material-tailwind/react";
+import { useNavigate, useParams } from "react-router-dom";
 
-const chartComponents = [
-  {
-    component: LineChartTemplate,
-    props: {
-      series: lineChartSeries,
-      title: "Product Trends by Month",
-      categories: lineChartCategories,
-      height: 350,
-    },
-  },
-  {
-    component: BarChartTemplate,
-    props: { chartSeries: chartSeriesBar, categories: categoriesBar },
-  },
-  {
-    component: HorizontalBarChartTemplate,
-    props: { chartSeries: chartSeriesBar, categories: categoriesBar },
-  },
-  {
-    component: DonutChartTemplate,
-    props: {
-      chartSeries: pieChartSeries,
-      labels: pieChartLabels,
-      sx: { height: "100%" },
-    },
-  },
-  {
-    component: AreaChartTemplate,
-    props: { chartSeries: areaChartSeries, labels: areaChartLabels },
-  },
-  {
-    component: StackedGroupBarChartTemplate,
-    props: {
-      chartSeries: chartSeriesStacked,
-      categories: categoriesStacked,
-      sx: { width: "100%", maxWidth: 600, margin: "0 auto" },
-    },
-  },
-  {
-    component: PyramidBarChartTemplate,
-    props: {
-      chartSeries: chartSeriesPyramid,
-      categories: categoriesPyramid,
-      sx: { maxWidth: 600, margin: "auto" },
-    },
-  },
-  {
-    component: LineColumnChartTemplate,
-    props: {
-      columnData,
-      lineData,
-      labels,
-      columnName: "Website Blog",
-      lineName: "Social Media",
-      chartTitle: "Traffic Sources",
-    },
-  },
-  {
-    component: MultipleYAxisLineChartTemplate,
-    props: {
-      incomeData,
-      cashflowData,
-      revenueData,
-      categories,
-      chartTitle: "XYZ - Stock Analysis (2009 - 2016)",
-    },
-  },
-  {
-    component: PieChartTemplate,
-    props: {
-      series: pieChartSeriesData,
-      labels: pieChartLabelsData,
-      chartWidth: 380,
-    },
-  },
-  {
-    component: RadarChartTemplate,
-    props: {
-      series: radarChartSeriesData,
-      categories: radarChartCategoriesData,
-      chartHeight: 350,
-    },
-  },
-  {
-    component: RadarChartMultipleTemplate,
-    props: {
-      series: radarChartMultipleSeriesData,
-      categories: radarChartMultipleCategoriesData,
-      chartHeight: 350,
-    },
-  },
-  {
-    component: RadarChartPolarTemplate,
-    props: { series: radarPolarSeriesData, chartWidth: 380 },
-  },
-  {
-    component: ScatterChartTemplate,
-    props: { series: scatterChartSeriesData, chartHeight: 350 },
-  },
-  {
-    component: CandlestickTemplate,
-    props: {
-      data: candleStickData,
-      title: "Bitcoin Candlestick Chart",
-      height: 400,
-    },
-  },
-  {
-    component: BoxPlotTemplate,
-    props: { data: boxPlotData, title: "Dynamic BoxPlot Chart", height: 400 },
-  },
-];
+export default function DashboardPage() {
+  const navigate = useNavigate(); 
+  const { dashboardId } = useParams();
 
-const chartStyle = {
-  margin: "16px",
-  height: "400px",
-  width: "100%",
-};
+  const [dashboards, setDashboards] = useState([]);
 
-export default function Page(): React.JSX.Element {
+
   return (
-    <Grid container spacing={2}>
-      {chartComponents.map(({ component: ChartComponent, props }, index) => (
-        <Grid item xs={12} sm={6} key={index}>
-          <Card sx={chartStyle}>
-            <CardContent>
-              <Typography variant="h6">{props.title || "Chart"}</Typography>
-              <ChartComponent
-                {...{ ...props as any, height: 400 }}
-              />
-            </CardContent>
+    <div className="min-h-screen bg-white p-8">
+      <Typography variant="h2" color="blue-gray" className="mb-8 text-4xl font-bold">
+        Dashboard
+      </Typography>
+      <Button
+        size="lg"
+        color="blue"
+        variant="filled"
+        className="flex items-center gap-2 justify-center w-full mb-4"
+        onClick={() => {
+          navigate(`/dashboards/${dashboardId}/tiles/new`);
+        }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2}
+          stroke="currentColor"
+          className="h-5 w-5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 4.5v15m7.5-7.5h-15"
+          />
+        </svg>
+        Create New Tile
+      </Button>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        {[...Array(5)].map((_, index) => (
+          <Card key={index} className="bg-gray-800 text-white">
+            <CardBody>
+              <Typography variant="h5" className="mb-2">
+                Tile {index + 1}
+              </Typography>
+              <Typography className="text-gray-300">
+                This is a placeholder tile. Replace with actual content.
+              </Typography>
+            </CardBody>
           </Card>
-        </Grid>
-      ))}
-    </Grid>
+        ))}
+      </div>
+    </div>
   );
 }

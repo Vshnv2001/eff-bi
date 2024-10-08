@@ -10,7 +10,6 @@ user_paths = [
 organization_paths = [
     path("organizations/", views.create_organization, name="create_organization"),
     path("organizations/<int:org_id>/", views.organization_details, name="organization_details"),
-    path("organizations/<int:org_id>/tables/", views.get_tables_by_organization, name="get_tables_by_organization"),
 ]
 
 connection_paths = [

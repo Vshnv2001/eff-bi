@@ -46,7 +46,7 @@ class Dashboard(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     organization = models.ForeignKey('Organization', on_delete=models.CASCADE)
-    tiles = models.ManyToManyField('Tile')
+    tiles = models.ForeignKey('Tile', on_delete=models.CASCADE, null=True)
     
     class Meta:
         db_table = "dashboards"
@@ -55,7 +55,7 @@ class Dashboard(models.Model):
 
 class Tile(models.Model):
     id = models.AutoField(primary_key=True)
-    dashboard = models.ForeignKey('Dashboard', on_delete=models.CASCADE)
+    dashboard_id = models.ForeignKey('Dashboard', on_delete=models.CASCADE, null=False)
     name = models.CharField(max_length=100)
     description = models.TextField()
     sql_query = models.TextField()

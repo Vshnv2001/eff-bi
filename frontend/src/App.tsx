@@ -27,6 +27,7 @@ import DBSettingsPage from "./pages/DBSettingsPage";
 import OrgSettingsPage from "./pages/OrgSettingsPage";
 import DashboardsPage from "./pages/DashboardsPage";
 import DBAccessPermissionsPage from "./pages/DBAccessPermissionsPage";
+import NewTilePage from "./pages/NewTilePage";
 
 // Initialize SuperTokens
 SuperTokens.init(SuperTokensConfig);
@@ -84,11 +85,18 @@ const router = createBrowserRouter(
           </SessionAuth>
         }
       />
+      <Route
+        path="/dashboards/:dashboardId/tiles/new"
+        element={
+          <SessionAuth>
+            <NewTilePage />
+          </SessionAuth>
+        }
+      />
         <Route
           path="/settings/access-permissions"
           element={<DBAccessPermissionsPage />}
         />
-        <Route path="/dashboard" element={<DashboardPage />} />
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />
