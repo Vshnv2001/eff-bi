@@ -185,6 +185,7 @@ def create_connection(request):
             for future in concurrent.futures.as_completed(tasks):
                 org_table = future.result()
                 org_table.save()
+                add_permissions_to_user(user_id, org_table.id, 'Admin')
 
         return JsonResponse({'message': 'meta data created and saved'}, status=201)
     except Exception as e:
@@ -251,30 +252,33 @@ def add_user_access_permissions(request):
     # Check if user exists
     user = get_object_or_404(User, email=user_email)
 
-    # Check if the permission already exists
     user_id = user.id
     table_id = request.data.get('table_id')
     permission = request.data.get('permission')
+
+    result, success = add_permissions_to_user(user_id, table_id, permission)
+    return JsonResponse(result, status=success)
+
+
+def add_permissions_to_user(user_id, table_id, permission):
+    """
+    Utility function to add permissions for a user to a specific table.
+    """
     if UserAccessPermissions.objects.filter(user_id=user_id, table_id=table_id, permission=permission).exists():
-        return JsonResponse({'error': 'Permission already exists for this user and table'},
-                            status=status.HTTP_409_CONFLICT)
+        return {'error': 'Permission already exists for this user and table'}, status.HTTP_409_CONFLICT
 
     data = {
-        'user_id': user.id,
+        'user_id': user_id,
         'table_id': table_id,
         'permission': permission
     }
     serializer = UserPermissionsSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
-
         # If 'Admin' permission is requested, 'View' permission will also be granted (if not already granted)
         if (permission == 'Admin' and
-        not UserAccessPermissions.objects.filter(user_id=user_id, table_id=table_id, permission='View').exists()):
-            data['permission'] = 'View'
-            serializer = UserPermissionsSerializer(data=data)
-            if serializer.is_valid():
-                serializer.save()
-        return JsonResponse({'message': 'User permissions added successfully'}, status=status.HTTP_201_CREATED)
+                not UserAccessPermissions.objects.filter(user_id=user_id, table_id=table_id, permission='View').exists()):
+            add_permissions_to_user(user_id, table_id, 'View')
+        return {'message': 'User permissions added successfully'}, status.HTTP_201_CREATED
     else:
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return serializer.errors, status.HTTP_400_BAD_REQUEST
