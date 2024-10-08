@@ -37,10 +37,10 @@ class OrgTables(models.Model):
     table_schema = models.TextField()
     column_descriptions = models.JSONField()
     column_types = models.JSONField()
+    # Next Sprint: Add database_uri to this table
     
     class Meta:
         db_table = "organization_tables"
         managed = True
         app_label = "effbi_api"
-    
     

@@ -22,6 +22,9 @@ import FileUpload from "./pages/FileUploadPage";
 import DashboardPage from "./pages/DashboardPage";
 import FetchUserData from "./components/Authentication/FetchUserData";
 import SaveUserData from "./components/Authentication/SaveUserData";
+import DBSettingsPage from "./pages/DBSettingsPage";
+import OrgSettingsPage from "./pages/OrgSettingsPage";
+import DBAccessPermissionsPage from "./pages/DBAccessPermissionsPage";
 
 SuperTokens.init(SuperTokensConfig);
 
@@ -66,6 +69,12 @@ const router = createBrowserRouter(
       />
 
       <Route path="/file/upload/" element={<FileUpload />} />
+      <Route path="/settings/database" element={<DBSettingsPage />} />
+      <Route path="/settings/organization" element={<OrgSettingsPage />} />
+      <Route
+        path="/settings/access-permissions"
+        element={<DBAccessPermissionsPage />}
+      />
       <Route path="/auth/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/reset-password" element={<ResetPassword />} />
       <Route path="/dashboard" element={<DashboardPage />} />

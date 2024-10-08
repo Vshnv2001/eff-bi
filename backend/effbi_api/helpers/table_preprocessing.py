@@ -1,8 +1,9 @@
 import psycopg2
-import os
 from openai import OpenAI
+import os
 from dotenv import load_dotenv
 load_dotenv()
+
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def get_database_schemas_and_tables(db_url):
@@ -67,6 +68,18 @@ def get_database_schemas_and_tables(db_url):
     except Exception as e:
         print(f"Error: {e}")
         return None
+    
+def process_table(schema_name, table_name, table_info, uri, organization):
+    column_types = {col_name: col_type for col_name, col_type in zip(table_info['columns'], table_info['types'])}
+    column_descriptions = get_column_descriptions(table_name, schema_name, uri)
+    
+    return OrgTables(
+        table_name=table_name,
+        table_schema=schema_name,
+        column_descriptions=column_descriptions,
+        column_types=column_types,
+        organization=organization
+    )
 
 def get_column_descriptions(table_name, schema_name, db_url):
     """

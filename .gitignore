@@ -4,4 +4,3 @@ frontend/package-lock.json
 **/__pycache__/
 .env
 venv
-backend/effbi_api/migrations/*.py
