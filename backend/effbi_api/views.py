@@ -93,6 +93,8 @@ def user_details(request, user_id):
 @api_view(["POST"])
 def create_organization(request):
     try:
+        print(f"Raw Request Data: {request.body}")
+        print(f"Parsed Request Data: {request.data}")
         serializer = OrganizationSerializer(data=request.data)
         if serializer.is_valid():
             organization = serializer.save()
