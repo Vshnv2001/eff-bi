@@ -3,7 +3,7 @@ import EffBINavbar from "../components/Navbar/EffBINavbar";
 
 const MainLayout = () => {
   return (
-    <div className="bg-gray-900">
+    <div className="bg-gray-custom">
       <EffBINavbar />
       <div>
         <Outlet />

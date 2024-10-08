@@ -1,6 +1,18 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { mockHistory } from "./MockHistory";
 import ChatHistory from "./ChatHistory";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  Grid,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 
 const Chatbot: React.FC = () => {
   const [message, setMessage] = useState("");
@@ -35,72 +47,110 @@ const Chatbot: React.FC = () => {
   };
 
   return (
-    <div className="flex" style={{ height: `calc(100vh - 80px)` }}>
-      <div className="w-1/4 p-4 border-r border-gray-300">
-        <input
-          type="text"
-          placeholder="Search history..."
-          onChange={handleFilterChange}
-          className="w-full p-2 border border-gray-300 rounded"
-        />
-        <h3 className="font-bold mt-4">History</h3>
-        <div
-          className="overflow-y-auto"
-          style={{ height: `calc(100vh - 200px)` }}
-        >
-          <ChatHistory history={filteredHistory} />
-        </div>
-      </div>
-
-      <div className="flex-1 flex flex-col p-4">
-        <div className="flex justify-between items-center mb-4">
-          <div>
-            <button
-              onClick={() => setSqlType("MySQL")}
-              className={`mr-2 ${sqlType === "MySQL" ? "font-bold" : ""}`}
-            >
-              MySQL
-            </button>
-            <button
-              onClick={() => setSqlType("PostgreSQL")}
-              className={`mr-2 ${sqlType === "PostgreSQL" ? "font-bold" : ""}`}
-            >
-              PostgreSQL
-            </button>
-            <button
-              onClick={() => setSqlType("SQLite")}
-              className={`mr-2 ${sqlType === "SQLite" ? "font-bold" : ""}`}
-            >
-              SQLite
-            </button>
-          </div>
-          <h2 className="text-lg">SQL Type: {sqlType}</h2>
-        </div>
-
-        {/* The scrollable chat area */}
-        <div className="flex-grow overflow-y-auto border border-gray-300 p-4 mb-4">
-          {/* Chat content goes here */}
-        </div>
-
-        {/* The form for sending messages */}
-        <form onSubmit={handleSendMessage} className="flex">
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Type your message..."
-            className="flex-1 p-2 border border-gray-300 rounded"
-            required
+    <Grid container style={{ height: `calc(100vh - 80px)` }}>
+      <Grid item xs={3} component={Paper} elevation={3} square>
+        <Box p={2}>
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Search history..."
+            onChange={handleFilterChange}
+            margin="normal"
           />
-          <button
-            type="submit"
-            className="ml-2 bg-blue-600 text-white p-2 rounded"
+          <Typography variant="h6" gutterBottom>
+            History
+          </Typography>
+          <Box
+            style={{ height: `calc(100vh - 200px)`, overflowY: "auto" }}
           >
-            Send
-          </button>
-        </form>
-      </div>
-    </div>
+            <ChatHistory history={filteredHistory} />
+          </Box>
+        </Box>
+      </Grid>
+
+      <Grid item xs={9} container direction="column" spacing={2}>
+        <Grid item>
+          <FormControl variant="outlined" fullWidth margin="normal">
+            <InputLabel>SQL Type</InputLabel>
+            <Select
+              value={sqlType}
+              onChange={(e) => setSqlType(e.target.value)}
+              label="SQL Type"
+            >
+              <MenuItem value="MySQL">MySQL</MenuItem>
+              <MenuItem value="PostgreSQL">PostgreSQL</MenuItem>
+              <MenuItem value="SQLite">SQLite</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item>
+          <Typography variant="h6">SQL Type: {sqlType}</Typography>
+        </Grid>
+        <Grid item xs className="flex-grow overflow-y-auto">
+          <Box
+            style={{
+              height: `calc(100vh - 350px)`, // Adjust this height to ensure the typing area fits nicely
+              overflowY: "auto",
+              padding: "16px",
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+              backgroundColor: "#f9f9f9",
+            }}
+          >
+            {history.map((msg) => (
+              <Box
+                key={msg.id}
+                sx={{
+                  display: "flex",
+                  justifyContent: msg.type === sqlType ? "flex-end" : "flex-start",
+                  mb: 1,
+                }}
+              >
+                <Box
+                  sx={{
+                    maxWidth: "70%",
+                    padding: 1,
+                    borderRadius: "20px",
+                    backgroundColor: msg.type === sqlType ? "#d1e7dd" : "#f8d7da",
+                    color: msg.type === sqlType ? "#0f5132" : "#721c24",
+                  }}
+                >
+                  <Typography variant="body2">
+                    {msg.type === sqlType ? msg.question : msg.answer}
+                  </Typography>
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        </Grid>
+        <Grid item>
+          <form onSubmit={handleSendMessage}>
+            <Grid container spacing={2}>
+              <Grid item xs>
+                <TextField
+                  fullWidth
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Type your message..."
+                  variant="outlined"
+                  required
+                  size="small" // Adjusted height for smaller text field
+                />
+              </Grid>
+              <Grid item>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                >
+                  Send
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 

@@ -1,6 +1,23 @@
 import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
 import axios from "axios";
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Alert,
+  CircularProgress,
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'; // Cloud upload icon
 
 type ParsedData = Record<string, any>;
 
@@ -9,20 +26,6 @@ declare global {
     worker?: Worker;
   }
 }
-
-const Alert: React.FC<{ message: string; onClose: () => void }> = ({
-  message,
-  onClose,
-}) => (
-  <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4 rounded-md">
-    <div className="flex justify-between">
-      <p>{message}</p>
-      <button onClick={onClose} className="text-yellow-700 font-bold">
-        X
-      </button>
-    </div>
-  </div>
-);
 
 const FileUpload: React.FC = () => {
   const [data, setData] = useState<ParsedData[]>([]);
@@ -34,7 +37,6 @@ const FileUpload: React.FC = () => {
 
   useEffect(() => {
     return () => {
-      // Cleanup web worker
       if (window.worker) {
         window.worker.terminate();
       }
@@ -89,10 +91,10 @@ const FileUpload: React.FC = () => {
 
   const handleUploadToDatabase = async () => {
     try {
-      setUploading(true); // Show loading while uploading data
+      setUploading(true);
       const response = await axios.post("/api/upload", { data });
       console.log("Data successfully uploaded:", response.data);
-      setUploading(false); // Hide loading after upload
+      setUploading(false);
     } catch (error) {
       console.error("Error uploading data:", error);
       setUploading(false);
@@ -100,82 +102,96 @@ const FileUpload: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-light-blue-100 p-6">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-8xl h-full">
-        <h2 className="text-2xl font-bold text-center mb-6">Upload a File</h2>
-        <input
+    <Container className="bg-gray-100 min-h-screen flex flex-col justify-center items-center">
+      <Typography variant="h4" component="h1" gutterBottom>
+        Upload a File
+      </Typography>
+
+      <Box className="border-2 border-dotted border-gray-300 rounded-lg p-8 text-center mt-4">
+        <CloudUploadIcon className="text-gray-500 text-6xl" />
+        <Typography className="mt-4 mb-4">
+          Drag & drop your file here or click to upload
+        </Typography>
+        <TextField
           type="file"
           accept=".csv, .xls, .xlsx"
           onChange={handleFileChange}
-          className="block w-full mb-4 text-gray-700 border border-gray-300 rounded-md p-2 focus:outline-none"
+          fullWidth
+          margin="normal"
+          variant="outlined"
+          inputProps={{ style: { display: 'none' } }} // Hide the default file input
         />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => document.querySelector('input[type="file"]')?.click()} // Trigger file input click
+          className="mt-2 px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded"
+        >
+          Upload File
+        </Button>
+      </Box>
 
-        {error && <div className="mb-4 text-red-600">{error}</div>}
-        {loading && (
-          <div className="text-center text-blue-600 mb-4">Loading...</div>
-        )}
+      {error && <Alert severity="error" className="mt-2">{error}</Alert>}
+      {loading && <CircularProgress className="mt-2" />}
 
-        {data.length > 0 && (
-          <>
-            <div className="overflow-y-auto max-h-80 mb-4 border border-gray-300">
-              <table className="min-w-full bg-white table-auto">
-                <thead>
-                  <tr className="bg-gray-200">
+      {data.length > 0 && (
+        <>
+          <Box
+            className="max-h-96 overflow-y-auto mt-2 w-full" // Limit the height for scrolling
+          >
+            <TableContainer component={Paper}>
+              <Table stickyHeader>
+                <TableHead>
+                  <TableRow>
                     {Object.keys(data[0]).map((key) => (
-                      <th
-                        key={key}
-                        className="p-4 border-b text-left font-semibold"
-                      >
+                      <TableCell key={key} align="left">
                         {key}
-                      </th>
+                      </TableCell>
                     ))}
-                  </tr>
-                </thead>
-                <tbody>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
                   {data.slice(0, rowsToShow).map((row, index) => (
-                    <tr key={index} className="hover:bg-gray-100">
+                    <TableRow key={index}>
                       {Object.keys(row).map((key) => (
-                        <td key={key} className="p-4 border-b">
-                          {row[key] as React.ReactNode}
-                        </td>
+                        <TableCell key={key} align="left">
+                          {row[key]}
+                        </TableCell>
                       ))}
-                    </tr>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
-            </div>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
 
-            {data.length > rowsToShow && (
-              <button
+          {data.length > rowsToShow && (
+            <Box className="flex justify-center mt-4">
+              <Button
                 onClick={() => setRowsToShow(rowsToShow + 100)}
-                className="block w-full p-2 bg-blue-600 text-white rounded-md font-semibold"
+                variant="contained"
+                color="primary"
+                className="mx-2 px-4 py-2 text-white rounded shadow-md hover:bg-blue-700"
               >
                 Load More
-              </button>
-            )}
+              </Button>
+            </Box>
+          )}
 
-            <button
+          <Box className="flex justify-center mt-4">
+            <Button
               onClick={handleUploadToDatabase}
               disabled={uploading}
-              className={`block w-full p-2 bg-blue-600 text-white rounded-md font-semibold ${
-                uploading
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-blue-700"
-              }`}
+              variant="contained"
+              color="primary"
+              className="mx-2 px-4 py-2 text-white rounded shadow-md hover:bg-blue-700"
             >
-              {uploading ? "Uploading..." : "Upload to Database"}
-            </button>
-          </>
-        )}
-
-        {showAlert && (
-          <Alert
-            message="Your data is too big, so click 'Load More' to view more rows."
-            onClose={() => setShowAlert(false)}
-          />
-        )}
-      </div>
-    </div>
+              {uploading ? <CircularProgress size={24} /> : "Upload to Database"}
+            </Button>
+          </Box>
+        </>
+      )}
+    </Container>
   );
 };
 
