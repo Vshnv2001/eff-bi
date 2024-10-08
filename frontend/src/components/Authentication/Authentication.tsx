@@ -19,10 +19,6 @@ const Authentication = () => {
     setOrganizationId,
   } = useAuth();
 
-  //const [email, setEmail] = useState("");
-  //const [firstName, setFirstName] = useState("");
-  //const [lastName, setLastName] = useState("");
-  //const [organizationId, setOrganizationId] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
@@ -78,7 +74,6 @@ const Authentication = () => {
         setInputError((prev) => ({ ...prev, email: true }));
       } else {
         setErrorMessage("");
-        //createUser();
         navigate("/auth/save");
       }
     } catch (err) {
@@ -114,7 +109,7 @@ const Authentication = () => {
         setInputError({ email: true, password: true });
       } else {
         setErrorMessage("");
-        navigate("/");
+        navigate("/auth/fetch");
       }
     } catch (err) {
       setErrorMessage("Oops! Something went wrong.");

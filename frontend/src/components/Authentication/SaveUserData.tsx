@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../Authentication/AuthenticationContext";
+import { useAuth } from "./AuthenticationContext";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { useNavigate } from "react-router-dom";
 
-const AuthenticationSave: React.FC = () => {
+const SaveUserData: React.FC = () => {
   const sessionContext = useSessionContext();
-  const { email, firstName, lastName, organizationId } = useAuth();
+  const { email, firstName, lastName, organizationId, setUserId } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaved, setIsSaved] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const saveUserToBackend = async () => {
-      // Prevent execution if the user is already saved or if loading is in progress
       if (isSaved || sessionContext.loading || !sessionContext.userId) {
         return;
       }
@@ -24,8 +23,10 @@ const AuthenticationSave: React.FC = () => {
         email,
         first_name: firstName,
         last_name: lastName,
-        organization: organizationId,
+        organization_id: organizationId,
       };
+
+      console.log("form data", formData)
 
       try {
         const createResponse = await fetch("http://localhost:8000/api/users/", {
@@ -39,6 +40,8 @@ const AuthenticationSave: React.FC = () => {
         if (createResponse.ok) {
           const createData = await createResponse.json();
           console.log("User created:", createData);
+          
+          setUserId(userId);
           setIsSaved(true);
           navigate("/");
         }
@@ -50,9 +53,9 @@ const AuthenticationSave: React.FC = () => {
     };
 
     saveUserToBackend();
-  }, [sessionContext, email, firstName, lastName, organizationId, navigate, isSaved]);
+  }, [sessionContext, email, firstName, lastName, organizationId, navigate, isSaved, setUserId]);
 
-  return isLoading ? <div>Loading...</div> : null; // Optional loading indicator
+  return isLoading ? <div>Loading...</div> : null;
 };
 
-export default AuthenticationSave;
+export default SaveUserData;

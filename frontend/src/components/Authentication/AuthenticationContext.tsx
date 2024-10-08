@@ -1,8 +1,8 @@
 import { createContext, useState, useContext, ReactNode } from "react";
 
 interface AuthContextType {
-  //userId: string | null;
-  //setUserId: (userId: string | null) => void;
+  userId: string | null;
+  setUserId: (userId: string | null) => void;
   email: string;
   setEmail: (email: string) => void;
   firstName: string;
@@ -19,7 +19,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   // Initialize state with empty strings instead of null
-  //const [userId, setUserId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [email, setEmail] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
@@ -28,8 +28,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   return (
     <AuthContext.Provider
       value={{
-        //userId,
-        //setUserId,
+        userId,
+        setUserId,
         email,
         setEmail,
         firstName,

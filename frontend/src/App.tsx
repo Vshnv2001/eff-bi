@@ -20,7 +20,8 @@ import NotFoundPage from "./pages/NotFoundPage";
 import UploadPage from "./pages/ChatbotPage";
 import FileUpload from "./pages/FileUploadPage";
 import DashboardPage from "./pages/DashboardPage";
-import AuthenticationSave from "./components/Authentication/AuthenticationSave";
+import FetchUserData from "./components/Authentication/FetchUserData";
+import SaveUserData from "./components/Authentication/SaveUserData";
 
 SuperTokens.init(SuperTokensConfig);
 
@@ -50,7 +51,16 @@ const router = createBrowserRouter(
         path="/auth/save"
         element={
           <SessionAuth>
-            <AuthenticationSave />
+            <SaveUserData />
+          </SessionAuth>
+        }
+      />
+
+      <Route
+        path="/auth/fetch"
+        element={
+          <SessionAuth>
+            <FetchUserData />
           </SessionAuth>
         }
       />
@@ -66,13 +76,13 @@ const router = createBrowserRouter(
 
 const App = () => {
   return (
-      <AuthProvider>
-        <SuperTokensWrapper>
-          <ComponentWrapper>
-            <RouterProvider router={router} />
-          </ComponentWrapper>
-        </SuperTokensWrapper>
-      </AuthProvider>
+    <AuthProvider>
+      <SuperTokensWrapper>
+        <ComponentWrapper>
+          <RouterProvider router={router} />
+        </ComponentWrapper>
+      </SuperTokensWrapper>
+    </AuthProvider>
   );
 };
 
