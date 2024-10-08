@@ -1,6 +1,5 @@
 import {
   Navbar,
-  Typography,
   Button,
   Menu,
   MenuHandler,
@@ -10,6 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { signOut } from "supertokens-auth-react/recipe/session";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
+import { Link } from "react-router-dom";
 
 export default function EffBINavbar() {
   const navigate = useNavigate();
@@ -28,11 +28,13 @@ export default function EffBINavbar() {
     <Navbar className="max-w-full px-6 py-3 bg-gray-800">
       <div className="flex items-center justify-between text-blue-gray-900 w-full">
         <div className="flex items-center gap-4">
-          <img
-            src="/assets/logo-nobg.png"
-            alt="EFF BI Logo"
-            className="w-15 h-10 block my-0"
-          />
+          <Link to="/">
+            <img
+              src="/assets/logo-nobg.png"
+              alt="EFF BI Logo"
+              className="w-15 h-10 block my-0"
+            />
+          </Link>
           <Button
             variant="text"
             size="sm"
