@@ -25,6 +25,7 @@ import FetchUserData from "./components/Authentication/FetchUserData";
 import SaveUserData from "./components/Authentication/SaveUserData";
 import DBSettingsPage from "./pages/DBSettingsPage";
 import OrgSettingsPage from "./pages/OrgSettingsPage";
+import DashboardsPage from "./pages/DashboardsPage";
 import DBAccessPermissionsPage from "./pages/DBAccessPermissionsPage";
 
 // Initialize SuperTokens
@@ -51,8 +52,38 @@ const router = createBrowserRouter(
         <Route path="/auth/fetch" element={<FetchUserData />} />
         <Route path="/chatbot" element={<ChatbotPage />} />
         <Route path="/file/upload" element={<FileUpload />} />
-        <Route path="/settings/database" element={<DBSettingsPage />} />
-        <Route path="/settings/organization" element={<OrgSettingsPage />} />
+        <Route
+        path="/settings/database"
+        element={
+          <SessionAuth>
+            <DBSettingsPage />
+          </SessionAuth>
+        }
+      />
+        <Route
+        path="/settings/organization"
+        element={
+          <SessionAuth>
+            <OrgSettingsPage />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/dashboards"
+        element={
+          <SessionAuth>
+            <DashboardsPage />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/dashboards/:dashboardId"
+        element={
+          <SessionAuth>
+            <DashboardPage />
+          </SessionAuth>
+        }
+      />
         <Route
           path="/settings/access-permissions"
           element={<DBAccessPermissionsPage />}
