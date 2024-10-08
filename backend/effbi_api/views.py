@@ -138,7 +138,7 @@ def organization_details(request, org_id):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
- 
+
 @api_view(["GET"])
 def get_users_by_organization(request, org_id):
     try:
@@ -174,14 +174,14 @@ def create_connection(request):
         if not db_data:
             return JsonResponse(
                 {'error': "No data retrieved from the database."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
         tasks = []
         with concurrent.futures.ThreadPoolExecutor() as executor:
             for schema_name, tables in db_data.items():
                 for table_name, table_info in tables.items():
                     task = executor.submit(process_table, schema_name, table_name, table_info, uri, organization)
                     tasks.append(task)
-            
+
             for future in concurrent.futures.as_completed(tasks):
                 org_table = future.result()
                 org_table.save()
@@ -189,7 +189,7 @@ def create_connection(request):
         return JsonResponse({'message': 'meta data created and saved'}, status=201)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
 
 @api_view(["POST"])
 def query_databases(request):
@@ -242,7 +242,8 @@ def get_user_access_permissions(request, user_id):
 @api_view(["POST"])
 def add_user_access_permissions(request):
     """
-    Add permissions for a user to access a specific table
+    Add permissions for a user to access a specific table.
+    If 'Admin' permission is requested, 'View' permission will also be automatically granted.
     :param request: { user_email, table_id, permission }
     :return:
     """
@@ -260,12 +261,20 @@ def add_user_access_permissions(request):
 
     data = {
         'user_id': user.id,
-        'table_id': request.data.get('table_id'),
-        'permission': request.data.get('permission')
+        'table_id': table_id,
+        'permission': permission
     }
     serializer = UserPermissionsSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
+
+        # If 'Admin' permission is requested, 'View' permission will also be granted (if not already granted)
+        if (permission == 'Admin' and
+        not UserAccessPermissions.objects.filter(user_id=user_id, table_id=table_id, permission='View').exists()):
+            data['permission'] = 'View'
+            serializer = UserPermissionsSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
         return JsonResponse({'message': 'User permissions added successfully'}, status=status.HTTP_201_CREATED)
     else:
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
