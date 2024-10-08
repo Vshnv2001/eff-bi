@@ -9,7 +9,13 @@ module.exports = withMT({
     "./node_modules/@mui/icons-material/**/*.js",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        gray: {
+          custom: 'rgb(243, 244, 247)',
+        },
+      },
+    },
   },
   plugins: [],
 });
