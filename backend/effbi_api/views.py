@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from .models import User, Organization, OrgTables
-from .serializer import UserSerializer, OrganizationSerializer
+from .serializer import DashboardSerializer, UserSerializer, OrganizationSerializer
 from .helpers.table_preprocessing import get_database_schemas_and_tables, process_table
 import concurrent.futures
 
@@ -86,6 +86,22 @@ def user_details(request, user_id):
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+
+@api_view(["POST"])
+def create_dashboard(request):
+    try:
+        serializer = DashboardSerializer(data=request.data)
+        if serializer.is_valid():
+            dashboard = serializer.save()
+            return JsonResponse(
+                {'message': 'Dashboard created successfully', 'dashboard': serializer.data},
+                status=status.HTTP_201_CREATED
+            )
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(["POST"])
@@ -155,20 +171,21 @@ def get_users_by_organization(request, org_id):
 def create_connection(request):
     try:
         uri = request.data.get('uri', None)
+        db_type = request.data.get('db_type', None)
         org_id = request.data.get('org_id', None)
         
         print(uri)
         print(org_id)
 
-        if not uri or not org_id:
-            return JsonResponse({'error': "Both uri and org_id are required"}, status=status.HTTP_400_BAD_REQUEST)
+        if not uri or not org_id or not db_type:
+            return JsonResponse({'error': "Both uri, org_id and db_type are required"}, status=status.HTTP_400_BAD_REQUEST)
 
         # update organization with uri
         organization = get_object_or_404(Organization, id=org_id)
         organization.database_uri = uri
         organization.save()
         
-        db_data = get_database_schemas_and_tables(uri)
+        db_data = get_database_schemas_and_tables(uri, db_type)
     
         if not db_data:
             print("No data retrieved from the database.")

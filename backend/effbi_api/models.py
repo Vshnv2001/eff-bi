@@ -43,4 +43,29 @@ class OrgTables(models.Model):
         db_table = "organization_tables"
         managed = True
         app_label = "effbi_api"
+
+
+class Dashboard(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    organization = models.ForeignKey('Organization', on_delete=models.CASCADE)
+    tiles = models.ManyToManyField('Tile')
     
+    class Meta:
+        db_table = "dashboards"
+        managed = True
+        app_label = "effbi_api"
+
+class Tile(models.Model):
+    id = models.AutoField(primary_key=True)
+    dashboard = models.ForeignKey('Dashboard', on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    sql_query = models.TextField()
+    
+    class Meta:
+        db_table = "tiles"
+        managed = True
+        app_label = "effbi_api"
+

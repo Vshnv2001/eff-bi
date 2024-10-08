@@ -44,10 +44,38 @@ const router = createBrowserRouter(
           </SessionAuth>
         }
       />
-      <Route path="/settings/database" element={<DBSettingsPage />} />
-      <Route path="/settings/organization" element={<OrgSettingsPage />} />
-      <Route path="/dashboards" element={<DashboardsPage />} />
-      <Route path="/dashboards/:dashboardId" element={<DashboardPage />} />
+      <Route
+        path="/settings/database"
+        element={
+          <SessionAuth>
+            <DBSettingsPage />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/settings/organization"
+        element={
+          <SessionAuth>
+            <OrgSettingsPage />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/dashboards"
+        element={
+          <SessionAuth>
+            <DashboardsPage />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/dashboards/:dashboardId"
+        element={
+          <SessionAuth>
+            <DashboardPage />
+          </SessionAuth>
+        }
+      />
       <Route path="/auth/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/reset-password" element={<ResetPassword />} />
       <Route path="*" element={<NotFoundPage />} />
