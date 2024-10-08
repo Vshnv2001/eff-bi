@@ -2,6 +2,8 @@ import psycopg2
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
+
+from ..models import OrgTables
 load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))

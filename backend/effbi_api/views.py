@@ -4,14 +4,15 @@ from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
 from supertokens_python.recipe.multitenancy.syncio import list_all_tenants
 from supertokens_python.recipe.session.framework.django.syncio import verify_session
-from .models import User, Organization
+from .models import User, Organization, UserAccessPermissions
 from rest_framework import status
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from .models import User, Organization, OrgTables
-from .serializer import UserSerializer, OrganizationSerializer
+from .serializer import UserSerializer, OrganizationSerializer, UserPermissionsSerializer
 from .helpers.table_preprocessing import get_database_schemas_and_tables, process_table
 import concurrent.futures
+
 
 class SessionInfoAPI(APIView):
     @method_decorator(verify_session())
@@ -24,6 +25,7 @@ class SessionInfoAPI(APIView):
                 "accessTokenPayload": session_.get_access_token_payload(),
             }
         )
+
 
 class TenantsAPI(APIView):
     def get(self, request, format=None):
@@ -38,6 +40,7 @@ class TenantsAPI(APIView):
             "status": "OK",
             "tenants": tenantsList,
         })
+
 
 @api_view(["GET"])
 def health_check(request):
@@ -105,6 +108,7 @@ def create_organization(request):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
 @api_view(["GET", "PATCH", "DELETE"])
 def organization_details(request, org_id):
     try:
@@ -153,27 +157,27 @@ def get_users_by_organization(request, org_id):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
 @api_view(["POST"])
 def create_connection(request):
     try:
         uri = request.data.get('uri', None)
         user_id = request.data.get('user_id', None)
         if not uri or not user_id:
-            return JsonResponse({'error': "Both uri and org_id are required"}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({'error': "Both uri and user_id are required"}, status=status.HTTP_400_BAD_REQUEST)
 
         user = get_object_or_404(User, id=user_id)
-        org_id = user.organization
+        organization = user.organization
 
         # update organization with uri
-        organization = get_object_or_404(Organization, id=org_id)
+        # organization = get_object_or_404(Organization, id=org_id)
         organization.database_uri = uri
         organization.save()
-        
+
         db_data = get_database_schemas_and_tables(uri)
-    
         if not db_data:
-            print("No data retrieved from the database.")
-            return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # print("No data retrieved from the database.")
+            return JsonResponse({'error': "No data retrieved from the database."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         tasks = []
         with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -207,11 +211,8 @@ def query_databases(request):
 
 
 @api_view(["GET"])
-def get_user_access_permissions(request):
+def get_user_access_permissions(request, user_id):
     # query the useraccess permissions table
-    # get based on the user_id
-    # view_acceess = [1, 2, 3]
-    # admin_access = [2, 3]
     # query table names from orgTable
     # mapping from tableid to name
     # {
@@ -223,10 +224,8 @@ def get_user_access_permissions(request):
     # {
     #     data: [
     #         {table_name: name1,
-    #          permissions: ['View', 'Admin']},
+    #          permissions: ['Admin']},
     #         {table_name: name2,
     #          permissions: ['View']},
-
     #     ]
     # }
-    return JsonResponse({'message': 'data generated!'}, status=200)
