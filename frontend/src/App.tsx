@@ -3,6 +3,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider,
+  Outlet,
 } from "react-router-dom";
 import SuperTokens, { SuperTokensWrapper } from "supertokens-auth-react";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
@@ -17,7 +18,7 @@ import ResetPassword from "./components/Authentication/ResetPassword";
 import MainLayout from "./layouts/MainLayout";
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import UploadPage from "./pages/ChatbotPage";
+import ChatbotPage from "./pages/ChatbotPage";
 import FileUpload from "./pages/FileUploadPage";
 import DashboardPage from "./pages/DashboardPage";
 import FetchUserData from "./components/Authentication/FetchUserData";
@@ -26,58 +27,39 @@ import DBSettingsPage from "./pages/DBSettingsPage";
 import OrgSettingsPage from "./pages/OrgSettingsPage";
 import DBAccessPermissionsPage from "./pages/DBAccessPermissionsPage";
 
+// Initialize SuperTokens
 SuperTokens.init(SuperTokensConfig);
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<MainLayout />}>
+      {/* Public Routes */}
       <Route path="/auth" element={<Authentication />} />
-      <Route
-        index
-        element={
-          <SessionAuth>
-            <LandingPage />
-          </SessionAuth>
-        }
-      />
-
-      <Route
-        path="/upload"
-        element={
-          <SessionAuth>
-            <UploadPage />
-          </SessionAuth>
-        }
-      />
-
-      <Route
-        path="/auth/save"
-        element={
-          <SessionAuth>
-            <SaveUserData />
-          </SessionAuth>
-        }
-      />
-
-      <Route
-        path="/auth/fetch"
-        element={
-          <SessionAuth>
-            <FetchUserData />
-          </SessionAuth>
-        }
-      />
-
-      <Route path="/file/upload/" element={<FileUpload />} />
-      <Route path="/settings/database" element={<DBSettingsPage />} />
-      <Route path="/settings/organization" element={<OrgSettingsPage />} />
-      <Route
-        path="/settings/access-permissions"
-        element={<DBAccessPermissionsPage />}
-      />
       <Route path="/auth/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/reset-password" element={<ResetPassword />} />
-      <Route path="/dashboard" element={<DashboardPage />} />
+
+      {/* Protected Routes */}
+      <Route
+        element={
+          <SessionAuth>
+            <Outlet />
+          </SessionAuth>
+        }
+      >
+        <Route index element={<LandingPage />} />
+        <Route path="/auth/save" element={<SaveUserData />} />
+        <Route path="/auth/fetch" element={<FetchUserData />} />
+        <Route path="/chatbot" element={<ChatbotPage />} />
+        <Route path="/file/upload" element={<FileUpload />} />
+        <Route path="/settings/database" element={<DBSettingsPage />} />
+        <Route path="/settings/organization" element={<OrgSettingsPage />} />
+        <Route
+          path="/settings/access-permissions"
+          element={<DBAccessPermissionsPage />}
+        />
+        <Route path="/dashboard" element={<DashboardPage />} />
+      </Route>
+
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )

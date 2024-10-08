@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Navbar,
   Typography,
@@ -10,9 +9,15 @@ import {
 } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "supertokens-auth-react/recipe/session";
+import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 export default function EffBINavbar() {
   const navigate = useNavigate();
+  const sessionContext = useSessionContext();
+
+  if (sessionContext.loading || !sessionContext.userId) {
+    return null;
+  }
 
   async function logoutClicked() {
     await signOut();
@@ -20,17 +25,14 @@ export default function EffBINavbar() {
   }
 
   return (
-    <Navbar className="mx-auto max-w-screen-xl px-6 py-3 mb-10 bg-gray-800">
-      <div className="flex items-center justify-between text-blue-gray-900">
-        <Typography
-          as="a"
-          href="#"
-          variant="h6"
-          className="mr-4 cursor-pointer py-1.5 text-2xl font-bold text-white"
-        >
-          effBI
-        </Typography>
+    <Navbar className="max-w-full px-6 py-3 bg-gray-800">
+      <div className="flex items-center justify-between text-blue-gray-900 w-full">
         <div className="flex items-center gap-4">
+          <img
+            src="/assets/logo-nobg.png"
+            alt="EFF BI Logo"
+            className="w-15 h-10 block my-0"
+          />
           <Button
             variant="text"
             size="sm"
@@ -44,8 +46,29 @@ export default function EffBINavbar() {
             size="sm"
             color="white"
             className="flex items-center gap-2"
+            onClick={() => navigate("/dashboard")}
           >
             Dashboards
+          </Button>
+
+          <Button
+            variant="text"
+            size="sm"
+            color="white"
+            className="flex items-center gap-2"
+            onClick={() => navigate("/chatbot")}
+          >
+            Chatbot
+          </Button>
+
+          <Button
+            variant="text"
+            size="sm"
+            color="white"
+            className="flex items-center gap-2"
+            onClick={() => navigate("/file/upload")}
+          >
+            Upload
           </Button>
           <Menu>
             <MenuHandler>
@@ -57,7 +80,6 @@ export default function EffBINavbar() {
               >
                 Settings
               </Button>
-              
             </MenuHandler>
             <MenuList className="bg-gray-800">
               <MenuItem
@@ -89,6 +111,17 @@ export default function EffBINavbar() {
               </MenuItem>
             </MenuList>
           </Menu>
+        </div>
+        <div>
+          <Button
+            variant="text"
+            size="sm"
+            color="white"
+            className="flex items-center gap-2"
+            onClick={logoutClicked}
+          >
+            Logout
+          </Button>
         </div>
       </div>
     </Navbar>
