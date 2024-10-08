@@ -12,5 +12,6 @@ urlpatterns = [
     path("organizations/<int:org_id>/", views.organization_details, name="organization_details"),
     path("connection/", views.create_connection, name="create_connection"),
     path("query/", views.query_databases, name="query_databases"),
-    path("user-access-permissions/<str:user_id>/", views.get_user_access_permissions, name="get_user_access_permissions")
+    path("user-access-permissions/<str:user_id>/", views.get_user_access_permissions, name="get_user_access_permissions"),
+    path("user-access-permissions/", views.add_user_access_permissions, name="add_user_access_permissions")
 ]

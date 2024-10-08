@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Organization
+from .models import User, Organization, UserAccessPermissions
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -13,3 +13,8 @@ class OrganizationSerializer(serializers.ModelSerializer):
         model = Organization
         fields = "__all__"
 
+
+class UserPermissionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserAccessPermissions
+        fields = "__all__"
