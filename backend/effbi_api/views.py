@@ -250,6 +250,14 @@ def add_user_access_permissions(request):
     # Check if user exists
     user = get_object_or_404(User, email=user_email)
 
+    # Check if the permission already exists
+    user_id = user.id
+    table_id = request.data.get('table_id')
+    permission = request.data.get('permission')
+    if UserAccessPermissions.objects.filter(user_id=user_id, table_id=table_id, permission=permission).exists():
+        return JsonResponse({'error': 'Permission already exists for this user and table'},
+                            status=status.HTTP_409_CONFLICT)
+
     data = {
         'user_id': user.id,
         'table_id': request.data.get('table_id'),
