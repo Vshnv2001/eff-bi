@@ -1,10 +1,9 @@
-from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
 from supertokens_python.recipe.multitenancy.syncio import list_all_tenants
 from supertokens_python.recipe.session.framework.django.syncio import verify_session
-from .models import User, Organization, UserAccessPermissions
+from .models import UserAccessPermissions
 from rest_framework import status
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
@@ -67,13 +66,15 @@ def create_user(request):
 @api_view(["GET", "PATCH", "DELETE"])
 def user_details(request, user_id):
     try:
-        user = User.objects.get(id=user_id)
+        user = get_object_or_404(User, id=user_id)
 
         if request.method == "GET":
+            # Return user details
             serializer = UserSerializer(user)
             return JsonResponse({'message': 'User retrieved successfully', 'user': serializer.data}, status=200)
 
         elif request.method == "PATCH":
+            # Update user details where necessary
             serializer = UserSerializer(instance=user, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
@@ -83,11 +84,9 @@ def user_details(request, user_id):
             return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         elif request.method == "DELETE":
+            # Delete user instance
             user.delete()
             return JsonResponse({'message': 'User deleted successfully'}, status=status.HTTP_200_OK)
-
-    except User.DoesNotExist:
-        return JsonResponse({'error': f'No user with id:{user_id} exists'}, status=status.HTTP_404_NOT_FOUND)
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -112,15 +111,17 @@ def create_organization(request):
 @api_view(["GET", "PATCH", "DELETE"])
 def organization_details(request, org_id):
     try:
-        organization = Organization.objects.get(id=org_id)
+        organization = get_object_or_404(Organization, id=org_id)
 
         if request.method == "GET":
+            # Return organization details
             serializer = OrganizationSerializer(organization)
             return JsonResponse(
                 {'message': 'Organization retrieved successfully', 'organization': serializer.data}, status=200
             )
 
         elif request.method == "PATCH":
+            # Update organization details where necessary
             serializer = OrganizationSerializer(instance=organization, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
@@ -130,12 +131,9 @@ def organization_details(request, org_id):
             return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         elif request.method == "DELETE":
-            # print(organization)
+            # Delete organization instance
             organization.delete()
             return JsonResponse({'message': f'Organization with id:{org_id} deleted successfully'}, status=204)
-
-    except Organization.DoesNotExist:
-        return JsonResponse({'error': f'No organization with id:{org_id} exists'}, status=status.HTTP_404_NOT_FOUND)
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -144,15 +142,14 @@ def organization_details(request, org_id):
 @api_view(["GET"])
 def get_users_by_organization(request, org_id):
     try:
-        organization = Organization.objects.get(id=org_id)
+        # Check that organization exists
+        get_object_or_404(Organization, id=org_id)
+
         users = User.objects.filter(organization=org_id)
         serializer = UserSerializer(users, many=True)
         return JsonResponse(
             {'message': 'Users retrieved successfully', 'users': serializer.data}, status=status.HTTP_200_OK
         )
-
-    except Organization.DoesNotExist:
-        return JsonResponse({'error': f'No organization with id:{org_id} exists'}, status=status.HTTP_404_NOT_FOUND)
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -170,14 +167,13 @@ def create_connection(request):
         organization = user.organization
 
         # update organization with uri
-        # organization = get_object_or_404(Organization, id=org_id)
         organization.database_uri = uri
         organization.save()
 
         db_data = get_database_schemas_and_tables(uri)
         if not db_data:
-            # print("No data retrieved from the database.")
-            return JsonResponse({'error': "No data retrieved from the database."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return JsonResponse(
+                {'error': "No data retrieved from the database."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         tasks = []
         with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -226,9 +222,9 @@ def get_user_access_permissions(request, user_id):
     #     ]
     # })
     """
-    # just to make sure user is valid
+    # Check that user is valid
     get_object_or_404(User, id=user_id)
-    # query the UserAccessPermissions table and get all instances of the current user's permission
+    # Query the UserAccessPermissions table and get all instances of the current user's permission
     permissions = UserAccessPermissions.objects.filter(user_id=user_id)
     serializer = UserPermissionsSerializer(permissions, many=True)
 
@@ -242,20 +238,17 @@ def get_user_access_permissions(request, user_id):
         })
     return JsonResponse({'message': 'User permissions:', 'data': data}, status=200)
 
+
 @api_view(["POST"])
 def add_user_access_permissions(request):
     """
     Add permissions for a user to access a specific table
     :param request: { user_email, table_id, permission }
-    :return: 
+    :return:
     """
-    # request: { user_email, table_id, permission }
     user_email = request.data.get('user_email', None)
-    # check if user exists
-    try:
-        user = User.objects.get(email=user_email)
-    except User.DoesNotExist:
-        return JsonResponse({'error': f'No user with email:{user_email} exists'}, status=status.HTTP_404_NOT_FOUND)
+    # Check if user exists
+    user = get_object_or_404(User, email=user_email)
 
     data = {
         'user_id': user.id,
