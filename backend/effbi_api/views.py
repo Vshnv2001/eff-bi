@@ -212,27 +212,43 @@ def query_databases(request):
 
 @api_view(["GET"])
 def get_user_access_permissions(request, user_id):
-    # query the useraccess permissions table
-    # query table names from orgTable
-    # mapping from tableid to name
-    # {
-    #     table: access,
-    #     table_name 1: view,
-    #     table_name 2: view, admin,
-    #     table_name 3: view, admin
-    # }
-    # {
-    #     data: [
+    """
+    Get all permissions for a user
+    :param request:
+    :param user_id: relevant user id
+    :return: JsonResponse(
+    #    {'message': 'User permissions:',
+    #     'data': [
     #         {table_name: name1,
     #          permissions: ['Admin']},
     #         {table_name: name2,
     #          permissions: ['View']},
     #     ]
-    # }
+    # })
+    """
+    # just to make sure user is valid
+    get_object_or_404(User, id=user_id)
+    # query the UserAccessPermissions table and get all instances of the current user's permission
+    permissions = UserAccessPermissions.objects.filter(user_id=user_id)
+    serializer = UserPermissionsSerializer(permissions, many=True)
+
+    data = []
+    for permission in serializer.data:
+        print(permission)
+        data.append({
+            # query table names from orgTable and map from tableid to name
+            'table_name': OrgTables.objects.get(id=permission['table_id']).table_name,
+            'permission': permission['permission']
+        })
     return JsonResponse({'message': 'User permissions:', 'data': data}, status=200)
 
 @api_view(["POST"])
 def add_user_access_permissions(request):
+    """
+    Add permissions for a user to access a specific table
+    :param request: { user_email, table_id, permission }
+    :return: 
+    """
     # request: { user_email, table_id, permission }
     user_email = request.data.get('user_email', None)
     # check if user exists
