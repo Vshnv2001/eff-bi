@@ -5,9 +5,24 @@ import {
   signIn,
   doesEmailExist,
 } from "supertokens-web-js/recipe/emailpassword";
+import { useAuth } from "./AuthenticationContext";
 
 const Authentication = () => {
-  const [email, setEmail] = useState("");
+  const {
+    email,
+    setEmail,
+    firstName,
+    setFirstName,
+    lastName,
+    setLastName,
+    organizationId,
+    setOrganizationId,
+  } = useAuth();
+
+  //const [email, setEmail] = useState("");
+  //const [firstName, setFirstName] = useState("");
+  //const [lastName, setLastName] = useState("");
+  //const [organizationId, setOrganizationId] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
@@ -19,6 +34,18 @@ const Authentication = () => {
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
+  };
+
+  const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFirstName(e.target.value);
+  };
+
+  const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLastName(e.target.value);
+  };
+
+  const organizationIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOrganizationId(e.target.value);
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,10 +78,12 @@ const Authentication = () => {
         setInputError((prev) => ({ ...prev, email: true }));
       } else {
         setErrorMessage("");
-        navigate("/");
+        //createUser();
+        navigate("/auth/save");
       }
     } catch (err) {
       setErrorMessage("Oops! Something went wrong.");
+      console.log("err", err);
       setInputError({ email: true, password: true });
     }
   };
@@ -139,6 +168,7 @@ const Authentication = () => {
         )}
 
         <form onSubmit={handleSubmit}>
+          {/* Email Field */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Email:
@@ -153,6 +183,8 @@ const Authentication = () => {
               }`}
             />
           </div>
+
+          {/* Password Field */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Password:
@@ -167,6 +199,51 @@ const Authentication = () => {
               }`}
             />
           </div>
+
+          {/* Additional Fields for Sign Up */}
+          {isSignUp && (
+            <>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  First Name:
+                </label>
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={handleFirstNameChange}
+                  required
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Last Name:
+                </label>
+                <input
+                  type="text"
+                  value={lastName}
+                  onChange={handleLastNameChange}
+                  required
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Organization ID:
+                </label>
+                <input
+                  type="text"
+                  value={organizationId}
+                  onChange={organizationIdChange}
+                  required
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none"
+                />
+              </div>
+            </>
+          )}
+
           <button
             type="submit"
             className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200"
