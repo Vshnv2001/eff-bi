@@ -290,12 +290,15 @@ def get_dashboard_tiles(request: HttpRequest):
 def create_dashboard_tile(request: HttpRequest):
     try:
         dash_id = request.data.get('dash_id', None)
-        dashboard = get_object_or_404(Dashboard, dash_id=dash_id)
+        print(dash_id)
+        if not dash_id:
+            return JsonResponse({'error': "Dash_id is required"}, status=status.HTTP_400_BAD_REQUEST)
         user_id = request.supertokens.get_user_id()
         user = get_object_or_404(User, id=user_id)
         org_id = user.organization.id
         request.data['organization'] = org_id
         request.data['sql_query'] = ''
+        request.data['component'] = 'lineChartTemplate'
         request.data['tile_props'] = {
             'series'    : 'lineChartSeries',
             'title'     : request.data.get('title', 'Untitled'),

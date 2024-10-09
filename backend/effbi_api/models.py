@@ -63,7 +63,7 @@ class Dashboard(models.Model):
 
 class Tile(models.Model):
     id = models.AutoField(primary_key=True)
-    dash_id = models.IntegerField(unique=True, default=0)
+    dash_id = models.IntegerField(default=0)
     organization = models.ForeignKey('Organization', on_delete=models.CASCADE, default=0)
     title = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
