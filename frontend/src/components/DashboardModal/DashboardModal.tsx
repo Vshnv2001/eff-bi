@@ -40,11 +40,9 @@ export default function DashboardModal({
 
   const handleCreate = async () => {
     try {
-      const response = await axios.post(`${process.env.API_BASE_URL}/api/dashboards`, {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/dashboard/`, {
         title: dashboardName,
         description: dashboardDescription,
-        createdBy: `${firstName} ${lastName}`,
-        organizationId: organizationId,
       });
       console.log("Dashboard created successfully:", response.data);
       setOpen(false);

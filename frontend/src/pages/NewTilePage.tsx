@@ -11,14 +11,16 @@ import {
 } from "@material-tailwind/react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 export default function NewTile() {
   const [tileName, setTileName] = useState("");
   const [tileDescription, setTileDescription] = useState("");
   const { dashboardId } = useParams();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     toast.info('Generating KPI...', {
@@ -31,9 +33,18 @@ export default function NewTile() {
       progress: undefined,
     });
 
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`, {
+      dash_id: dashboardId,
+      title: tileName,
+      description: tileDescription,
+    });
+
+    console.log(response.data);
+
     // Reset form fields
     setTileName("");
     setTileDescription("");
+    navigate(`/dashboards/${dashboardId}`);
   };
 
   return (

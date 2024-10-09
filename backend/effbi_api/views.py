@@ -1,15 +1,15 @@
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpRequest, JsonResponse, HttpResponse
 from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
 from supertokens_python.recipe.multitenancy.syncio import list_all_tenants
 from supertokens_python.recipe.session.framework.django.syncio import verify_session
-from .models import User, Organization
+from .models import Dashboard, Tile, User, Organization
 from rest_framework import status
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from .models import User, Organization, OrgTables
-from .serializer import DashboardSerializer, UserSerializer, OrganizationSerializer
+from .serializer import DashboardSerializer, TileSerializer, UserSerializer, OrganizationSerializer
 from .helpers.table_preprocessing import get_database_schemas_and_tables, process_table
 import concurrent.futures
 
@@ -91,11 +91,21 @@ def user_details(request, user_id):
     
 
 @api_view(["POST"])
+@verify_session()
 def create_dashboard(request):
     try:
+        user_id = request.supertokens.get_user_id()
+        print(user_id)
+        user = get_object_or_404(User, id=user_id)
+        org_id = user.organization.id
+        request.data['organization'] = org_id
+        request.data['created_by'] = user.first_name + " " + user.last_name
+        request.data['dash_id'] = 'DASH010'
+        print(request.data)
         serializer = DashboardSerializer(data=request.data)
         if serializer.is_valid():
             dashboard = serializer.save()
+            print(dashboard)
             return JsonResponse(
                 {'message': 'Dashboard created successfully', 'dashboard': serializer.data},
                 status=status.HTTP_201_CREATED
@@ -249,3 +259,55 @@ def get_user_access_permissions(request):
     #     ]
     # }
     return JsonResponse({'message': 'data generated!'}, status=200)
+
+@api_view(["GET"])
+@verify_session()
+def get_dashboards(request: HttpRequest):
+    session = request.supertokens
+    user_id = session.get_user_id()
+    print(user_id)
+    user = get_object_or_404(User, id=user_id)
+    org_id = user.organization
+    dashboards = Dashboard.objects.filter(organization=org_id)
+    serializer = DashboardSerializer(dashboards, many=True)
+    return JsonResponse({'data': serializer.data}, status=200)
+
+
+@api_view(["GET"])
+@verify_session()
+def get_dashboard_tiles(request: HttpRequest):
+    user_id = request.supertokens.get_user_id()
+    dash_id = request.GET.get('dash_id', None)
+    user = get_object_or_404(User, id=user_id)
+    org_id = user.organization.id
+    tiles = Tile.objects.filter(dash_id=dash_id, organization=org_id)
+    serializer = TileSerializer(tiles, many=True)
+    return JsonResponse({'data': serializer.data}, status=200)
+
+
+@api_view(["POST"])
+@verify_session()
+def create_dashboard_tile(request: HttpRequest):
+    try:
+        dash_id = request.data.get('dash_id', None)
+        dashboard = get_object_or_404(Dashboard, dash_id=dash_id)
+        user_id = request.supertokens.get_user_id()
+        user = get_object_or_404(User, id=user_id)
+        org_id = user.organization.id
+        request.data['organization'] = org_id
+        request.data['sql_query'] = ''
+        request.data['tile_props'] = {
+            'series'    : 'lineChartSeries',
+            'title'     : request.data.get('title', 'Untitled'),
+            'categories': 'lineChartCategories',
+            'height'    : 350,
+        }
+        print(request.data)
+        serializer = TileSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse({'data': serializer.data}, status=201)
+        print(serializer.errors)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

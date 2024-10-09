@@ -28,6 +28,7 @@ import OrgSettingsPage from "./pages/OrgSettingsPage";
 import DashboardsPage from "./pages/DashboardsPage";
 import DBAccessPermissionsPage from "./pages/DBAccessPermissionsPage";
 import NewTilePage from "./pages/NewTilePage";
+import ExDashboardPage from "./pages/ExDashboardPage";
 
 // Initialize SuperTokens
 SuperTokens.init(SuperTokensConfig);
@@ -90,6 +91,14 @@ const router = createBrowserRouter(
         element={
           <SessionAuth>
             <NewTilePage />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/ex-dashboard"
+        element={
+          <SessionAuth>
+            <ExDashboardPage />
           </SessionAuth>
         }
       />

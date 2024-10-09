@@ -18,6 +18,7 @@ connection_paths = [
 
 dashboard_paths = [
     path("dashboard/", views.create_dashboard, name="create_dashboard"),
+    path("dashboards/", views.get_dashboards, name="get_dashboards"),
 ]
 
 query_paths = [
@@ -38,13 +39,19 @@ tenants_paths = [
 
 urlpatterns = [
     path("health/", views.health_check, name="health_check"),
-    *user_paths,
-    *organization_paths,
-    *connection_paths,
-    *query_paths,
-    *user_access_paths,
-    *session_info_paths,
-    *tenants_paths,
-    *dashboard_paths,
+    path("users/", views.create_user, name="create_user"),
+    path("users/<int:user_id>/", views.user_details, name="user_details"),
+    path("users/org/<int:org_id>/", views.get_users_by_organization, name="get_users_by_organization"),
+    path("organizations/", views.create_organization, name="create_organization"),
+    path("organizations/<int:org_id>/", views.organization_details, name="organization_details"),
+    path("connection/", views.create_connection, name="create_connection"),
+    path("query/", views.query_databases, name="query_databases"),
+    path("user-access-permissions/<int:user_id>", views.get_user_access_permissions, name="user_access_permissions"),
+    path("sessioninfo/", views.SessionInfoAPI.as_view()),
+    path("tenants/", views.TenantsAPI.as_view()),
+    path("dashboard/", views.create_dashboard, name="create_dashboard"),
+    path("dashboards/", views.get_dashboards, name="get_dashboards"),
+    path("dashboard-tiles/", views.get_dashboard_tiles, name="get_dashboard_tiles"),
+    path("dashboard-tile/", views.create_dashboard_tile, name="create_dashboard_tile"),
 ]
 
