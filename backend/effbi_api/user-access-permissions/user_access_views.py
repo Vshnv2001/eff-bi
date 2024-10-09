@@ -17,8 +17,10 @@ def get_user_access_permissions(request, user_id):
     #    {'message': 'User permissions:',
     #     'data': [
     #         {table_name: name1,
+                table_id: id1,
     #          permissions: 'Admin'},
     #         {table_name: name2,
+                table_id: id2,
     #          permissions: 'View'},
     #     ]
     # })
@@ -26,16 +28,20 @@ def get_user_access_permissions(request, user_id):
     # Check that user is valid
     get_object_or_404(User, id=user_id)
     # Query the UserAccessPermissions table and get all instances of the current user's permission
-    permissions = UserAccessPermissions.objects.filter(user_id=user_id)
-    serializer = UserPermissionsSerializer(permissions, many=True)
+    permissions = UserAccessPermissions.objects.filter(user_id=user_id).select_related('table_id')
 
-    data = []
-    for permission in serializer.data:
-        data.append({
-            # query table names from orgTable and map from tableid to name
-            'table_name': OrgTables.objects.get(id=permission['table_id']).table_name,
-            'permission': permission['permission']
-        })
+    # {OrgTable: permission}
+    table_permissions = {}
+    for perm in permissions:
+        # Admin permission is the highest level
+        if perm.permission == 'Admin' or perm.table_id not in table_permissions:
+            table_permissions[perm.table_id] = perm.permission
+
+    data = [{
+        'table_name': table.table_name,
+        'table_id': table.id,
+        'permissions': permission} for table, permission in table_permissions.items()
+    ]
     return JsonResponse({'message': 'User permissions:', 'data': data}, status=200)
 
 
