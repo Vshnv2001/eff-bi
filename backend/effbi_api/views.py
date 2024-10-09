@@ -115,8 +115,11 @@ def add_permissions_to_user(user_id, table_id, permission):
         serializer.save()
         # If 'Admin' permission is requested, 'View' permission will also be granted (if not already granted)
         if (permission == 'Admin' and
-                not UserAccessPermissions.objects.filter(user_id=user_id, table_id=table_id, permission='View').exists()):
+                not UserAccessPermissions.objects.filter(user_id=user_id, table_id=table_id,
+                                                         permission='View').exists()):
             add_permissions_to_user(user_id, table_id, 'View')
         return {'message': 'User permissions added successfully'}, status.HTTP_201_CREATED
     else:
         return serializer.errors, status.HTTP_400_BAD_REQUEST
+
+
