@@ -54,6 +54,8 @@ import {
   Typography,
 } from "@mui/material";
 
+
+
 const chartComponents = [
   {
     component: LineChartTemplate,

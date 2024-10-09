@@ -8,6 +8,8 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Tile } from "../consts/Tile";
+import { components } from "../consts/Components";
+import { lineChartSeries, lineChartCategories } from "../components/ChartTemplates/MockData/mockData";
 
 const mockTiles = [
   {
@@ -73,18 +75,33 @@ export default function DashboardPage() {
       </Button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {tiles.map((tile) => (
-          <Card key={tile.id} className="bg-gray-800 text-white">
-            <CardBody>
-              <Typography variant="h5" className="mb-2">
-                {tile.title}
-              </Typography>
-              <Typography className="text-gray-300">
-                {tile.description}
-              </Typography>
-            </CardBody>
-          </Card>
-        ))}
+        {tiles.map((tile) => {
+          const Component = components[tile.component as keyof typeof components].component;
+          const props = components[tile.component as keyof typeof components].props;
+          console.log("Component", Component);
+          console.log("props", props);
+          if (!Component || typeof Component !== 'function') {
+            console.error(`Invalid component for tile: ${tile.title}`);
+            return null;
+          }
+          return (
+            <Card key={tile.id} className="bg-gray-800 text-white">
+              <CardBody>
+                <Typography variant="h5" className="mb-2">
+                  {tile.title}
+                </Typography>
+                <Typography className="text-gray-300">
+                  {tile.description}
+                </Typography>
+                {Component && React.createElement(Component, {
+                  series: lineChartSeries,
+                  title: "Product Trends by Month",
+                  categories: lineChartCategories,
+                })}
+              </CardBody>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );
