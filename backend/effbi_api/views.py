@@ -169,6 +169,12 @@ def add_permissions_to_user(user_id, table_id, permission):
         'table_id': table_id,
         'permission': permission
     }
+    # Check that user is in the same organization before adding permissions
+    user = get_object_or_404(User, id=user_id)
+    table = get_object_or_404(OrgTables, id=table_id)
+    if user.organization != table.organization:
+        return {'error': 'User and table must be in the same organization'}, status.HTTP_400_BAD_REQUEST
+
     serializer = UserPermissionsSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
