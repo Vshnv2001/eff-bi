@@ -8,38 +8,62 @@ import { TileProps } from "../components/Dashboard/TileProps";
 type ComponentKeys = keyof typeof componentMapping;
 
 export default function DashboardPage() {
+  console.log("component mounted")
   const navigate = useNavigate();
   const { dashboardId } = useParams();
-  
+
   const [tilesData, setTilesData] = useState<TileProps[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log("use effect")
     fetchTiles();
   }, []);
 
   const fetchTiles = async () => {
+    console.log('fetchTiles called');
+    setLoading(true);
+    setError(null);
     try {
+      console.log('Fetching tiles');
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tiles/`,
         {
           params: { dash_id: dashboardId },
         }
       );
-      console.log("tiles data", response.data.data);
-      setTilesData(response.data.data);
+  
+      console.log("Full response:", response);
+  
+      if (response.data) {
+        console.log("Tiles data", response.data);
+        setTilesData(response.data.data || []); // Set to empty array if data is not structured as expected
+      } else {
+        console.error("No data found in response");
+        setError("No data found");
+      }
     } catch (error) {
-      console.error("Error fetching tiles:", error);
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error:", error.response ? error.response.data : error.message);
+        setError("Error fetching tiles");
+      } else {
+        console.error("Unexpected error:", error);
+        setError("Unexpected error occurred");
+      }
+    } finally {
+      setLoading(false);
     }
   };
+  
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (error) return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
 
   return (
     <div className="min-h-screen bg-white p-8">
       <div className="flex justify-between items-center mb-8">
-        <Typography
-          variant="h2"
-          color="blue-gray"
-          className="text-4xl font-bold"
-        >
+        <Typography variant="h2" color="blue-gray" className="text-4xl font-bold">
           Dashboard
         </Typography>
         <Button
@@ -69,6 +93,7 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {tilesData.map((tileData) => {
+          console.log("tile data component", tileData.component)
           const Component = componentMapping[tileData.component as ComponentKeys] || null;
 
           if (!Component) {

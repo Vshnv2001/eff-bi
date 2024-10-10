@@ -6,7 +6,7 @@ interface DashboardProp {
   dashboard: DashboardProps;
 }
 
-const Dashboard: React.FC<DashboardProp> = ({ dashboard }) => {
+const DashboardCard: React.FC<DashboardProp> = ({ dashboard }) => {
   const navigate = useNavigate();
   return (
     <Card key={dashboard.dash_id} className="bg-gray-700 text-white cursor-pointer hover:" onClick={() => navigate(`/dashboards/${dashboard.dash_id}`)}>
@@ -38,4 +38,4 @@ const Dashboard: React.FC<DashboardProp> = ({ dashboard }) => {
   );
 };
 
-export default Dashboard;
+export default DashboardCard;

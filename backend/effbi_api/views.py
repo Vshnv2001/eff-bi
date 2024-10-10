@@ -13,6 +13,7 @@ from .serializer import DashboardSerializer, TileSerializer, UserSerializer, Org
 from .helpers.table_preprocessing import get_database_schemas_and_tables, process_table
 import concurrent.futures
 
+
 class SessionInfoAPI(APIView):
     @method_decorator(verify_session())
     def get(self, request, format=None):
@@ -24,6 +25,7 @@ class SessionInfoAPI(APIView):
                 "accessTokenPayload": session_.get_access_token_payload(),
             }
         )
+
 
 class TenantsAPI(APIView):
     def get(self, request, format=None):
@@ -38,6 +40,7 @@ class TenantsAPI(APIView):
             "status": "OK",
             "tenants": tenantsList,
         })
+
 
 @api_view(["GET"])
 def health_check(request):
@@ -71,7 +74,8 @@ def user_details(request, user_id):
             return JsonResponse({'message': 'User retrieved successfully', 'user': serializer.data}, status=200)
 
         elif request.method == "PATCH":
-            serializer = UserSerializer(instance=user, data=request.data, partial=True)
+            serializer = UserSerializer(
+                instance=user, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return JsonResponse(
@@ -88,7 +92,7 @@ def user_details(request, user_id):
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
 
 @api_view(["POST"])
 @verify_session()
@@ -107,7 +111,8 @@ def create_dashboard(request):
             dashboard = serializer.save()
             print(dashboard)
             return JsonResponse(
-                {'message': 'Dashboard created successfully', 'dashboard': serializer.data},
+                {'message': 'Dashboard created successfully',
+                    'dashboard': serializer.data},
                 status=status.HTTP_201_CREATED
             )
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -125,13 +130,15 @@ def create_organization(request):
         if serializer.is_valid():
             organization = serializer.save()
             return JsonResponse(
-                {'message': 'Organization created successfully', 'organization': serializer.data},
+                {'message': 'Organization created successfully',
+                    'organization': serializer.data},
                 status=status.HTTP_201_CREATED
             )
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 @api_view(["GET", "PATCH", "DELETE"])
 def organization_details(request, org_id):
@@ -145,7 +152,8 @@ def organization_details(request, org_id):
             )
 
         elif request.method == "PATCH":
-            serializer = OrganizationSerializer(instance=organization, data=request.data, partial=True)
+            serializer = OrganizationSerializer(
+                instance=organization, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return JsonResponse(
@@ -164,7 +172,7 @@ def organization_details(request, org_id):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
- 
+
 @api_view(["GET"])
 def get_users_by_organization(request, org_id):
     try:
@@ -180,6 +188,7 @@ def get_users_by_organization(request, org_id):
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 @api_view(["POST"])
 def create_connection(request):
@@ -197,20 +206,21 @@ def create_connection(request):
         organization = get_object_or_404(Organization, id=org_id)
         organization.database_uri = uri
         organization.save()
-        
+
         db_data = get_database_schemas_and_tables(uri, db_type)
-    
+
         if not db_data:
             print("No data retrieved from the database.")
             return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
         tasks = []
         with concurrent.futures.ThreadPoolExecutor() as executor:
             for schema_name, tables in db_data.items():
                 for table_name, table_info in tables.items():
-                    task = executor.submit(process_table, schema_name, table_name, table_info, uri, organization)
+                    task = executor.submit(
+                        process_table, schema_name, table_name, table_info, uri, organization)
                     tasks.append(task)
-            
+
             for future in concurrent.futures.as_completed(tasks):
                 org_table = future.result()
                 org_table.save()
@@ -218,7 +228,7 @@ def create_connection(request):
         return JsonResponse({'message': 'meta data created and saved'}, status=201)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
 
 @api_view(["POST"])
 def query_databases(request):
@@ -260,6 +270,7 @@ def get_user_access_permissions(request):
     # }
     return JsonResponse({'message': 'data generated!'}, status=200)
 
+
 @api_view(["GET"])
 @verify_session()
 def get_dashboards(request: HttpRequest):
@@ -276,12 +287,16 @@ def get_dashboards(request: HttpRequest):
 @api_view(["GET"])
 @verify_session()
 def get_dashboard_tiles(request: HttpRequest):
+    print("get tiles request called")
     user_id = request.supertokens.get_user_id()
     dash_id = request.GET.get('dash_id', None)
     user = get_object_or_404(User, id=user_id)
     org_id = user.organization.id
+    print("dash_id: ", dash_id)
     tiles = Tile.objects.filter(dash_id=dash_id, organization=org_id)
+    print("filtered tiles: ", tiles)
     serializer = TileSerializer(tiles, many=True)
+    print("data", serializer.data)
     return JsonResponse({'data': serializer.data}, status=200)
 
 
@@ -298,12 +313,16 @@ def create_dashboard_tile(request: HttpRequest):
         org_id = user.organization.id
         request.data['organization'] = org_id
         request.data['sql_query'] = ''
-        request.data['component'] = 'lineChartTemplate'
+        request.data['component'] = 'LineChartTemplate'
         request.data['tile_props'] = {
-            'series'    : 'lineChartSeries',
-            'title'     : request.data.get('title', 'Untitled'),
-            'categories': 'lineChartCategories',
-            'height'    : 350,
+            'series': [
+                {
+                    "name": "Desktops",
+                    "data": [10, 41, 35, 51, 49, 62, 69, 91, 148],
+                },
+            ],
+            'title': request.data.get('title', 'Untitled'),
+            'categories': ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
         }
         print(request.data)
         serializer = TileSerializer(data=request.data)
