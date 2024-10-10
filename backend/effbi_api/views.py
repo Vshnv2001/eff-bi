@@ -51,52 +51,6 @@ def health_check(request):
     return JsonResponse({'message': 'Server is running successfully'}, status=200)
 
 
-@api_view(["POST"])
-def create_user(request):
-    try:
-        print(request.data)
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            print(serializer)
-            serializer.save()
-            return JsonResponse(
-                {'message': 'User created successfully', 'user': serializer.data}, status=status.HTTP_201_CREATED
-            )
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-@api_view(["GET", "PATCH", "DELETE"])
-def user_details(request, user_id):
-    try:
-        user = User.objects.get(id=user_id)
-
-        if request.method == "GET":
-            serializer = UserSerializer(user)
-            return JsonResponse({'message': 'User retrieved successfully', 'user': serializer.data}, status=200)
-
-        elif request.method == "PATCH":
-            serializer = UserSerializer(
-                instance=user, data=request.data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                return JsonResponse(
-                    {'message': 'User updated successfully', 'user': serializer.data}, status=status.HTTP_200_OK
-                )
-            return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        elif request.method == "DELETE":
-            user.delete()
-            return JsonResponse({'message': 'User deleted successfully'}, status=status.HTTP_200_OK)
-
-    except User.DoesNotExist:
-        return JsonResponse({'error': f'No user with id:{user_id} exists'}, status=status.HTTP_404_NOT_FOUND)
-
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 @api_view(["GET"])
 def get_user_access_permissions(request):
     # query the useraccess permissions table
@@ -149,82 +103,14 @@ def create_dashboard(request):
 
 
 @api_view(["POST"])
-def create_organization(request):
-    try:
-        print(f"Raw Request Data: {request.body}")
-        print(f"Parsed Request Data: {request.data}")
-        serializer = OrganizationSerializer(data=request.data)
-        if serializer.is_valid():
-            organization = serializer.save()
-            return JsonResponse(
-                {'message': 'Organization created successfully',
-                    'organization': serializer.data},
-                status=status.HTTP_201_CREATED
-            )
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-@api_view(["GET", "PATCH", "DELETE"])
-def organization_details(request, org_id):
-    try:
-        organization = Organization.objects.get(id=org_id)
-
-        if request.method == "GET":
-            serializer = OrganizationSerializer(organization)
-            return JsonResponse(
-                {'message': 'Organization retrieved successfully', 'organization': serializer.data}, status=200
-            )
-
-        elif request.method == "PATCH":
-            serializer = OrganizationSerializer(
-                instance=organization, data=request.data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                return JsonResponse(
-                    {'message': 'Organization updated successfully', 'organization': serializer.data}, status=200
-                )
-            return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        elif request.method == "DELETE":
-            # print(organization)
-            organization.delete()
-            return JsonResponse({'message': f'Organization with id:{org_id} deleted successfully'}, status=204)
-
-    except Organization.DoesNotExist:
-        return JsonResponse({'error': f'No organization with id:{org_id} exists'}, status=status.HTTP_404_NOT_FOUND)
-
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-@api_view(["GET"])
-def get_users_by_organization(request, org_id):
-    try:
-        organization = Organization.objects.get(id=org_id)
-        users = User.objects.filter(organization=org_id)
-        serializer = UserSerializer(users, many=True)
-        return JsonResponse(
-            {'message': 'Users retrieved successfully', 'users': serializer.data}, status=status.HTTP_200_OK
-        )
-
-    except Organization.DoesNotExist:
-        return JsonResponse({'error': f'No organization with id:{org_id} exists'}, status=status.HTTP_404_NOT_FOUND)
-
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-@api_view(["POST"])
 def create_connection(request):
     try:
         uri = request.data.get('uri', None)
         db_type = request.data.get('db_type', None)
         user_id = request.data.get('user_id', None)
         if not uri or not user_id or not db_type:
-            return JsonResponse({'error': "Both uri, org_id and db_type are required"}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({'error': "uri, user_id and db_type are required"},
+                                    status=status.HTTP_400_BAD_REQUEST)
 
         user = get_object_or_404(User, id=user_id)
         organization = user.organization
@@ -236,8 +122,8 @@ def create_connection(request):
         db_data = get_database_schemas_and_tables(uri, db_type)
 
         if not db_data:
-            print("No data retrieved from the database.")
-            return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return JsonResponse({'error': "No data retrieved from the database."},
+                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         tasks = []
         with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -284,6 +170,12 @@ def add_permissions_to_user(user_id, table_id, permission):
         'table_id': table_id,
         'permission': permission
     }
+    # Check that user is in the same organization before adding permissions
+    user = get_object_or_404(User, id=user_id)
+    table = get_object_or_404(OrgTables, id=table_id)
+    if user.organization != table.organization:
+        return {'error': 'User and table must be in the same organization'}, status.HTTP_400_BAD_REQUEST
+
     serializer = UserPermissionsSerializer(data=data)
     if serializer.is_valid():
         serializer.save()

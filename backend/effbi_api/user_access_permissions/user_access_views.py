@@ -96,9 +96,7 @@ def delete_user_permissions(request, user_email, table_id):
     user = get_object_or_404(User, email=user_email)
 
     user_id = user.id
-    result, success = remove_user_permission(user_id, table_id, 'Admin')
-    if success != status.HTTP_200_OK:
-        return JsonResponse(result, success)
+    remove_user_permission(user_id, table_id, 'Admin')
     result, success = remove_user_permission(user_id, table_id, 'View')
     return JsonResponse(result, status=success)
 
@@ -107,9 +105,9 @@ def remove_user_permission(user_id, table_id, permission):
     """
     Utility function to add permissions for a user to a specific table.
     """
-    permission = UserAccessPermissions.objects.filter(user_id=user_id, table_id=table_id, permission=permission)
-    if not permission.exists():
-        return {'error': 'User does not have this permission for this table'}, status.HTTP_404_NOT_FOUND
+    check = UserAccessPermissions.objects.filter(user_id=user_id, table_id=table_id, permission=permission)
+    if not check.exists():
+        return {'error': f'User does not have {permission} permission for this table'}, status.HTTP_404_NOT_FOUND
 
-    permission.delete()
+    check.delete()
     return {'message': 'User permission removed successfully'}, status.HTTP_200_OK
