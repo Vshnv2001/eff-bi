@@ -15,8 +15,8 @@ import os
 from corsheaders.defaults import default_headers
 from typing import List
 from supertokens_python import get_all_cors_headers
-from supertokens_python import init
 from .config import supertokens_config, app_info, recipe_list
+from supertokens_python import init, InputAppInfo, SupertokensConfig
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -94,7 +94,8 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME', 'effbi-db'),
         'USER': os.environ.get('DB_USER', 'effbiuser'),
         'PASSWORD': os.environ.get('DB_PASSWORD', 'effortless'),
-        'HOST': os.environ.get('DB_HOST', 'db'),  # Changed from 'postgres_db' to 'db'
+        # Changed from 'postgres_db' to 'db'
+        'HOST': os.environ.get('DB_HOST', 'db'),
         'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
@@ -142,11 +143,15 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 init(
-    supertokens_config=supertokens_config,
+    #supertokens_config=supertokens_config,
     app_info=app_info,
     framework="django",
     recipe_list=recipe_list,
-    mode='wsgi'
+    mode='wsgi',
+    supertokens_config=SupertokensConfig(
+        connection_uri='https://st-dev-0bf497e0-8705-11ef-b932-3d3f954bbd00.aws.supertokens.io',
+        api_key='a-gAwJrcQSej7QhXAsZWPp-y4C',
+    ),
 )
 
 CORS_ORIGIN_WHITELIST = [
