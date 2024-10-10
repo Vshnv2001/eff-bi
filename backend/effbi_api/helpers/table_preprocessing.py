@@ -2,23 +2,21 @@ import psycopg2
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
+from .sql_scripts import schema_query_dict, schema_table_query_dict
 
 from ..models import OrgTables
 load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-def get_database_schemas_and_tables(db_url):
+
+def get_database_schemas_and_tables(db_url, db_type="postgres"):
     try:
         conn = psycopg2.connect(db_url)
         cursor = conn.cursor()
 
         # Query to get all schemas
-        cursor.execute("""
-            SELECT schema_name
-            FROM information_schema.schemata
-            WHERE schema_name NOT IN ('pg_catalog', 'information_schema');
-        """)
+        cursor.execute(schema_query_dict[db_type])
         schemas = cursor.fetchall()
 
         result = {}
@@ -42,11 +40,7 @@ def get_database_schemas_and_tables(db_url):
                 result[schema_name][table_name] = []
 
                 # Query to get all columns for the current table
-                cursor.execute(f"""
-                    SELECT column_name, data_type
-                    FROM information_schema.columns
-                    WHERE table_schema = %s AND table_name = %s;
-                """, (schema_name, table_name))
+                cursor.execute(schema_table_query_dict[db_type], (schema_name, table_name))
                 columns = cursor.fetchall()
 
                 # Add columns to the result

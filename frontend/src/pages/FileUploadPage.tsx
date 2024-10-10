@@ -17,7 +17,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import CloudUploadIcon from '@mui/icons-material/CloudUpload'; // Cloud upload icon
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 type ParsedData = Record<string, any>;
 
@@ -114,7 +114,7 @@ const FileUpload: React.FC = () => {
         </Typography>
         <TextField
           type="file"
-          accept=".csv, .xls, .xlsx"
+          accept=".csv"
           onChange={handleFileChange}
           fullWidth
           margin="normal"
@@ -124,7 +124,7 @@ const FileUpload: React.FC = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => document.querySelector('input[type="file"]')?.click()} // Trigger file input click
+          onClick={() => document.querySelector('input[type="file"]')?.click()}
           className="mt-2 px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded"
         >
           Upload File
@@ -137,7 +137,7 @@ const FileUpload: React.FC = () => {
       {data.length > 0 && (
         <>
           <Box
-            className="max-h-96 overflow-y-auto mt-2 w-full" // Limit the height for scrolling
+            className="max-h-96 overflow-y-auto mt-2 w-full"
           >
             <TableContainer component={Paper}>
               <Table stickyHeader>

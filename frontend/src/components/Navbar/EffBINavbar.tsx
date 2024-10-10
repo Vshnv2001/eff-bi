@@ -48,7 +48,7 @@ export default function EffBINavbar() {
             size="sm"
             color="white"
             className="flex items-center gap-2"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/dashboards")}
           >
             Dashboards
           </Button>
@@ -85,27 +85,18 @@ export default function EffBINavbar() {
             </MenuHandler>
             <MenuList className="bg-gray-800">
               <MenuItem
-                variant="text"
-                size="sm"
-                color="white"
                 className="flex items-center text-white gap-2 p-3 bg-gray-800 border-none"
                 onClick={() => navigate("/settings/database")}
               >
                 Database Settings
               </MenuItem>
               <MenuItem
-                variant="text"
-                size="sm"
-                color="white"
                 className="flex items-center text-white gap-2 p-3 bg-gray-800 border-none"
                 onClick={() => navigate("/settings/organization")}
               >
                 Organization Management
               </MenuItem>
               <MenuItem
-                variant="text"
-                size="sm"
-                color="white"
                 className="flex items-center text-white gap-2 p-3 bg-gray-800 border-none"
                 onClick={() => navigate("/settings/access-permissions")}
               >
