@@ -41,8 +41,17 @@ const router = createBrowserRouter(
       <Route path="/auth/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/reset-password" element={<ResetPassword />} />
       <Route index element={<LandingPage />} />
-        <Route path="/auth/save" element={<SaveUserData />} />
-        <Route path="/auth/fetch" element={<FetchUserData />} />
+      <Route path="/auth/save" element={<SaveUserData />} />
+      <Route path="/auth/fetch" element={<FetchUserData />} />
+
+      {/* Protected Routes */}
+      <Route
+        element={
+          <SessionAuth>
+            <Outlet />
+          </SessionAuth>
+        }
+      >
         <Route path="/chatbot" element={<ChatbotPage />} />
         <Route path="/file/upload" element={<FileUpload />} />
         <Route path="/settings/database" element={<DBSettingsPage />} />
@@ -53,23 +62,12 @@ const router = createBrowserRouter(
           path="/dashboards/:dashboardId/tiles/new"
           element={<NewTilePage />}
         />
-        <Route path="/ex-dashboard" element={<ExDashboardPage />} />
+        <Route path="/dashboard/demo" element={<ExDashboardPage />} />
         <Route
           path="/settings/access-permissions"
           element={<DBAccessPermissionsPage />}
         />
-
-      {/* Protected Routes */}
-      <Route
-        element={
-          <SessionAuth>
-            <Outlet />
-          </SessionAuth>
-        }
-      >
-        
       </Route>
-
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )

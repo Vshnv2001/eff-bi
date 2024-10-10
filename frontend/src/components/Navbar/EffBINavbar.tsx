@@ -15,11 +15,9 @@ export default function EffBINavbar() {
   const navigate = useNavigate();
   const sessionContext = useSessionContext();
 
-  /*
   if (sessionContext.loading || !sessionContext.userId) {
     return null;
   }
-  */
 
   async function logoutClicked() {
     await signOut();
@@ -99,9 +97,6 @@ export default function EffBINavbar() {
                 Organization Management
               </MenuItem>
               <MenuItem
-                variant="text"
-                size="sm"
-                color="white"
                 className="flex items-center text-white gap-2 p-3 bg-gray-800 border-none"
                 onClick={() => navigate("/settings/access-permissions")}
               >

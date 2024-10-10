@@ -4,5 +4,5 @@ export interface TileProps {
     dash_id: number;
     title: string;
     description: string;
-    props: any;
+    tile_props: any;
 }

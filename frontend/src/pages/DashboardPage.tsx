@@ -8,7 +8,7 @@ import { TileProps } from "../components/Dashboard/TileProps";
 type ComponentKeys = keyof typeof componentMapping;
 
 export default function DashboardPage() {
-  console.log("component mounted")
+  console.log("component mounted");
   const navigate = useNavigate();
   const { dashboardId } = useParams();
 
@@ -17,35 +17,38 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log("use effect")
+    console.log("use effect");
     fetchTiles();
   }, []);
 
   const fetchTiles = async () => {
-    console.log('fetchTiles called');
+    console.log("fetchTiles called");
     setLoading(true);
     setError(null);
     try {
-      console.log('Fetching tiles');
+      console.log("Fetching tiles");
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tiles/`,
         {
           params: { dash_id: dashboardId },
         }
       );
-  
+
       console.log("Full response:", response);
-  
+
       if (response.data) {
-        console.log("Tiles data", response.data);
-        setTilesData(response.data.data || []); // Set to empty array if data is not structured as expected
+        console.log("Tiles data", response.data.data);
+        setTilesData(response.data.data || []);
       } else {
         console.error("No data found in response");
         setError("No data found");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error("Axios error:", error.response ? error.response.data : error.message);
+        console.error(
+          "Axios error:",
+          error.response ? error.response.data : error.message
+        );
         setError("Error fetching tiles");
       } else {
         console.error("Unexpected error:", error);
@@ -55,15 +58,28 @@ export default function DashboardPage() {
       setLoading(false);
     }
   };
-  
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-  if (error) return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  if (error)
+    return (
+      <div className="min-h-screen flex items-center justify-center text-red-500">
+        {error}
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-white p-8">
       <div className="flex justify-between items-center mb-8">
-        <Typography variant="h2" color="blue-gray" className="text-4xl font-bold">
+        <Typography
+          variant="h2"
+          color="blue-gray"
+          className="text-4xl font-bold"
+        >
           Dashboard
         </Typography>
         <Button
@@ -93,20 +109,22 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {tilesData.map((tileData) => {
-          console.log("tile data component", tileData.component)
-          const Component = componentMapping[tileData.component as ComponentKeys] || null;
+          console.log("tile data component", tileData.component);
+          const Component =
+            componentMapping[tileData.component as ComponentKeys] || null;
 
           if (!Component) {
             console.error(`Invalid component for tile: ${tileData.title}`);
             return null;
           }
 
-          let componentProps = tileData.props;
-          if (typeof tileData.props === 'string') {
+          let componentProps = tileData.tile_props;
+          console.log("component props", componentProps);
+          if (typeof tileData.tile_props === "string") {
             try {
-              componentProps = JSON.parse(tileData.props);
+              componentProps = JSON.parse(tileData.tile_props);
             } catch (error) {
-              console.error('Error parsing tile props', error);
+              console.error("Error parsing tile props", error);
               return null;
             }
           }
