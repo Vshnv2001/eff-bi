@@ -11,14 +11,6 @@ import { Tile } from "../consts/Tile";
 import { components } from "../consts/Components";
 import { lineChartSeries, lineChartCategories } from "../components/ChartTemplates/MockData/mockData";
 
-const mockTiles = [
-  {
-    id: 1,
-    title: "Tile 1",
-    description: "This is a placeholder tile. Replace with actual content.",
-  },
-];
-
 export default function DashboardPage() {
   const navigate = useNavigate(); 
   const { dashboardId } = useParams();

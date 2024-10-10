@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Dialog,
   DialogHeader,
@@ -12,7 +11,7 @@ import {
 import axios from "axios";
 
 // Define the props type
-interface DashboardModalProps {
+interface DashboardFormProps {
   open: boolean;
   handleOpen: () => void;
   setOpen: (open: boolean) => void;
@@ -20,12 +19,9 @@ interface DashboardModalProps {
   setDashboardName: (name: string) => void;
   dashboardDescription: string;
   setDashboardDescription: (description: string) => void;
-  firstName: string;
-  lastName: string;
-  organizationId: string;
 }
 
-export default function DashboardModal({
+export default function DashboardForm({
   open,
   handleOpen,
   setOpen,
@@ -33,10 +29,7 @@ export default function DashboardModal({
   setDashboardName,
   dashboardDescription,
   setDashboardDescription,
-  firstName,
-  lastName,
-  organizationId,
-}: DashboardModalProps) {
+}: DashboardFormProps) {
 
   const handleCreate = async () => {
     try {
@@ -81,6 +74,7 @@ export default function DashboardModal({
             containerProps={{
               className: "min-w-[100px]",
             }}
+            crossOrigin="anonymous"
           />
         </div>
         <div className="mb-4">

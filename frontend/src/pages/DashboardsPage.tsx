@@ -1,23 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
-  Card,
-  CardHeader,
-  CardBody,
   Typography,
-  Chip,
   Button,
-  Dialog,
-  DialogBody,
-  DialogFooter,
-  DialogHeader,
 } from "@material-tailwind/react";
-import DashboardModal from "../components/DashboardModal/DashboardModal";
-import { useAuth } from "../components/Authentication/AuthenticationContext";
-import DashboardCard from "../components/DashboardModal/DashboardCard";
+import DashboardForm from "../components/Dashboard/DashboardForm";
+import Tile from "../components/Dashboard/Tile";
 import axios from "axios";
 import { Dashboard } from "../consts/Dashboard";
-
-
 
 export default function DashboardsPage() {
   const [open, setOpen] = useState(false);
@@ -38,12 +27,6 @@ export default function DashboardsPage() {
 
   console.log(dashboards);
 
-  const {
-    firstName,
-    lastName,
-    organizationId,
-  } = useAuth();
-
   const handleOpen = () => {
     setOpen(!open);
     setDashboardName("");
@@ -60,7 +43,7 @@ export default function DashboardsPage() {
           Create Dashboard
         </Button>
     </div>
-    <DashboardModal
+    <DashboardForm
         open={open}
         handleOpen={handleOpen}
         setOpen={setOpen}
@@ -68,15 +51,12 @@ export default function DashboardsPage() {
         setDashboardName={setDashboardName}
         dashboardDescription={dashboardDescription}
         setDashboardDescription={setDashboardDescription}
-        firstName={firstName}
-        lastName={lastName}
-        organizationId={organizationId}
     />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {dashboards.map((dashboard) => {
           return (
-            <DashboardCard key={dashboard.dash_id} dashboard={dashboard} />
+            <Tile key={dashboard.dash_id} dashboard={dashboard} />
           );
         })}
       </div>

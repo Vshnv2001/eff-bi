@@ -15,9 +15,11 @@ export default function EffBINavbar() {
   const navigate = useNavigate();
   const sessionContext = useSessionContext();
 
+  /*
   if (sessionContext.loading || !sessionContext.userId) {
     return null;
   }
+  */
 
   async function logoutClicked() {
     await signOut();

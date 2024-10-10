@@ -40,6 +40,24 @@ const router = createBrowserRouter(
       <Route path="/auth" element={<Authentication />} />
       <Route path="/auth/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/reset-password" element={<ResetPassword />} />
+      <Route index element={<LandingPage />} />
+        <Route path="/auth/save" element={<SaveUserData />} />
+        <Route path="/auth/fetch" element={<FetchUserData />} />
+        <Route path="/chatbot" element={<ChatbotPage />} />
+        <Route path="/file/upload" element={<FileUpload />} />
+        <Route path="/settings/database" element={<DBSettingsPage />} />
+        <Route path="/settings/organization" element={<OrgSettingsPage />} />
+        <Route path="/dashboards" element={<DashboardsPage />} />
+        <Route path="/dashboards/:dashboardId" element={<DashboardPage />} />
+        <Route
+          path="/dashboards/:dashboardId/tiles/new"
+          element={<NewTilePage />}
+        />
+        <Route path="/ex-dashboard" element={<ExDashboardPage />} />
+        <Route
+          path="/settings/access-permissions"
+          element={<DBAccessPermissionsPage />}
+        />
 
       {/* Protected Routes */}
       <Route
@@ -49,63 +67,7 @@ const router = createBrowserRouter(
           </SessionAuth>
         }
       >
-        <Route index element={<LandingPage />} />
-        <Route path="/auth/save" element={<SaveUserData />} />
-        <Route path="/auth/fetch" element={<FetchUserData />} />
-        <Route path="/chatbot" element={<ChatbotPage />} />
-        <Route path="/file/upload" element={<FileUpload />} />
-        <Route
-        path="/settings/database"
-        element={
-          <SessionAuth>
-            <DBSettingsPage />
-          </SessionAuth>
-        }
-      />
-        <Route
-        path="/settings/organization"
-        element={
-          <SessionAuth>
-            <OrgSettingsPage />
-          </SessionAuth>
-        }
-      />
-      <Route
-        path="/dashboards"
-        element={
-          <SessionAuth>
-            <DashboardsPage />
-          </SessionAuth>
-        }
-      />
-      <Route
-        path="/dashboards/:dashboardId"
-        element={
-          <SessionAuth>
-            <DashboardPage />
-          </SessionAuth>
-        }
-      />
-      <Route
-        path="/dashboards/:dashboardId/tiles/new"
-        element={
-          <SessionAuth>
-            <NewTilePage />
-          </SessionAuth>
-        }
-      />
-      <Route
-        path="/ex-dashboard"
-        element={
-          <SessionAuth>
-            <ExDashboardPage />
-          </SessionAuth>
-        }
-      />
-        <Route
-          path="/settings/access-permissions"
-          element={<DBAccessPermissionsPage />}
-        />
+        
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />

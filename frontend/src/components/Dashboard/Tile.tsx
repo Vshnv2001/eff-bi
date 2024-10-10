@@ -2,11 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardHeader, CardBody, Typography, Chip } from "@material-tailwind/react";
 import { Dashboard } from "../../consts/Dashboard";
 
-interface DashboardCardProps {
+interface TileProps {
   dashboard: Dashboard;
 }
 
-const DashboardCard: React.FC<DashboardCardProps> = ({ dashboard }) => {
+const Tile: React.FC<TileProps> = ({ dashboard }) => {
   const navigate = useNavigate();
   return (
     <Card key={dashboard.dash_id} className="bg-gray-700 text-white cursor-pointer hover:" onClick={() => navigate(`/dashboards/${dashboard.dash_id}`)}>
@@ -38,4 +38,4 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ dashboard }) => {
   );
 };
 
-export default DashboardCard;
+export default Tile;
