@@ -6,7 +6,7 @@ import {
 import DashboardForm from "../components/Dashboard/DashboardForm";
 import DashboardCard from "../components/Dashboard/DashboardCard";
 import axios from "axios";
-import { DashboardProps } from "../components/Dashboard/consts/DashboardProps";
+import { DashboardProps } from "../components/Dashboard/DashboardProps";
 
 export default function DashboardsPage() {
   const [open, setOpen] = useState(false);

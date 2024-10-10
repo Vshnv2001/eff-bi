@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Card, CardHeader, CardBody, Typography, Chip } from "@material-tailwind/react";
-import { DashboardProps } from "./consts/DashboardProps";
+import { DashboardProps } from "./DashboardProps";
 
 interface DashboardProp {
   dashboard: DashboardProps;

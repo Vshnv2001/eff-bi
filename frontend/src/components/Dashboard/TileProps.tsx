@@ -1,4 +1,4 @@
-export interface Tile {
+export interface TileProps {
     component: string;
     id: number;
     dash_id: number;
