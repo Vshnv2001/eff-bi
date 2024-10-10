@@ -4,16 +4,16 @@ import {
   Button,
 } from "@material-tailwind/react";
 import DashboardForm from "../components/Dashboard/DashboardForm";
-import Tile from "../components/Dashboard/Tile";
+import DashboardCard from "../components/Dashboard/DashboardCard";
 import axios from "axios";
-import { Dashboard } from "../consts/Dashboard";
+import { DashboardProps } from "../components/Dashboard/consts/DashboardProps";
 
 export default function DashboardsPage() {
   const [open, setOpen] = useState(false);
   const [dashboardName, setDashboardName] = useState("");
   const [dashboardDescription, setDashboardDescription] = useState("");
 
-  const [dashboards, setDashboards] = useState<Dashboard[]>([]);
+  const [dashboards, setDashboards] = useState<DashboardProps[]>([]);
 
   useEffect(() => {
     console.log("fetching dashboards");
@@ -56,7 +56,7 @@ export default function DashboardsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {dashboards.map((dashboard) => {
           return (
-            <Tile key={dashboard.dash_id} dashboard={dashboard} />
+            <DashboardCard key={dashboard.dash_id} dashboard={dashboard} />
           );
         })}
       </div>

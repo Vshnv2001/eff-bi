@@ -1,4 +1,4 @@
-export interface Dashboard {
+export interface DashboardProps {
     dash_id: string;
     title: string;
     created_by: string;

@@ -7,15 +7,14 @@ import {
 } from "@material-tailwind/react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { Tile } from "../consts/Tile";
-import { components } from "../consts/Components";
-import { lineChartSeries, lineChartCategories } from "../components/ChartTemplates/MockData/mockData";
+import { Tile } from "../components/Dashboard/consts/Tile";
+import { components } from "../components/Dashboard/consts/Components";
 
 export default function DashboardPage() {
   const navigate = useNavigate(); 
   const { dashboardId } = useParams();
 
-  const [tiles, setTiles] = useState<Tile[]>([]);
+  const [dashboardData, setDashboardData] = useState<Tile[]>([]);
 
   useEffect(() => {
     fetchTiles();
@@ -29,8 +28,8 @@ export default function DashboardPage() {
         },
       }
     );
-    console.log("tiles", response.data.data);
-    setTiles(response.data.data);
+    console.log("dashboard data", response.data.data);
+    setDashboardData(response.data.data);
   };
 
 
@@ -67,12 +66,12 @@ export default function DashboardPage() {
       </Button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {tiles.map((tile) => {
-          const Component = components[tile.component as keyof typeof components].component;
+        {dashboardData.map((tile) => {
+          const component = components[tile.component as keyof typeof components].component;
           const props = components[tile.component as keyof typeof components].props;
-          console.log("Component", Component);
+          console.log("Component", component);
           console.log("props", props);
-          if (!Component || typeof Component !== 'function') {
+          if (!component || typeof component !== 'function') {
             console.error(`Invalid component for tile: ${tile.title}`);
             return null;
           }
@@ -85,10 +84,8 @@ export default function DashboardPage() {
                 <Typography className="text-gray-300">
                   {tile.description}
                 </Typography>
-                {Component && React.createElement(Component, {
-                  series: lineChartSeries,
-                  title: "Product Trends by Month",
-                  categories: lineChartCategories,
+                {component && React.createElement(component, {
+                 props: props,
                 })}
               </CardBody>
             </Card>
