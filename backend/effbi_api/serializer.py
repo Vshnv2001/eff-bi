@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Dashboard, Tile, User, Organization
+from .models import Dashboard, Tile, User, Organization, UserAccessPermissions
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -21,4 +21,9 @@ class DashboardSerializer(serializers.ModelSerializer):
 class TileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tile
+        fields = "__all__"
+
+class UserPermissionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserAccessPermissions
         fields = "__all__"

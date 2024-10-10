@@ -10,8 +10,12 @@ from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from .models import User, Organization, OrgTables
 from .serializer import DashboardSerializer, TileSerializer, UserSerializer, OrganizationSerializer
+from .models import User, UserAccessPermissions
 from .helpers.table_preprocessing import get_database_schemas_and_tables, process_table
 import concurrent.futures
+
+
+from .serializer import UserPermissionsSerializer
 
 
 class SessionInfoAPI(APIView):
@@ -200,10 +204,9 @@ def create_connection(request):
             return JsonResponse({'error': "Both uri, org_id and db_type are required"}, status=status.HTTP_400_BAD_REQUEST)
 
         user = get_object_or_404(User, id=user_id)
-        org_id = user.organization
+        organization = user.organization
 
         # update organization with uri
-        organization = get_object_or_404(Organization, id=org_id)
         organization.database_uri = uri
         organization.save()
 
@@ -224,6 +227,7 @@ def create_connection(request):
             for future in concurrent.futures.as_completed(tasks):
                 org_table = future.result()
                 org_table.save()
+                add_permissions_to_user(user_id, org_table.id, 'Admin')
 
         return JsonResponse({'message': 'meta data created and saved'}, status=201)
     except Exception as e:
@@ -245,91 +249,28 @@ def query_databases(request):
     return JsonResponse({'message': 'data generated!'}, status=200)
 
 
-@api_view(["GET"])
-def get_user_access_permissions(request):
-    # query the useraccess permissions table
-    # get based on the user_id
-    # view_acceess = [1, 2, 3]
-    # admin_access = [2, 3]
-    # query table names from orgTable
-    # mapping from tableid to name
-    # {
-    #     table: access,
-    #     table_name 1: view,
-    #     table_name 2: view, admin,
-    #     table_name 3: view, admin
-    # }
-    # {
-    #     data: [
-    #         {table_name: name1,
-    #          permissions: ['View', 'Admin']},
-    #         {table_name: name2,
-    #          permissions: ['View']},
+def add_permissions_to_user(user_id, table_id, permission):
+    """
+    Utility function to add permissions for a user to a specific table.
+    """
+    if UserAccessPermissions.objects.filter(user_id=user_id, table_id=table_id, permission=permission).exists():
+        return {'error': 'Permission already exists for this user and table'}, status.HTTP_409_CONFLICT
 
-    #     ]
-    # }
-    return JsonResponse({'message': 'data generated!'}, status=200)
-
-
-@api_view(["GET"])
-@verify_session()
-def get_dashboards(request: HttpRequest):
-    session = request.supertokens
-    user_id = session.get_user_id()
-    print(user_id)
-    user = get_object_or_404(User, id=user_id)
-    org_id = user.organization
-    dashboards = Dashboard.objects.filter(organization=org_id)
-    serializer = DashboardSerializer(dashboards, many=True)
-    return JsonResponse({'data': serializer.data}, status=200)
+    data = {
+        'user_id': user_id,
+        'table_id': table_id,
+        'permission': permission
+    }
+    serializer = UserPermissionsSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        # If 'Admin' permission is requested, 'View' permission will also be granted (if not already granted)
+        if (permission == 'Admin' and
+                not UserAccessPermissions.objects.filter(user_id=user_id, table_id=table_id,
+                                                         permission='View').exists()):
+            add_permissions_to_user(user_id, table_id, 'View')
+        return {'message': 'User permissions added successfully'}, status.HTTP_201_CREATED
+    else:
+        return serializer.errors, status.HTTP_400_BAD_REQUEST
 
 
-@api_view(["GET"])
-@verify_session()
-def get_dashboard_tiles(request: HttpRequest):
-    print("get tiles request called")
-    user_id = request.supertokens.get_user_id()
-    dash_id = request.GET.get('dash_id', None)
-    user = get_object_or_404(User, id=user_id)
-    org_id = user.organization.id
-    print("dash_id: ", dash_id)
-    tiles = Tile.objects.filter(dash_id=dash_id, organization=org_id)
-    print("filtered tiles: ", tiles)
-    serializer = TileSerializer(tiles, many=True)
-    print("data", serializer.data)
-    return JsonResponse({'data': serializer.data}, status=200)
-
-
-@api_view(["POST"])
-@verify_session()
-def create_dashboard_tile(request: HttpRequest):
-    try:
-        dash_id = request.data.get('dash_id', None)
-        print(dash_id)
-        if not dash_id:
-            return JsonResponse({'error': "Dash_id is required"}, status=status.HTTP_400_BAD_REQUEST)
-        user_id = request.supertokens.get_user_id()
-        user = get_object_or_404(User, id=user_id)
-        org_id = user.organization.id
-        request.data['organization'] = org_id
-        request.data['sql_query'] = ''
-        request.data['component'] = 'LineChartTemplate'
-        request.data['tile_props'] = {
-            'series': [
-                {
-                    "name": "Desktops",
-                    "data": [10, 41, 35, 51, 49, 62, 69, 91, 148],
-                },
-            ],
-            'title': request.data.get('title', 'Untitled'),
-            'categories': ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
-        }
-        print(request.data)
-        serializer = TileSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse({'data': serializer.data}, status=201)
-        print(serializer.errors)
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

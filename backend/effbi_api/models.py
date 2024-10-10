@@ -14,6 +14,7 @@ class User(models.Model):
         managed = True
         app_label = "effbi_api"
 
+
 class Organization(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
@@ -39,7 +40,6 @@ class OrgTables(models.Model):
         db_table = "organization_tables"
         managed = True
         app_label = "effbi_api"
-
 
 class Dashboard(models.Model):
     id = models.AutoField(primary_key=True)
@@ -76,3 +76,18 @@ class Tile(models.Model):
         managed = True
         app_label = "effbi_api"
 
+
+
+class UserAccessPermissions(models.Model):
+    id = models.AutoField(primary_key=True)
+    user_id = models.ForeignKey('User', on_delete=models.CASCADE)
+    table_id = models.ForeignKey('OrgTables', on_delete=models.CASCADE)
+    permission = models.CharField(max_length=100, choices=[
+        ('Admin', 'Admin'),
+        ('View', 'View')
+    ])
+
+    class Meta:
+        db_table = "user_access_permissions"
+        managed = True
+        app_label = "effbi_api"
