@@ -14,60 +14,87 @@ import {
   Option,
 } from "@material-tailwind/react";
 import axios from "axios";
+import { BACKEND_API_URL } from "../config/index";
+import { useAuth } from "../components/Authentication/AuthenticationContext";
+
+type PermissionData = {
+  table_name: string;
+  table_id: number;
+  permissions: string;
+};
 
 const TABLE_HEAD = ["Tables", "Permissions", "Actions"];
 
-// TODO remove
 const temp_data = [
-  { table_name: "table 1", permissions: ["View", "Admin"] },
-  { table_name: "table 2", permissions: ["View", "Admin"] },
-  { table_name: "long long long table name", permissions: ["View"] },
+  { table_name: "table 1", table_id: 12, permissions: "Admin" },
+  { table_name: "table 2", table_id: 13, permissions: "View" },
+  {
+    table_name: "long long long table name",
+    table_id: 15,
+    permissions: "View",
+  },
 ];
 
 export default function DBAccessPermissionsPage() {
   const [open, setOpen] = useState(false);
   const [selectedTable, setSelectedTable] = useState("");
+  const [selectedTableId, setSelectedTableId] = useState(0);
   const [emailInput, setEmailInput] = useState("");
   const [permissionsInput, setPermissionsInput] = useState("");
-  const [permissions, setPermissions] = useState(temp_data);
+  const [allPermissions, setAllPermissions] = useState<
+    PermissionData[] | undefined
+  >(temp_data);
+  const [errorText, setErrorText] = useState("");
 
-  const onGivePermissionClick = (table_name: string) => {
+  const { userId } = useAuth();
+
+  const onGivePermissionClick = (table_name: string, table_id: number) => {
     setSelectedTable(table_name);
+    setSelectedTableId(table_id);
     setOpen(true);
   };
 
   const giveUserPermissions = async () => {
     try {
       const requestData = {
-        permissions: permissionsInput,
-        email: emailInput,
+        permission: permissionsInput,
+        user_email: emailInput,
+        table_id: selectedTableId,
       };
 
-      console.log(requestData);
+      const response = await axios.post(
+        `${BACKEND_API_URL}/api/user-access-permissions/`,
+        requestData
+      );
 
-      //   const response = await axios.post(
-      //     // TODO update this
-      //     "http://localhost:8000/api/connection/",
-      //     requestData
-      //   );
-
-      //   console.log("Response from API:", response.data);
-
-      setOpen(false);
+      console.log("Response from API:", response.data);
+      // TODO if success show success toast
+      setErrorText("");
       setEmailInput("");
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        setErrorText(JSON.stringify(error.response.data));
+      } else {
+        setErrorText("An unexpected error occurred");
+      }
       console.error("Error while giving permissions:", error);
     }
+  };
+
+  const onClickClose = () => {
+    setOpen(false);
+    setErrorText("");
+    setEmailInput("");
   };
 
   useEffect(() => {
     const fetchPermissions = async () => {
       try {
-        // TODO get the user_id
         const response = await axios.get(
-          "http://localhost:8000/api/user-access-permissions/<int:user_id>"
+          `${BACKEND_API_URL}/api/user-access-permissions/${userId}`
         );
-        setPermissions(response.data); // Update the permissions state with data from the API
+        // console.log(response.data.data);
+        setAllPermissions(response.data.data);
       } catch (error) {
         console.error("Error fetching permissions:", error);
       }
@@ -112,7 +139,7 @@ export default function DBAccessPermissionsPage() {
               </tr>
             </thead>
             <tbody>
-              {permissions.map(({ table_name, permissions }, index) => {
+              {allPermissions.map(({ table_name, table_id, permissions }) => {
                 const classes = "p-4 text-center";
 
                 return (
@@ -132,24 +159,23 @@ export default function DBAccessPermissionsPage() {
                     </td>
                     <td className={classes}>
                       <div className="flex justify-center">
-                        {permissions.map((role, index) => (
-                          <Chip
-                            key={index}
-                            value={role}
-                            className={`m-2 text-center w-20 rounded-full ${
-                              role === "Admin"
-                                ? "bg-red-500"
-                                : "bg-gray-200 text-black"
-                            }`}
-                          />
-                        ))}
+                        <Chip
+                          value={permissions}
+                          className={`m-2 text-center w-20 rounded-full ${
+                            permissions === "Admin"
+                              ? "bg-red-500"
+                              : "bg-gray-200 text-black"
+                          }`}
+                        />
                       </div>
                     </td>
                     <td className={classes}>
                       <div className="flex justify-center">
-                        {permissions.includes("Admin") && (
+                        {permissions === "Admin" && (
                           <button
-                            onClick={() => onGivePermissionClick(table_name)}
+                            onClick={() =>
+                              onGivePermissionClick(table_name, table_id)
+                            }
                             className="bg-blue-500 text-white p-2 rounded-md"
                           >
                             Give Permissions
@@ -188,12 +214,13 @@ export default function DBAccessPermissionsPage() {
               View
             </Option>
           </Select>
+          {errorText && <div className="text-red-400">{errorText}</div>}
         </DialogBody>
         <DialogFooter className="space-x-5 justify-center">
           <Button
             variant="gradient"
             className="bg-black"
-            onClick={() => setOpen(false)}
+            onClick={onClickClose}
           >
             <span>Cancel</span>
           </Button>
