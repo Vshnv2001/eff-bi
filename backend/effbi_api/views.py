@@ -109,7 +109,8 @@ def create_connection(request):
         db_type = request.data.get('db_type', None)
         user_id = request.data.get('user_id', None)
         if not uri or not user_id or not db_type:
-            return JsonResponse({'error': "Both uri, org_id and db_type are required"}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({'error': "uri, user_id and db_type are required"},
+                                    status=status.HTTP_400_BAD_REQUEST)
 
         user = get_object_or_404(User, id=user_id)
         organization = user.organization
@@ -121,8 +122,8 @@ def create_connection(request):
         db_data = get_database_schemas_and_tables(uri, db_type)
 
         if not db_data:
-            print("No data retrieved from the database.")
-            return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return JsonResponse({'error': "No data retrieved from the database."},
+                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         tasks = []
         with concurrent.futures.ThreadPoolExecutor() as executor:
