@@ -274,3 +274,65 @@ def add_permissions_to_user(user_id, table_id, permission):
         return serializer.errors, status.HTTP_400_BAD_REQUEST
 
 
+@api_view(["GET"])
+@verify_session()
+def get_dashboards(request: HttpRequest):
+    session = request.supertokens
+    user_id = session.get_user_id()
+    print(user_id)
+    user = get_object_or_404(User, id=user_id)
+    org_id = user.organization
+    dashboards = Dashboard.objects.filter(organization=org_id)
+    serializer = DashboardSerializer(dashboards, many=True)
+    return JsonResponse({'data': serializer.data}, status=200)
+
+
+@api_view(["GET"])
+@verify_session()
+def get_dashboard_tiles(request: HttpRequest):
+    print("get tiles request called")
+    user_id = request.supertokens.get_user_id()
+    dash_id = request.GET.get('dash_id', None)
+    user = get_object_or_404(User, id=user_id)
+    org_id = user.organization.id
+    print("dash_id: ", dash_id)
+    tiles = Tile.objects.filter(dash_id=dash_id, organization=org_id)
+    print("filtered tiles: ", tiles)
+    serializer = TileSerializer(tiles, many=True)
+    print("data", serializer.data)
+    return JsonResponse({'data': serializer.data}, status=200)
+
+
+@api_view(["POST"])
+@verify_session()
+def create_dashboard_tile(request: HttpRequest):
+    try:
+        dash_id = request.data.get('dash_id', None)
+        print(dash_id)
+        if not dash_id:
+            return JsonResponse({'error': "Dash_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        user_id = request.supertokens.get_user_id()
+        user = get_object_or_404(User, id=user_id)
+        org_id = user.organization.id
+        request.data['organization'] = org_id
+        request.data['sql_query'] = ''
+        request.data['component'] = 'LineChartTemplate'
+        request.data['tile_props'] = {
+            'series': [
+                {
+                    "name": "Desktops",
+                    "data": [10, 41, 35, 51, 49, 62, 69, 91, 148],
+                },
+            ],
+            'title': request.data.get('title', 'Untitled'),
+            'categories': ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+        }
+        print(request.data)
+        serializer = TileSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse({'data': serializer.data}, status=201)
+        print(serializer.errors)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
