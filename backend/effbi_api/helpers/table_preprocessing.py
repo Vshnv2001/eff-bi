@@ -11,6 +11,7 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 def get_database_schemas_and_tables(db_url, db_type="postgres"):
     try:
         conn = psycopg2.connect(db_url)
+        print(conn)
         cursor = conn.cursor()
 
         # Query to get all schemas

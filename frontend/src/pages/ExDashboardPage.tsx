@@ -73,6 +73,7 @@ const component_mapping = {
   'BoxPlotTemplate': BoxPlotTemplate,
 }
 
+
 const chartComponents = [
   {
     component: LineChartTemplate,

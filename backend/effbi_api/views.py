@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpRequest, JsonResponse, HttpResponse
+from .llm.TablePrunerAgent import TablePrunerAgent
 from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
 from supertokens_python.recipe.multitenancy.syncio import list_all_tenants
@@ -182,16 +183,18 @@ def get_users_by_organization(request, org_id):
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(["POST"])
+@verify_session()
 def create_connection(request):
     try:
         uri = request.data.get('uri', None)
         db_type = request.data.get('db_type', None)
-        user_id = request.data.get('user_id', None)
+        user_id = request.supertokens.get_user_id()
+        print(uri, user_id, db_type)
         if not uri or not user_id or not db_type:
             return JsonResponse({'error': "Both uri, org_id and db_type are required"}, status=status.HTTP_400_BAD_REQUEST)
 
         user = get_object_or_404(User, id=user_id)
-        org_id = user.organization
+        org_id = user.organization.id
 
         # update organization with uri
         organization = get_object_or_404(Organization, id=org_id)
@@ -217,6 +220,7 @@ def create_connection(request):
 
         return JsonResponse({'message': 'meta data created and saved'}, status=201)
     except Exception as e:
+        print(e)
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 
@@ -295,6 +299,16 @@ def create_dashboard_tile(request: HttpRequest):
             return JsonResponse({'error': "Dash_id is required"}, status=status.HTTP_400_BAD_REQUEST)
         user_id = request.supertokens.get_user_id()
         user = get_object_or_404(User, id=user_id)
+        user_prompt = request.data.get('description', None)
+        if not user_prompt:
+            return JsonResponse({'error': "Tile description is required"}, status=status.HTTP_400_BAD_REQUEST)
+        print("Creating table pruner agent")
+        table_pruner_agent = TablePrunerAgent()
+        print("Created table pruner agent")
+        prompt = table_pruner_agent.generate_prompt(user_prompt, user.organization.id)
+        print(prompt)
+        response = table_pruner_agent.generate_response(prompt)
+        print(response)
         org_id = user.organization.id
         request.data['organization'] = org_id
         request.data['sql_query'] = ''
@@ -305,12 +319,13 @@ def create_dashboard_tile(request: HttpRequest):
             'categories': 'lineChartCategories',
             'height'    : 350,
         }
-        print(request.data)
+        print("request data", request.data)
         serializer = TileSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse({'data': serializer.data}, status=201)
-        print(serializer.errors)
+        print("errors", serializer.errors)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
+        print("error", e)
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -65,6 +65,7 @@ export default function NewTile() {
                 placeholder="Enter tile name"
                 value={tileName}
                 onChange={(e) => setTileName(e.target.value)}
+                required
               />
             </div>
 
@@ -79,6 +80,7 @@ export default function NewTile() {
                 onChange={(e) => setTileDescription(e.target.value)}
                 rows={4}
                 className="required-border"
+                required
               />
             </div>
 

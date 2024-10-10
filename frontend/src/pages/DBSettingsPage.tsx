@@ -9,6 +9,7 @@ import {
 } from "@material-tailwind/react";
 import axios from "axios";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
+import { useAuth } from "../components/Authentication/AuthenticationContext";
 
 const databases = [
   {
@@ -46,13 +47,14 @@ const darkTheme = {
 export default function DBSettingsPage() {
   const [selectedDb, setSelectedDb] = useState("");
   const [selectedDbUri, setSelectedDbUri] = useState("");
-  const sessionContext = useSessionContext();
+  const {userId} = useAuth();
 
   const handleSave = async () => {
-    // console.log("Selected Database:", selectedDb);
-    // console.log("Database URI:", selectedDbUri);
+    if (!selectedDb) {
+      console.error("Database is required");
+      return;
+    }
 
-    const userId = sessionContext.userId;
     if (!selectedDbUri) {
       console.error("Database URI is required");
       return;
@@ -60,6 +62,7 @@ export default function DBSettingsPage() {
     await axios.post(`http://localhost:8000/api/connection/`, {
       uri: selectedDbUri,
       user_id: userId,
+      db_type: selectedDb,
       // org_id: 1, TODO pass org_id if we can get it from FE
     });
   };
