@@ -136,7 +136,6 @@ const Authentication = () => {
 
   const handleOrgSubmit = async (orgData: any) => {
     console.log("Organization data:", orgData);
-    navigate("/auth/save");
   };
 
   const handleBackToAuth = () => {

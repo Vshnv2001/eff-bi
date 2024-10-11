@@ -99,7 +99,7 @@ export default function DBAccessPermissionsPage() {
               </tr>
             </thead>
             <tbody>
-              {allPermissions.map(({ table_name, table_id, permissions }) => {
+              {allPermissions?.map(({ table_name, table_id, permissions }) => {
                 const classes = "p-4 text-center";
 
                 return (
@@ -150,6 +150,48 @@ export default function DBAccessPermissionsPage() {
           </table>
         </CardBody>
       </Card>
+      <Dialog open={open} handler={() => setOpen(false)}>
+        <DialogHeader>Permissions: {selectedTable}</DialogHeader>
+        <DialogBody>
+          <input
+            type="text"
+            placeholder="User's email"
+            className="w-full p-2 rounded bg-white text-black border border-gray-700 focus:outline-none focus:border-blue-500 mb-5"
+            value={emailInput}
+            onChange={(e) => setEmailInput(e.target.value)}
+          />
+          <Select
+            label="Select Permission type"
+            className="min-h-10"
+            variant="outlined"
+            onChange={(value) => setPermissionsInput(value as string)}
+          >
+            <Option className="p-3" value="Admin">
+              Admin
+            </Option>
+            <Option className="p-3" value="View">
+              View
+            </Option>
+          </Select>
+          {errorText && <div className="text-red-400">{errorText}</div>}
+        </DialogBody>
+        <DialogFooter className="space-x-5 justify-center">
+          <Button
+            variant="gradient"
+            className="bg-black"
+            onClick={onClickClose}
+          >
+            <span>Cancel</span>
+          </Button>
+          <Button
+            variant="gradient"
+            className="bg-black"
+            onClick={giveUserPermissions}
+          >
+            <span>Confirm</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
     </div>
   );
 }

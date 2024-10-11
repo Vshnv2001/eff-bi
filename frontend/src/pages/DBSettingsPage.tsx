@@ -46,6 +46,7 @@ const darkTheme = {
 
 export default function DBSettingsPage() {
   const [selectedDb, setSelectedDb] = useState("");
+  const [selectedDbUri, setSelectedDbUri] = useState("");
   const [dbUri, setDbUri] = useState("");
   const { userId, organizationId } = useAuth();
 
@@ -77,7 +78,7 @@ export default function DBSettingsPage() {
         alert("Connection saved successfully!");
         setDbUri("");
       }
-    } catch (error) {
+    } catch (error: any) {
       if ((error as any).response) {
         console.error("Backend error:", error.response.data);
         alert(
@@ -106,7 +107,7 @@ export default function DBSettingsPage() {
           >
             Organization Settings
           </Typography>
-          <Typography as="mb" color="white" className="mb-6 text-2xl font-bold">
+          <Typography as="h3" color="white" className="mb-6 text-2xl font-bold">
             Select Database
           </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -136,6 +137,7 @@ export default function DBSettingsPage() {
                   <Radio
                     name="database"
                     color="blue"
+                    crossOrigin={undefined}
                     checked={selectedDb === db.id}
                     onChange={() => setSelectedDb(db.id)}
                     className="checked:border-blue-500 checked:before:bg-blue-500"
