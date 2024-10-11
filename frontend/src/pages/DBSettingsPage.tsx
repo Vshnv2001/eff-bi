@@ -52,15 +52,13 @@ export default function DBSettingsPage() {
     // console.log("Selected Database:", selectedDb);
     // console.log("Database URI:", selectedDbUri);
 
-    const userId = sessionContext.userId;
     if (!selectedDbUri) {
       console.error("Database URI is required");
       return;
     }
     await axios.post(`http://localhost:8000/api/connection/`, {
       uri: selectedDbUri,
-      user_id: userId,
-      // org_id: 1, TODO pass org_id if we can get it from FE
+      db_type: selectedDb,
     });
   };
 

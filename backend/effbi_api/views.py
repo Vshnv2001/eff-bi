@@ -102,12 +102,14 @@ def create_dashboard(request):
 
 
 @api_view(["POST"])
+@verify_session()
 def create_connection(request):
     try:
         uri = request.data.get('uri', None)
         db_type = request.data.get('db_type', None)
-        user_id = request.data.get('user_id', None)
+        user_id = request.supertokens.get_user_id()
         if not uri or not user_id or not db_type:
+            print("uri, user_id and db_type are required")
             return JsonResponse({'error': "uri, user_id and db_type are required"},
                                     status=status.HTTP_400_BAD_REQUEST)
 
@@ -139,6 +141,7 @@ def create_connection(request):
 
         return JsonResponse({'message': 'meta data created and saved'}, status=201)
     except Exception as e:
+        print(e)
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
