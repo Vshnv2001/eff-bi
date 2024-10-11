@@ -1,22 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Card,
   CardHeader,
   Typography,
   CardBody,
   Chip,
-  Avatar,
-  IconButton,
-  Tooltip,
   Dialog,
   DialogHeader,
   DialogBody,
   DialogFooter,
   Button,
 } from "@material-tailwind/react";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
+
+interface User {
+  img: string;
+  name: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+}
 
 const TABLE_HEAD = ["Member", "Role"];
 
@@ -60,9 +64,9 @@ const TABLE_ROWS = [
 
 export default function OrgSettingsPage() {
   const [open, setOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  const handleOpen = (user) => {
+  const handleOpen = (user: User) => {
     setSelectedUser(user);
     setOpen(true);
   };

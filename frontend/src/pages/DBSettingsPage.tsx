@@ -8,7 +8,7 @@ import {
   Button,
 } from "@material-tailwind/react";
 import axios from "axios";
-import { useSessionContext } from "supertokens-auth-react/recipe/session";
+import { useAuth } from "../components/Authentication/AuthenticationContext";
 
 const databases = [
   {
@@ -46,13 +46,12 @@ const darkTheme = {
 export default function DBSettingsPage() {
   const [selectedDb, setSelectedDb] = useState("");
   const [selectedDbUri, setSelectedDbUri] = useState("");
-  const sessionContext = useSessionContext();
+  const { userId } = useAuth();
 
   const handleSave = async () => {
     // console.log("Selected Database:", selectedDb);
     // console.log("Database URI:", selectedDbUri);
 
-    const userId = sessionContext.userId;
     if (!selectedDbUri) {
       console.error("Database URI is required");
       return;
@@ -75,7 +74,7 @@ export default function DBSettingsPage() {
           >
             Organization Settings
           </Typography>
-          <Typography as="mb" color="white" className="mb-6 text-2xl font-bold">
+          <Typography as="h3" color="white" className="mb-6 text-2xl font-bold">
             Select Database
           </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -105,6 +104,7 @@ export default function DBSettingsPage() {
                   <Radio
                     name="database"
                     color="blue"
+                    crossOrigin={undefined}
                     checked={selectedDb === db.id}
                     onChange={() => setSelectedDb(db.id)}
                     className="checked:border-blue-500 checked:before:bg-blue-500"

@@ -139,7 +139,7 @@ export default function DBAccessPermissionsPage() {
               </tr>
             </thead>
             <tbody>
-              {allPermissions.map(({ table_name, table_id, permissions }) => {
+              {allPermissions?.map(({ table_name, table_id, permissions }) => {
                 const classes = "p-4 text-center";
 
                 return (
@@ -205,7 +205,7 @@ export default function DBAccessPermissionsPage() {
             label="Select Permission type"
             className="min-h-10"
             variant="outlined"
-            onChange={setPermissionsInput}
+            onChange={(value) => setPermissionsInput(value as string)}
           >
             <Option className="p-3" value="Admin">
               Admin
