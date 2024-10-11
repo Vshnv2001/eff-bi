@@ -15,8 +15,6 @@ import {
   Container,
   Paper,
   Slide,
-  Breadcrumbs,
-  Link,
 } from "@mui/material";
 
 const Authentication = () => {
@@ -39,7 +37,6 @@ const Authentication = () => {
     password: false,
   });
   const [showOrgSelection, setShowOrgSelection] = useState(false);
-  const [currentStep, setCurrentStep] = useState("authentication");
 
   const navigate = useNavigate();
 
@@ -70,7 +67,6 @@ const Authentication = () => {
       } else {
         setErrorMessage("");
         //navigate("/auth/save");
-        setCurrentStep("organization");
         setShowOrgSelection(true);
       }
     } catch (err) {
@@ -147,158 +143,159 @@ const Authentication = () => {
 
   const handleBackToAuth = () => {
     setShowOrgSelection(false);
-    setCurrentStep("authentication");
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Paper
-        elevation={6}
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Container
+        component="main"
         sx={{
-          mt: 8,
-          p: 4,
+          height: "85vh",
           display: "flex",
-          flexDirection: "column",
+          justifyContent: "center",
           alignItems: "center",
-          overflow: "hidden",
         }}
       >
-        <img
-          src="/assets/logo-nobg.png"
-          alt="EFF BI Logo"
-          style={{ width: "128px", marginBottom: "16px" }}
-        />
+        <Paper
+          elevation={6}
+          sx={{
+            p: 4,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            height: "100%",
+            width: "50%",
+          }}
+        >
+          <img
+            src="/assets/logo-nobg.png"
+            alt="EFF BI Logo"
+            style={{ width: "128px", marginBottom: "16px" }}
+          />
 
-        <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
-          <Link
-            color={
-              currentStep === "authentication" ? "text.primary" : "inherit"
-            }
-            onClick={handleBackToAuth}
-            sx={{ cursor: "pointer" }}
+          <Box
+            sx={{
+              position: "relative",
+              width: "100%",
+              height: "100%",
+              overflow: "auto",
+            }}
           >
-            Authentication
-          </Link>
-          {isSignUp && (
-            <Typography
-              color={
-                currentStep === "organization" ? "text.primary" : "inherit"
-              }
+            <Slide
+              direction="right"
+              in={!showOrgSelection}
+              mountOnEnter
+              unmountOnExit
             >
-              Organization
-            </Typography>
-          )}
-        </Breadcrumbs>
-
-        <Box sx={{ position: "relative", width: "100%", height: 400 }}>
-          <Slide
-            direction="right"
-            in={!showOrgSelection}
-            mountOnEnter
-            unmountOnExit
-          >
-            <Box sx={{ position: "absolute", width: "100%" }}>
-              <Typography component="h1" variant="h5">
-                {isSignUp ? "Sign Up" : "Sign In"}
-              </Typography>
-              {errorMessage && (
-                <Typography color="error" sx={{ mt: 2 }}>
-                  {errorMessage}
-                </Typography>
-              )}
-              <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  error={inputError.email}
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  error={inputError.password}
-                />
-                {isSignUp && (
-                  <>
-                    <TextField
-                      margin="normal"
-                      required
-                      fullWidth
-                      id="firstName"
-                      label="First Name"
-                      name="firstName"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                    />
-                    <TextField
-                      margin="normal"
-                      required
-                      fullWidth
-                      id="lastName"
-                      label="Last Name"
-                      name="lastName"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                    />
-                  </>
-                )}
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
+              <Box sx={{ position: "absolute", width: "100%" }}>
+                <Typography component="h1" variant="h5">
                   {isSignUp ? "Sign Up" : "Sign In"}
-                </Button>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  onClick={() => setIsSignUp(!isSignUp)}
-                  sx={{ mb: 2 }}
-                >
-                  {isSignUp ? "Switch to Sign In" : "Switch to Sign Up"}
-                </Button>
-                <Button
-                  fullWidth
-                  onClick={() => navigate("/auth/forgot-password")}
-                >
-                  Forgot Password?
-                </Button>
+                </Typography>
+                {errorMessage && (
+                  <Typography color="error" sx={{ mt: 2 }}>
+                    {errorMessage}
+                  </Typography>
+                )}
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    autoFocus
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    error={inputError.email}
+                  />
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    error={inputError.password}
+                  />
+                  {isSignUp && (
+                    <>
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="firstName"
+                        label="First Name"
+                        name="firstName"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                      />
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="lastName"
+                        label="Last Name"
+                        name="lastName"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                      />
+                    </>
+                  )}
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                  >
+                    {isSignUp ? "Sign Up" : "Sign In"}
+                  </Button>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={() => setIsSignUp(!isSignUp)}
+                    sx={{ mb: 2 }}
+                  >
+                    {isSignUp ? "Switch to Sign In" : "Switch to Sign Up"}
+                  </Button>
+                  <Button
+                    fullWidth
+                    onClick={() => navigate("/auth/forgot-password")}
+                  >
+                    Forgot Password?
+                  </Button>
+                </Box>
               </Box>
-            </Box>
-          </Slide>
-          <Slide
-            direction="left"
-            in={showOrgSelection}
-            mountOnEnter
-            unmountOnExit
-          >
-            <Box
+            </Slide>
+            <Slide
+              direction="left"
+              in={showOrgSelection}
+              mountOnEnter
+              unmountOnExit
             >
-              <OrganizationSelection
-                onClose={handleBackToAuth}
-                onSubmit={handleOrgSubmit}
-              />
-            </Box>
-          </Slide>
-        </Box>
-      </Paper>
-    </Container>
+              <Box>
+                <OrganizationSelection
+                  onClose={handleBackToAuth}
+                  onSubmit={handleOrgSubmit}
+                />
+              </Box>
+            </Slide>
+          </Box>
+        </Paper>
+      </Container>
+    </div>
   );
 };
 
