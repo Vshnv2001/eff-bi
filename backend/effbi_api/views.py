@@ -85,7 +85,6 @@ def create_dashboard(request):
         org_id = user.organization.id
         request.data['organization'] = org_id
         request.data['created_by'] = user.first_name + " " + user.last_name
-        request.data['dash_id'] = 'DASH010'
         print(request.data)
         serializer = DashboardSerializer(data=request.data)
         if serializer.is_valid():
