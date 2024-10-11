@@ -79,7 +79,7 @@ const ForgotPassword = () => {
 
         {!loading && (
           <div className="mt-4 text-center">
-            <Link to="/" className="text-blue-600 hover:underline">
+            <Link to="/auth" className="text-blue-600 hover:underline">
               Back to Login/Signup
             </Link>
           </div>

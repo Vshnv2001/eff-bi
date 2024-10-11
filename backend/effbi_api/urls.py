@@ -64,4 +64,3 @@ urlpatterns = [
     path("dashboard-tiles/", views.get_dashboard_tiles, name="get_dashboard_tiles"),
     path("dashboard-tile/", views.create_dashboard_tile, name="create_dashboard_tile"),
 ]
-
