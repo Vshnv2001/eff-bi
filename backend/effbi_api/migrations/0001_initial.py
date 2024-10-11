@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='OrgTables',
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
+                ('id', models.IntegerField(primary_key=True, serialize=False)),
                 ('table_name', models.CharField(max_length=100)),
                 ('table_schema', models.TextField()),
                 ('column_descriptions', models.JSONField()),
