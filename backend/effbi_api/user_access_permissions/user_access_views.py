@@ -15,10 +15,12 @@ def get_user_permissions_by_table(request, table_id):
     Response
     {
     data: [
-        user_id : id,
-        user_email: email,
-        permissions: 'Admin'
-    ]
+        {
+            user_id : id,
+            user_email: email,
+            permissions: 'Admin'
+        },  
+      ]
     }
     """
     try:
@@ -35,7 +37,7 @@ def get_user_permissions_by_table(request, table_id):
         ]
 
         filtered_permissions_data = filter_permissions(permissions_data)
-        if not permissions_data:
+        if not filtered_permissions_data:
             return JsonResponse({'message': 'No permissions found for this table.'}, status=204)
 
         return JsonResponse({'data': filtered_permissions_data})
