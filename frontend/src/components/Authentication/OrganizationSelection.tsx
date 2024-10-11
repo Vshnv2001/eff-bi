@@ -10,6 +10,8 @@ import {
   FormControl,
   Slide,
 } from "@mui/material";
+import { useAuth } from "./AuthenticationContext";
+import { useNavigate } from "react-router-dom";
 
 interface OrganizationSelectionProps {
   onClose: () => void;
@@ -27,7 +29,10 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
     name: "",
     databaseUri: "",
   });
-  const [showTransition, setShowTransition] = useState(true); // For handling slide transitions
+  const [showTransition, setShowTransition] = useState(true);
+
+  const { setOrganizationId } = useAuth();
+  const navigate = useNavigate();
 
   const handleSelectionChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -36,7 +41,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
   };
 
   const handleNext = () => {
-    setShowTransition(false); // Hide current step with slide out
+    setShowTransition(false);
 
     setTimeout(() => {
       if (selection === "create") {
@@ -44,16 +49,16 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
       } else if (selection === "join") {
         setStep("join");
       }
-      setShowTransition(true); // Slide in the next step
-    }, 300); // Timing to match the slide transition
+      setShowTransition(true);
+    }, 300);
   };
 
   const handleBack = () => {
-    setShowTransition(false); // Hide current step with slide out
+    setShowTransition(false);
 
     setTimeout(() => {
       setStep("select");
-      setShowTransition(true); // Slide in the previous step
+      setShowTransition(true);
     }, 300);
   };
 
@@ -65,8 +70,49 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
     }));
   };
 
-  const handleSubmit = () => {
-    onSubmit({ ...orgData, action: step });
+  const handleSubmit = async () => {
+    if (step === "create") {
+      // Post to create organization
+      const response = await fetch("http://localhost:8000/api/organizations/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: orgData.id,
+          name: orgData.name,
+          database_uri: orgData.databaseUri,
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setOrganizationId(orgData.id);
+        onSubmit({ ...orgData, action: step });
+        navigate("/auth/save");
+      } else {
+        // Handle error
+        console.error("Error creating organization");
+      }
+    } else if (step === "join") {
+      // Get organization data
+      const response = await fetch(
+        `http://localhost:8000/api/organizations/${orgData.id}`,
+        {
+          method: "GET",
+        }
+      );
+
+      if (response.ok) {
+        const result = await response.json();
+        setOrganizationId(orgData.id);
+        console.log("get response is ok", result);
+        onSubmit({ ...orgData, action: step });
+        navigate("/auth/save");
+      } else {
+        console.error("Organization not found");
+      }
+    }
   };
 
   return (
@@ -80,11 +126,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
         p: 4,
       }}
     >
-      <Typography
-        component="h1"
-        variant="h5"
-        sx={{textAlign: "center" }}
-      >
+      <Typography component="h1" variant="h5" sx={{ textAlign: "center" }}>
         {step === "select"
           ? "Organization Selection"
           : step === "create"
@@ -106,7 +148,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
                   name="organization-selection"
                   value={selection}
                   onChange={handleSelectionChange}
-                  sx={{ alignItems: "flex-start" }} // Align items to the left
+                  sx={{ alignItems: "flex-start" }}
                 >
                   <FormControlLabel
                     value="create"
@@ -135,6 +177,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
                 value={orgData.id}
                 onChange={handleInputChange}
               />
+
               <TextField
                 margin="normal"
                 required

@@ -25,8 +25,6 @@ const Authentication = () => {
     setFirstName,
     lastName,
     setLastName,
-    organizationId,
-    setOrganizationId,
   } = useAuth();
 
   const [password, setPassword] = useState("");
@@ -175,7 +173,7 @@ const Authentication = () => {
           <img
             src="/assets/logo-nobg.png"
             alt="EFF BI Logo"
-            style={{ width: "128px", marginBottom: "16px" }}
+            style={{ width: "128px"}}
           />
 
           <Box
