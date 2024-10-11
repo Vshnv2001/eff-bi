@@ -16,7 +16,7 @@ class User(models.Model):
 
 
 class Organization(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100)
     database_uri = models.CharField(max_length=255, default="")
     

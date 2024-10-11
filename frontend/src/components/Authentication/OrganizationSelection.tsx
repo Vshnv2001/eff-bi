@@ -25,7 +25,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
   const [step, setStep] = useState<"select" | "create" | "join">("select");
   const [selection, setSelection] = useState<"create" | "join" | "">("");
   const [orgData, setOrgData] = useState({
-    id: "",
+    orgId: "",
     name: "",
     databaseUri: "",
   });
@@ -72,6 +72,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
 
   const handleSubmit = async () => {
     if (step === "create") {
+      console.log("org id", orgData, orgData.orgId)
       // Post to create organization
       const response = await fetch("http://localhost:8000/api/organizations/", {
         method: "POST",
@@ -79,7 +80,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id: orgData.id,
+          id: orgData.orgId,
           name: orgData.name,
           database_uri: orgData.databaseUri,
         }),
@@ -87,7 +88,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
 
       if (response.ok) {
         const result = await response.json();
-        setOrganizationId(orgData.id);
+        setOrganizationId(orgData.orgId);
         onSubmit({ ...orgData, action: step });
         navigate("/auth/save");
       } else {
@@ -97,7 +98,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
     } else if (step === "join") {
       // Get organization data
       const response = await fetch(
-        `http://localhost:8000/api/organizations/${orgData.id}`,
+        `http://localhost:8000/api/organizations/${orgData.orgId}`,
         {
           method: "GET",
         }
@@ -105,7 +106,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
 
       if (response.ok) {
         const result = await response.json();
-        setOrganizationId(orgData.id);
+        setOrganizationId(orgData.orgId);
         onSubmit({ ...orgData, action: step });
         navigate("/auth/save");
       } else {
@@ -170,10 +171,10 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
                 margin="normal"
                 required
                 fullWidth
-                name="id"
+                name="orgId"
                 label="Organization ID"
                 type="number"
-                value={orgData.id}
+                value={orgData.orgId}
                 onChange={handleInputChange}
               />
 
@@ -208,7 +209,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
               name="id"
               label="Organization ID"
               type="number"
-              value={orgData.id}
+              value={orgData.orgId}
               onChange={handleInputChange}
             />
           )}

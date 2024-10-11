@@ -47,8 +47,6 @@ const darkTheme = {
 export default function DBSettingsPage() {
   const [selectedDb, setSelectedDb] = useState("");
   const [selectedDbUri, setSelectedDbUri] = useState("");
-  const { userId } = useAuth();
-
   const [dbUri, setDbUri] = useState("");
   const { userId, organizationId } = useAuth();
 
@@ -80,7 +78,7 @@ export default function DBSettingsPage() {
         alert("Connection saved successfully!");
         setDbUri("");
       }
-    } catch (error) {
+    } catch (error: any) {
       if ((error as any).response) {
         console.error("Backend error:", error.response.data);
         alert(
