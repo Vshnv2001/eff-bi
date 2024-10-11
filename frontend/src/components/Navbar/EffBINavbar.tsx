@@ -53,7 +53,7 @@ export default function EffBINavbar() {
             Dashboards
           </Button>
 
-          <Button
+          {/* <Button
             variant="text"
             size="sm"
             color="white"
@@ -61,9 +61,9 @@ export default function EffBINavbar() {
             onClick={() => navigate("/chatbot")}
           >
             Chatbot
-          </Button>
+          </Button> */}
 
-          <Button
+          {/* <Button
             variant="text"
             size="sm"
             color="white"
@@ -71,7 +71,7 @@ export default function EffBINavbar() {
             onClick={() => navigate("/file/upload")}
           >
             Upload
-          </Button>
+          </Button> */}
           <Menu>
             <MenuHandler>
               <Button

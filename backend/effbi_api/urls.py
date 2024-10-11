@@ -36,7 +36,10 @@ user_access_paths = [
          name="delete_user_permissions"),
     path("delete-admin/<str:user_email>/<int:table_id>/",
          user_access_views.delete_user_admin_permission,
-         name="delete_user_admin_permission")
+         name="delete_user_admin_permission"),
+    path("table/<int:table_id>", 
+         user_access_views.get_user_permissions_by_table,
+         name="get_user_permissions_by_table")
 ]
 
 session_info_paths = [
@@ -61,4 +64,3 @@ urlpatterns = [
     path("dashboard-tiles/", views.get_dashboard_tiles, name="get_dashboard_tiles"),
     path("dashboard-tile/", views.create_dashboard_tile, name="create_dashboard_tile"),
 ]
-
