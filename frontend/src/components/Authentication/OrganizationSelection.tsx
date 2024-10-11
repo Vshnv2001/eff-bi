@@ -106,7 +106,6 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
       if (response.ok) {
         const result = await response.json();
         setOrganizationId(orgData.id);
-        console.log("get response is ok", result);
         onSubmit({ ...orgData, action: step });
         navigate("/auth/save");
       } else {
