@@ -77,7 +77,6 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
         alignItems: "center",
         flexDirection: "column",
         width: "100%",
-        maxWidth: "500px",
         p: 4,
       }}
     >

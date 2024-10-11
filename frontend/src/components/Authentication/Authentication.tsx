@@ -157,7 +157,6 @@ const Authentication = () => {
       <Container
         component="main"
         sx={{
-          height: "85vh",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -170,7 +169,6 @@ const Authentication = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            height: "100%",
             width: "50%",
           }}
         >
@@ -185,7 +183,6 @@ const Authentication = () => {
               position: "relative",
               width: "100%",
               height: "100%",
-              overflow: "auto",
             }}
           >
             <Slide
@@ -194,7 +191,7 @@ const Authentication = () => {
               mountOnEnter
               unmountOnExit
             >
-              <Box sx={{ position: "absolute", width: "100%" }}>
+              <Box>
                 <Typography component="h1" variant="h5">
                   {isSignUp ? "Sign Up" : "Sign In"}
                 </Typography>
