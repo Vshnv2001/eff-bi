@@ -2,10 +2,48 @@ from django.http import JsonResponse
 from rest_framework import status
 
 from ..views import add_permissions_to_user
-from ..models import UserAccessPermissions
+from ..models import UserAccessPermissions, OrgTables, User
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from ..models import User
+from django.core.exceptions import ObjectDoesNotExist
+
+@api_view(["GET"])
+def get_user_permissions_by_table(request, table_id):
+    """
+    Get all the users who have permission on the table.
+    Response
+    {
+    data: [
+        user_id : id,
+        user_email: email,
+        permissions: 'Admin'
+    ]
+    }
+    """
+    try:
+        table = get_object_or_404(OrgTables, id=table_id)
+        # print(table)
+        permissions = UserAccessPermissions.objects.select_related('user_id').filter(table_id=table_id)
+        permissions_data = [
+            {
+                'user_id': permission.user_id.id,
+                'user_email': permission.user_id.email,
+                'permissions': permission.permission
+            }
+            for permission in permissions
+        ]
+
+        filtered_permissions_data = filter_permissions(permissions_data)
+        if not permissions_data:
+            return JsonResponse({'message': 'No permissions found for this table.'}, status=204)
+
+        return JsonResponse({'data': filtered_permissions_data})
+
+    except ObjectDoesNotExist:
+        return JsonResponse({'error': 'Table does not exist'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=500)
 
 
 @api_view(["GET"])
@@ -111,3 +149,15 @@ def remove_user_permission(user_id, table_id, permission):
 
     check.delete()
     return {'message': 'User permission removed successfully'}, status.HTTP_200_OK
+
+
+def filter_permissions(permissions):
+    user_permissions = {}
+    
+    for perm in permissions:
+        user_id = perm['user_id']
+        
+        if user_id not in user_permissions or perm['permissions'] == 'Admin':
+            user_permissions[user_id] = perm
+    
+    return list(user_permissions.values())
