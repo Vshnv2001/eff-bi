@@ -10,7 +10,7 @@ const generateMockData = (length: number) => {
   }));
 };
 
-const ApexChartsGrid: React.FC = () => {
+const ChartsGrid: React.FC = () => {
   const commonOptions: ApexOptions = {
     chart: {
       height: 160,
@@ -106,4 +106,4 @@ const ApexChartsGrid: React.FC = () => {
   );
 };
 
-export default ApexChartsGrid;
+export default ChartsGrid;

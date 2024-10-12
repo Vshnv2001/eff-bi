@@ -15,22 +15,22 @@ const databases = [
   {
     id: "mysql",
     name: "MySQL",
-    logo: "https://www.vectorlogo.zone/logos/mysql/mysql-ar21.svg",
+    logo: "/assets/logos/my-sql.svg",
   },
   {
     id: "postgresql",
     name: "PostgreSQL",
-    logo: "https://www.vectorlogo.zone/logos/postgresql/postgresql-ar21.svg",
+    logo: "/assets/logos/postgres-sql.svg",
   },
   {
     id: "sqlite",
     name: "SQLite",
-    logo: "https://www.vectorlogo.zone/logos/sqlite/sqlite-ar21.svg",
+    logo: "/assets/logos/sql-lite.svg",
   },
   {
     id: "oracle",
     name: "Oracle DB",
-    logo: "https://www.vectorlogo.zone/logos/oracle/oracle-ar21.svg",
+    logo: "/assets/logos/oracle.svg",
   },
 ];
 

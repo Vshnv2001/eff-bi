@@ -1,13 +1,13 @@
 import TextCard from "./TextCard";
 import Texts from "./Texts";
-import ApexChartsGrid from "./ApexChartsGrid";
+import ChartsGrid from "./ChartsGrid";
 
 const AboutUs = () => {
   return (
     <div className="w-full bg-black text-white">
   <div className="w-full flex justify-center p-6">
     <div className="w-1/2 h-1/2">
-      <ApexChartsGrid />
+      <ChartsGrid />
     </div>
   </div>
 
