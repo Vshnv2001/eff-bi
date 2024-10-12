@@ -8,17 +8,11 @@ import {
 } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "supertokens-auth-react/recipe/session";
-import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { Link } from "react-router-dom";
 
 export default function EffBINavbar() {
   const navigate = useNavigate();
-  const sessionContext = useSessionContext();
-
-  if (sessionContext.loading || !sessionContext.userId) {
-    return null;
-  }
-
+ 
   async function logoutClicked() {
     await signOut();
     navigate("/auth");
