@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { Card, CardBody, Typography, Button } from "@material-tailwind/react";
+import { Button } from "@material-tailwind/react";
+import { Card, CardContent, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { componentMapping } from "../components/Dashboard/ComponentMapping";
 import { TileProps } from "../components/Dashboard/TileProps";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 type ComponentKeys = keyof typeof componentMapping;
 
@@ -20,6 +22,10 @@ export default function DashboardPage() {
     console.log("use effect");
     fetchTiles();
   }, []);
+
+  const handleOnDragEnd = (result: any) => {
+    console.log(result);
+  };
 
   const fetchTiles = async () => {
     console.log("fetchTiles called");
@@ -85,7 +91,6 @@ export default function DashboardPage() {
         <Button
           size="lg"
           color="blue"
-          variant="filled"
           className="flex items-center gap-2 justify-center"
           onClick={() => navigate(`/dashboards/${dashboardId}/tiles/new`)}
         >
@@ -107,43 +112,76 @@ export default function DashboardPage() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {tilesData.map((tileData) => {
-          console.log("tile data component", tileData.component);
-          const Component =
-            componentMapping[tileData.component as ComponentKeys] || null;
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId="tiles" direction="horizontal">
+          {(provided) => (
+            <div
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
+              {tilesData.map((tileData, index) => {
+                const Component =
+                  componentMapping[tileData.component as ComponentKeys] || null;
 
-          if (!Component) {
-            console.error(`Invalid component for tile: ${tileData.title}`);
-            return null;
-          }
+                if (!Component) {
+                  console.error(
+                    `Invalid component for tile: ${tileData.title}`
+                  );
+                  return null;
+                }
 
-          let componentProps = tileData.tile_props;
-          console.log("component props", componentProps);
-          if (typeof tileData.tile_props === "string") {
-            try {
-              componentProps = JSON.parse(tileData.tile_props);
-            } catch (error) {
-              console.error("Error parsing tile props", error);
-              return null;
-            }
-          }
+                let componentProps = tileData.tile_props;
+                if (typeof tileData.tile_props === "string") {
+                  try {
+                    componentProps = JSON.parse(tileData.tile_props);
+                  } catch (error) {
+                    console.error("Error parsing tile props", error);
+                    return null;
+                  }
+                }
 
-          return (
-            <Card key={tileData.id} className="bg-gray-800 text-white">
-              <CardBody>
-                <Typography variant="h5" className="mb-2">
-                  {tileData.title}
-                </Typography>
-                <Typography className="text-gray-300">
-                  {tileData.description}
-                </Typography>
-                {Component && <Component {...componentProps} />}
-              </CardBody>
-            </Card>
-          );
-        })}
-      </div>
+                return (
+                  <Draggable
+                    key={tileData.id}
+                    draggableId={tileData.id.toString()}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <Card
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        ref={provided.innerRef}
+                        sx={{
+                          backgroundColor: "#f9f9f9",
+                          boxShadow: 3,
+                          borderRadius: 2,
+                          padding: 2,
+                        }}
+                      >
+                        <CardContent sx={{ textAlign: "center" }}>
+                          <Typography variant="h5" gutterBottom>
+                            {tileData.title}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            gutterBottom
+                          >
+                            {tileData.description}
+                          </Typography>
+                          {Component && <Component {...componentProps} />}
+                        </CardContent>
+                      </Card>
+                    )}
+                  </Draggable>
+                );
+              })}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 }

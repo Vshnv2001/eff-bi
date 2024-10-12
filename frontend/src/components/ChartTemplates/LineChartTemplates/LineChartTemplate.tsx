@@ -14,7 +14,6 @@ type LineChartTemplateProps = {
 
 const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
   series,
-  title,
   categories,
   height = 350,
 }) => {
@@ -25,25 +24,29 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
       zoom: {
         enabled: false,
       },
+      background: '#fff',
+    },
+    xaxis: {
+      categories,
+    },
+    yaxis: {
+    },
+    grid: {
+      borderColor: '#e7e7e7',
+    },
+    stroke: {
+      curve: 'smooth',
+      width: 2,
     },
     dataLabels: {
       enabled: false,
     },
-    stroke: {
-      curve: 'straight',
+    markers: {
+      size: 4,
+      colors: ['#FFA500'],
     },
-    title: {
-      text: title,
-      align: 'left',
-    },
-    grid: {
-      row: {
-        colors: ['#f3f3f3', 'transparent'],
-        opacity: 0.5,
-      },
-    },
-    xaxis: {
-      categories,
+    tooltip: {
+      theme: 'light',
     },
   };
 
