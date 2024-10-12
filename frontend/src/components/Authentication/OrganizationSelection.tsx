@@ -73,7 +73,6 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
   const handleSubmit = async () => {
     if (step === "create") {
       console.log("org id", orgData, orgData.orgId)
-      // Post to create organization
       const response = await fetch("http://localhost:8000/api/organizations/", {
         method: "POST",
         headers: {

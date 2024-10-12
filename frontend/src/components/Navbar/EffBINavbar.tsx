@@ -8,24 +8,18 @@ import {
 } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "supertokens-auth-react/recipe/session";
-import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { Link } from "react-router-dom";
 
 export default function EffBINavbar() {
   const navigate = useNavigate();
-  const sessionContext = useSessionContext();
-
-  if (sessionContext.loading || !sessionContext.userId) {
-    return null;
-  }
-
+ 
   async function logoutClicked() {
     await signOut();
     navigate("/auth");
   }
 
   return (
-    <Navbar className="max-w-full px-6 py-3 bg-gray-800">
+    <Navbar className="max-w-full px-6 py-3 bg-gray-800 rounded-none">
       <div className="flex items-center justify-between text-blue-gray-900 w-full">
         <div className="flex items-center gap-4">
           <Link to="/">
