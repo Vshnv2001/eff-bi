@@ -5,7 +5,7 @@ const Header: React.FC = () => {
   const [animateVisualisations, setAnimateVisualisations] = useState(false);
   const [animateDescription, setAnimateDescription] = useState(false);
   const [animateButton, setAnimateButton] = useState(false);
-
+  
   useEffect(() => {
     setTimeout(() => {
       setAnimateEffortless(true);
