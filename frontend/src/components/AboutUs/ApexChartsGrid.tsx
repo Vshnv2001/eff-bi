@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
-import { Grid, Card, CardContent, Box } from '@mui/material';
+import { Card, CardContent, Box } from '@mui/material';
 import { ApexOptions } from 'apexcharts';
 
 const generateMockData = (length: number) => {
@@ -51,41 +51,56 @@ const ApexChartsGrid: React.FC = () => {
 
   return (
     <Card elevation={3} sx={{ width: '100%', height: '100%', overflow: 'hidden' }}>
-      <CardContent sx={{ padding: '16px !important' }}>
-        <Grid container spacing={2}>
+      <CardContent sx={{ padding: '16px !important', height: '100%' }}>
+        <Box sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          height: '100%',
+          '& > *': {
+            flexBasis: 'calc(33.333% - 8px)',
+            marginBottom: '12px',
+            '&:not(:nth-of-type(3n))': {
+              marginRight: '12px',
+            }
+          }
+        }}>
           {charts.map((chart, index) => (
-            <Grid item xs={4} key={index}>
-              <Card variant="outlined">
-                <CardContent sx={{ padding: '8px !important', '&:last-child': { paddingBottom: '8px' } }}>
-                  <ReactApexChart
-                    options={{
-                      ...commonOptions,
-                      chart: { ...commonOptions.chart, type: chart.type as any },
-                      title: { 
-                        text: chart.title, 
-                        align: 'center', 
-                        style: { 
-                          fontSize: '12px',
-                          fontWeight: 'bold'
-                        } 
-                      },
-                      plotOptions: {
-                        pie: {
-                          donut: {
-                            size: '65%'
-                          }
+            <Card key={index} variant="outlined" sx={{ display: 'flex', flexDirection: 'column' }}>
+              <CardContent sx={{ 
+                padding: '8px !important', 
+                flex: 1, 
+                display: 'flex', 
+                flexDirection: 'column', 
+                '&:last-child': { paddingBottom: '8px' } 
+              }}>
+                <ReactApexChart
+                  options={{
+                    ...commonOptions,
+                    chart: { ...commonOptions.chart, type: chart.type as any },
+                    title: { 
+                      text: chart.title, 
+                      align: 'center', 
+                      style: { 
+                        fontSize: '12px',
+                        fontWeight: 'bold'
+                      } 
+                    },
+                    plotOptions: {
+                      pie: {
+                        donut: {
+                          size: '65%'
                         }
                       }
-                    }}
-                    series={chart.data}
-                    type={chart.type as any}
-                    height={160}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
+                    }
+                  }}
+                  series={chart.data}
+                  type={chart.type as any}
+                  height="100%"
+                />
+              </CardContent>
+            </Card>
           ))}
-        </Grid>
+        </Box>
       </CardContent>
     </Card>
   );
