@@ -19,7 +19,7 @@ export default function EffBINavbar() {
   }
 
   return (
-    <Navbar className="max-w-full px-6 py-3 bg-gray-800">
+    <Navbar className="max-w-full px-6 py-3 bg-gray-800 rounded-none">
       <div className="flex items-center justify-between text-blue-gray-900 w-full">
         <div className="flex items-center gap-4">
           <Link to="/">
