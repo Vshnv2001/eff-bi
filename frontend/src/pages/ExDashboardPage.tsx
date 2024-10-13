@@ -54,24 +54,24 @@ import {
   Typography,
 } from "@mui/material";
 
-const component_mapping = {
-  'LineChartTemplate': LineChartTemplate,
-  'BarChartTemplate': BarChartTemplate,
-  'HorizontalBarChartTemplate': HorizontalBarChartTemplate,
-  'DonutChartTemplate': DonutChartTemplate,
-  'AreaChartTemplate': AreaChartTemplate,
-  'StackedGroupBarChartTemplate': StackedGroupBarChartTemplate,
-  'PyramidBarChartTemplate': PyramidBarChartTemplate,
-  'LineColumnChartTemplate': LineColumnChartTemplate,
-  'MultipleYAxisLineChartTemplate': MultipleYAxisLineChartTemplate,
-  'PieChartTemplate': PieChartTemplate,
-  'RadarChartTemplate': RadarChartTemplate,
-  'RadarChartMultipleTemplate': RadarChartMultipleTemplate,
-  'RadarChartPolarTemplate': RadarChartPolarTemplate,
-  'ScatterChartTemplate': ScatterChartTemplate,
-  'CandlestickTemplate': CandlestickTemplate,
-  'BoxPlotTemplate': BoxPlotTemplate,
-}
+// const component_mapping = {
+//   'LineChartTemplate': LineChartTemplate,
+//   'BarChartTemplate': BarChartTemplate,
+//   'HorizontalBarChartTemplate': HorizontalBarChartTemplate,
+//   'DonutChartTemplate': DonutChartTemplate,
+//   'AreaChartTemplate': AreaChartTemplate,
+//   'StackedGroupBarChartTemplate': StackedGroupBarChartTemplate,
+//   'PyramidBarChartTemplate': PyramidBarChartTemplate,
+//   'LineColumnChartTemplate': LineColumnChartTemplate,
+//   'MultipleYAxisLineChartTemplate': MultipleYAxisLineChartTemplate,
+//   'PieChartTemplate': PieChartTemplate,
+//   'RadarChartTemplate': RadarChartTemplate,
+//   'RadarChartMultipleTemplate': RadarChartMultipleTemplate,
+//   'RadarChartPolarTemplate': RadarChartPolarTemplate,
+//   'ScatterChartTemplate': ScatterChartTemplate,
+//   'CandlestickTemplate': CandlestickTemplate,
+//   'BoxPlotTemplate': BoxPlotTemplate,
+// }
 
 const chartComponents = [
   {

@@ -22,7 +22,7 @@ const Chat: React.FC = () => {
       <div
         className="absolute top-0 left-0 w-full h-full bg-fixed bg-center bg-cover"
         style={{
-          backgroundImage: `url('/assets/bg.jpg')`,
+          backgroundImage: `url('/assets/big-data.jpg')`,
         }}
       ></div>
 

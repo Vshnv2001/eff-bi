@@ -1,4 +1,5 @@
 import React from "react";
+import { Card } from "@mui/material";
 
 interface ImageComponentProps {
   src: string;
@@ -11,22 +12,23 @@ const ImageComponent: React.FC<ImageComponentProps> = ({
   alt,
   className,
 }) => (
-  <div
-    className={`flex overflow-hidden relative flex-col rounded-3xl aspect-[0.725] ${className}`}
+  <Card
+    sx={{
+      borderRadius: 4,
+      boxShadow: 3,
+      overflow: "hidden",
+    }}
+    className={className}
   >
-    <img
-      loading="lazy"
-      src={src}
-      alt={alt}
-      className="object-cover absolute inset-0 size-full"
-    />
-    <img
-      loading="lazy"
-      src={src}
-      alt={alt}
-      className="object-contain w-full rounded-3xl aspect-[0.72]"
-    />
-  </div>
+    <div className="flex overflow-hidden relative flex-col aspect-[0.725]">
+      <img
+        loading="lazy"
+        src={src}
+        alt={alt}
+        className="object-fit w-full h-full"
+      />
+    </div>
+  </Card>
 );
 
 export default ImageComponent;

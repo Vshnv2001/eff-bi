@@ -9,6 +9,7 @@ from ..serializer import OrganizationSerializer
 @api_view(["POST"])
 def create_organization(request):
     try:
+        print(request.data)
         serializer = OrganizationSerializer(data=request.data)
         if serializer.is_valid():
             organization = serializer.save()

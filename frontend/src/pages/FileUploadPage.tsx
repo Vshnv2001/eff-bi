@@ -35,6 +35,7 @@ const FileUpload: React.FC = () => {
   const [rowsToShow, setRowsToShow] = useState<number>(100);
   const [showAlert, setShowAlert] = useState<boolean>(false);
 
+
   useEffect(() => {
     return () => {
       if (window.worker) {
@@ -74,6 +75,7 @@ const FileUpload: React.FC = () => {
           complete: () => {
             setLoading(false);
             if (data.length > 100) setShowAlert(true);
+            console.log(showAlert);
           },
           error: () => {
             setError("Error parsing CSV file.");
@@ -114,17 +116,16 @@ const FileUpload: React.FC = () => {
         </Typography>
         <TextField
           type="file"
-          accept=".csv"
           onChange={handleFileChange}
           fullWidth
           margin="normal"
           variant="outlined"
-          inputProps={{ style: { display: 'none' } }} // Hide the default file input
+          inputProps={{ accept: ".csv", style: { display: 'none' } }} // Hide the default file input
         />
         <Button
           variant="contained"
           color="primary"
-          onClick={() => document.querySelector('input[type="file"]')?.click()}
+          onClick={() => (document.querySelector('input[type="file"]') as HTMLInputElement)?.click()}
           className="mt-2 px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded"
         >
           Upload File

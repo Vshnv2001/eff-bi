@@ -44,6 +44,7 @@ const router = createBrowserRouter(
       <Route index element={<LandingPage />} />
       <Route path="/auth/save" element={<SaveUserData />} />
       <Route path="/auth/fetch" element={<FetchUserData />} />
+      <Route path="*" element={<NotFoundPage />} />
 
       {/* Protected Routes */}
       <Route
@@ -73,7 +74,6 @@ const router = createBrowserRouter(
           element={<TablePermissionsPage />}
         />
       </Route>
-      <Route path="*" element={<NotFoundPage />} />
     </Route>
   )
 );
