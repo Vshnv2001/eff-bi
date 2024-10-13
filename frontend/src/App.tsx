@@ -3,7 +3,6 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider,
-  Outlet,
 } from "react-router-dom";
 import SuperTokens, { SuperTokensWrapper } from "supertokens-auth-react";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
@@ -37,7 +36,88 @@ SuperTokens.init(SuperTokensConfig);
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<MainLayout />}>
-      {/* Public Routes */}
+      <Route path="/auth" element={<Authentication />} />
+      <Route
+        path="/chatbot"
+        element={
+          <SessionAuth>
+            <ChatbotPage />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/file/upload"
+        element={
+          <SessionAuth>
+            <FileUpload />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/settings/database"
+        element={
+          <SessionAuth>
+            <DBSettingsPage />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/settings/organization"
+        element={
+          <SessionAuth>
+            <OrgSettingsPage />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/dashboards"
+        element={
+          <SessionAuth>
+            <DashboardsPage />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/dashboards/:dashboardId"
+        element={
+          <SessionAuth>
+            <DashboardPage />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/dashboards/:dashboardId/tiles/new"
+        element={
+          <SessionAuth>
+            <NewTilePage />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/dashboard/demo"
+        element={
+          <SessionAuth>
+            <ExDashboardPage />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/settings/access-permissions"
+        element={
+          <SessionAuth>
+            <DBAccessPermissionsPage />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/settings/table-permissions"
+        element={
+          <SessionAuth>
+            <TablePermissionsPage />
+          </SessionAuth>
+        }
+      />
+
       <Route path="/auth" element={<Authentication />} />
       <Route path="/auth/forgot-password" element={<ForgotPassword />} />
       <Route path="/auth/reset-password" element={<ResetPassword />} />
@@ -45,35 +125,6 @@ const router = createBrowserRouter(
       <Route path="/auth/save" element={<SaveUserData />} />
       <Route path="/auth/fetch" element={<FetchUserData />} />
       <Route path="*" element={<NotFoundPage />} />
-
-      {/* Protected Routes */}
-      <Route
-        element={
-          <SessionAuth>
-            <Outlet />
-          </SessionAuth>
-        }
-      >
-        <Route path="/chatbot" element={<ChatbotPage />} />
-        <Route path="/file/upload" element={<FileUpload />} />
-        <Route path="/settings/database" element={<DBSettingsPage />} />
-        <Route path="/settings/organization" element={<OrgSettingsPage />} />
-        <Route path="/dashboards" element={<DashboardsPage />} />
-        <Route path="/dashboards/:dashboardId" element={<DashboardPage />} />
-        <Route
-          path="/dashboards/:dashboardId/tiles/new"
-          element={<NewTilePage />}
-        />
-        <Route path="/dashboard/demo" element={<ExDashboardPage />} />
-        <Route
-          path="/settings/access-permissions"
-          element={<DBAccessPermissionsPage />}
-        />
-        <Route
-          path="/settings/table-permissions"
-          element={<TablePermissionsPage />}
-        />
-      </Route>
     </Route>
   )
 );

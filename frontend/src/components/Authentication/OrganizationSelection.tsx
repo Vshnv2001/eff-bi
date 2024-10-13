@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   TextField,
@@ -31,6 +31,8 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
     databaseUri: "",
   });
   const [showTransition, setShowTransition] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isShaking, setIsShaking] = useState(false);
 
   const { setOrganizationId } = useAuth();
   const navigate = useNavigate();
@@ -40,6 +42,16 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
   ) => {
     setSelection(event.target.value as "create" | "join");
   };
+
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage("");
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
 
   const handleNext = () => {
     setShowTransition(false);
@@ -56,6 +68,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
 
   const handleBack = () => {
     setShowTransition(false);
+    setErrorMessage("");
 
     setTimeout(() => {
       setStep("select");
@@ -86,10 +99,10 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
       });
 
       if (response.ok) {
-        const data = await response.json(); // Await the JSON parsing
-        console.log("json response", data); // Log the parsed response
+        const data = await response.json();
+        console.log("json response", data);
 
-        setOrganizationId(data.organization.id); // Access the id after awaiting
+        setOrganizationId(data.organization.id);
         onSubmit({ ...orgData, id: data.organization.id, action: step });
         navigate("/auth/save");
       } else {
@@ -111,6 +124,9 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
         onSubmit({ ...orgData, action: step });
         navigate("/auth/save");
       } else {
+        setErrorMessage("Organization not found");
+        setIsShaking(true);
+        setTimeout(() => setIsShaking(false), 1000);
         console.error("Organization not found");
       }
     }
@@ -180,10 +196,9 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
               />
               <TextField
                 margin="normal"
-                required
                 fullWidth
                 name="databaseUri"
-                label="Database URI"
+                label="Database URI (Optional)"
                 type="text"
                 value={orgData.databaseUri}
                 onChange={handleInputChange}
@@ -201,7 +216,20 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
               type="number"
               value={orgData.orgId}
               onChange={handleInputChange}
+              className={`transition duration-300 ${
+                isShaking ? "border-red-500 animate-shake" : "border-gray-300"
+              }`}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "inherit",
+                  },
+                },
+              }}
             />
+          )}
+          {errorMessage && (
+            <p className="mt-1 text-red-500 text-sm">{errorMessage}</p>
           )}
         </Box>
       </Slide>
