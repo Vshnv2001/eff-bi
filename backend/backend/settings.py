@@ -15,7 +15,7 @@ import os
 from corsheaders.defaults import default_headers
 from typing import List
 from supertokens_python import get_all_cors_headers
-from .config import supertokens_config, app_info, recipe_list
+from .config import app_info, recipe_list
 from supertokens_python import init, InputAppInfo, SupertokensConfig
 from pathlib import Path
 
