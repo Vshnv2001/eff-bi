@@ -8,7 +8,8 @@ import {
   Button,
 } from "@material-tailwind/react";
 import axios from "axios";
-import { useSessionContext } from "supertokens-auth-react/recipe/session";
+import { useAuth } from "../components/Authentication/AuthenticationContext";
+import { BACKEND_API_URL } from "../config/index";
 
 const databases = [
   {
@@ -45,21 +46,53 @@ const darkTheme = {
 
 export default function DBSettingsPage() {
   const [selectedDb, setSelectedDb] = useState("");
-  const [selectedDbUri, setSelectedDbUri] = useState("");
-  const sessionContext = useSessionContext();
+  const [dbUri, setDbUri] = useState("");
+  const { userId, organizationId } = useAuth();
 
   const handleSave = async () => {
-    // console.log("Selected Database:", selectedDb);
-    // console.log("Database URI:", selectedDbUri);
-
-    if (!selectedDbUri) {
-      console.error("Database URI is required");
+    if (!dbUri) {
+      // TODO do proper error handling in frontend
+      alert("Error: Database URI is required.");
       return;
     }
-    await axios.post(`http://localhost:8000/api/connection/`, {
-      uri: selectedDbUri,
-      db_type: selectedDb,
-    });
+
+    const reqBody = {
+      uri: dbUri,
+      user_id: userId,
+      org_id: Number(organizationId),
+      // TODO: hardcoded for now, change when application allows for different db
+      // probably use selectedDb
+      db_type: "postgres",
+    };
+
+    // console.log(reqBody);
+
+    try {
+      const response = await axios.post(
+        `${BACKEND_API_URL}/api/connection/`,
+        reqBody
+      );
+
+      if (response.status === 201) {
+        alert("Connection saved successfully!");
+        setDbUri("");
+      }
+    } catch (error) {
+      if ((error as any).response) {
+        console.error("Backend error:", (error as any).response.data);
+        alert(
+          `Error: ${
+            (error as any).response.data.message || "Failed to save connection."
+          }`
+        );
+      } else if ((error as any).request) {
+        console.error("Network error:", (error as any).request);
+        alert("Network error: Failed to reach the server.");
+      } else {
+        console.error("Error:", (error as any).message);
+        alert(`Error: ${(error as any).message}`);
+      }
+    }
   };
 
   return (
@@ -73,7 +106,7 @@ export default function DBSettingsPage() {
           >
             Organization Settings
           </Typography>
-          <Typography as="mb" color="white" className="mb-6 text-2xl font-bold">
+          <Typography as="h3" color="white" className="mb-6 text-2xl font-bold">
             Select Database
           </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -101,6 +134,7 @@ export default function DBSettingsPage() {
                     </Typography>
                   </div>
                   <Radio
+                    crossOrigin={undefined}
                     name="database"
                     color="blue"
                     checked={selectedDb === db.id}
@@ -123,8 +157,8 @@ export default function DBSettingsPage() {
               type="text"
               placeholder="Database URI"
               className="w-full p-2 rounded bg-white text-black border border-gray-700 focus:outline-none focus:border-blue-500"
-              value={selectedDbUri}
-              onChange={(e) => setSelectedDbUri(e.target.value)}
+              value={dbUri}
+              onChange={(e) => setDbUri(e.target.value)}
             />
           </div>
           <div className="flex justify-center mt-12">

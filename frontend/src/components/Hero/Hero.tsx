@@ -22,10 +22,14 @@ const Hero: React.FC = () => {
       <div
         className="absolute top-0 left-0 w-full h-screen bg-fixed bg-center bg-cover"
         style={{
-          backgroundImage: `url('/assets/bg.jpg')`,
+          backgroundImage: `url('/assets/cover-slanted.png')`,
           transform: `translateY(${scrollY * 0.5}px)`,
         }}
       ></div>
+
+      <div>
+        <Header />
+      </div>
 
       <div
         className="absolute top-0 left-0 w-full h-screen"
@@ -33,10 +37,6 @@ const Hero: React.FC = () => {
           backgroundColor: `rgba(0, 0, 0, ${opacity})`,
         }}
       ></div>
-
-      <div className="flex items-center justify-center w-full h-screen">
-        <Header />
-      </div>
     </main>
   );
 };

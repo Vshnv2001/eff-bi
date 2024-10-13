@@ -8,16 +8,12 @@ import {
 } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "supertokens-auth-react/recipe/session";
-import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { Link } from "react-router-dom";
+import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 export default function EffBINavbar() {
   const navigate = useNavigate();
   const sessionContext = useSessionContext();
-
-  if (sessionContext.loading || !sessionContext.userId) {
-    return null;
-  }
 
   async function logoutClicked() {
     await signOut();
@@ -25,7 +21,7 @@ export default function EffBINavbar() {
   }
 
   return (
-    <Navbar className="max-w-full px-6 py-3 bg-gray-800">
+    <Navbar className="max-w-full px-6 py-3 bg-gray-800 rounded-none">
       <div className="flex items-center justify-between text-blue-gray-900 w-full">
         <div className="flex items-center gap-4">
           <Link to="/">
@@ -53,7 +49,7 @@ export default function EffBINavbar() {
             Dashboards
           </Button>
 
-          <Button
+          {/* <Button
             variant="text"
             size="sm"
             color="white"
@@ -61,9 +57,9 @@ export default function EffBINavbar() {
             onClick={() => navigate("/chatbot")}
           >
             Chatbot
-          </Button>
+          </Button> */}
 
-          <Button
+          {/* <Button
             variant="text"
             size="sm"
             color="white"
@@ -71,7 +67,7 @@ export default function EffBINavbar() {
             onClick={() => navigate("/file/upload")}
           >
             Upload
-          </Button>
+          </Button> */}
           <Menu>
             <MenuHandler>
               <Button
@@ -92,12 +88,6 @@ export default function EffBINavbar() {
               </MenuItem>
               <MenuItem
                 className="flex items-center text-white gap-2 p-3 bg-gray-800 border-none"
-                onClick={() => navigate("/settings/organization")}
-              >
-                Organization Management
-              </MenuItem>
-              <MenuItem
-                className="flex items-center text-white gap-2 p-3 bg-gray-800 border-none"
                 onClick={() => navigate("/settings/access-permissions")}
               >
                 Access Permissions
@@ -113,7 +103,9 @@ export default function EffBINavbar() {
             className="flex items-center gap-2"
             onClick={logoutClicked}
           >
-            Logout
+            {sessionContext.loading || !sessionContext.doesSessionExist
+              ? "Login"
+              : "Logout"}
           </Button>
         </div>
       </div>

@@ -63,6 +63,7 @@ export default function NewTile() {
               <Input
                 size="lg"
                 placeholder="Enter tile name"
+                crossOrigin={undefined}
                 value={tileName}
                 onChange={(e) => setTileName(e.target.value)}
               />

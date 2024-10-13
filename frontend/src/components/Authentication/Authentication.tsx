@@ -6,47 +6,31 @@ import {
   doesEmailExist,
 } from "supertokens-web-js/recipe/emailpassword";
 import { useAuth } from "./AuthenticationContext";
+import OrganizationSelection from "./OrganizationSelection";
+import {
+  Button,
+  TextField,
+  Typography,
+  Box,
+  Container,
+  Paper,
+  Slide,
+} from "@mui/material";
 
 const Authentication = () => {
-  const {
-    email,
-    setEmail,
-    firstName,
-    setFirstName,
-    lastName,
-    setLastName,
-    organizationId,
-    setOrganizationId,
-  } = useAuth();
+  const { email, setEmail, firstName, setFirstName, lastName, setLastName } =
+    useAuth();
 
   const [password, setPassword] = useState("");
-  const [isSignUp, setIsSignUp] = useState(true);
+  const [isSignUp, setIsSignUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [inputError, setInputError] = useState({
     email: false,
     password: false,
   });
+  const [showOrgSelection, setShowOrgSelection] = useState(false);
+
   const navigate = useNavigate();
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFirstName(e.target.value);
-  };
-
-  const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLastName(e.target.value);
-  };
-
-  const organizationIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setOrganizationId(e.target.value);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
 
   const signUpClicked = async () => {
     try {
@@ -74,7 +58,7 @@ const Authentication = () => {
         setInputError((prev) => ({ ...prev, email: true }));
       } else {
         setErrorMessage("");
-        navigate("/auth/save");
+        setShowOrgSelection(true);
       }
     } catch (err) {
       setErrorMessage("Oops! Something went wrong.");
@@ -143,125 +127,161 @@ const Authentication = () => {
     }
   };
 
+  const handleOrgSubmit = async (orgData: any) => {
+    console.log("Organization data:", orgData);
+  };
+
+  const handleBackToAuth = () => {
+    setShowOrgSelection(false);
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-gray-custom justify-center items-center">
-      {/* Header Section */}
-      <div className="flex flex-col items-center">
-        <img src="/assets/logo-nobg.png" alt="EFF BI Logo" className="w-32" />
-      </div>
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Container
+        component="main"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Paper
+          elevation={6}
+          sx={{
+            p: 4,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "50%",
+          }}
+        >
+          <img
+            src="/assets/logo-nobg.png"
+            alt="EFF BI Logo"
+            style={{ width: "128px" }}
+          />
 
-      {/* Form Box */}
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-        <h2 className="text-2xl text-black font-bold text-center mb-6">
-          {isSignUp ? "Sign Up" : "Sign In"}
-        </h2>
-
-        {errorMessage && (
-          <div className="mb-4 p-2 text-red-700 max-w-full w-full">
-            {errorMessage}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit}>
-          {/* Email Field */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Email:
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={handleEmailChange}
-              required
-              className={`text-black mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none ${
-                inputError.email ? "animate-shake border-red-500" : ""
-              }`}
-            />
-          </div>
-
-          {/* Password Field */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Password:
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-              required
-              className={`text-black mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none ${
-                inputError.password ? "animate-shake border-red-500" : ""
-              }`}
-            />
-          </div>
-
-          {/* Additional Fields for Sign Up */}
-          {isSignUp && (
-            <>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  First Name:
-                </label>
-                <input
-                  type="text"
-                  value={firstName}
-                  onChange={handleFirstNameChange}
-                  required
-                  className="text-black mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none"
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Last Name:
-                </label>
-                <input
-                  type="text"
-                  value={lastName}
-                  onChange={handleLastNameChange}
-                  required
-                  className="text-black mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none"
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Organization ID:
-                </label>
-                <input
-                  type="text"
-                  value={organizationId}
-                  onChange={organizationIdChange}
-                  required
-                  className="text-black mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none"
-                />
-              </div>
-            </>
-          )}
-
-          <button
-            type="submit"
-            className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200"
+          <Box
+            sx={{
+              position: "relative",
+              width: "100%",
+              height: "100%",
+            }}
           >
-            {isSignUp ? "Sign Up" : "Sign In"}
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="w-full mt-4 py-2 px-4 bg-gray-300 text-gray-800 font-semibold rounded-lg hover:bg-gray-400 transition duration-200"
-          >
-            {isSignUp ? "Switch to Sign In" : "Switch to Sign Up"}
-          </button>
-        </form>
-        <div className="mt-4 text-center">
-          <button
-            onClick={() => navigate("/auth/forgot-password")}
-            className="text-blue-500 hover:underline"
-          >
-            Forgot Password?
-          </button>
-        </div>
-      </div>
+            <Slide
+              direction="right"
+              in={!showOrgSelection}
+              mountOnEnter
+              unmountOnExit
+            >
+              <Box>
+                <Typography component="h1" variant="h5">
+                  {isSignUp ? "Sign Up" : "Sign In"}
+                </Typography>
+                {errorMessage && (
+                  <Typography color="error" sx={{ mt: 2 }}>
+                    {errorMessage}
+                  </Typography>
+                )}
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    autoFocus
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    error={inputError.email}
+                  />
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    error={inputError.password}
+                  />
+                  {isSignUp && (
+                    <>
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="firstName"
+                        label="First Name"
+                        name="firstName"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                      />
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="lastName"
+                        label="Last Name"
+                        name="lastName"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                      />
+                    </>
+                  )}
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                  >
+                    {isSignUp ? "Sign Up" : "Sign In"}
+                  </Button>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={() => setIsSignUp(!isSignUp)}
+                    sx={{ mb: 2 }}
+                  >
+                    {isSignUp ? "Switch to Sign In" : "Switch to Sign Up"}
+                  </Button>
+                  <Button
+                    fullWidth
+                    onClick={() => navigate("/auth/forgot-password")}
+                  >
+                    Forgot Password?
+                  </Button>
+                </Box>
+              </Box>
+            </Slide>
+            <Slide
+              direction="left"
+              in={showOrgSelection}
+              mountOnEnter
+              unmountOnExit
+            >
+              <Box>
+                <OrganizationSelection
+                  onClose={handleBackToAuth}
+                  onSubmit={handleOrgSubmit}
+                />
+              </Box>
+            </Slide>
+          </Box>
+        </Paper>
+      </Container>
     </div>
   );
 };

@@ -5,17 +5,11 @@ import {
   Typography,
   CardBody,
   Chip,
-  Dialog,
-  DialogHeader,
-  DialogBody,
-  DialogFooter,
-  Button,
-  Select,
-  Option,
 } from "@material-tailwind/react";
 import axios from "axios";
 import { BACKEND_API_URL } from "../config/index";
-import { useAuth } from "../components/Authentication/AuthenticationContext";
+import { useNavigate } from "react-router-dom";
+import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 type PermissionData = {
   table_name: string;
@@ -36,55 +30,21 @@ const temp_data = [
 ];
 
 export default function DBAccessPermissionsPage() {
-  const [open, setOpen] = useState(false);
-  const [selectedTable, setSelectedTable] = useState("");
-  const [selectedTableId, setSelectedTableId] = useState(0);
-  const [emailInput, setEmailInput] = useState("");
-  const [permissionsInput, setPermissionsInput] = useState("");
   const [allPermissions, setAllPermissions] = useState<
     PermissionData[] | undefined
   >(temp_data);
-  const [errorText, setErrorText] = useState("");
+  const navigate = useNavigate();
 
-  const { userId } = useAuth();
+  const sessionContext = useSessionContext();
+  const userId = sessionContext.loading ? null : sessionContext.userId;
 
   const onGivePermissionClick = (table_name: string, table_id: number) => {
-    setSelectedTable(table_name);
-    setSelectedTableId(table_id);
-    setOpen(true);
-  };
-
-  const giveUserPermissions = async () => {
-    try {
-      const requestData = {
-        permission: permissionsInput,
-        user_email: emailInput,
-        table_id: selectedTableId,
-      };
-
-      const response = await axios.post(
-        `${BACKEND_API_URL}/api/user-access-permissions/`,
-        requestData
-      );
-
-      console.log("Response from API:", response.data);
-      // TODO if success show success toast
-      setErrorText("");
-      setEmailInput("");
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setErrorText(JSON.stringify(error.response.data));
-      } else {
-        setErrorText("An unexpected error occurred");
-      }
-      console.error("Error while giving permissions:", error);
-    }
-  };
-
-  const onClickClose = () => {
-    setOpen(false);
-    setErrorText("");
-    setEmailInput("");
+    // TODO consider encrypting the url?
+    navigate(
+      `/settings/table-permissions?table_name=${encodeURIComponent(
+        table_name
+      )}&table_id=${table_id}`
+    );
   };
 
   useEffect(() => {
@@ -103,6 +63,10 @@ export default function DBAccessPermissionsPage() {
     fetchPermissions();
   }, []);
 
+  if (sessionContext.loading) {
+    return <div>loading</div>;
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-800 p-10">
       <Card className="w-full max-w-4xl p-10 rounded-xl">
@@ -113,7 +77,7 @@ export default function DBAccessPermissionsPage() {
                 Your Database Permissions
               </Typography>
               <Typography color="gray" className="mt-1 font-normal">
-                See access control permissions for each table
+                See access control permissions for each table you have access to
               </Typography>
             </div>
           </div>
@@ -176,7 +140,7 @@ export default function DBAccessPermissionsPage() {
                             onClick={() =>
                               onGivePermissionClick(table_name, table_id)
                             }
-                            className="bg-blue-500 text-white p-2 rounded-md"
+                            className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-400"
                           >
                             Give Permissions
                           </button>
@@ -190,49 +154,6 @@ export default function DBAccessPermissionsPage() {
           </table>
         </CardBody>
       </Card>
-
-      <Dialog open={open} handler={() => setOpen(false)}>
-        <DialogHeader>Permissions: {selectedTable}</DialogHeader>
-        <DialogBody>
-          <input
-            type="text"
-            placeholder="User's email"
-            className="w-full p-2 rounded bg-white text-black border border-gray-700 focus:outline-none focus:border-blue-500 mb-5"
-            value={emailInput}
-            onChange={(e) => setEmailInput(e.target.value)}
-          />
-          <Select
-            label="Select Permission type"
-            className="min-h-10"
-            variant="outlined"
-            onChange={setPermissionsInput}
-          >
-            <Option className="p-3" value="Admin">
-              Admin
-            </Option>
-            <Option className="p-3" value="View">
-              View
-            </Option>
-          </Select>
-          {errorText && <div className="text-red-400">{errorText}</div>}
-        </DialogBody>
-        <DialogFooter className="space-x-5 justify-center">
-          <Button
-            variant="gradient"
-            className="bg-black"
-            onClick={onClickClose}
-          >
-            <span>Cancel</span>
-          </Button>
-          <Button
-            variant="gradient"
-            className="bg-black"
-            onClick={giveUserPermissions}
-          >
-            <span>Confirm</span>
-          </Button>
-        </DialogFooter>
-      </Dialog>
     </div>
   );
 }

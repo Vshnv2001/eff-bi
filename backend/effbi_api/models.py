@@ -34,6 +34,7 @@ class OrgTables(models.Model):
     table_schema = models.TextField()
     column_descriptions = models.JSONField()
     column_types = models.JSONField()
+    table_description = models.TextField(default='')
     # Next Sprint: Add database_uri to this table
     
     class Meta:
