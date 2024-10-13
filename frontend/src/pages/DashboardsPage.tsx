@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Typography,
   Button,
 } from "@material-tailwind/react";
 import DashboardForm from "../components/Dashboard/DashboardForm";
 import DashboardCard from "../components/Dashboard/DashboardCard";
+import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import axios from "axios";
 import { DashboardProps } from "../components/Dashboard/DashboardProps";
 
@@ -12,6 +13,12 @@ export default function DashboardsPage() {
   const [open, setOpen] = useState(false);
   const [dashboardName, setDashboardName] = useState("");
   const [dashboardDescription, setDashboardDescription] = useState("");
+  const sessionContext = useSessionContext();
+  const userId = sessionContext.loading ? null : sessionContext.userId;
+
+  console.log("sessionContext: ", sessionContext);
+
+  console.log("userId: ", userId);
 
   const [dashboards, setDashboards] = useState<DashboardProps[]>([]);
 
