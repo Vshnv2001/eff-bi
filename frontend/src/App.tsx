@@ -3,7 +3,6 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider,
-  Routes,
 } from "react-router-dom";
 import SuperTokens, { SuperTokensWrapper } from "supertokens-auth-react";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
@@ -30,7 +29,6 @@ import DBAccessPermissionsPage from "./pages/DBAccessPermissionsPage";
 import NewTilePage from "./pages/NewTilePage";
 import ExDashboardPage from "./pages/ExDashboardPage";
 import TablePermissionsPage from "./pages/TablePermissionsPage";
-import { Session } from "inspector/promises";
 
 // Initialize SuperTokens
 SuperTokens.init(SuperTokensConfig);
