@@ -3,7 +3,7 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 from .sql_scripts import schema_query_dict, schema_table_query_dict
-
+import uuid
 from ..models import OrgTables
 load_dotenv()
 
@@ -68,8 +68,10 @@ def get_database_schemas_and_tables(db_url, db_type="postgres"):
 def process_table(schema_name, table_name, table_info, uri, organization):
     column_types = {col_name: col_type for col_name, col_type in zip(table_info['columns'], table_info['types'])}
     column_descriptions, table_description = get_column_descriptions(table_name, schema_name, uri)
+    id = str(uuid.uuid4())
     
     return OrgTables(
+        id=id,
         table_name=table_name,
         table_schema=schema_name,
         column_descriptions=column_descriptions,

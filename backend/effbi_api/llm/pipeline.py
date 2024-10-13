@@ -23,6 +23,7 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int):
     
     state.parsed_question = parsed_question
     
+    
     # Pass the pruned schema to the SQL agent to generate a SQL query
     sql_agent = SQLAgent(db_manager)
     sql_query = sql_agent.generate_sql(state)
@@ -47,10 +48,16 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int):
     
     state.results = results
     
-    print("results: ", state.results)
     
     # # Format the results
-    # formatter = DataFormatter()
-    # formatted_data = formatter.format_results(results, state)
+    formatter = DataFormatter(state)
+    visualization_choice = formatter.choose_visualization()
+    print("VISUALIZATION CHOICE: ", visualization_choice)
+    state.visualization = visualization_choice
+    formatted_data = formatter.format_data_for_visualization()
     
-    # return formatted_data
+    print("FORMATTED DATA: ", formatted_data)
+    
+    state.formatted_data = formatted_data
+    
+    return state
