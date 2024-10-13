@@ -5,7 +5,6 @@ from django.shortcuts import get_object_or_404
 from ..models import Organization
 from ..serializer import OrganizationSerializer
 
-
 @api_view(["POST"])
 def create_organization(request):
     try:
@@ -13,10 +12,16 @@ def create_organization(request):
         name = request.data.get('name', None)
         database_uri = request.data.get('database_uri', "")
         
+        max_id = Organization.objects.order_by('-id').first()
+        if max_id:
+            max_id = max_id.id
+        else:
+            max_id = 0
+        
         if not name:
             return JsonResponse({'error': 'Organization name is required'}, status=status.HTTP_400_BAD_REQUEST)
         
-        organization = Organization(name=name, database_uri=database_uri)
+        organization = Organization(id=max_id + 1, name=name, database_uri=database_uri)
         organization.save()
 
         # Prepare response data
@@ -31,6 +36,7 @@ def create_organization(request):
             status=status.HTTP_201_CREATED
         )
     except Exception as e:
+        print(e)
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     # try:
