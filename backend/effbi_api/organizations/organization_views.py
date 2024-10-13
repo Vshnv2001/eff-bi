@@ -9,18 +9,44 @@ from ..serializer import OrganizationSerializer
 @api_view(["POST"])
 def create_organization(request):
     try:
-        print(request.data)
-        serializer = OrganizationSerializer(data=request.data)
-        if serializer.is_valid():
-            organization = serializer.save()
-            return JsonResponse(
-                {'message': 'Organization created successfully', 'organization': serializer.data},
-                status=status.HTTP_201_CREATED
-            )
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # print(request.data)
+        name = request.data.get('name', None)
+        database_uri = request.data.get('database_uri', "")
+        
+        if not name:
+            return JsonResponse({'error': 'Organization name is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        organization = Organization(name=name, database_uri=database_uri)
+        organization.save()
 
+        # Prepare response data
+        organization_data = {
+            'id': organization.id,
+            'name': organization.name,
+            'database_uri': organization.database_uri,
+        }
+
+        return JsonResponse(
+            {'message': 'Organization created successfully', 'organization': organization_data},
+            status=status.HTTP_201_CREATED
+        )
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    # try:
+    #     print(request.data)
+
+    #     serializer = OrganizationSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         organization = serializer.save()
+    #         return JsonResponse(
+    #             {'message': 'Organization created successfully', 'organization': serializer.data},
+    #             status=status.HTTP_201_CREATED
+    #         )
+    #     return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # except Exception as e:
+    #     return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(["GET", "PATCH", "DELETE"])
