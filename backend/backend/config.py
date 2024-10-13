@@ -10,8 +10,8 @@ supertokens_config = SupertokensConfig(
 
 app_info = InputAppInfo(
     app_name="eff-bi",
-    api_domain="http://localhost:8000",
-    website_domain="http://localhost:3000",
+    api_domain="https://eff-bi.onrender.com",
+    website_domain="https://eff-bi.vercel.app/",
 )
 
 # recipeList contains all the modules that you want to
