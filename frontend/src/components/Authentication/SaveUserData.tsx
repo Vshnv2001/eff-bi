@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "./AuthenticationContext";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { useNavigate } from "react-router-dom";
+import { BACKEND_API_URL } from "../../config";
 
 const SaveUserData: React.FC = () => {
   const sessionContext = useSessionContext();
@@ -26,10 +27,10 @@ const SaveUserData: React.FC = () => {
         organization: organizationId,
       };
 
-      console.log("form data", formData)
+      console.log("form data", formData);
 
       try {
-        const createResponse = await fetch("http://localhost:8000/api/users/", {
+        const createResponse = await fetch(`${BACKEND_API_URL}/api/users/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -40,7 +41,7 @@ const SaveUserData: React.FC = () => {
         if (createResponse.ok) {
           const createData = await createResponse.json();
           console.log("User created:", createData);
-          
+
           setUserId(userId);
           setIsSaved(true);
           navigate("/");
@@ -53,7 +54,16 @@ const SaveUserData: React.FC = () => {
     };
 
     saveUserToBackend();
-  }, [sessionContext, email, firstName, lastName, organizationId, navigate, isSaved, setUserId]);
+  }, [
+    sessionContext,
+    email,
+    firstName,
+    lastName,
+    organizationId,
+    navigate,
+    isSaved,
+    setUserId,
+  ]);
 
   return isLoading ? <div>Loading...</div> : null;
 };

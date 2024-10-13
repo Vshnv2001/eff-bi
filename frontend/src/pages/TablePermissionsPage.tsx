@@ -54,7 +54,7 @@ const TablePermissionsPage = () => {
   );
   const [errorText, setErrorText] = useState("");
 
-  const onRemovePermissionClick = (user_email: string, user_id: string) => {
+  const onRemovePermissionClick = (user_email: string) => {
     setSelectedUserEmail(user_email);
     setOpenRemoveDialog(true);
   };
@@ -190,7 +190,7 @@ const TablePermissionsPage = () => {
             </thead>
             <tbody>
               {allUsers &&
-                allUsers.map(({ user_email, user_id, permissions }) => {
+                allUsers.map(({ user_email, permissions }) => {
                   const classes = "p-4 text-center";
 
                   return (
@@ -223,9 +223,7 @@ const TablePermissionsPage = () => {
                       <td className={classes}>
                         <div className="flex justify-center items-center space-x-3">
                           <button
-                            onClick={() =>
-                              onRemovePermissionClick(user_email, user_id)
-                            }
+                            onClick={() => onRemovePermissionClick(user_email)}
                             className="bg-red-500 text-white p-2 rounded-md hover:bg-red-400"
                           >
                             Remove
@@ -255,7 +253,7 @@ const TablePermissionsPage = () => {
             label="Select Permission type"
             className="min-h-10"
             variant="outlined"
-            onChange={setPermissionsInput}
+            onChange={(value) => setPermissionsInput(value as string)}
           >
             <Option className="p-3" value="Admin">
               Admin
@@ -301,7 +299,7 @@ const TablePermissionsPage = () => {
             label="Select Permission type"
             className="min-h-10"
             variant="outlined"
-            onChange={setRemovePermissionInput}
+            onChange={(value) => setRemovePermissionInput(value as string)}
           >
             <Option className="p-3" value="Admin">
               Admin
