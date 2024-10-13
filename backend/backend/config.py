@@ -3,6 +3,7 @@ from supertokens_python import (
     InputAppInfo,
     SupertokensConfig,
 )
+import os
 
 # this is the location of the SuperTokens core.
 # supertokens_config = SupertokensConfig(
