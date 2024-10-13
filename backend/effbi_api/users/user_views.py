@@ -9,10 +9,10 @@ from ..serializer import UserSerializer
 @api_view(["POST"])
 def create_user(request):
     try:
-        print(request.data)
+        # print(request.data)
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            print(serializer)
+            # print(serializer)
             serializer.save()
             return JsonResponse(
                 {'message': 'User created successfully', 'user': serializer.data}, status=status.HTTP_201_CREATED

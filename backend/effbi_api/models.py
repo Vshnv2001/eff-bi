@@ -18,7 +18,7 @@ class User(models.Model):
 class Organization(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
-    database_uri = models.CharField(max_length=255, default="")
+    database_uri = models.CharField(max_length=255, blank=True, null=True, default="")
     
     class Meta:
         db_table = "organizations"
