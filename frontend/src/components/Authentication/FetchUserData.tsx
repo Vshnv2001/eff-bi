@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { useAuth } from "./AuthenticationContext";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { useNavigate } from "react-router-dom";
+import { BACKEND_API_URL } from "../../config";
 
 const FetchUserData: React.FC = () => {
   const sessionContext = useSessionContext();
-  const { setUserId, setEmail, setFirstName, setLastName, setOrganizationId } = useAuth();
+  const { setUserId, setEmail, setFirstName, setLastName, setOrganizationId } =
+    useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -18,12 +20,15 @@ const FetchUserData: React.FC = () => {
       const userId = sessionContext.userId;
 
       try {
-        const response = await fetch(`http://localhost:8000/api/users/${userId}/`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `${BACKEND_API_URL}/api/users/${userId}/`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (response.ok) {
           const userData = await response.json();
@@ -46,7 +51,15 @@ const FetchUserData: React.FC = () => {
     };
 
     fetchUserData();
-  }, [sessionContext, setUserId, setEmail, setFirstName, setLastName, setOrganizationId, navigate]); // Update dependencies
+  }, [
+    sessionContext,
+    setUserId,
+    setEmail,
+    setFirstName,
+    setLastName,
+    setOrganizationId,
+    navigate,
+  ]); // Update dependencies
 
   return isLoading ? <div>Loading user data...</div> : null;
 };
