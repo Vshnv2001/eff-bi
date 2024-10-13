@@ -18,17 +18,11 @@ import {
 } from "@mui/material";
 
 const Authentication = () => {
-  const {
-    email,
-    setEmail,
-    firstName,
-    setFirstName,
-    lastName,
-    setLastName,
-  } = useAuth();
+  const { email, setEmail, firstName, setFirstName, lastName, setLastName } =
+    useAuth();
 
   const [password, setPassword] = useState("");
-  const [isSignUp, setIsSignUp] = useState(true);
+  const [isSignUp, setIsSignUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [inputError, setInputError] = useState({
     email: false,
@@ -171,7 +165,7 @@ const Authentication = () => {
           <img
             src="/assets/logo-nobg.png"
             alt="EFF BI Logo"
-            style={{ width: "128px"}}
+            style={{ width: "128px" }}
           />
 
           <Box

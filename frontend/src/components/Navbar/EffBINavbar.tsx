@@ -9,10 +9,12 @@ import {
 import { useNavigate } from "react-router-dom";
 import { signOut } from "supertokens-auth-react/recipe/session";
 import { Link } from "react-router-dom";
+import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 export default function EffBINavbar() {
   const navigate = useNavigate();
- 
+  const sessionContext = useSessionContext();
+
   async function logoutClicked() {
     await signOut();
     navigate("/auth");
@@ -86,12 +88,6 @@ export default function EffBINavbar() {
               </MenuItem>
               <MenuItem
                 className="flex items-center text-white gap-2 p-3 bg-gray-800 border-none"
-                onClick={() => navigate("/settings/organization")}
-              >
-                Organization Management
-              </MenuItem>
-              <MenuItem
-                className="flex items-center text-white gap-2 p-3 bg-gray-800 border-none"
                 onClick={() => navigate("/settings/access-permissions")}
               >
                 Access Permissions
@@ -107,7 +103,9 @@ export default function EffBINavbar() {
             className="flex items-center gap-2"
             onClick={logoutClicked}
           >
-            Logout
+            {sessionContext.loading || !sessionContext.doesSessionExist
+              ? "Login"
+              : "Logout"}
           </Button>
         </div>
       </div>
