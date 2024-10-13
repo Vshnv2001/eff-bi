@@ -36,7 +36,7 @@ export default function DBAccessPermissionsPage() {
   const navigate = useNavigate();
 
   const sessionContext = useSessionContext();
-  const userId = sessionContext.userId;
+  const userId = sessionContext.loading ? null : sessionContext.userId;
 
   const onGivePermissionClick = (table_name: string, table_id: number) => {
     // TODO consider encrypting the url?
@@ -62,6 +62,10 @@ export default function DBAccessPermissionsPage() {
 
     fetchPermissions();
   }, []);
+
+  if (sessionContext.loading) {
+    return <div>loading</div>;
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-800 p-10">
@@ -99,7 +103,7 @@ export default function DBAccessPermissionsPage() {
               </tr>
             </thead>
             <tbody>
-              {allPermissions.map(({ table_name, table_id, permissions }) => {
+              {allPermissions?.map(({ table_name, table_id, permissions }) => {
                 const classes = "p-4 text-center";
 
                 return (

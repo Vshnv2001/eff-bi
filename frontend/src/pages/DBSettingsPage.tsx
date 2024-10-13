@@ -79,18 +79,18 @@ export default function DBSettingsPage() {
       }
     } catch (error) {
       if ((error as any).response) {
-        console.error("Backend error:", error.response.data);
+        console.error("Backend error:", (error as any).response.data);
         alert(
           `Error: ${
-            error.response.data.message || "Failed to save connection."
+            (error as any).response.data.message || "Failed to save connection."
           }`
         );
-      } else if (error.request) {
-        console.error("Network error:", error.request);
+      } else if ((error as any).request) {
+        console.error("Network error:", (error as any).request);
         alert("Network error: Failed to reach the server.");
       } else {
-        console.error("Error:", error.message);
-        alert(`Error: ${error.message}`);
+        console.error("Error:", (error as any).message);
+        alert(`Error: ${(error as any).message}`);
       }
     }
   };
@@ -106,7 +106,7 @@ export default function DBSettingsPage() {
           >
             Organization Settings
           </Typography>
-          <Typography as="mb" color="white" className="mb-6 text-2xl font-bold">
+          <Typography as="h3" color="white" className="mb-6 text-2xl font-bold">
             Select Database
           </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -134,6 +134,7 @@ export default function DBSettingsPage() {
                     </Typography>
                   </div>
                   <Radio
+                    crossOrigin={undefined}
                     name="database"
                     color="blue"
                     checked={selectedDb === db.id}
