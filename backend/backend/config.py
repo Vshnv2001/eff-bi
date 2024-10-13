@@ -17,6 +17,8 @@ app_info = InputAppInfo(
     app_name="eff-bi",
     api_domain=os.getenv("API_DOMAIN"),
     website_domain=os.getenv("WEBSITE_DOMAIN"),
+    api_base_path="/api/auth",
+    website_base_path="/auth",
 )
 
 # recipeList contains all the modules that you want to
