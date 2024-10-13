@@ -15,9 +15,4 @@ class Migration(migrations.Migration):
             name='database_uri',
             field=models.CharField(blank=True, default='', max_length=255, null=True),
         ),
-        # migrations.AlterField(
-        #     model_name='orgtables',
-        #     name='id',
-        #     field=models.AutoField(primary_key=True, serialize=False),
-        # ),
     ]
