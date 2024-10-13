@@ -9,7 +9,9 @@ dotenv.load_dotenv()
 
 # this is the location of the SuperTokens core.
 supertokens_config = SupertokensConfig(
-    connection_uri=os.getenv("SUPERTOKENS_CONNECTION_URI"))
+    connection_uri=os.getenv("SUPERTOKENS_CONNECTION_URI"),
+    api_key=os.getenv("SUPERTOKENS_API_KEY"),
+)
 
 app_info = InputAppInfo(
     app_name="eff-bi",
