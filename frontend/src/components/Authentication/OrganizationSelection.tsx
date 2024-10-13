@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { useAuth } from "./AuthenticationContext";
 import { useNavigate } from "react-router-dom";
+import { BACKEND_API_URL } from "../../config";
 
 interface OrganizationSelectionProps {
   onClose: () => void;
@@ -72,8 +73,8 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
 
   const handleSubmit = async () => {
     if (step === "create") {
-      console.log("org id", orgData, orgData.orgId)
-      const response = await fetch("http://localhost:8000/api/organizations/", {
+      console.log("org id", orgData, orgData.orgId);
+      const response = await fetch(`${BACKEND_API_URL}/api/organizations/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,7 +87,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
       });
 
       if (response.ok) {
-        const result = await response.json();
+        await response.json();
         setOrganizationId(orgData.orgId);
         onSubmit({ ...orgData, action: step });
         navigate("/auth/save");
@@ -97,14 +98,14 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
     } else if (step === "join") {
       // Get organization data
       const response = await fetch(
-        `http://localhost:8000/api/organizations/${orgData.orgId}`,
+        `${BACKEND_API_URL}/api/organizations/${orgData.orgId}`,
         {
           method: "GET",
         }
       );
 
       if (response.ok) {
-        const result = await response.json();
+        await response.json();
         setOrganizationId(orgData.orgId);
         onSubmit({ ...orgData, action: step });
         navigate("/auth/save");

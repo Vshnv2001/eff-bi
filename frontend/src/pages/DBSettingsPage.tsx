@@ -15,22 +15,22 @@ const databases = [
   {
     id: "mysql",
     name: "MySQL",
-    logo: "/assets/logos/my-sql.svg",
+    logo: "https://www.vectorlogo.zone/logos/mysql/mysql-ar21.svg",
   },
   {
     id: "postgresql",
     name: "PostgreSQL",
-    logo: "/assets/logos/postgres-sql.svg",
+    logo: "https://www.vectorlogo.zone/logos/postgresql/postgresql-ar21.svg",
   },
   {
     id: "sqlite",
     name: "SQLite",
-    logo: "/assets/logos/sql-lite.svg",
+    logo: "https://www.vectorlogo.zone/logos/sqlite/sqlite-ar21.svg",
   },
   {
     id: "oracle",
     name: "Oracle DB",
-    logo: "/assets/logos/oracle.svg",
+    logo: "https://www.vectorlogo.zone/logos/oracle/oracle-ar21.svg",
   },
 ];
 
@@ -46,7 +46,6 @@ const darkTheme = {
 
 export default function DBSettingsPage() {
   const [selectedDb, setSelectedDb] = useState("");
-  const [selectedDbUri, setSelectedDbUri] = useState("");
   const [dbUri, setDbUri] = useState("");
   const { userId, organizationId } = useAuth();
 
@@ -78,7 +77,7 @@ export default function DBSettingsPage() {
         alert("Connection saved successfully!");
         setDbUri("");
       }
-    } catch (error: any) {
+    } catch (error) {
       if ((error as any).response) {
         console.error("Backend error:", (error as any).response.data);
         alert(
@@ -138,7 +137,6 @@ export default function DBSettingsPage() {
                     crossOrigin={undefined}
                     name="database"
                     color="blue"
-                    crossOrigin={undefined}
                     checked={selectedDb === db.id}
                     onChange={() => setSelectedDb(db.id)}
                     className="checked:border-blue-500 checked:before:bg-blue-500"
