@@ -31,6 +31,8 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
     databaseUri: "",
   });
   const [showTransition, setShowTransition] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isShaking, setIsShaking] = useState(false);
 
   const { setOrganizationId } = useAuth();
   const navigate = useNavigate();
@@ -111,6 +113,9 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
         onSubmit({ ...orgData, action: step });
         navigate("/auth/save");
       } else {
+        setErrorMessage("Organization not found");
+        setIsShaking(true);
+        setTimeout(() => setIsShaking(false), 1000);
         console.error("Organization not found");
       }
     }
@@ -201,7 +206,20 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
               type="number"
               value={orgData.orgId}
               onChange={handleInputChange}
+              className={`transition duration-300 ${
+                isShaking ? "border-red-500 animate-shake" : "border-gray-300"
+              }`}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "inherit",
+                  },
+                },
+              }}
             />
+          )}
+          {errorMessage && (
+            <p className="mt-1 text-red-500 text-sm">{errorMessage}</p>
           )}
         </Box>
       </Slide>

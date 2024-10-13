@@ -64,7 +64,6 @@ const Authentication = () => {
         setInputError((prev) => ({ ...prev, email: true }));
       } else {
         setErrorMessage("");
-        //navigate("/auth/save");
         setShowOrgSelection(true);
       }
     } catch (err) {
