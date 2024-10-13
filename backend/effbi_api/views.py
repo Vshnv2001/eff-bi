@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpRequest, JsonResponse, HttpResponse
+from .llm.pipeline import response_pipeline
 from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
 from supertokens_python.recipe.multitenancy.syncio import list_all_tenants
@@ -231,8 +232,11 @@ def create_dashboard_tile(request: HttpRequest):
         user_id = request.supertokens.get_user_id()
         user = get_object_or_404(User, id=user_id)
         org_id = user.organization.id
+        db_uri = user.organization.database_uri
+        response = response_pipeline(request.data.get('description'), db_uri, org_id)
+        print("Pipeline complete")
         request.data['organization'] = org_id
-        request.data['sql_query'] = ''
+        request.data['sql_query'] = ""
         request.data['component'] = 'LineChartTemplate'
         request.data['tile_props'] = {
             'series': [
@@ -252,4 +256,5 @@ def create_dashboard_tile(request: HttpRequest):
         print(serializer.errors)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
+        print(e)
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

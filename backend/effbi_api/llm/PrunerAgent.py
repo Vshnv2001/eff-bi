@@ -16,6 +16,8 @@ Your response should be in the following JSON format:
         {{
             "table_name": string,
             "columns": [string],
+            "column_descriptions": dict,
+            "column_types": dict,
             "noun_columns": [string]
         }}
     ]
@@ -23,13 +25,14 @@ Your response should be in the following JSON format:
 
 The "noun_columns" field should contain only the columns that are relevant to the question and contain nouns or names, for example, the column "Artist name" contains nouns relevant to the question "What are the top selling artists?", but the column "Artist ID" is not relevant because it does not contain a noun. Do not include columns that contain numbers.
 '''),
-            ("human", "===Database schema:\n{schema}\n\n===User question:\n{question}\n\nIdentify relevant tables and columns:")
+            ("human", "===User question:\n{question}\n\n===Database schema:\n{schema}\n\nIdentify relevant tables and columns:")
         ])  
         self.llm_manager = LLMManager(model)
         
-    def prune(self, database_schema, user_query):
+    def prune(self, state):
         output_parser = JsonOutputParser()
-        response = self.llm_manager.invoke(self.prompt, schema=database_schema, question=user_query)
+        response = self.llm_manager.invoke(self.prompt, question=state.question, schema=state.database_schema)
+        print(response)
         output = output_parser.parse(response)
         return output
     

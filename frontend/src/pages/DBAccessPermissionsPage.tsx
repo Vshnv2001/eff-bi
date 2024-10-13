@@ -139,7 +139,7 @@ export default function DBAccessPermissionsPage() {
               </tr>
             </thead>
             <tbody>
-              {allPermissions.map(({ table_name, table_id, permissions }) => {
+              {allPermissions?.map(({ table_name, table_id, permissions }) => {
                 const classes = "p-4 text-center";
 
                 return (
