@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   TextField,
@@ -43,6 +43,16 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
     setSelection(event.target.value as "create" | "join");
   };
 
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage("");
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
+
   const handleNext = () => {
     setShowTransition(false);
 
@@ -58,6 +68,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
 
   const handleBack = () => {
     setShowTransition(false);
+    setErrorMessage("");
 
     setTimeout(() => {
       setStep("select");
@@ -88,10 +99,10 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
       });
 
       if (response.ok) {
-        const data = await response.json(); // Await the JSON parsing
-        console.log("json response", data); // Log the parsed response
+        const data = await response.json();
+        console.log("json response", data);
 
-        setOrganizationId(data.organization.id); // Access the id after awaiting
+        setOrganizationId(data.organization.id);
         onSubmit({ ...orgData, id: data.organization.id, action: step });
         navigate("/auth/save");
       } else {
@@ -185,10 +196,9 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
               />
               <TextField
                 margin="normal"
-                required
                 fullWidth
                 name="databaseUri"
-                label="Database URI"
+                label="Database URI (Optional)"
                 type="text"
                 value={orgData.databaseUri}
                 onChange={handleInputChange}
