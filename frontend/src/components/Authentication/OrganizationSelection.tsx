@@ -80,16 +80,17 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id: orgData.orgId,
           name: orgData.name,
           database_uri: orgData.databaseUri,
         }),
       });
 
       if (response.ok) {
-        await response.json();
-        setOrganizationId(orgData.orgId);
-        onSubmit({ ...orgData, action: step });
+        const data = await response.json(); // Await the JSON parsing
+        console.log("json response", data); // Log the parsed response
+
+        setOrganizationId(data.organization.id); // Access the id after awaiting
+        onSubmit({ ...orgData, id: data.organization.id, action: step });
         navigate("/auth/save");
       } else {
         // Handle error
@@ -171,17 +172,6 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
                 margin="normal"
                 required
                 fullWidth
-                name="orgId"
-                label="Organization ID"
-                type="number"
-                value={orgData.orgId}
-                onChange={handleInputChange}
-              />
-
-              <TextField
-                margin="normal"
-                required
-                fullWidth
                 name="name"
                 label="Organization Name"
                 type="text"
@@ -206,7 +196,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
               margin="normal"
               required
               fullWidth
-              name="id"
+              name="orgId"
               label="Organization ID"
               type="number"
               value={orgData.orgId}
