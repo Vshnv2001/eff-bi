@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardBody,
@@ -10,6 +10,7 @@ import {
 import axios from "axios";
 import { useAuth } from "../components/Authentication/AuthenticationContext";
 import { BACKEND_API_URL } from "../config/index";
+import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 const databases = [
   {
@@ -47,7 +48,28 @@ const darkTheme = {
 export default function DBSettingsPage() {
   const [selectedDb, setSelectedDb] = useState("");
   const [dbUri, setDbUri] = useState("");
-  const { userId, organizationId } = useAuth();
+  const { organizationId } = useAuth();
+  const sessionContext = useSessionContext();
+  const userId = sessionContext.loading ? null : sessionContext.userId;
+
+  useEffect(() => {
+    const fetchDbSettings = async () => {
+      console.log(userId);
+      try {
+        const response = await axios.get(
+            `${BACKEND_API_URL}/api/users/uri/${userId}`
+        );
+        if (response.status === 200) {
+          setDbUri(response.data.database_uri);
+        } else {
+          console.error("Failed to fetch db settings:", response);
+        }
+      } catch (error) {
+        console.error("Error fetching db settings:", error);
+      }
+    };
+    fetchDbSettings();
+    }, []);
 
   const handleSave = async () => {
     if (!dbUri) {
@@ -155,7 +177,7 @@ export default function DBSettingsPage() {
             </Typography>
             <input
               type="text"
-              placeholder="Database URI"
+              placeholder={dbUri}
               className="w-full p-2 rounded bg-white text-black border border-gray-700 focus:outline-none focus:border-blue-500"
               value={dbUri}
               onChange={(e) => setDbUri(e.target.value)}
