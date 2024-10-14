@@ -30,13 +30,15 @@ export default function DashboardForm({
   dashboardDescription,
   setDashboardDescription,
 }: DashboardFormProps) {
-
   const handleCreate = async () => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/dashboard/`, {
-        title: dashboardName,
-        description: dashboardDescription,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/dashboard/`,
+        {
+          title: dashboardName,
+          description: dashboardDescription,
+        }
+      );
       console.log("Dashboard created successfully:", response.data);
       setOpen(false);
       window.location.reload();
@@ -50,7 +52,7 @@ export default function DashboardForm({
       open={open}
       handler={handleOpen}
       size="md"
-      className="bg-gray-300 border-4 border-black text-black flex flex-col items-center justify-between h-[50%]"
+      className="bg-gray-300 border-4 border-black text-black flex flex-col items-center justify-between h-[55%]"
       animate={{
         mount: { scale: 1, y: 0 },
         unmount: { scale: 0.9, y: -100 },
@@ -59,7 +61,11 @@ export default function DashboardForm({
       <DialogHeader className="text-black">Create Dashboard</DialogHeader>
       <DialogBody>
         <div className="mb-4">
-          <Typography variant="small" color="blue-gray" className="font-normal mb-2 text-black">
+          <Typography
+            variant="small"
+            color="blue-gray"
+            className="font-normal mb-2 text-black"
+          >
             Dashboard Name
           </Typography>
           <Input
@@ -78,7 +84,11 @@ export default function DashboardForm({
           />
         </div>
         <div className="mb-4">
-          <Typography variant="small" color="blue-gray" className="font-normal mb-2 text-black">
+          <Typography
+            variant="small"
+            color="blue-gray"
+            className="font-normal mb-2 text-black"
+          >
             Dashboard Description
           </Typography>
           <Textarea

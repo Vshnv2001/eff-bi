@@ -70,3 +70,13 @@ def get_users_by_organization(request, org_id):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+@api_view(["GET"])
+def get_organization_uri(request, user_id):
+    try:
+        user = get_object_or_404(User, id=user_id)
+        org_uri = user.organization.database_uri
+        return JsonResponse({'message': 'Organization URI retrieved successfully', 'database_uri': org_uri}, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

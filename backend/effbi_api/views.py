@@ -52,30 +52,6 @@ def health_check(request):
     return JsonResponse({'message': 'Server is running successfully'}, status=200)
 
 
-@api_view(["GET"])
-def get_user_access_permissions(request):
-    # query the useraccess permissions table
-    # get based on the user_id
-    # view_acceess = [1, 2, 3]
-    # admin_access = [2, 3]
-    # query table names from orgTable
-    # mapping from tableid to name
-    # {
-    #     table: access,
-    #     table_name 1: view,
-    #     table_name 2: view, admin,
-    #     table_name 3: view, admin
-    # }
-    # {
-    #     data: [
-    #         {table_name: name1,
-    #          permissions: ['View', 'Admin']},
-    #         {table_name: name2,
-    #          permissions: ['View']},
-    #     ]
-    # }
-    return JsonResponse({'message': 'data generated!'}, status=200)
-
 @api_view(["POST"])
 @verify_session()
 def create_dashboard(request):
