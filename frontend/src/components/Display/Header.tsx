@@ -5,8 +5,9 @@ const Header: React.FC = () => {
         Database Connection
       </h1>
       <p className="mt-6 text-2xl text-left text-neutral-800 text-opacity-80 max-md:max-w-full">
-      Eff-BI allows connection to well-known databases with read-only access,
-      enabling the generation of charts from the tables and data within the databases.
+        Eff BI allows connection to well-known databases with read-only access,
+        enabling the generation of charts from the tables and data within the
+        databases.
       </p>
     </header>
   );

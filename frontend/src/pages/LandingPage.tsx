@@ -21,7 +21,6 @@ const LandingPage = () => {
       <AboutUs />
       <Steps />
       <Display />
-      <Features />
       <Reviews />
       <Chat />
       <ContactUs />
