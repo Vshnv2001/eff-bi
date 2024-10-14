@@ -45,7 +45,7 @@ class Dashboard(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
     description = models.TextField()
-    dash_id = models.IntegerField(unique=True, editable=False)  # Make dash_id unique and non-editable
+    dash_id = models.IntegerField(editable=False)  
     organization = models.ForeignKey('Organization', on_delete=models.CASCADE)
     tiles = models.ForeignKey('Tile', on_delete=models.CASCADE, null=True)
     created_by = models.CharField(max_length=100, default='')
