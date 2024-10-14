@@ -54,10 +54,12 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int):
     visualization_choice = formatter.choose_visualization()
     print("VISUALIZATION CHOICE: ", visualization_choice)
     state.visualization = visualization_choice
-    formatted_data = formatter.format_data_for_visualization()
+    try:
+        formatted_data = formatter.format_data_for_visualization()
+    except Exception as e:
+        print("Error formatting data for visualization: ", e)
+        raise e
     
     print("FORMATTED DATA: ", formatted_data)
-    
-    state.formatted_data = formatted_data
-    
+
     return state

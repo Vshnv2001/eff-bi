@@ -63,7 +63,9 @@ export default function DBSettingsPage() {
         );
         if (response.status === 200) {
           setDbUri(response.data.database_uri);
-          setIsDisabledField(true);
+          if (response.data.database_uri !== "") {
+            setIsDisabledField(true);
+          }
         } else {
           console.error("Failed to fetch db settings:", response);
         }
@@ -132,6 +134,8 @@ export default function DBSettingsPage() {
     // TODO call refresh api
     console.log("refreshed!");
   };
+
+  console.log(isDisabledField);
 
   return (
     <ThemeProvider value={darkTheme}>

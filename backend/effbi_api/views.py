@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpRequest, JsonResponse, HttpResponse
+
+from .llm.State import State
 from .llm.pipeline import response_pipeline
 from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
@@ -211,21 +213,12 @@ def create_dashboard_tile(request: HttpRequest):
         user = get_object_or_404(User, id=user_id)
         org_id = user.organization.id
         db_uri = user.organization.database_uri
-        response = response_pipeline(request.data.get('description'), db_uri, org_id)
+        response : State = response_pipeline(request.data.get('description'), db_uri, org_id)
         print("Pipeline complete")
         request.data['organization'] = org_id
-        request.data['sql_query'] = ""
-        request.data['component'] = 'LineChartTemplate'
-        request.data['tile_props'] = {
-            'series': [
-                {
-                    "name": "Desktops",
-                    "data": [10, 41, 35, 51, 49, 62, 69, 91, 148],
-                },
-            ],
-            'title': request.data.get('title', 'Untitled'),
-            'categories': ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
-        }
+        request.data['sql_query'] = response.sql_query
+        request.data['component'] = response.visualization.get('visualization', '')
+        request.data['tile_props'] = response.formatted_data
         print(request.data)
         serializer = TileSerializer(data=request.data)
         if serializer.is_valid():

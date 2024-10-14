@@ -10,13 +10,13 @@ class ChartType(Enum):
     LineChartTemplate = "LineChartTemplate"
     BarChartTemplate = "BarChartTemplate"
     HorizontalBarChartTemplate = "HorizontalBarChartTemplate"
+    PieChartTemplate = "PieChartTemplate"
     DonutChartTemplate = "DonutChartTemplate"
     AreaChartTemplate = "AreaChartTemplate"
     StackedGroupBarChartTemplate = "StackedGroupBarChartTemplate"
     PyramidBarChartTemplate = "PyramidBarChartTemplate"
     LineColumnChartTemplate = "LineColumnChartTemplate"
     MultipleYAxisLineChartTemplate = "MultipleYAxisLineChartTemplate"
-    PieChartTemplate = "PieChartTemplate"
     RadarChartTemplate = "RadarChartTemplate"
     RadarChartMultipleTemplate = "RadarChartMultipleTemplate"
     RadarChartPolarTemplate = "RadarChartPolarTemplate"
@@ -70,6 +70,7 @@ class DataFormatter:
                 - PieChartTemplate: Ideal for showing proportions or percentages within a whole. Use for questions like "What is the market share distribution among different companies?" or "What percentage of the total revenue comes from each product?"
                 - LineChartTemplate: Best for showing trends and distributionsover time. Best used when both x axis and y axis are continuous. Used for questions like "How have website visits changed over the year?" or "What is the trend in temperature over the past decade?". Do not use it for questions that do not have a continuous x axis or a time based x axis.
 
+            Make sure that the chart type you choose is one of the above. 'HorizontalBarChartTemplate' is allowed but not 'HorizontalBarChartTemplate .'.
             Consider these types of questions when recommending a visualization:
             1. Aggregations and Summarizations (e.g., "What is the average revenue by month?" - Line Chart)
             2. Comparisons (e.g., "Compare the sales figures of Product A and Product B over the last year." - Line or Column Chart)
@@ -93,8 +94,8 @@ class DataFormatter:
         response = self.llm_manager.invoke(prompt, question=question, sql_query=sql_query, results=results)
         
         lines = response.split('\n')
-        visualization = lines[0].split(': ')[1]
-        reason = lines[1].split(': ')[1]
+        visualization = lines[0].split(': ')[1].strip()
+        reason = lines[1].split(': ')[1].strip()
 
         return {"visualization": visualization, "visualization_reason": reason}
 
@@ -112,6 +113,7 @@ class DataFormatter:
         
         visualization_props = viz_props[ChartType(visualization)]
         
+        print("visualization_props: ", visualization_props)
         prompt = ChatPromptTemplate.from_messages([
             ("system", '''
             You are an AI assistant that formats data for data visualizations.
@@ -121,51 +123,7 @@ class DataFormatter:
             - The type of visualization that was chosen and its props that we will use in the frontend
             - The user's question
             
-            You need to format the data for the visualization. An example for each visualization type is provided below.
-            
-            LineChartTemplate:
-            {
-                "series": [
-                    {
-                        "name": "Desktops",
-                        "data": [10, 41, 35, 51, 49, 62, 69, 91, 148],
-                    },
-                ],
-                "categories": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
-            }
-            
-            BarChartTemplate:
-            {
-                "chartSeries": [
-                    {
-                        "name": "Desktops",
-                        "data": [10, 41, 35, 51, 49, 62, 69, 91, 148],
-                    },
-                ],
-                "categories": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
-            }
-            
-            HorizontalBarChartTemplate:
-            {
-                "chartSeries": [
-                    {
-                        "name": "Desktops",
-                        "data": [10, 41, 35, 51, 49, 62, 69, 91, 148],
-                    },
-                ],
-                "categories": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
-            }
-            
-            PieChartTemplate:
-            {
-                "series": [
-                    {
-                        "name": "Desktops",
-                        "data": [10, 41, 35, 51, 49, 62, 69, 91, 148],
-                    },
-                ],
-                "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
-            }
+            You need to format the data for the visualization.
             
             Available chart types (in Javascript) Make sure to use the exact names ONLY:
             LineChartTemplate, BarChartTemplate, HorizontalBarChartTemplate, PieChartTemplate
@@ -181,7 +139,16 @@ class DataFormatter:
             '''),
         ])
         
-        response = self.llm_manager.invoke(prompt, sql_query=sql_query, results=results, visualization=visualization, question=question, visualization_props=visualization_props)
+        print("invoking llm_manager")
+        try:
+            response = self.llm_manager.invoke(prompt, sql_query=sql_query, results=results, visualization=visualization, question=question, visualization_props=visualization_props)
+        except Exception as e:
+            print("Error invoking llm_manager: ", e)
+            raise e
         
-        return {"formatted_data_for_visualization": response}
+        print("response: ", response)
+        
+        self.state.formatted_data = JsonOutputParser().parse(response)
+        
+        return {"formatted_data_for_visualization": self.state.formatted_data}
         
