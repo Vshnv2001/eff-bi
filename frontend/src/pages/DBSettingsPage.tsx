@@ -6,6 +6,7 @@ import {
   Radio,
   ThemeProvider,
   Button,
+  Spinner,
 } from "@material-tailwind/react";
 import axios from "axios";
 import { useAuth } from "../components/Authentication/AuthenticationContext";
@@ -48,30 +49,37 @@ const darkTheme = {
 export default function DBSettingsPage() {
   const [selectedDb, setSelectedDb] = useState("");
   const [dbUri, setDbUri] = useState("");
+  const [isDisabledField, setIsDisabledField] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { organizationId } = useAuth();
   const sessionContext = useSessionContext();
   const userId = sessionContext.loading ? null : sessionContext.userId;
 
   useEffect(() => {
     const fetchDbSettings = async () => {
-      console.log(userId);
       try {
         const response = await axios.get(
-            `${BACKEND_API_URL}/api/users/uri/${userId}`
+          `${BACKEND_API_URL}/api/users/uri/${userId}`
         );
         if (response.status === 200) {
           setDbUri(response.data.database_uri);
+          setIsDisabledField(true);
         } else {
           console.error("Failed to fetch db settings:", response);
         }
       } catch (error) {
         console.error("Error fetching db settings:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchDbSettings();
-    }, []);
+  }, []);
 
   const handleSave = async () => {
+    if (isDisabledField) {
+      return;
+    }
     if (!dbUri) {
       // TODO do proper error handling in frontend
       alert("Error: Database URI is required.");
@@ -90,6 +98,7 @@ export default function DBSettingsPage() {
     // console.log(reqBody);
 
     try {
+      setIsLoading(true);
       const response = await axios.post(
         `${BACKEND_API_URL}/api/connection/`,
         reqBody
@@ -114,22 +123,34 @@ export default function DBSettingsPage() {
         console.error("Error:", (error as any).message);
         alert(`Error: ${(error as any).message}`);
       }
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleRefresh = async () => {
+    // TODO call refresh api
+    console.log("refreshed!");
   };
 
   return (
     <ThemeProvider value={darkTheme}>
-      <div className="min-h-screen bg-gray-900 text-gray-100 p-8">
+      <div className="min-h-screen bg-gray-800 text-gray-100 p-8">
+        {isLoading && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <Spinner className="h-10 w-10" />
+          </div>
+        )}
         <div className="max-w-4xl mx-auto">
           <Typography
             as="h2"
             color="white"
             className="mb-6 text-3xl font-bold text-center"
           >
-            Organization Settings
+            Database Settings
           </Typography>
           <Typography as="h3" color="white" className="mb-6 text-2xl font-bold">
-            Select Database
+            Select Database Type
           </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {databases.map((db) => (
@@ -156,6 +177,7 @@ export default function DBSettingsPage() {
                     </Typography>
                   </div>
                   <Radio
+                    disabled={isDisabledField}
                     crossOrigin={undefined}
                     name="database"
                     color="blue"
@@ -176,17 +198,26 @@ export default function DBSettingsPage() {
               Enter Database URI
             </Typography>
             <input
+              disabled={isDisabledField}
               type="text"
               placeholder={dbUri}
-              className="w-full p-2 rounded bg-white text-black border border-gray-700 focus:outline-none focus:border-blue-500"
+              className={`w-full p-2 rounded ${
+                isDisabledField ? "bg-gray-400" : "bg-white"
+              } text-black border border-gray-700 focus:outline-none focus:border-blue-500`}
               value={dbUri}
               onChange={(e) => setDbUri(e.target.value)}
             />
           </div>
           <div className="flex justify-center mt-12">
-            <Button color="blue" className="w-full" onClick={handleSave}>
-              Save
-            </Button>
+            {isDisabledField ? (
+              <Button color="blue" className={`w-full`} onClick={handleRefresh}>
+                Refresh
+              </Button>
+            ) : (
+              <Button color="blue" className={`w-full`} onClick={handleSave}>
+                Save
+              </Button>
+            )}
           </div>
         </div>
       </div>
