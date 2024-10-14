@@ -4,11 +4,16 @@ import DashboardForm from "../components/Dashboard/DashboardForm";
 import DashboardCard from "../components/Dashboard/DashboardCard";
 import axios from "axios";
 import { DashboardProps } from "../components/Dashboard/DashboardProps";
+import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 export default function DashboardsPage() {
   const [open, setOpen] = useState(false);
   const [dashboardName, setDashboardName] = useState("");
   const [dashboardDescription, setDashboardDescription] = useState("");
+
+  const sessionContext = useSessionContext();
+
+  console.log(sessionContext);
 
   const [dashboards, setDashboards] = useState<DashboardProps[]>([]);
 
