@@ -3,9 +3,11 @@ import testimonials from "./Testimonials";
 
 const Reviews = forwardRef<HTMLDivElement, {}>((_, ref) => {
   return (
-    <section className="py-12">
+    <section className="py-12" id="reviews">
       <div ref={ref} className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-black uppercase text-slate-500 text-center mt-10">What Our Clients Say</h2>
+        <h2 className="text-3xl font-black uppercase text-slate-500 text-center mt-10">
+          What Our Clients Say
+        </h2>
         <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((testimonial) => (
             <div
@@ -29,7 +31,11 @@ const Reviews = forwardRef<HTMLDivElement, {}>((_, ref) => {
                 <p className="text-lg text-gray-900">{testimonial.review}</p>
               </blockquote>
               <div className="flex items-center">
-                <img className="w-12 h-12 rounded-full" src={testimonial.image} alt={testimonial.name} />
+                <img
+                  className="w-12 h-12 rounded-full"
+                  src={testimonial.image}
+                  alt={testimonial.name}
+                />
                 <div className="ml-4">
                   <p className="font-bold text-gray-900">{testimonial.name}</p>
                   <p className="text-sm text-gray-600">{testimonial.role}</p>

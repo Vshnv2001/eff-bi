@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  FaFacebook,
-  FaTwitter,
-  FaInstagram,
-  FaGooglePlusG,
-} from "react-icons/fa";
+import { FaTwitter, FaLinkedin, FaEnvelope } from "react-icons/fa";
 import emailjs, { EmailJSResponseStatus } from "@emailjs/browser";
 
 const Footer: React.FC = () => {
@@ -40,16 +35,17 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-gray-800 text-white py-6 h-screen flex flex-col justify-center">
+    <footer
+      className="bg-gray-800 text-white py-6 h-screen flex flex-col justify-center"
+      id="contact"
+    >
       <div className="container mx-auto flex flex-col items-center">
         {/* Contact Us Section */}
         <div className="w-full max-w-md mb-4 text-center">
           <h2 className="text-white text-4xl font-black uppercase text-slate-500 text-center mb-6">
             Contact Us
           </h2>
-          <p className="mb-6 text-lg">
-            We'd love to hear from you!
-          </p>
+          <p className="mb-6 text-lg">We'd love to hear from you!</p>
           <form onSubmit={sendEmail}>
             <input
               type="text"
@@ -77,7 +73,7 @@ const Footer: React.FC = () => {
             />
             <button
               type="submit"
-              className="w-full bg-dark-blue-custom hover:bg-blue-600 text-white py-3 rounded transition duration-300 text-lg"
+              className="w-full bg-dark-blue-custom bg-blue-600 hover:bg-blue-500 text-white py-3 rounded transition duration-300 text-lg"
             >
               Send Message
             </button>
@@ -89,15 +85,18 @@ const Footer: React.FC = () => {
             <a
               className="flex flex-col items-center hover:text-blue-500 transition duration-300"
               aria-label="Facebook"
+              href="https://www.linkedin.com/company/eff-bi"
             >
-              <FaFacebook size={30} />
-              <span className="text-xs">Facebook</span>
+              <FaLinkedin size={30} />
+              <span className="text-xs">LinkedIn</span>
             </a>
           </li>
           <li>
             <a
               className="flex flex-col items-center hover:text-blue-400 transition duration-300"
               aria-label="Twitter"
+              href="https://x.com/effbi3216"
+              target="_blank"
             >
               <FaTwitter size={30} />
               <span className="text-xs">Twitter</span>
@@ -105,31 +104,22 @@ const Footer: React.FC = () => {
           </li>
           <li>
             <a
-              className="flex flex-col items-center hover:text-pink-500 transition duration-300"
-              aria-label="Instagram"
-            >
-              <FaInstagram size={30} />
-              <span className="text-xs">Instagram</span>
-            </a>
-          </li>
-          <li>
-            <a
               onClick={() =>
                 window.open(
-                  "mailto:stellar3216@gmail.com?subject=Your Subject Here&body=Your Message Here",
+                  "mailto:effortlessbi@gmail.com?subject=Your Subject Here&body=Your Message Here",
                   "_blank"
                 )
               }
               className="flex flex-col items-center hover:text-red-600 transition duration-300 cursor-pointer"
               aria-label="Google Plus"
             >
-              <FaGooglePlusG size={30} />
-              <span className="text-xs">Google+</span>
+              <FaEnvelope size={30} />
+              <span className="text-xs">Gmail</span>
             </a>
           </li>
         </ul>
         <div className="text-center text-xs mt-4">
-          &copy; {new Date().getFullYear()} eff-BI. All rights reserved.
+          &copy; {new Date().getFullYear()} Eff BI. All rights reserved.
         </div>
       </div>
     </footer>

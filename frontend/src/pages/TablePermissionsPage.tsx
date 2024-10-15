@@ -25,15 +25,15 @@ type UserPermissions = {
 
 const TABLE_HEAD = ["User", "Permissions", "Actions on Permissions"];
 
-const temp_data = [
-  { user_email: "bob@email.com", user_id: "12", permissions: "Admin" },
-  { user_email: "tom@email.com", user_id: "13", permissions: "View" },
-  {
-    user_email: "longlonglonglonglonglonglong@email.com",
-    user_id: "15",
-    permissions: "View",
-  },
-];
+// const temp_data = [
+//   { user_email: "bob@email.com", user_id: "12", permissions: "Admin" },
+//   { user_email: "tom@email.com", user_id: "13", permissions: "View" },
+//   {
+//     user_email: "longlonglonglonglonglonglong@email.com",
+//     user_id: "15",
+//     permissions: "View",
+//   },
+// ];
 
 const TablePermissionsPage = () => {
   const location = useLocation();
@@ -49,9 +49,7 @@ const TablePermissionsPage = () => {
   const [emailInput, setEmailInput] = useState("");
   const [permissionsInput, setPermissionsInput] = useState("");
   const [removePermissionInput, setRemovePermissionInput] = useState("");
-  const [allUsers, setAllUsers] = useState<UserPermissions[] | undefined>(
-    temp_data
-  );
+  const [allUsers, setAllUsers] = useState<UserPermissions[] | undefined>();
   const [errorText, setErrorText] = useState("");
 
   const onRemovePermissionClick = (user_email: string) => {
@@ -60,6 +58,7 @@ const TablePermissionsPage = () => {
   };
 
   const giveUserPermissions = async () => {
+    setOpenRemoveDialog(false);
     try {
       const requestData = {
         permission: permissionsInput,
@@ -76,6 +75,7 @@ const TablePermissionsPage = () => {
       // TODO if success show success toast
       setErrorText("");
       setEmailInput("");
+      setOpenRemoveDialog(false);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         setErrorText(JSON.stringify(error.response.data));
