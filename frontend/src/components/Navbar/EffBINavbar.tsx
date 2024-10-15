@@ -24,7 +24,7 @@ export default function EffBINavbar() {
   }
 
   return (
-    <Navbar className="max-w-full px-6 py-3 bg-gray-800 rounded-none">
+    <Navbar className="sticky top-0 z-50 max-w-full px-6 py-3 bg-gray-800 rounded-none">
       <div className="flex items-center justify-between text-blue-gray-900 w-full">
         <div className="flex items-center gap-4">
           <Link to="/">
@@ -34,7 +34,7 @@ export default function EffBINavbar() {
               className="w-15 h-10 block my-0"
             />
           </Link>
-          {isUserLoggedIn && (
+          {isUserLoggedIn ? (
             <div className="flex items-center gap-4">
               <Button
                 variant="text"
@@ -79,6 +79,51 @@ export default function EffBINavbar() {
                   </MenuItem>
                 </MenuList>
               </Menu>
+            </div>
+          ) : (
+            <div className="flex items-center gap-4">
+              <Button
+                variant="text"
+                size="sm"
+                color="white"
+                className="flex items-center gap-2"
+                onClick={() => {
+                  const featuresSection = document.getElementById("features");
+                  if (featuresSection) {
+                    featuresSection.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+              >
+                Features
+              </Button>
+              <Button
+                variant="text"
+                size="sm"
+                color="white"
+                className="flex items-center gap-2"
+                onClick={() => {
+                  const featuresSection = document.getElementById("reviews");
+                  if (featuresSection) {
+                    featuresSection.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+              >
+                Reviews
+              </Button>
+              <Button
+                variant="text"
+                size="sm"
+                color="white"
+                className="flex items-center gap-2"
+                onClick={() => {
+                  const featuresSection = document.getElementById("contact");
+                  if (featuresSection) {
+                    featuresSection.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+              >
+                Contact
+              </Button>
             </div>
           )}
         </div>

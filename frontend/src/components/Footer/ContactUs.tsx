@@ -35,7 +35,10 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-gray-800 text-white py-6 h-screen flex flex-col justify-center">
+    <footer
+      className="bg-gray-800 text-white py-6 h-screen flex flex-col justify-center"
+      id="contact"
+    >
       <div className="container mx-auto flex flex-col items-center">
         {/* Contact Us Section */}
         <div className="w-full max-w-md mb-4 text-center">

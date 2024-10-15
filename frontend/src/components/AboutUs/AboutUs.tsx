@@ -4,7 +4,7 @@ import ChartsGrid from "./ChartsGrid";
 
 const AboutUs = () => {
   return (
-    <div className="w-full bg-black text-white">
+    <div className="w-full bg-black text-white pt-6" id="features">
       <div className="flex flex-col items-center justify-center p-6">
         <h1 className="text-6xl text-white leading-[88px] max-md:text-4xl max-md:leading-[54px] mb-6 text-center">
           Render Beautiful Charts
