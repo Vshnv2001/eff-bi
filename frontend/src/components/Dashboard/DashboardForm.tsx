@@ -8,7 +8,6 @@ import {
   Input,
   Textarea,
   IconButton,
-  Tooltip,
 } from "@material-tailwind/react";
 import { useState } from "react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
