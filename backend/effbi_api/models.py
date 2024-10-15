@@ -27,13 +27,14 @@ class Organization(models.Model):
 
 
 class OrgTables(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.CharField(max_length=100, primary_key=True)
     organization = models.ForeignKey('Organization', on_delete=models.CASCADE)
     # organization_name = models.CharField(max_length=100, default='')
     table_name = models.CharField(max_length=100)
     table_schema = models.TextField()
     column_descriptions = models.JSONField()
     column_types = models.JSONField()
+    table_description = models.TextField(default='')
     # Next Sprint: Add database_uri to this table
     
     class Meta:
@@ -45,7 +46,7 @@ class Dashboard(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
     description = models.TextField()
-    dash_id = models.IntegerField(unique=True, editable=False)  # Make dash_id unique and non-editable
+    dash_id = models.IntegerField(editable=False)  # Make dash_id unique and non-editable
     organization = models.ForeignKey('Organization', on_delete=models.CASCADE)
     tiles = models.ForeignKey('Tile', on_delete=models.CASCADE, null=True)
     created_by = models.CharField(max_length=100, default='')

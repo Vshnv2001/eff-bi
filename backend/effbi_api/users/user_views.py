@@ -26,7 +26,9 @@ def create_user(request):
 @api_view(["GET", "PATCH", "DELETE"])
 def user_details(request, user_id):
     try:
-        user = get_object_or_404(User, id=user_id)
+        print(user_id)
+        user = get_object_or_404(User, id=str(user_id))
+        print("USER: ", user)
 
         if request.method == "GET":
             # Return user details
@@ -49,6 +51,7 @@ def user_details(request, user_id):
             return JsonResponse({'message': 'User deleted successfully'}, status=status.HTTP_200_OK)
 
     except Exception as e:
+        print(e)
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 

@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpRequest, JsonResponse, HttpResponse
+
+from .llm.State import State
+from .llm.pipeline import response_pipeline
 from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
 from supertokens_python.recipe.multitenancy.syncio import list_all_tenants
@@ -79,12 +82,14 @@ def create_dashboard(request):
 
 
 @api_view(["POST"])
+@verify_session()
 def create_connection(request):
     try:
         uri = request.data.get('uri', None)
         db_type = request.data.get('db_type', None)
-        user_id = request.data.get('user_id', None)
+        user_id = request.supertokens.get_user_id()
         if not uri or not user_id or not db_type:
+            print("uri, user_id and db_type are required")
             return JsonResponse({'error': "uri, user_id and db_type are required"},
                                     status=status.HTTP_400_BAD_REQUEST)
 
@@ -105,6 +110,7 @@ def create_connection(request):
         with concurrent.futures.ThreadPoolExecutor() as executor:
             for schema_name, tables in db_data.items():
                 for table_name, table_info in tables.items():
+                    print("TABLE NAME: ", table_name)
                     task = executor.submit(
                         process_table, schema_name, table_name, table_info, uri, organization)
                     tasks.append(task)
@@ -116,6 +122,7 @@ def create_connection(request):
 
         return JsonResponse({'message': 'meta data created and saved'}, status=201)
     except Exception as e:
+        print(e)
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -205,19 +212,13 @@ def create_dashboard_tile(request: HttpRequest):
         user_id = request.supertokens.get_user_id()
         user = get_object_or_404(User, id=user_id)
         org_id = user.organization.id
+        db_uri = user.organization.database_uri
+        response : State = response_pipeline(request.data.get('description'), db_uri, org_id)
+        print("Pipeline complete")
         request.data['organization'] = org_id
-        request.data['sql_query'] = ''
-        request.data['component'] = 'LineChartTemplate'
-        request.data['tile_props'] = {
-            'series': [
-                {
-                    "name": "Desktops",
-                    "data": [10, 41, 35, 51, 49, 62, 69, 91, 148],
-                },
-            ],
-            'title': request.data.get('title', 'Untitled'),
-            'categories': ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
-        }
+        request.data['sql_query'] = response.sql_query
+        request.data['component'] = response.visualization.get('visualization', '')
+        request.data['tile_props'] = response.formatted_data
         print(request.data)
         serializer = TileSerializer(data=request.data)
         if serializer.is_valid():
@@ -226,4 +227,5 @@ def create_dashboard_tile(request: HttpRequest):
         print(serializer.errors)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
+        print(e)
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
