@@ -67,7 +67,7 @@ export default function DashboardForm({
     >
       <DialogHeader className="text-black">Create Dashboard</DialogHeader>
 
-      <DialogBody className="overflow-y-scroll pr-2">
+      <DialogBody className="overflow-y-scroll pr-2 w-full">
         <div className="mb-4">
           <Typography
             variant="h6"
@@ -81,12 +81,9 @@ export default function DashboardForm({
             placeholder="Enter dashboard name"
             value={dashboardName}
             onChange={(e) => setDashboardName(e.target.value)}
-            className="!border-gray-300 focus:!border-blue-500"
+            className="!border border-gray-400 focus:!border-blue-500 w-full"
             labelProps={{
               className: "hidden",
-            }}
-            containerProps={{
-              className: "min-w-[100px]",
             }}
             crossOrigin="anonymous"
           />
@@ -108,7 +105,7 @@ export default function DashboardForm({
               <InformationCircleIcon className="h-5 w-5" />
             </IconButton>
             <Dialog open={info} handler={handleInfo}>
-              <DialogHeader>Info</DialogHeader>
+              <DialogHeader>Query Prompt</DialogHeader>
               <DialogBody>
                 Describe the data insights you want to extract from your
                 uploaded data.
@@ -124,7 +121,7 @@ export default function DashboardForm({
             placeholder="e.g., 'Show monthly sales trends and top-performing products'"
             value={dashboardDescription}
             onChange={(e) => setDashboardDescription(e.target.value)}
-            className="!border-gray-300 focus:!border-blue-500 min-h-[120px]"
+            className="!border border-gray-400 focus:!border-blue-500 w-full min-h-[120px]"
             labelProps={{
               className: "hidden",
             }}
@@ -132,12 +129,12 @@ export default function DashboardForm({
         </div>
       </DialogBody>
 
-      <DialogFooter className="border-t border-gray-700">
+      <div className="flex justify-between w-full p-4">
         <Button
           variant="text"
           color="red"
           onClick={handleOpen}
-          className="mr-2 text-red-500 hover:bg-red-500/10"
+          className="text-red-500 hover:bg-red-500/10"
         >
           Cancel
         </Button>
@@ -149,7 +146,7 @@ export default function DashboardForm({
         >
           Create
         </Button>
-      </DialogFooter>
+      </div>
     </Dialog>
   );
 }
