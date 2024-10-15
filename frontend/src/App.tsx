@@ -72,7 +72,9 @@ const router = createBrowserRouter(
       <Route
         path="/dashboards"
         element={
+          <SessionAuth>
             <DashboardsPage />
+          </SessionAuth>
         }
       />
       <Route
