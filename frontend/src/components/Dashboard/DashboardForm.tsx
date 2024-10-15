@@ -7,7 +7,10 @@ import {
   Typography,
   Input,
   Textarea,
+  IconButton,
 } from "@material-tailwind/react";
+import { useState } from "react";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 
 // Define the props type
@@ -47,6 +50,9 @@ export default function DashboardForm({
     }
   };
 
+  const [info, setInfo] = useState(false);
+  const handleInfo = () => setInfo(!info);
+
   return (
     <Dialog
       open={open}
@@ -59,12 +65,13 @@ export default function DashboardForm({
       }}
     >
       <DialogHeader className="text-black">Create Dashboard</DialogHeader>
-      <DialogBody>
+
+      <DialogBody className="overflow-y-scroll pr-2 w-full">
         <div className="mb-4">
           <Typography
-            variant="small"
+            variant="h6"
             color="blue-gray"
-            className="font-normal mb-2 text-black"
+            className="font-medium mb-2"
           >
             Dashboard Name
           </Typography>
@@ -73,44 +80,60 @@ export default function DashboardForm({
             placeholder="Enter dashboard name"
             value={dashboardName}
             onChange={(e) => setDashboardName(e.target.value)}
-            className="!border-gray-600 focus:!border-gray-500 bg-gray-700 text-black"
+            className="!border border-gray-400 focus:!border-blue-500 w-full"
             labelProps={{
               className: "hidden",
-            }}
-            containerProps={{
-              className: "min-w-[100px]",
             }}
             crossOrigin="anonymous"
           />
         </div>
         <div className="mb-4">
-          <Typography
-            variant="small"
-            color="blue-gray"
-            className="font-normal mb-2 text-black"
-          >
-            Dashboard Description
-          </Typography>
+          <div className="flex items-center mb-2">
+            <Typography
+              variant="h6"
+              color="blue-gray"
+              className="font-medium mr-2"
+            >
+              Data Query Prompt
+            </Typography>
+            <IconButton
+              variant="text"
+              className="w-5 h-5 p-0"
+              onClick={handleInfo}
+            >
+              <InformationCircleIcon className="h-5 w-5" />
+            </IconButton>
+            <Dialog open={info} handler={handleInfo}>
+              <DialogHeader>Query Prompt</DialogHeader>
+              <DialogBody>
+                Describe the data insights you want to extract from your
+                uploaded data.
+              </DialogBody>
+              <DialogFooter>
+                <Button variant="text" onClick={handleInfo}>
+                  Close
+                </Button>
+              </DialogFooter>
+            </Dialog>
+          </div>
           <Textarea
-            placeholder="Enter dashboard description"
+            placeholder="e.g., 'Show monthly sales trends and top-performing products'"
             value={dashboardDescription}
             onChange={(e) => setDashboardDescription(e.target.value)}
-            className="!border-gray-600 focus:!border-gray-500 bg-gray-700 text-black"
+            className="!border border-gray-400 focus:!border-blue-500 w-full min-h-[120px]"
             labelProps={{
               className: "hidden",
-            }}
-            containerProps={{
-              className: "min-w-[100px]",
             }}
           />
         </div>
       </DialogBody>
-      <DialogFooter className="border-t border-gray-700">
+
+      <div className="flex justify-between w-full p-4">
         <Button
           variant="text"
           color="red"
           onClick={handleOpen}
-          className="mr-2 text-red-500 hover:bg-red-500/10"
+          className="text-red-500 hover:bg-red-500/10"
         >
           Cancel
         </Button>
@@ -122,7 +145,7 @@ export default function DashboardForm({
         >
           Create
         </Button>
-      </DialogFooter>
+      </div>
     </Dialog>
   );
 }
