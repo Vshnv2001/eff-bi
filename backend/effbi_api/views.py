@@ -18,9 +18,6 @@ from .helpers.table_preprocessing import get_database_schemas_and_tables, proces
 import concurrent.futures
 
 
-from .serializer import UserPermissionsSerializer
-
-
 class SessionInfoAPI(APIView):
     @method_decorator(verify_session())
     def get(self, request, format=None):
@@ -142,37 +139,6 @@ def query_databases(request):
     # TODO: use websockets to stream the data to user
     # TODO: store history of the user's NLP and generated sql query
     return JsonResponse({'message': 'data generated!'}, status=200)
-
-
-def add_permissions_to_user(user_id, table_id, permission):
-    """
-    Utility function to add permissions for a user to a specific table.
-    """
-    if UserAccessPermissions.objects.filter(user_id=user_id, table_id=table_id, permission=permission).exists():
-        return {'error': 'Permission already exists for this user and table'}, status.HTTP_409_CONFLICT
-
-    data = {
-        'user_id': user_id,
-        'table_id': table_id,
-        'permission': permission
-    }
-    # Check that user is in the same organization before adding permissions
-    user = get_object_or_404(User, id=user_id)
-    table = get_object_or_404(OrgTables, id=table_id)
-    if user.organization != table.organization:
-        return {'error': 'User and table must be in the same organization'}, status.HTTP_400_BAD_REQUEST
-
-    serializer = UserPermissionsSerializer(data=data)
-    if serializer.is_valid():
-        serializer.save()
-        # If 'Admin' permission is requested, 'View' permission will also be granted (if not already granted)
-        if (permission == 'Admin' and
-                not UserAccessPermissions.objects.filter(user_id=user_id, table_id=table_id,
-                                                         permission='View').exists()):
-            add_permissions_to_user(user_id, table_id, 'View')
-        return {'message': 'User permissions added successfully'}, status.HTTP_201_CREATED
-    else:
-        return serializer.errors, status.HTTP_400_BAD_REQUEST
 
 
 @api_view(["GET"])
