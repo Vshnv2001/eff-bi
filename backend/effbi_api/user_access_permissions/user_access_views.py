@@ -194,3 +194,12 @@ def add_permissions_to_user(user_id, table_id, permission):
         return {'message': 'User permissions added successfully'}, status.HTTP_201_CREATED
     else:
         return serializer.errors, status.HTTP_400_BAD_REQUEST
+
+
+def get_accessible_tables(user_id):
+    """
+    Get all tables that a user has access to (either admin or view).
+    """
+    permissions = UserAccessPermissions.objects.filter(user_id=user_id).select_related('table_id')
+    tables = set([permission.table_id for permission in permissions])
+    return tables

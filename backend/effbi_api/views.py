@@ -14,8 +14,10 @@ from django.shortcuts import get_object_or_404
 from .models import User, Organization, OrgTables
 from .serializer import DashboardSerializer, TileSerializer, UserSerializer, OrganizationSerializer
 from .models import User, UserAccessPermissions
-from .helpers.table_preprocessing import get_database_schemas_and_tables, process_table
+from .helpers.table_preprocessing import get_database_schemas_and_tables, process_table, get_sample_table_data
 import concurrent.futures
+
+from .user_access_permissions.user_access_views import get_accessible_tables
 
 
 class SessionInfoAPI(APIView):
@@ -139,6 +141,21 @@ def query_databases(request):
     # TODO: use websockets to stream the data to user
     # TODO: store history of the user's NLP and generated sql query
     return JsonResponse({'message': 'data generated!'}, status=200)
+
+
+@api_view(["GET"])
+def get_database_schemas(request, user_id):
+    # Check that user is valid
+    user = get_object_or_404(User, id=user_id)
+
+    # Gets all table_id of tables accessible by user
+    table_ids = get_accessible_tables(user_id)
+
+    # Get organization uri
+    org_uri = user.organization.database_uri
+
+    # Get sample table data
+    result = get_sample_table_data(table_ids, org_uri)
 
 
 @api_view(["GET"])
