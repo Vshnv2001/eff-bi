@@ -39,6 +39,41 @@ export default function DashboardPage() {
       if (response.data) {
         console.log("Tiles data", response.data.data);
         setTilesData(response.data.data || []);
+
+        const tilesData: TileProps[] = [
+          {
+            id: 1, // Unique ID for each tile
+            dash_id: 101, // ID of the dashboard this tile belongs to
+            title: "Sales Trends", // Title of the chart
+            description: "Monthly sales trends for desktop products.", // A brief description
+            component: "LineChartTemplate", // The component name to render
+            tile_props: {
+              // Series and categories are part of the tile_props
+              series: [
+                {
+                  name: "Desktops",
+                  data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
+                },
+              ],
+              categories: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+              ],
+              height: 400, // Optional height field
+            },
+          },
+          // Additional tile data objects can follow this structure
+        ];
+
+        // Set tilesData in state
+        setTilesData(tilesData);
       } else {
         console.error("No data found in response");
         setError("No data found");
@@ -73,20 +108,20 @@ export default function DashboardPage() {
     );
 
   return (
-    <div className="min-h-screen bg-white p-8">
-      <div className="flex justify-between items-center mb-8">
-        <Typography
-          variant="h2"
-          color="blue-gray"
-          className="text-4xl font-bold"
-        >
-          Dashboard
-        </Typography>
+    <div className="min-h-screen bg-gray-800 p-8">
+      <div className="flex items-center justify-between mb-8 relative">
+        <div className="absolute inset-x-0 text-center">
+          <Typography color="white" className="text-3xl font-bold">
+            Dashboard
+          </Typography>
+        </div>
+        <div className="flex-1" />
+
         <Button
-          size="lg"
-          color="blue"
-          variant="filled"
-          className="flex items-center gap-2 justify-center"
+          variant="text"
+          size="sm"
+          color="white"
+          className="flex items-center gap-2 justify-center font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
           onClick={() => navigate(`/dashboards/${dashboardId}/tiles/new`)}
         >
           <svg
@@ -130,7 +165,7 @@ export default function DashboardPage() {
           }
 
           return (
-            <Card key={tileData.id} className="bg-gray-800 text-white">
+            <Card key={tileData.id} className="text-white">
               <CardBody>
                 <Typography variant="h5" className="mb-2">
                   {tileData.title}

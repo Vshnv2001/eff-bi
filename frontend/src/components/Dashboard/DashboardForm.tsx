@@ -75,16 +75,14 @@ export default function DashboardForm({
           >
             Dashboard Name
           </Typography>
-          <Input
-            type="text"
+          <Textarea
             placeholder="Enter dashboard name"
             value={dashboardName}
             onChange={(e) => setDashboardName(e.target.value)}
-            className="!border border-gray-400 focus:!border-blue-500 w-full"
+            className="border border-gray-400 focus:!border-blue-500 w-full min-h-[60px]"
             labelProps={{
               className: "hidden",
             }}
-            crossOrigin="anonymous"
           />
         </div>
         <div className="mb-4">
