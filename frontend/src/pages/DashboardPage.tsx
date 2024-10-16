@@ -4,11 +4,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { componentMapping } from "../components/Dashboard/ComponentMapping";
 import { TileProps } from "../components/Dashboard/TileProps";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 type ComponentKeys = keyof typeof componentMapping;
 
 export default function DashboardPage() {
-  console.log("component mounted");
   const navigate = useNavigate();
   const { dashboardId } = useParams();
 
@@ -17,16 +17,13 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log("use effect");
     fetchTiles();
   }, []);
 
   const fetchTiles = async () => {
-    console.log("fetchTiles called");
     setLoading(true);
     setError(null);
     try {
-      console.log("Fetching tiles");
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tiles/`,
         {
@@ -34,29 +31,32 @@ export default function DashboardPage() {
         }
       );
 
-      console.log("Full response:", response);
-
-      if (response.data) {
-        console.log("Tiles data", response.data.data);
-        setTilesData(response.data.data || []);
+      if (response.data && response.data.data) {
+        setTilesData(response.data.data);
       } else {
-        console.error("No data found in response");
         setError("No data found");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error(
-          "Axios error:",
-          error.response ? error.response.data : error.message
-        );
         setError("Error fetching tiles");
       } else {
-        console.error("Unexpected error:", error);
         setError("Unexpected error occurred");
       }
     } finally {
       setLoading(false);
     }
+  };
+
+  const onDragEnd = (result: any) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const items = Array.from(tilesData);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setTilesData(items);
   };
 
   if (loading)
@@ -73,20 +73,19 @@ export default function DashboardPage() {
     );
 
   return (
-    <div className="min-h-screen bg-white p-8">
-      <div className="flex justify-between items-center mb-8">
-        <Typography
-          variant="h2"
-          color="blue-gray"
-          className="text-4xl font-bold"
-        >
-          Dashboard
-        </Typography>
+    <div className="min-h-screen bg-gray-800 p-8">
+      <div className="flex items-center justify-between mb-8 relative">
+        <div className="absolute inset-x-0 text-center">
+          <Typography color="white" className="text-3xl font-bold">
+            Dashboard
+          </Typography>
+        </div>
+        <div className="flex-1" />
         <Button
-          size="lg"
-          color="blue"
-          variant="filled"
-          className="flex items-center gap-2 justify-center"
+          variant="text"
+          size="sm"
+          color="white"
+          className="flex items-center gap-2 justify-center font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
           onClick={() => navigate(`/dashboards/${dashboardId}/tiles/new`)}
         >
           <svg
@@ -107,43 +106,119 @@ export default function DashboardPage() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {tilesData.map((tileData) => {
-          console.log("tile data component", tileData.component);
-          const Component =
-            componentMapping[tileData.component as ComponentKeys] || null;
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="tiles">
+          {(provided) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              {tilesData.map((tileData, index) => {
+                const Component =
+                  componentMapping[tileData.component as ComponentKeys] || null;
 
-          if (!Component) {
-            console.error(`Invalid component for tile: ${tileData.title}`);
-            return null;
-          }
+                if (!Component) {
+                  console.error(
+                    `Invalid component for tile: ${tileData.title}`
+                  );
+                  return null;
+                }
 
-          let componentProps = tileData.tile_props;
-          console.log("component props", componentProps);
-          if (typeof tileData.tile_props === "string") {
-            try {
-              componentProps = JSON.parse(tileData.tile_props);
-            } catch (error) {
-              console.error("Error parsing tile props", error);
-              return null;
-            }
-          }
+                let componentProps = tileData.tile_props;
+                if (typeof tileData.tile_props === "string") {
+                  try {
+                    componentProps = JSON.parse(tileData.tile_props);
+                  } catch (error) {
+                    console.error("Error parsing tile props", error);
+                    return null;
+                  }
+                }
 
-          return (
-            <Card key={tileData.id} className="bg-gray-800 text-white">
-              <CardBody>
-                <Typography variant="h5" className="mb-2">
-                  {tileData.title}
-                </Typography>
-                <Typography className="text-gray-300">
-                  {tileData.description}
-                </Typography>
-                {Component && <Component {...componentProps} />}
-              </CardBody>
-            </Card>
-          );
-        })}
-      </div>
+                return (
+                  <Draggable
+                    key={tileData.id}
+                    draggableId={tileData.id.toString()}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <Card className="text-black">
+                          <CardBody className="flex flex-col items-center">
+                            <Typography
+                              variant="h5"
+                              className="text-black mb-2 text-center"
+                            >
+                              {tileData.title}
+                            </Typography>
+                            <Typography className="text-gray-800 text-center mb-4">
+                              {tileData.description}
+                            </Typography>
+                            <div className="w-full">
+                              {Component && <Component {...componentProps} />}
+                            </div>
+                          </CardBody>
+                        </Card>
+                      </div>
+                    )}
+                  </Draggable>
+                );
+              })}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 }
+
+/*
+  const fetchTiles = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const mockTilesData: TileProps[] = [
+        {
+          id: 1,
+          dash_id: 101,
+          title: "Sales Trends",
+          description: "Monthly sales trends for desktop products.",
+          component: "LineChartTemplate",
+          tile_props: {
+            series: [
+              {
+                name: "Desktops",
+                data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
+              },
+            ],
+            categories: [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+            ],
+            height: 400,
+          },
+        },
+        // You can add more mock tiles here following the same structure
+      ];
+
+      setTilesData(mockTilesData);
+    } catch (error) {
+      console.error("Error setting mock data:", error);
+      setError("Error setting mock data");
+    } finally {
+      setLoading(false);
+    }
+  };
+  */
