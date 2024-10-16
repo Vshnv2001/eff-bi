@@ -16,6 +16,7 @@ import {
 import axios from "axios";
 import { BACKEND_API_URL } from "../config/index";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 type UserPermissions = {
   user_email: string;
@@ -50,7 +51,6 @@ const TablePermissionsPage = () => {
   const [permissionsInput, setPermissionsInput] = useState("");
   const [removePermissionInput, setRemovePermissionInput] = useState("");
   const [allUsers, setAllUsers] = useState<UserPermissions[] | undefined>();
-  const [errorText, setErrorText] = useState("");
 
   const onRemovePermissionClick = (user_email: string) => {
     setSelectedUserEmail(user_email);
@@ -58,7 +58,15 @@ const TablePermissionsPage = () => {
   };
 
   const giveUserPermissions = async () => {
-    setOpenRemoveDialog(false);
+    if (!emailInput) {
+      toast.error("Email is required!");
+      return;
+    }
+    if (!permissionsInput) {
+      toast.error("Permission type is required!");
+      return;
+    }
+
     try {
       const requestData = {
         permission: permissionsInput,
@@ -71,23 +79,27 @@ const TablePermissionsPage = () => {
         requestData
       );
 
-      console.log("Response from API:", response.data);
-      // TODO if success show success toast
-      setErrorText("");
-      setEmailInput("");
-      setOpenRemoveDialog(false);
+      if (response.status === 201) {
+        toast.success("Permission added successfully!");
+        setEmailInput("");
+        fetchTableUsers();
+      }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        setErrorText(JSON.stringify(error.response.data));
+        console.log(JSON.stringify(error.response.data));
+        toast.error("Your organization does not have this user");
       } else {
-        setErrorText("An unexpected error occurred");
+        console.log("An unexpected error occurred", error);
+        toast.error("Error while giving permissions");
       }
-
-      console.error("Error while giving permissions:", error);
     }
   };
 
   const removeUserPermissions = async () => {
+    if (!removePermissionInput) {
+      toast.error("Permission type is required!");
+      return;
+    }
     const urlPartial =
       removePermissionInput == "Admin" ? "delete-admin" : "delete";
 
@@ -96,31 +108,32 @@ const TablePermissionsPage = () => {
         `${BACKEND_API_URL}/api/user-access-permissions/${urlPartial}/${selectedUserEmail}/${table_id}/`
       );
 
-      console.log("Response from API:", response.data);
-      // TODO if success show success toast
-      setErrorText("");
+      if (response.status === 200) {
+        setOpenRemoveDialog(false);
+        toast.success("User removed successfully!");
+        setRemovePermissionInput("");
+        fetchTableUsers();
+      }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        setErrorText(JSON.stringify(error.response.data));
+        console.log(JSON.stringify(error.response.data));
+        toast.error("User does not have Admin permission for this table");
       } else {
         console.log(error);
-        setErrorText("An unexpected error occurred");
+        toast.error("Error while removing permissions:");
       }
-
-      console.error("Error while removing permissions:", error);
     }
   };
 
   const onClickCloseAddDialog = () => {
     setOpenAddDialog(false);
-    setErrorText("");
     setEmailInput("");
   };
 
   const onClickCloseRemoveDialog = () => {
     setOpenRemoveDialog(false);
-    setErrorText("");
     fetchTableUsers();
+    setRemovePermissionInput("");
   };
 
   const fetchTableUsers = async () => {
@@ -131,7 +144,8 @@ const TablePermissionsPage = () => {
       // console.log(response.data.data);
       setAllUsers(response.data.data);
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error("Error fetching table users:", error);
+      toast.error("Error retrieving table users");
     }
   };
 
@@ -262,7 +276,6 @@ const TablePermissionsPage = () => {
               View
             </Option>
           </Select>
-          {errorText && <div className="text-red-400">{errorText}</div>}
         </DialogBody>
         <DialogFooter className="space-x-5 justify-center">
           <Button
@@ -308,7 +321,6 @@ const TablePermissionsPage = () => {
               View
             </Option>
           </Select>
-          {errorText && <div className="text-red-400">{errorText}</div>}
         </DialogBody>
         <DialogFooter className="space-x-5 justify-center">
           <Button
@@ -327,6 +339,18 @@ const TablePermissionsPage = () => {
           </Button>
         </DialogFooter>
       </Dialog>
+
+      <ToastContainer
+        className="pt-14 z-[99999]"
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        pauseOnHover
+      />
     </div>
   );
 };

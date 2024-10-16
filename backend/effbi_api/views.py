@@ -96,10 +96,6 @@ def create_connection(request):
         user = get_object_or_404(User, id=user_id)
         organization = user.organization
 
-        # update organization with uri
-        organization.database_uri = uri
-        organization.save()
-
         db_data = get_database_schemas_and_tables(uri, db_type)
 
         if not db_data:
@@ -119,6 +115,13 @@ def create_connection(request):
                 org_table = future.result()
                 org_table.save()
                 add_permissions_to_user(user_id, org_table.id, 'Admin')
+
+        # update organization last because if processing fails
+        # we want them to resend the uri, but the frontend will
+        # disable the field if there is a uri present, regardless
+        # if the processing of table meta data was successful or not
+        organization.database_uri = uri
+        organization.save()
 
         return JsonResponse({'message': 'meta data created and saved'}, status=201)
     except Exception as e:

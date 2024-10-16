@@ -56,7 +56,7 @@ const Steps: React.FC = () => {
           </div>
           <div className="flex flex-col justify-center w-1/2 max-md:w-full">
             <TextSection
-              title="Customise User Roles"
+              title="Customise user roles"
               description="Add users to your organization and assign them roles with ease.
                 Customize each user's role, and grant admin privileges to manage
                 higher-level tasks when necessary."

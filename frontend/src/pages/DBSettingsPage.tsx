@@ -12,6 +12,7 @@ import axios from "axios";
 import { useAuth } from "../components/Authentication/AuthenticationContext";
 import { BACKEND_API_URL } from "../config/index";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
+import { ToastContainer, toast } from "react-toastify";
 
 const databases = [
   {
@@ -39,9 +40,8 @@ const databases = [
 const darkTheme = {
   card: {
     defaultProps: {
-      color: "transparent",
       shadow: false,
-      className: "border border-blue-gray-800",
+      className: "border-4 border-blue-gray-800",
     },
   },
 };
@@ -82,9 +82,17 @@ export default function DBSettingsPage() {
     if (isDisabledField) {
       return;
     }
+    if (!selectedDb) {
+      toast.error("Database selection type is required!");
+      return;
+    }
+    if (selectedDb !== "postgresql") {
+      // TODO remove when other db are implemented
+      toast.warning("We only support PostgreSQL at the moment");
+      return;
+    }
     if (!dbUri) {
-      // TODO do proper error handling in frontend
-      alert("Error: Database URI is required.");
+      toast.error("Database URI is required!");
       return;
     }
 
@@ -107,24 +115,18 @@ export default function DBSettingsPage() {
       );
 
       if (response.status === 201) {
-        alert("Connection saved successfully!");
-        setDbUri("");
+        setIsDisabledField(true);
+        toast.success("Connection saved successfully!");
       }
     } catch (error) {
       if ((error as any).response) {
         console.error("Backend error:", (error as any).response.data);
-        alert(
-          `Error: ${
-            (error as any).response.data.message || "Failed to save connection."
-          }`
-        );
       } else if ((error as any).request) {
         console.error("Network error:", (error as any).request);
-        alert("Network error: Failed to reach the server.");
       } else {
         console.error("Error:", (error as any).message);
-        alert(`Error: ${(error as any).message}`);
       }
+      toast.error("Failed to save connection");
     } finally {
       setIsLoading(false);
     }
@@ -134,8 +136,6 @@ export default function DBSettingsPage() {
     // TODO call refresh api
     console.log("refreshed!");
   };
-
-  console.log(isDisabledField);
 
   return (
     <ThemeProvider value={darkTheme}>
@@ -149,11 +149,15 @@ export default function DBSettingsPage() {
           <Typography
             as="h2"
             color="white"
-            className="mb-6 text-3xl font-bold text-center"
+            className="mb-6 text-4xl font-bold text-center"
           >
             Database Settings
           </Typography>
-          <Typography as="h3" color="white" className="mb-6 text-2xl font-bold">
+          <Typography
+            as="h3"
+            color="white"
+            className="mb-6 mt-10 text-2xl font-bold"
+          >
             Select Database Type
           </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -197,34 +201,53 @@ export default function DBSettingsPage() {
             <Typography
               as="h3"
               color="white"
-              className="mb-2 text-xl font-bold"
+              className="mb-2 text-2xl font-bold"
             >
               Enter Database URI
             </Typography>
             <input
               disabled={isDisabledField}
               type="text"
-              placeholder={dbUri}
+              placeholder={"postgres://user@localhost/db"}
               className={`w-full p-2 rounded ${
                 isDisabledField ? "bg-gray-400" : "bg-white"
-              } text-black border border-gray-700 focus:outline-none focus:border-blue-500`}
+              } text-black border border-gray-700 focus:outline-none focus:border-blue-500 focus:border-2`}
               value={dbUri}
               onChange={(e) => setDbUri(e.target.value)}
             />
           </div>
           <div className="flex justify-center mt-12">
             {isDisabledField ? (
-              <Button color="blue" className={`w-full`} onClick={handleRefresh}>
+              <Button
+                color="blue"
+                className={`w-full text-md tracking-widest`}
+                onClick={handleRefresh}
+              >
                 Refresh
               </Button>
             ) : (
-              <Button color="blue" className={`w-full`} onClick={handleSave}>
+              <Button
+                color="blue"
+                className={`w-full text-md tracking-widest`}
+                onClick={handleSave}
+              >
                 Save
               </Button>
             )}
           </div>
         </div>
       </div>
+      <ToastContainer
+        className="pt-14"
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        pauseOnHover
+      />
     </ThemeProvider>
   );
 }
