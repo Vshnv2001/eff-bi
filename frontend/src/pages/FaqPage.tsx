@@ -29,7 +29,7 @@ function Icon({ id, open }: { id: number; open: number }) {
 
 const faqs = [
   {
-    question: "What Admin permission mean?",
+    question: "What does Admin permission mean?",
     answer:
       "Permissions are applied on the table level, where each user can have no access, view access or admin access to a table. If a user has admin permissions, they would be able to view the data in the table and grant other users view or admin permissions. View permission simply means that the user can only view the data.",
   },
@@ -49,7 +49,7 @@ const faqs = [
       "Dashboard (without s) contains multiple tiles. Dashboards (with s) is a collection of all your dashboard.",
   },
   {
-    question: "None of the above answers my question",
+    question: "None of the above answers my question, what should I do?",
     answer:
       "We are here for you! Reach out to us via email at effortlessbi@gmail.com",
   },
