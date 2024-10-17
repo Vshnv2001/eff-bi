@@ -1,24 +1,21 @@
 from .helpers.table_processing import get_sample_table_data
-from django.http import HttpRequest, JsonResponse
+from django.http import JsonResponse, HttpRequest
 from .llm.State import State
 from .llm.pipeline import response_pipeline
 from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
 from supertokens_python.recipe.multitenancy.syncio import list_all_tenants
 from supertokens_python.recipe.session.framework.django.syncio import verify_session
-from .models import Dashboard, Tile, User, OrgTables, UserAccessPermissions
+from .models import Dashboard, Tile, UserAccessPermissions
 from rest_framework import status
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from .models import User
 import concurrent.futures
-
 from .user_access_permissions.user_access_views import get_accessible_tables, add_permissions_to_user
-
 from .serializer import DashboardSerializer, TileSerializer
 from .helpers.table_preprocessing import get_database_schemas_and_tables, process_table
 import concurrent.futures
-
 
 class SessionInfoAPI(APIView):
     @method_decorator(verify_session())
