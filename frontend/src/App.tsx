@@ -110,18 +110,18 @@ const router = createBrowserRouter(
         }
       />
       <Route
-        path="/view-data"
-        element={
-          <SessionAuth>
-            <ViewDataPage />
-          </SessionAuth>
-        }
-      />
-      <Route
         path="/settings/table-permissions"
         element={
           <SessionAuth>
             <TablePermissionsPage />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/view-data"
+        element={
+          <SessionAuth>
+            <ViewDataPage />
           </SessionAuth>
         }
       />
