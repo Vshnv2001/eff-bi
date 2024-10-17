@@ -84,8 +84,9 @@ const Footer: React.FC = () => {
           <li>
             <a
               className="flex flex-col items-center hover:text-blue-500 transition duration-300"
-              aria-label="Facebook"
+              aria-label="LinkedIn"
               href="https://www.linkedin.com/company/eff-bi"
+              target="_blank"
             >
               <FaLinkedin size={30} />
               <span className="text-xs">LinkedIn</span>
@@ -111,7 +112,7 @@ const Footer: React.FC = () => {
                 )
               }
               className="flex flex-col items-center hover:text-red-600 transition duration-300 cursor-pointer"
-              aria-label="Google Plus"
+              aria-label="Email"
             >
               <FaEnvelope size={30} />
               <span className="text-xs">Gmail</span>
