@@ -3,7 +3,7 @@ import {
   Card,
   CardHeader,
   Typography,
-  CardBody,
+  CardBody, Spinner,
 } from "@material-tailwind/react";
 import axios from "axios";
 import { BACKEND_API_URL } from "../config/index";
@@ -68,14 +68,16 @@ export default function ViewDataPage() {
 
   console.log(data);
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <Spinner className="h-10 w-10"/>
+    </div>;
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-800 p-10">
-      <Typography
-        as="h2"
-        color="white"
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-800 p-10">
+        <Typography
+            as="h2"
+            color="white"
         className="mb-6 text-4xl font-bold text-center"
       >
         View Data
