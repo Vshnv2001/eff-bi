@@ -41,6 +41,7 @@ export default function EffBINavbar() {
                 size="sm"
                 color="white"
                 className="flex items-center gap-2"
+                onClick={() => navigate("/view-data")}
               >
                 View Data
               </Button>
