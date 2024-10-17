@@ -10,8 +10,15 @@ import { BACKEND_API_URL } from "../config/index";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import DataTable from "../components/DataTable/DataTable";
 
+interface Table {
+  table_name: string;
+  table_description?: string;
+  column_headers: string[];
+  rows: string[][];
+}
 
-const TableWithDescription = ({ table }) => (
+interface TableWithDescriptionProps { table: Table; }
+const TableWithDescription: React.FC<TableWithDescriptionProps> = ({ table }) => (
   <>
     <Typography className="text-xl font-bold">
       {table.table_name}
@@ -21,7 +28,7 @@ const TableWithDescription = ({ table }) => (
         {table.table_description}
       </Typography>
     )}
-    <DataTable columns={table.column_headers.map((header) => ({ id: header, label: header }))}
+    <DataTable columns={table.column_headers.map((header: string) => ({ id: header, label: header }))}
                data={table.rows} />
   </>
 );
@@ -68,7 +75,7 @@ export default function ViewDataPage() {
 
   console.log(data);
   if (loading) {
-    return <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    return <div className="fixed inset-0 flex items-center justify-center bg-gray-800 min-h-screen">
       <Spinner className="h-10 w-10"/>
     </div>;
   }
@@ -82,9 +89,10 @@ export default function ViewDataPage() {
       >
         View Data
       </Typography>
-      {data.map((table, index) => (
-        <Card key={index} className="w-full max-w-4xl bg-white my-4 rounded-xl p-10 shadow-md">
-          <CardHeader floated={false} shadow={false} className="bg-gray-100 rounded-none">
+        {data.map((table, index) => (
+            <Card key={index} className="w-full max-w-4xl bg-white my-4 rounded-xl p-10 shadow-md">
+            <CardHeader floated={false} shadow={false} className="bg-gray-100 rounded-none" >
+              <></>
           </CardHeader>
           <CardBody className="overflow-auto p-0">
             <TableWithDescription table={table} />
