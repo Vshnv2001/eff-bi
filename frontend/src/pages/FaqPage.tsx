@@ -41,7 +41,7 @@ const faqs = [
   {
     question: "Why am I unable to update my database URI?",
     answer:
-      "Our system only supports 1 database URI per organization at the moment. Do bear with us as we continue to develop Eff BI!",
+      "Our system only supports 1 database URI per organization at the moment. As such, if your organization has previously added a database URI, the SAVE button will be disabled. If you urgently need to update your database URI, do reach out to us at effortlessbi@gmail.com. Thank you for bearing with us as we continue to develop Eff BI!",
   },
   {
     question: "What is the difference between dashboards and dashboard?",
