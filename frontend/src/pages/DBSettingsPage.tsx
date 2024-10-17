@@ -80,6 +80,9 @@ export default function DBSettingsPage() {
 
   const handleSave = async () => {
     if (isDisabledField) {
+      toast.warning(
+        "We only allow 1 database URI per organization at the moment"
+      );
       return;
     }
     if (!selectedDb) {
@@ -130,11 +133,6 @@ export default function DBSettingsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleRefresh = async () => {
-    // TODO call refresh api
-    console.log("refreshed!");
   };
 
   return (
@@ -217,23 +215,14 @@ export default function DBSettingsPage() {
             />
           </div>
           <div className="flex justify-center mt-12">
-            {isDisabledField ? (
-              <Button
-                color="blue"
-                className={`w-full text-md tracking-widest`}
-                onClick={handleRefresh}
-              >
-                Refresh
-              </Button>
-            ) : (
-              <Button
-                color="blue"
-                className={`w-full text-md tracking-widest`}
-                onClick={handleSave}
-              >
-                Save
-              </Button>
-            )}
+            <Button
+              color="blue"
+              className={`w-full text-md tracking-widest`}
+              onClick={handleSave}
+              disabled={isDisabledField}
+            >
+              Save
+            </Button>
           </div>
         </div>
       </div>
