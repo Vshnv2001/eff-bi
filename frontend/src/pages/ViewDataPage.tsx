@@ -13,7 +13,7 @@ import DataTable from "../components/DataTable/DataTable";
 
 const TableWithDescription = ({ table }) => (
   <>
-    <Typography variant="h6" className="mb-2">
+    <Typography className="text-xl font-bold">
       {table.table_name}
     </Typography>
     {table.table_description && (
@@ -81,11 +81,8 @@ export default function ViewDataPage() {
         View Data
       </Typography>
       {data.map((table, index) => (
-        <Card key={index} className="w-full max-w-4xl bg-white my-4 rounded-xl shadow-md">
+        <Card key={index} className="w-full max-w-4xl bg-white my-4 rounded-xl p-10 shadow-md">
           <CardHeader floated={false} shadow={false} className="bg-gray-100 rounded-none">
-            <Typography className="text-xl font-bold p-4">
-              {table.table_name} {/* You might want to show the table name here or keep it inside TableWithDescription */}
-            </Typography>
           </CardHeader>
           <CardBody className="overflow-auto p-0">
             <TableWithDescription table={table} />
