@@ -1,6 +1,6 @@
-import React from 'react';
-import Chart from 'react-apexcharts';
-import { ApexOptions } from 'apexcharts';
+import React from "react";
+import Chart from "react-apexcharts";
+import { ApexOptions } from "apexcharts";
 
 type LineChartTemplateProps = {
   series: {
@@ -21,33 +21,29 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
   const options: ApexOptions = {
     chart: {
       height,
-      type: 'line',
+      type: "line",
       zoom: {
-        enabled: false,
+        enabled: true,
       },
     },
     dataLabels: {
       enabled: false,
     },
     stroke: {
-      curve: 'straight',
+      curve: "straight",
     },
     title: {
       text: title,
-      align: 'left',
-    },
-    grid: {
-      row: {
-        colors: ['#f3f3f3', 'transparent'],
-        opacity: 0.5,
-      },
+      align: "left",
     },
     xaxis: {
       categories,
     },
   };
 
-  return <Chart options={options} series={series} type="line" height={height} />;
+  return (
+    <Chart options={options} series={series} type="line" height={height} />
+  );
 };
 
 export default LineChartTemplate;

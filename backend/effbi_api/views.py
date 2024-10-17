@@ -1,23 +1,23 @@
-from django.shortcuts import render
-from django.http import HttpRequest, JsonResponse, HttpResponse
-
 from .helpers.table_processing import get_sample_table_data
+from django.http import HttpRequest, JsonResponse
 from .llm.State import State
 from .llm.pipeline import response_pipeline
 from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
 from supertokens_python.recipe.multitenancy.syncio import list_all_tenants
 from supertokens_python.recipe.session.framework.django.syncio import verify_session
-from .models import Dashboard, Tile, User, Organization
+from .models import Dashboard, Tile, User, OrgTables, UserAccessPermissions
 from rest_framework import status
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
-from .serializer import DashboardSerializer, TileSerializer, UserSerializer, OrganizationSerializer
 from .models import User
-from .helpers.table_preprocessing import get_database_schemas_and_tables, process_table
 import concurrent.futures
 
 from .user_access_permissions.user_access_views import get_accessible_tables, add_permissions_to_user
+
+from .serializer import DashboardSerializer, TileSerializer
+from .helpers.table_preprocessing import get_database_schemas_and_tables, process_table
+import concurrent.futures
 
 
 class SessionInfoAPI(APIView):
@@ -127,21 +127,6 @@ def create_connection(request):
     except Exception as e:
         print(e)
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-@api_view(["POST"])
-def query_databases(request):
-    text = request.data.get('text', None)
-    org_id = request.data.get('org_id', None)
-    user_id = request.data.get('user_id', None)
-
-    if not text or not org_id or not user_id:
-        return JsonResponse({'error': "Text, user_id and org_id are required"}, status=status.HTTP_400_BAD_REQUEST)
-
-    # TODO: implement text to sql, execute sql, return ans
-    # TODO: use websockets to stream the data to user
-    # TODO: store history of the user's NLP and generated sql query
-    return JsonResponse({'message': 'data generated!'}, status=200)
 
 
 @api_view(["GET"])

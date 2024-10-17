@@ -80,6 +80,15 @@ export default function EffBINavbar() {
                   </MenuItem>
                 </MenuList>
               </Menu>
+              <Button
+                variant="text"
+                size="sm"
+                color="white"
+                className="flex items-center gap-2"
+                onClick={() => navigate("/faq")}
+              >
+                FAQ
+              </Button>
             </div>
           ) : (
             <div className="flex items-center gap-4">

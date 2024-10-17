@@ -39,20 +39,24 @@ export default function DashboardsPage() {
 
   return (
     <div className="min-h-screen bg-gray-800 p-8">
-      <div className="flex items-center justify-between mb-8">
-        <Typography color="white" className="text-3xl font-bold">
-          Dashboards
-        </Typography>
+      <div className="flex items-center justify-between mb-8 relative">
+        <div className="absolute inset-x-0 text-center">
+          <Typography color="white" className="text-3xl font-bold">
+            Dashboards
+          </Typography>
+        </div>
+        <div className="flex-1" />
         <Button
           variant="text"
           size="sm"
           color="white"
-          className="font-bold bg-blue-500 hover:bg-blue-600 hover:text-white"
+          className="font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
           onClick={handleOpen}
         >
           Create Dashboard
         </Button>
       </div>
+
       <DashboardForm
         open={open}
         handleOpen={handleOpen}
@@ -62,13 +66,10 @@ export default function DashboardsPage() {
         dashboardDescription={dashboardDescription}
         setDashboardDescription={setDashboardDescription}
       />
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {dashboards.map((dashboard) => {
-          return (
-            <DashboardCard key={dashboard.dash_id} dashboard={dashboard} />
-          );
-        })}
+        {dashboards.map((dashboard) => (
+          <DashboardCard key={dashboard.dash_id} dashboard={dashboard} />
+        ))}
       </div>
     </div>
   );
