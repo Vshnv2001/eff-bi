@@ -150,7 +150,7 @@ init(
     mode='wsgi',
     supertokens_config=SupertokensConfig(
         connection_uri='https://st-dev-0bf497e0-8705-11ef-b932-3d3f954bbd00.aws.supertokens.io',
-        api_key='a-gAwJrcQSej7QhXAsZWPp-y4C',
+        api_key=os.environ.get('SUPERTOKENS_API_KEY'),
     ),
 )
 

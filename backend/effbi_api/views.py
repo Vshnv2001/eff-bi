@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpRequest, JsonResponse, HttpResponse
 
+from .helpers.table_processing import get_sample_table_data
 from .llm.State import State
 from .llm.pipeline import response_pipeline
 from rest_framework.views import APIView
@@ -11,13 +12,12 @@ from .models import Dashboard, Tile, User, Organization
 from rest_framework import status
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
-from .models import User, Organization, OrgTables
 from .serializer import DashboardSerializer, TileSerializer, UserSerializer, OrganizationSerializer
-from .models import User, UserAccessPermissions
-from .helpers.table_preprocessing import get_database_schemas_and_tables, process_table, get_sample_table_data
+from .models import User
+from .helpers.table_preprocessing import get_database_schemas_and_tables, process_table
 import concurrent.futures
 
-from .user_access_permissions.user_access_views import get_accessible_tables
+from .user_access_permissions.user_access_views import get_accessible_tables, add_permissions_to_user
 
 
 class SessionInfoAPI(APIView):
@@ -87,6 +87,7 @@ def create_connection(request):
         uri = request.data.get('uri', None)
         db_type = request.data.get('db_type', None)
         user_id = request.supertokens.get_user_id()
+        # user_id = request.data.get('user_id', None)
         if not uri or not user_id or not db_type:
             print("uri, user_id and db_type are required")
             return JsonResponse({'error': "uri, user_id and db_type are required"},
@@ -144,7 +145,27 @@ def query_databases(request):
 
 
 @api_view(["GET"])
-def get_database_schemas(request, user_id):
+def get_view_data_tables(request, user_id):
+    '''
+    Get all tables accessible by user and returns a JsonResponse with 3 sample data rows
+    for each table.
+    Example response:
+    {
+    "tables": [
+        {
+            "table_name": "rider_exits",
+            "column_headers": ["rider,"stage","reason"],
+            "rows": [[195, 1, "withdrawal"], [76, 4, "DNS"], [45, 8, "DNS"]],
+            "table_description": ""
+        },
+        {
+        "table_name": "locations",
+        "column_headers": ["name", "country"],
+        "rows": [["Agen", "FRA"], ["Alexandrie", "ITA"], ["Aoste", "FRA"]],
+        "table_description": ""
+        }
+    ]}
+    '''
     # Check that user is valid
     user = get_object_or_404(User, id=user_id)
 
@@ -155,7 +176,11 @@ def get_database_schemas(request, user_id):
     org_uri = user.organization.database_uri
 
     # Get sample table data
-    result = get_sample_table_data(table_ids, org_uri)
+    try:
+        result = get_sample_table_data(table_ids, org_uri)
+        return JsonResponse({"tables": result}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(["GET"])
