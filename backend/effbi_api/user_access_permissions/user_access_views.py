@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from rest_framework import status
 
-from ..views import add_permissions_to_user
+from ..serializer import UserPermissionsSerializer
 from ..models import UserAccessPermissions, OrgTables, User
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
@@ -163,3 +163,43 @@ def filter_permissions(permissions):
             user_permissions[user_id] = perm
     
     return list(user_permissions.values())
+
+
+def add_permissions_to_user(user_id, table_id, permission):
+    """
+    Utility function to add permissions for a user to a specific table.
+    """
+    if UserAccessPermissions.objects.filter(user_id=user_id, table_id=table_id, permission=permission).exists():
+        return {'error': 'Permission already exists for this user and table'}, status.HTTP_409_CONFLICT
+
+    data = {
+        'user_id': user_id,
+        'table_id': table_id,
+        'permission': permission
+    }
+    # Check that user is in the same organization before adding permissions
+    user = get_object_or_404(User, id=user_id)
+    table = get_object_or_404(OrgTables, id=table_id)
+    if user.organization != table.organization:
+        return {'error': 'User and table must be in the same organization'}, status.HTTP_400_BAD_REQUEST
+
+    serializer = UserPermissionsSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        # If 'Admin' permission is requested, 'View' permission will also be granted (if not already granted)
+        if (permission == 'Admin' and
+                not UserAccessPermissions.objects.filter(user_id=user_id, table_id=table_id,
+                                                         permission='View').exists()):
+            add_permissions_to_user(user_id, table_id, 'View')
+        return {'message': 'User permissions added successfully'}, status.HTTP_201_CREATED
+    else:
+        return serializer.errors, status.HTTP_400_BAD_REQUEST
+
+
+def get_accessible_tables(user_id):
+    """
+    Get all tables that a user has access to (either admin or view).
+    """
+    permissions = UserAccessPermissions.objects.filter(user_id=user_id).select_related('table_id')
+    tables = set([permission.table_id for permission in permissions])
+    return tables

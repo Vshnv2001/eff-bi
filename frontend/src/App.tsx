@@ -29,6 +29,7 @@ import DBAccessPermissionsPage from "./pages/DBAccessPermissionsPage";
 import NewTilePage from "./pages/NewTilePage";
 import ExDashboardPage from "./pages/ExDashboardPage";
 import TablePermissionsPage from "./pages/TablePermissionsPage";
+import ViewDataPage from "./pages/ViewDataPage";
 import FaqPage from "./pages/FaqPage";
 
 // Initialize SuperTokens
@@ -115,6 +116,14 @@ const router = createBrowserRouter(
         element={
           <SessionAuth>
             <TablePermissionsPage />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/view-data"
+        element={
+          <SessionAuth>
+            <ViewDataPage />
           </SessionAuth>
         }
       />
