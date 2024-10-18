@@ -70,6 +70,13 @@ export default function DashboardsPage() {
         {dashboards.map((dashboard) => (
           <DashboardCard key={dashboard.dash_id} dashboard={dashboard} />
         ))}
+        {!dashboards.length && (
+          <div className="col-span-1 md:col-span-2 lg:col-span-3">
+            <Typography color="white" className="text-xl text-center italic">
+              No dashboards found. Create one to get started.
+            </Typography>
+          </div>
+        )}
       </div>
     </div>
   );

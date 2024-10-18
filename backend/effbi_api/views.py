@@ -177,6 +177,18 @@ def get_dashboards(request: HttpRequest):
     serializer = DashboardSerializer(dashboards, many=True)
     return JsonResponse({'data': serializer.data}, status=200)
 
+@api_view(["GET"])
+@verify_session()
+def get_dashboard_name(request: HttpRequest):
+    print("get_dashboard_name called")
+    user_id = request.supertokens.get_user_id()
+    user = get_object_or_404(User, id=user_id)
+    org_id = user.organization.id
+    dash_id = request.GET.get('dash_id', None)
+    print("dash_id: ", dash_id, "org_id: ", org_id)
+    dashboard = get_object_or_404(Dashboard, dash_id=dash_id, organization=org_id)
+    return JsonResponse({'data': dashboard.title}, status=200)
+
 
 @api_view(["GET"])
 @verify_session()
