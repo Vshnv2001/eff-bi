@@ -80,6 +80,19 @@ export default function ViewDataPage() {
     </div>;
   }
 
+  if (data.length == 0) {
+    return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-800 p-10">
+      <Card className="w-full max-w-4xl p-10 rounded-xl">
+        <div className="text-lg text-center">
+          You do not have access to any tables, request for permissions with
+          your admin.
+        </div>
+      </Card>
+    </div>
+    );
+  }
+
   return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-800 p-10">
         <Typography
