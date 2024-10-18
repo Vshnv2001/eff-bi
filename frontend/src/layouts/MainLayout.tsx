@@ -12,7 +12,6 @@ const MainLayout = () => {
     "/auth/fetch",
   ];
 
-  // Check if the current path starts with "/auth" or is one of the specified paths
   const shouldShowNavbar = !(
     pathsWithoutNavbar.includes(location.pathname) || 
     location.pathname.startsWith('/auth/')
