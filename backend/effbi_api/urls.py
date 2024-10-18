@@ -41,6 +41,7 @@ urlpatterns = [
     path("tenants/", views.TenantsAPI.as_view()),
     path("dashboard/", views.create_dashboard, name="create_dashboard"),
     path("dashboards/", views.get_dashboards, name="get_dashboards"),
+    path("dashboard-name/", views.get_dashboard_name, name="get_dashboard_name"),
     path("dashboard-tiles/", views.get_dashboard_tiles, name="get_dashboard_tiles"),
     path("dashboard-tile/", views.create_dashboard_tile, name="create_dashboard_tile"),
 ]

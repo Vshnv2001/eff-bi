@@ -15,10 +15,28 @@ export default function DashboardPage() {
   const [tilesData, setTilesData] = useState<TileProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  const [dashboardName, setDashboardName] = useState<string>("");
   useEffect(() => {
     fetchTiles();
+    fetchDashboardName();
   }, []);
+
+  const fetchDashboardName = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-name/`,
+        {
+          params: { dash_id: dashboardId },
+        }
+      );
+      setDashboardName(response.data.data);
+    } catch (error) {
+      console.error("Error fetching dashboard name:", error);
+    }
+  };
+
+  console.log("dashboardName: ", dashboardName);
+
 
   const fetchTiles = async () => {
     setLoading(true);
@@ -77,7 +95,7 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between mb-8 relative">
         <div className="absolute inset-x-0 text-center">
           <Typography color="white" className="text-3xl font-bold">
-            Dashboard
+            {dashboardName}
           </Typography>
         </div>
         <div className="flex-1" />
