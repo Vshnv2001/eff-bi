@@ -1,3 +1,4 @@
+// DashboardsPage.tsx
 import { useState, useEffect } from "react";
 import { Typography, Button } from "@material-tailwind/react";
 import DashboardForm from "../components/Dashboard/DashboardForm";
@@ -5,17 +6,16 @@ import DashboardCard from "../components/Dashboard/DashboardCard";
 import axios from "axios";
 import { DashboardProps } from "../components/Dashboard/DashboardProps";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function DashboardsPage() {
   const [open, setOpen] = useState(false);
   const [dashboardName, setDashboardName] = useState("");
   const [dashboardDescription, setDashboardDescription] = useState("");
-
-  const sessionContext = useSessionContext();
-
-  console.log(sessionContext);
-
   const [dashboards, setDashboards] = useState<DashboardProps[]>([]);
+  
+  const sessionContext = useSessionContext();
 
   useEffect(() => {
     console.log("fetching dashboards");
@@ -23,15 +23,27 @@ export default function DashboardsPage() {
   }, []);
 
   const fetchDashboards = async () => {
-    const response = await axios.get(
-      `${import.meta.env.VITE_BACKEND_URL}/api/dashboards/`
-    );
-    setDashboards(response.data.data);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/dashboards/`
+      );
+      setDashboards(response.data.data);
+    } catch (error) {
+      toast.error("Failed to fetch dashboards");
+    }
   };
 
-  console.log(dashboards);
+  const handleDashboardCreated = (success: boolean, message: string) => {
+    if (success) {
+      toast.success(message);
+      fetchDashboards();
+    } else {
+      toast.error(message);
+    }
+  };
 
   const handleOpen = () => {
+    toast.dismiss(); // Dismiss any active toasts
     setOpen(!open);
     setDashboardName("");
     setDashboardDescription("");
@@ -39,6 +51,20 @@ export default function DashboardsPage() {
 
   return (
     <div className="min-h-screen bg-gray-800 p-8">
+      <ToastContainer 
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        className="z-[9999] !important"
+      />
+      
       <div className="flex items-center justify-between mb-8 relative">
         <div className="absolute inset-x-0 text-center">
           <Typography color="white" className="text-3xl font-bold">
@@ -65,7 +91,9 @@ export default function DashboardsPage() {
         setDashboardName={setDashboardName}
         dashboardDescription={dashboardDescription}
         setDashboardDescription={setDashboardDescription}
+        onDashboardCreated={handleDashboardCreated}
       />
+      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {dashboards.map((dashboard) => (
           <DashboardCard key={dashboard.dash_id} dashboard={dashboard} />

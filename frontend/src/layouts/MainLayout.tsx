@@ -13,14 +13,14 @@ const MainLayout = () => {
   ];
 
   const shouldShowNavbar = !(
-    pathsWithoutNavbar.includes(location.pathname) || 
-    location.pathname.startsWith('/auth/')
+    pathsWithoutNavbar.includes(location.pathname) ||
+    location.pathname.startsWith("/auth/")
   );
 
   return (
     <div className="bg-gray-custom">
       {shouldShowNavbar && <EffBINavbar />}
-      <div>
+      <div className="pt-[60px]">
         <Outlet />
       </div>
     </div>
