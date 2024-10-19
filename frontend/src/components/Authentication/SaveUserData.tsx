@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "./AuthenticationContext";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { BACKEND_API_URL } from "../../config";
 
 const SaveUserData: React.FC = () => {
@@ -10,6 +10,7 @@ const SaveUserData: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaved, setIsSaved] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const saveUserToBackend = async () => {
@@ -25,6 +26,7 @@ const SaveUserData: React.FC = () => {
         first_name: firstName,
         last_name: lastName,
         organization: organizationId,
+        is_super_admin: location.state.isSuperAdmin,
       };
 
       console.log("form data", formData);

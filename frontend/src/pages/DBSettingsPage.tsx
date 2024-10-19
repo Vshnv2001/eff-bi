@@ -135,6 +135,37 @@ export default function DBSettingsPage() {
     }
   };
 
+  const handleRefresh = async () => {
+    if (!dbUri) {
+      toast.error("Database URI is required!");
+      return;
+    }
+    // TODO do finalize after refresh api implemented
+    console.log("refresh!");
+
+    // try {
+    //   setIsLoading(true);
+    //   const response = await axios.post(
+    //     `${BACKEND_API_URL}/api/connection/refresh`
+    //   );
+
+    //   if (response.status === 200) {
+    //     toast.success("Database refreshed successfully!");
+    //   }
+    // } catch (error) {
+    //   if ((error as any).response) {
+    //     console.error("Backend error:", (error as any).response.data);
+    //   } else if ((error as any).request) {
+    //     console.error("Network error:", (error as any).request);
+    //   } else {
+    //     console.error("Error:", (error as any).message);
+    //   }
+    //   toast.error("Failed to refresh data");
+    // } finally {
+    //   setIsLoading(false);
+    // }
+  };
+
   return (
     <ThemeProvider value={darkTheme}>
       <div className="min-h-screen bg-gray-800 text-gray-100 p-8">
@@ -154,9 +185,9 @@ export default function DBSettingsPage() {
           <Typography
             as="h3"
             color="white"
-            className="mb-6 mt-10 text-2xl font-bold"
+            className="mb-2 mt-12 text-2xl font-bold"
           >
-            Select Database Type
+            Database Type
           </Typography>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {databases.map((db) => (
@@ -201,7 +232,7 @@ export default function DBSettingsPage() {
               color="white"
               className="mb-2 text-2xl font-bold"
             >
-              Enter Database URI
+              Database URI
             </Typography>
             <input
               disabled={isDisabledField}
@@ -214,16 +245,38 @@ export default function DBSettingsPage() {
               onChange={(e) => setDbUri(e.target.value)}
             />
           </div>
-          <div className="flex justify-center mt-12">
-            <Button
-              color="blue"
-              className={`w-full text-md tracking-widest`}
-              onClick={handleSave}
-              disabled={isDisabledField}
-            >
-              Save
-            </Button>
-          </div>
+          {isDisabledField ? (
+            <>
+              <Typography
+                as="h3"
+                color="white"
+                className="mb-2 pt-10 text-2xl font-bold"
+              >
+                Refresh Data
+              </Typography>
+              <div className="flex">
+                <Button
+                  color="blue"
+                  className={`w-full text-md tracking-widest`}
+                  onClick={handleRefresh}
+                >
+                  Refresh
+                </Button>
+              </div>
+            </>
+          ) : (
+            <div className="flex mt-12">
+              <Button
+                color="blue"
+                className={`w-full text-md tracking-widest`}
+                onClick={handleSave}
+                disabled={isDisabledField}
+              >
+                Save
+              </Button>
+            </div>
+          )}
+          {/* </div> */}
         </div>
       </div>
       <ToastContainer

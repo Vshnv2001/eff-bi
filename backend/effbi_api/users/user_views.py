@@ -10,10 +10,26 @@ from ..serializer import UserSerializer
 def create_user(request):
     try:
         # print(request.data)
-        serializer = UserSerializer(data=request.data)
+        user_data = request.data.copy() 
+        is_super_admin = user_data.pop('is_super_admin', False)
+
+        serializer = UserSerializer(data=user_data)
         if serializer.is_valid():
             # print(serializer)
             serializer.save()
+
+            if is_super_admin:
+                organization_id = user_data.get("organization")
+                try:
+                    organization = Organization.objects.get(id=organization_id)
+                    organization.super_user.append(user_data.get('id'))
+                    organization.save()
+                except Organization.DoesNotExist:
+                    return JsonResponse(
+                        {'error': f'Organization with id {organization_id} not found.'}, 
+                        status=status.HTTP_404_NOT_FOUND
+                    )
+
             return JsonResponse(
                 {'message': 'User created successfully', 'user': serializer.data}, status=status.HTTP_201_CREATED
             )
