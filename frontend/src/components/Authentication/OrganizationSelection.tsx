@@ -86,7 +86,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
 
   const handleSubmit = async () => {
     if (step === "create") {
-      console.log("org id", orgData, orgData.orgId);
+      // console.log("org id", orgData, orgData.orgId);
       const response = await fetch(`${BACKEND_API_URL}/api/organizations/`, {
         method: "POST",
         headers: {
@@ -104,7 +104,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
 
         setOrganizationId(data.organization.id);
         onSubmit({ ...orgData, id: data.organization.id, action: step });
-        navigate("/auth/save");
+        navigate("/auth/save", { state: { isSuperAdmin: true } });
       } else {
         // Handle error
         console.error("Error creating organization");
@@ -122,7 +122,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
         await response.json();
         setOrganizationId(orgData.orgId);
         onSubmit({ ...orgData, action: step });
-        navigate("/auth/save");
+        navigate("/auth/save", { state: { isSuperAdmin: false } });
       } else {
         setErrorMessage("Organization not found");
         setIsShaking(true);

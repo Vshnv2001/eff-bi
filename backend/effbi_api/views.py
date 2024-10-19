@@ -6,11 +6,10 @@ from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
 from supertokens_python.recipe.multitenancy.syncio import list_all_tenants
 from supertokens_python.recipe.session.framework.django.syncio import verify_session
-from .models import Dashboard, Tile, UserAccessPermissions
+from .models import Dashboard, Tile, User
 from rest_framework import status
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
-from .models import User
 import concurrent.futures
 from .user_access_permissions.user_access_views import get_accessible_tables, add_permissions_to_user
 from .serializer import DashboardSerializer, TileSerializer
