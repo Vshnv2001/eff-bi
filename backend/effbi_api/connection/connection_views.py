@@ -22,7 +22,7 @@ def create_connection(request):
         if not uri or not user_id or not db_type:
             print("uri, user_id and db_type are required")
             return JsonResponse({'error': "uri, user_id and db_type are required"},
-                                    status=status.HTTP_400_BAD_REQUEST)
+                                status=status.HTTP_400_BAD_REQUEST)
 
         user = get_object_or_404(User, id=user_id)
         organization = user.organization
@@ -138,38 +138,58 @@ def refresh_org_tables(org_id, uri):
             new_tables[table_name] = schema_name
 
     print(new_tables)
-    for table in curr_tables:
-        # Check if table still exists in new db instance
-        table_name = table.table_name
-        # Case 1: Current table is deleted
-        if table_name not in new_tables:
-            table.delete()
 
-        # Case 2: Table still exists, but columns may have changed
-        else:
-            table_info = db_data[table.table_schema][table_name]
-            new_types = table_info['types']
+    update_tasks = []
+    delete_tasks = []
+    new_table_tasks = []
 
-            # Get new column descriptions and types and replace
-            new_column_descriptions, new_table_description = get_column_descriptions(table_name, new_tables[table_name], uri)
+    # Using ThreadPoolExecutor to handle existing table checks and updates
+    with concurrent.futures.ThreadPoolExecutor() as executor:
 
+        for table in curr_tables:
+            # Check if table still exists in new db instance
+            table_name = table.table_name
+
+            # Case 1: Current table is deleted
+            if table_name not in new_tables:
+                delete_tasks.append(table)
+
+            # Case 2: Table still exists, but columns may have changed
+            else:
+                schema_name = new_tables[table_name]
+                new_types = db_data[schema_name][table_name]['types']
+
+                # Get new column descriptions and types and replace
+                task = executor.submit(get_column_descriptions, table_name, schema_name, uri)
+                update_tasks.append((table, task, new_types, schema_name))
+                del new_tables[table_name]
+
+        # Case 3: New tables that have been added
+        for table_name in new_tables:
+            schema_name = new_tables[table_name]
+            table_info = db_data[schema_name][table_name]
+            task = executor.submit(process_table, schema_name, table_name, table_info, uri, org_id)
+            new_table_tasks.append(task)
+
+        # Handling updates
+        for table, future, new_types, new_schema in update_tasks:
+            new_column_descriptions, new_table_description = future.result()
             # Overwrite existing information
             table.column_descriptions = new_column_descriptions
             table.column_types = new_types
             table.table_description = new_table_description
-            table.table_schema = new_tables[table_name]
-
-            print(table)
+            table.table_schema = new_schema
             table.save()
 
-            del new_tables[table_name]
+        # Handling deletions
+        for table in delete_tasks:
+            table.delete()
 
-    # Case 3: New tables have been added
-    for table_name in new_tables:
-        org_table = process_table(new_tables[table_name], table_name, db_data[new_tables[table_name]][table_name], uri, org_id)
-        org_table.save()
+        # Handling new tables
         super_user = Organization.objects.get(id=org_id).super_user
-        add_permissions_to_user(super_user, org_table.id, 'Admin')
+        for future in new_table_tasks:
+            org_table = future.result()
+            org_table.save()
+            add_permissions_to_user(super_user, org_table.id, 'Admin')
 
     return True
-
