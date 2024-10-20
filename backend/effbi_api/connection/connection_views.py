@@ -46,8 +46,9 @@ def create_connection(request):
             for future in concurrent.futures.as_completed(tasks):
                 org_table = future.result()
                 org_table.save()
-                super_user = Organization.objects.get(id=organization.id).super_user
-                add_permissions_to_user(super_user, org_table.id, 'Admin')
+                super_users = Organization.objects.get(id=organization.id).super_user
+                for super_user in super_users:
+                    add_permissions_to_user(super_user, org_table.id, 'Admin')
 
         # update organization last because if processing fails
         # we want them to resend the uri, but the frontend will
@@ -108,19 +109,17 @@ def refresh_connection(request):
     '''
     user_id = request.data.get('user_id', None)
     user = get_object_or_404(User, id=user_id)
-    org_id = user.organization.id
-    if not org_id:
-        return JsonResponse({'error': 'Organization ID is required'}, status=status.HTTP_400_BAD_REQUEST)
 
-    organization = get_object_or_404(Organization, id=org_id)
-    success = refresh_org_tables(org_id, organization.database_uri)
+    organization = user.organization
+    success = refresh_org_tables(organization, organization.database_uri)
+    print(success)
     if success:
         return JsonResponse({'message': 'Tables refreshed successfully'}, status=status.HTTP_200_OK)
     else:
         return JsonResponse({'error': 'Failed to refresh tables'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-def refresh_org_tables(org_id, uri):
+def refresh_org_tables(organization, uri):
     '''
     Utility function to refresh all tables for an organization
     '''
@@ -135,7 +134,7 @@ def refresh_org_tables(org_id, uri):
 
         with transaction.atomic():
             # Get all current tables in organization
-            curr_tables = OrgTables.objects.filter(organization=org_id)
+            curr_tables = OrgTables.objects.filter(organization=organization)
 
             # Get names of tables, and keep track of their respective schema in new db instance
             new_tables = {}
@@ -152,7 +151,6 @@ def refresh_org_tables(org_id, uri):
 
             # Using ThreadPoolExecutor to handle existing table checks and updates
             with concurrent.futures.ThreadPoolExecutor() as executor:
-
                 for table in curr_tables:
                     # Check if table still exists in new db instance
                     table_name = table.table_name
@@ -170,13 +168,13 @@ def refresh_org_tables(org_id, uri):
                         task = executor.submit(get_column_descriptions, table_name, schema_name, uri)
                         update_tasks.append((table, task, new_types, schema_name))
                         del new_tables[table_name]
-
                 # Case 3: New tables that have been added
                 for table_name in new_tables:
                     schema_name = new_tables[table_name]
                     table_info = db_data[schema_name][table_name]
-                    task = executor.submit(process_table, schema_name, table_name, table_info, uri, org_id)
+                    task = executor.submit(process_table, schema_name, table_name, table_info, uri, organization)
                     new_table_tasks.append(task)
+
 
                 # Handling updates
                 for table, future, new_types, new_schema in update_tasks:
@@ -193,11 +191,13 @@ def refresh_org_tables(org_id, uri):
                     table.delete()
 
                 # Handling new tables
-                super_user = Organization.objects.get(id=org_id).super_user
+                super_users = organization.super_user
                 for future in new_table_tasks:
                     org_table = future.result()
                     org_table.save()
-                    add_permissions_to_user(super_user, org_table.id, 'Admin')
+                    for super_user in super_users:
+                        add_permissions_to_user(super_user, org_table.id, 'Admin')
+
 
         return True
 
