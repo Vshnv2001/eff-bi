@@ -12,6 +12,8 @@ import axios from "axios";
 import { componentMapping } from "../components/Dashboard/ComponentMapping";
 import { TileProps } from "../components/Dashboard/TileProps";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Link from "@mui/material/Link";
 import NewTile from "../components/Dashboard/NewTile";
 
 type ComponentKeys = keyof typeof componentMapping;
@@ -108,7 +110,36 @@ export default function DashboardPage() {
           <Spinner className="h-10 w-10" />
         </div>
       )}
-      <div className="flex items-center justify-between mb-8 relative mt-4">
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        style={{ color: "white", fontSize: "16px" }}
+      >
+        <Link
+          underline="hover"
+          color="inherit"
+          href="/"
+          style={{ color: "#fff" }}
+        >
+          Home
+        </Link>
+        <Link
+          underline="hover"
+          color="inherit"
+          href="/dashboards"
+          style={{ color: "#fff" }}
+        >
+          Dashboards
+        </Link>
+        <Link
+          underline="hover"
+          color="text.primary"
+          style={{ color: "#4995ec" }}
+        >
+          {dashboardName}
+        </Link>
+      </Breadcrumbs>
+
+      <div className="flex items-center justify-between mb-8 relative">
         <div className="absolute inset-x-0 text-center">
           <Typography color="white" className="text-3xl font-bold">
             {dashboardName}

@@ -9,6 +9,8 @@ import "react-toastify/dist/ReactToastify.css";
 import NotificationDialog from "../components/Dashboard/NotificationDialog";
 import { useNavigate } from "react-router-dom";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Link from "@mui/material/Link";
 
 export default function DashboardsPage() {
   const [open, setOpen] = useState(false);
@@ -78,7 +80,7 @@ export default function DashboardsPage() {
     setDashboardName("");
     setDashboardDescription("");
   };
-  
+
   const handleDialogClose = () => {
     setIsDialogOpen(false);
   };
@@ -94,6 +96,28 @@ export default function DashboardsPage() {
           <Spinner className="h-10 w-10" />
         </div>
       )}
+
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        style={{ color: "white", fontSize: "16px" }}
+      >
+        <Link
+          underline="hover"
+          color="inherit"
+          href="/"
+          style={{ color: "#fff" }}
+        >
+          Home
+        </Link>
+        <Link
+          underline="hover"
+          color="text.primary"
+          style={{ color: "#4995ec" }}
+        >
+          Dashboards
+        </Link>
+      </Breadcrumbs>
+
       <ToastContainer
         position="top-right"
         autoClose={3000}
