@@ -9,6 +9,10 @@ import {
   FormControlLabel,
   FormControl,
   Slide,
+  Select,
+  MenuItem,
+  FormHelperText,
+  SelectChangeEvent,
 } from "@mui/material";
 import { useAuth } from "./AuthenticationContext";
 import { useNavigate } from "react-router-dom";
@@ -29,6 +33,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
     orgId: "",
     name: "",
     databaseUri: "",
+    dbType: "",
   });
   const [showTransition, setShowTransition] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
@@ -48,14 +53,12 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
       const timer = setTimeout(() => {
         setErrorMessage("");
       }, 1000);
-
       return () => clearTimeout(timer);
     }
   }, [errorMessage]);
 
   const handleNext = () => {
     setShowTransition(false);
-
     setTimeout(() => {
       if (selection === "create") {
         setStep("create");
@@ -69,7 +72,6 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
   const handleBack = () => {
     setShowTransition(false);
     setErrorMessage("");
-
     setTimeout(() => {
       setStep("select");
       setShowTransition(true);
@@ -81,12 +83,40 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
     setOrgData((prevData) => ({
       ...prevData,
       [name]: value,
+      ...(name === "databaseUri" ? { dbType: "" } : {}),
+    }));
+  };
+
+  const handleDbTypeChange = (event: SelectChangeEvent<string>) => {
+    setOrgData((prevData) => ({
+      ...prevData,
+      dbType: event.target.value as string,
     }));
   };
 
   const handleSubmit = async () => {
     if (step === "create") {
-      // console.log("org id", orgData, orgData.orgId);
+      if (orgData.databaseUri) {
+        const connectionResponse = await fetch(`${BACKEND_API_URL}/api/connection/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            uri: orgData.databaseUri,
+            db_type: orgData.dbType,
+          }),
+        });
+
+        if (!connectionResponse.ok) {
+          const errorData = await connectionResponse.json();
+          setErrorMessage(errorData.message || "Error connecting to database");
+          setIsShaking(true);
+          setTimeout(() => setIsShaking(false), 1000);
+          return;
+        }
+      }
+
       const response = await fetch(`${BACKEND_API_URL}/api/organizations/`, {
         method: "POST",
         headers: {
@@ -106,7 +136,10 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
         onSubmit({ ...orgData, id: data.organization.id, action: step });
         navigate("/auth/save", { state: { isSuperAdmin: true } });
       } else {
-        // Handle error
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || "Error creating organization");
+        setIsShaking(true);
+        setTimeout(() => setIsShaking(false), 1000);
         console.error("Error creating organization");
       }
     } else if (step === "join") {
@@ -119,8 +152,8 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
       );
 
       if (response.ok) {
-        await response.json();
-        setOrganizationId(orgData.orgId);
+        const data = await response.json();
+        setOrganizationId(data.organization.id);
         onSubmit({ ...orgData, action: step });
         navigate("/auth/save", { state: { isSuperAdmin: false } });
       } else {
@@ -203,6 +236,24 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
                 value={orgData.databaseUri}
                 onChange={handleInputChange}
               />
+              <FormControl fullWidth sx={{ mt: 2 }}>
+                <Select
+                  value={orgData.dbType}
+                  onChange={handleDbTypeChange} // This is now correctly typed
+                  displayEmpty
+                  inputProps={{ 'aria-label': 'Database Type' }}
+                  disabled={!orgData.databaseUri} // Disable if databaseUri is empty
+                >
+                  <MenuItem value="" disabled>
+                    Select Database Type
+                  </MenuItem>
+                  <MenuItem value="postgres">Postgres</MenuItem>
+                  <MenuItem value="mysql">MySQL</MenuItem>
+                  <MenuItem value="oracle">Oracle</MenuItem>
+                  <MenuItem value="sqlite">SQLite</MenuItem>
+                </Select>
+                <FormHelperText>Select the database type</FormHelperText>
+              </FormControl>
             </>
           )}
 
@@ -241,19 +292,9 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
         >
           {step === "select" ? "Back" : "Previous"}
         </Button>
-        {step === "select" ? (
-          <Button
-            onClick={handleNext}
-            disabled={!selection}
-            variant="contained"
-          >
-            Next
-          </Button>
-        ) : (
-          <Button onClick={handleSubmit} variant="contained">
-            Submit
-          </Button>
-        )}
+        <Button onClick={step === "select" ? handleNext : handleSubmit} variant="contained">
+          {step === "select" ? "Next" : "Submit"}
+        </Button>
       </Box>
     </Box>
   );

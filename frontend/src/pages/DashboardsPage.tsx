@@ -120,11 +120,9 @@ export default function DashboardsPage() {
         {!dashboards.length && (
           <div className="col-span-1 md:col-span-2 lg:col-span-3">
             <Typography color="white" className="text-xl text-center italic">
-              {!isLoading && (
-                <div className="text-center text-gray-500">
-                  No dashboards found. Create one to get started.
-                </div>
-              )}
+              {!isLoading
+                ? "No dashboards found. Create one to get started."
+                : ""}
             </Typography>
           </div>
         )}
