@@ -1,21 +1,24 @@
 import { useEffect, useState } from "react";
-import { Card, CardBody, Typography, Button } from "@material-tailwind/react";
+import { Card, CardBody, Typography, Dialog } from "@material-tailwind/react";
+import { Button } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { componentMapping } from "../components/Dashboard/ComponentMapping";
 import { TileProps } from "../components/Dashboard/TileProps";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import NewTile from "../components/Dashboard/NewTile";
 
 type ComponentKeys = keyof typeof componentMapping;
 
 export default function DashboardPage() {
-  const navigate = useNavigate();
   const { dashboardId } = useParams();
 
   const [tilesData, setTilesData] = useState<TileProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [dashboardName, setDashboardName] = useState<string>("");
+  const [isNewTileDialogOpen, setIsNewTileDialogOpen] = useState(false);
+
   useEffect(() => {
     fetchTiles();
     fetchDashboardName();
@@ -36,7 +39,6 @@ export default function DashboardPage() {
   };
 
   console.log("dashboardName: ", dashboardName);
-
 
   const fetchTiles = async () => {
     setLoading(true);
@@ -77,6 +79,15 @@ export default function DashboardPage() {
     setTilesData(items);
   };
 
+  const handleNewTileClick = () => {
+    setIsNewTileDialogOpen(true);
+  };
+
+  const handleNewTileClose = () => {
+    setIsNewTileDialogOpen(false);
+    fetchTiles();
+  };
+
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -99,12 +110,14 @@ export default function DashboardPage() {
           </Typography>
         </div>
         <div className="flex-1" />
+
         <Button
-          variant="text"
-          size="sm"
-          color="white"
-          className="flex items-center gap-2 justify-center font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
-          onClick={() => navigate(`/dashboards/${dashboardId}/tiles/new`)}
+          variant="contained"
+          size="medium"
+          onClick={handleNewTileClick}
+          sx={{
+            borderRadius: "20px",
+          }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -112,7 +125,7 @@ export default function DashboardPage() {
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            className="h-5 w-5"
+            className="h-5 w-5 mr-2"
           >
             <path
               strokeLinecap="round"
@@ -191,6 +204,14 @@ export default function DashboardPage() {
           )}
         </Droppable>
       </DragDropContext>
+
+      <Dialog
+        open={isNewTileDialogOpen}
+        handler={() => setIsNewTileDialogOpen(false)}
+        size="xl"
+      >
+        <NewTile onClose={handleNewTileClose} />
+      </Dialog>
     </div>
   );
 }

@@ -14,7 +14,7 @@ export default function DashboardsPage() {
   const [dashboardName, setDashboardName] = useState("");
   const [dashboardDescription, setDashboardDescription] = useState("");
   const [dashboards, setDashboards] = useState<DashboardProps[]>([]);
-  
+
   const sessionContext = useSessionContext();
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function DashboardsPage() {
 
   return (
     <div className="min-h-screen bg-gray-800 p-8">
-      <ToastContainer 
+      <ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
@@ -60,11 +60,11 @@ export default function DashboardsPage() {
         rtl={false}
         pauseOnFocusLoss
         draggable
-        pauseOnHover
+        pauseOnHover={false}
         theme="colored"
         className="z-[9999] !important"
       />
-      
+
       <div className="flex items-center justify-between mb-8 relative">
         <div className="absolute inset-x-0 text-center">
           <Typography color="white" className="text-3xl font-bold">
@@ -72,7 +72,6 @@ export default function DashboardsPage() {
           </Typography>
         </div>
         <div className="flex-1" />
-
 
         <Button
           variant="text"
@@ -109,7 +108,7 @@ export default function DashboardsPage() {
         setDashboardDescription={setDashboardDescription}
         onDashboardCreated={handleDashboardCreated}
       />
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {dashboards.map((dashboard) => (
           <DashboardCard key={dashboard.dash_id} dashboard={dashboard} />

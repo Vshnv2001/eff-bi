@@ -7,8 +7,9 @@ import {
   Textarea,
   IconButton,
   ThemeProvider,
+  Button,
 } from "@material-tailwind/react";
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useState, useEffect } from "react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
@@ -69,7 +70,7 @@ export default function DashboardForm({
   onDashboardCreated,
 }: DashboardFormProps) {
   const [isMounted, setIsMounted] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -183,17 +184,50 @@ export default function DashboardForm({
         </DialogBody>
 
         <Box className="flex justify-center gap-2 mb-2">
-          <Button variant="contained" onClick={handleOpen} color="error">
+          <Button
+            color="red"
+            onClick={handleOpen}
+            disabled={isLoading}
+            className="bg-red-500 hover:bg-red-600 text-white"
+          >
             Cancel
           </Button>
-          <LoadingButton
-            variant="contained"
-            onClick={handleCreate}
-            color="success"
-            loading={loading}
+
+          <Button
+            type="submit"
+            color="blue"
+            disabled={isLoading}
+            className="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white"
+            onClick={handleCreate} // Assuming this is your submit handler
           >
-            Create
-          </LoadingButton>
+            {isLoading ? (
+              <>
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Generating...
+              </>
+            ) : (
+              "Create"
+            )}
+          </Button>
         </Box>
       </Dialog>
 
