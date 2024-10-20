@@ -44,7 +44,7 @@ export default function ViewDataPage() {
       if (!userId) return;
       setLoading(true);
       try {
-        const response = await axios.get(`${BACKEND_API_URL}/api/tables/${userId}`);
+        const response = await axios.get(`${BACKEND_API_URL}/api/connection/${userId}`);
         //Example response:
         //     {
         //     "tables": [

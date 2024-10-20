@@ -49,6 +49,20 @@ const faqs = [
       "Dashboard (without s) contains multiple tiles. Dashboards (with s) is a collection of all your dashboard.",
   },
   {
+    question: "What happens if I rename a table in the database?",
+    answer:
+      "Upon renaming a table in your database and refreshing, the renamed table is treated as a new table and the original table is deleted. " +
+        "Consequently all user-specific permissions linked to the original table will be deleted.\n" +
+        "The new table will be added as a fresh entry with admin permissions set only for your organization's Super Admins.",
+  },
+  {
+    question: "Who is a Super Admin?",
+    answer:
+      "Super Admins are the Effortless BI coordinators of your organization. " +
+        "They have the highest level of permissions in the application and have admin permissions to all tables by default. " +
+        "They can grant admin/view permissions to other users in your company.",
+  },
+  {
     question: "None of the above answers my question, what should I do?",
     answer:
       "We are here for you! Reach out to us via email at effortlessbi@gmail.com",
