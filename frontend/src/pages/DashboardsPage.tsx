@@ -1,4 +1,3 @@
-// DashboardsPage.tsx
 import { useState, useEffect } from "react";
 import { Typography, Button, Spinner } from "@material-tailwind/react";
 import DashboardForm from "../components/Dashboard/DashboardForm";
@@ -7,6 +6,9 @@ import axios from "axios";
 import { DashboardProps } from "../components/Dashboard/DashboardProps";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import NotificationDialog from "../components/Dashboard/NotificationDialog";
+import { useNavigate } from "react-router-dom";
+import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 export default function DashboardsPage() {
   const [open, setOpen] = useState(false);
@@ -14,10 +16,16 @@ export default function DashboardsPage() {
   const [dashboardDescription, setDashboardDescription] = useState("");
   const [dashboards, setDashboards] = useState<DashboardProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dbUri, setDbUri] = useState("");
+  const [isDisabledField, setIsDisabledField] = useState(false);
+  const sessionContext = useSessionContext();
+  const userId = sessionContext.loading ? null : sessionContext.userId;
+  const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("fetching dashboards");
     fetchDashboards();
+    fetchDbSettings();
   }, []);
 
   const fetchDashboards = async () => {
@@ -28,6 +36,28 @@ export default function DashboardsPage() {
       setDashboards(response.data.data);
     } catch (error) {
       toast.error("Failed to fetch dashboards");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchDbSettings = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/uri/${userId}`
+      );
+      if (response.status === 200) {
+        setDbUri(response.data.database_uri);
+        if (response.data.database_uri === "") {
+          setIsDialogOpen(true);
+        } else {
+          setIsDisabledField(true);
+        }
+      } else {
+        console.error("Failed to fetch db settings:", response);
+      }
+    } catch (error) {
+      console.error("Error fetching db settings:", error);
     } finally {
       setIsLoading(false);
     }
@@ -47,6 +77,14 @@ export default function DashboardsPage() {
     setOpen(!open);
     setDashboardName("");
     setDashboardDescription("");
+  };
+  
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+  };
+
+  const navigateToSettings = () => {
+    navigate("/settings/database");
   };
 
   return (
@@ -127,6 +165,11 @@ export default function DashboardsPage() {
           </div>
         )}
       </div>
+      <NotificationDialog
+        open={isDialogOpen}
+        onClose={handleDialogClose}
+        navigateToSettings={navigateToSettings}
+      />
     </div>
   );
 }
