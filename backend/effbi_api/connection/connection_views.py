@@ -142,8 +142,6 @@ def refresh_org_tables(organization, uri):
                 for table_name in tables:
                     new_tables[table_name] = schema_name
 
-            # print(new_tables)
-
             # Initialize lists to keep track of tasks -> Ensure thread safety while managing DB operations
             update_tasks = []
             delete_tasks = []
@@ -175,31 +173,38 @@ def refresh_org_tables(organization, uri):
                     task = executor.submit(process_table, schema_name, table_name, table_info, uri, organization)
                     new_table_tasks.append(task)
 
-
-                # Handling updates
-                for table, future, new_types, new_schema in update_tasks:
-                    new_column_descriptions, new_table_description = future.result()
-                    # Overwrite existing information
-                    table.column_descriptions = new_column_descriptions
-                    table.column_types = new_types
-                    table.table_description = new_table_description
-                    table.table_schema = new_schema
-                    table.save()
-
-                # Handling deletions
-                for table in delete_tasks:
-                    table.delete()
-
-                # Handling new tables
-                super_users = organization.super_user
-                for future in new_table_tasks:
-                    org_table = future.result()
-                    org_table.save()
-                    for super_user in super_users:
-                        add_permissions_to_user(super_user, org_table.id, 'Admin')
-
+                # Handle all tasks
+                handle_updates(update_tasks)
+                handle_deletes(delete_tasks)
+                handle_new_tables(new_table_tasks, organization)
 
         return True
 
     except Exception as e:
         return False
+
+
+def handle_new_tables(new_table_tasks, organization):
+    super_users = organization.super_user
+    for future in new_table_tasks:
+        org_table = future.result()
+        org_table.save()
+        for super_user in super_users:
+            add_permissions_to_user(super_user, org_table.id, 'Admin')
+
+
+def handle_deletes(delete_tasks):
+    # Handling deletions
+    for table in delete_tasks:
+        table.delete()
+
+
+def handle_updates(update_tasks):
+    for table, future, new_types, new_schema in update_tasks:
+        new_column_descriptions, new_table_description = future.result()
+        # Overwrite existing information
+        table.column_descriptions = new_column_descriptions
+        table.column_types = new_types
+        table.table_description = new_table_description
+        table.table_schema = new_schema
+        table.save()
