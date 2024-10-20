@@ -1,4 +1,3 @@
-// DashboardForm.tsx
 import {
   Dialog,
   DialogHeader,
@@ -10,6 +9,7 @@ import {
   ThemeProvider,
 } from "@material-tailwind/react";
 import { Box, Button } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { useState, useEffect } from "react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
@@ -69,6 +69,7 @@ export default function DashboardForm({
   onDashboardCreated,
 }: DashboardFormProps) {
   const [isMounted, setIsMounted] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -77,13 +78,17 @@ export default function DashboardForm({
 
   const handleCreate = async () => {
     try {
+      setLoading(true);
+
       if (!dashboardName.trim()) {
         onDashboardCreated?.(false, "Dashboard name is required");
+        setLoading(false);
         return;
       }
 
       if (!dashboardDescription.trim()) {
         onDashboardCreated?.(false, "Dashboard description is required");
+        setLoading(false);
         return;
       }
 
@@ -106,6 +111,8 @@ export default function DashboardForm({
       if (isMounted) {
         onDashboardCreated?.(false, errorMessage);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -176,20 +183,17 @@ export default function DashboardForm({
         </DialogBody>
 
         <Box className="flex justify-center gap-2 mb-2">
-          <Button
-            variant="contained"
-            onClick={handleOpen}
-            color="error"
-          >
+          <Button variant="contained" onClick={handleOpen} color="error">
             Cancel
           </Button>
-          <Button
+          <LoadingButton
             variant="contained"
             onClick={handleCreate}
             color="success"
+            loading={loading}
           >
             Create
-          </Button>
+          </LoadingButton>
         </Box>
       </Dialog>
 
