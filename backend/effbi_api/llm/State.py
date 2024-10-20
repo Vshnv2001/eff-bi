@@ -2,6 +2,7 @@ class State:
     def __init__(self):
         self.uuid = ""
         self.question = ""
+        self.accessible_table_names = []
         self.parsed_question = {}
         self.database_schema = {}
         self.is_relevant = False

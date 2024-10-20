@@ -217,7 +217,7 @@ def create_dashboard_tile(request: HttpRequest):
         user = get_object_or_404(User, id=user_id)
         org_id = user.organization.id
         db_uri = user.organization.database_uri
-        response : State = response_pipeline(request.data.get('description'), db_uri, org_id)
+        response : State = response_pipeline(request.data.get('description'), db_uri, org_id, user_id)
         print("Pipeline complete")
         request.data['organization'] = org_id
         request.data['sql_query'] = response.sql_query

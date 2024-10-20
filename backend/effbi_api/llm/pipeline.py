@@ -3,15 +3,19 @@ from .SQLAgent import SQLAgent
 from .DataFormatter import DataFormatter
 from .PrunerAgent import PrunerAgent
 from .State import State
+from ..helpers.access_check import get_accessible_table_names
 
 
-def response_pipeline(user_query: str, db_uri: str, organization_id: int):
+def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_id: int):
     state = State()
     state.question = user_query
     
+    accessible_table_names = get_accessible_table_names(user_id)
+    print("ACCESSIBLE TABLE NAMES: ", accessible_table_names)
+    
     # Get the database schema
     db_manager = DatabaseManager(db_uri, organization_id)
-    database_schema = db_manager.get_schema()
+    database_schema = db_manager.get_schema(accessible_table_names)
     
     state.database_schema = database_schema
     
