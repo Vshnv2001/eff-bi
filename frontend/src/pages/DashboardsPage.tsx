@@ -5,7 +5,6 @@ import DashboardForm from "../components/Dashboard/DashboardForm";
 import DashboardCard from "../components/Dashboard/DashboardCard";
 import axios from "axios";
 import { DashboardProps } from "../components/Dashboard/DashboardProps";
-import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -14,8 +13,6 @@ export default function DashboardsPage() {
   const [dashboardName, setDashboardName] = useState("");
   const [dashboardDescription, setDashboardDescription] = useState("");
   const [dashboards, setDashboards] = useState<DashboardProps[]>([]);
-
-  const sessionContext = useSessionContext();
 
   useEffect(() => {
     console.log("fetching dashboards");

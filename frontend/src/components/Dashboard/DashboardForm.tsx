@@ -97,6 +97,8 @@ export default function DashboardForm({
         }
       );
 
+      console.log("response", response);
+
       if (isMounted) {
         onDashboardCreated?.(true, "Dashboard created successfully!");
         setOpen(false);

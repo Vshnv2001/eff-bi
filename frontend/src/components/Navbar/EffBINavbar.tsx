@@ -12,10 +12,8 @@ import { Link } from "react-router-dom";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { useState, useEffect } from "react";
 
-// Custom hook to track scroll direction
 const useScrollDirection = () => {
   const [scrollDirection, setScrollDirection] = useState("up");
-  const [prevOffset, setPrevOffset] = useState(0);
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
