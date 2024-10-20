@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   signUp,
   signIn,
   doesEmailExist,
 } from "supertokens-web-js/recipe/emailpassword";
-import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { BACKEND_API_URL } from "../../config";
 import { useAuth } from "./AuthenticationContext";
 import OrganizationSelection from "./OrganizationSelection";
