@@ -50,10 +50,12 @@ export default function DashboardsPage() {
       );
       if (response.status === 200) {
         setDbUri(response.data.database_uri);
+        console.log("uri", dbUri);
         if (response.data.database_uri === "") {
           setIsDialogOpen(true);
         } else {
           setIsDisabledField(true);
+          console.log("disabled field", isDisabledField);
         }
       } else {
         console.error("Failed to fetch db settings:", response);
