@@ -1,10 +1,20 @@
 import React, { useState } from "react";
-import { Typography, Input, Textarea, Button } from "@material-tailwind/react";
+import {
+  Typography,
+  Textarea,
+  Button,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+} from "@material-tailwind/react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams } from "react-router-dom";
 import { Box } from "@mui/material";
 import axios from "axios";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { IconButton } from "@material-tailwind/react";
 
 interface NewTileProps {
   onClose: () => void;
@@ -12,8 +22,9 @@ interface NewTileProps {
 
 export default function NewTile({ onClose }: NewTileProps) {
   const [tileName, setTileName] = useState("");
-  const [tileDescription, setTileDescription] = useState("");
+  const [queryPrompt, setQueryPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [info, setInfo] = useState(false);
   const { dashboardId } = useParams();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -26,13 +37,13 @@ export default function NewTile({ onClose }: NewTileProps) {
         {
           dash_id: dashboardId,
           title: tileName,
-          description: tileDescription,
+          description: queryPrompt,
         }
       );
 
       console.log(response.data);
       setTileName("");
-      setTileDescription("");
+      setQueryPrompt("");
       toast.success("KPI generated successfully!");
       onClose();
     } catch (error) {
@@ -41,6 +52,10 @@ export default function NewTile({ onClose }: NewTileProps) {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleInfo = () => {
+    setInfo(!info);
   };
 
   return (
@@ -54,30 +69,45 @@ export default function NewTile({ onClose }: NewTileProps) {
           <Typography variant="h6" color="blue-gray" className="mb-2">
             Tile Name
           </Typography>
-          <Input
-            size="lg"
+
+          <Textarea
             placeholder="Enter tile name"
-            crossOrigin={undefined}
             value={tileName}
             onChange={(e) => setTileName(e.target.value)}
+            className="border border-gray-400 focus:!border-blue-500 w-full min-h-[60px]"
+            labelProps={{
+              className: "hidden",
+            }}
           />
         </div>
 
         <div>
-          <Typography variant="h6" color="blue-gray" className="mb-2">
-            Tile Description
-          </Typography>
+          <div className="flex items-center mb-2">
+            <Typography variant="h6" color="blue-gray" className="mr-2">
+              Query Prompt
+            </Typography>
+            <IconButton
+              variant="text"
+              className="w-5 h-5 p-0"
+              onClick={handleInfo}
+            >
+              <InformationCircleIcon className="h-5 w-5" />
+            </IconButton>
+          </div>
           <Textarea
             size="lg"
-            placeholder="Enter tile description"
-            value={tileDescription}
-            onChange={(e) => setTileDescription(e.target.value)}
+            placeholder="Enter your query to generate the chart (e.g., 'Show me monthly sales data for the past year')"
+            value={queryPrompt}
+            onChange={(e) => setQueryPrompt(e.target.value)}
             rows={4}
-            className="required-border"
+            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+            labelProps={{
+              className: "before:content-none after:content-none",
+            }}
           />
         </div>
 
-        <Box className="flex justify-center gap-2 mb-2">
+        <Box className="flex justify-center gap-2 mb-4">
           <Button color="red" onClick={onClose} disabled={isLoading}>
             Cancel
           </Button>
@@ -129,6 +159,20 @@ export default function NewTile({ onClose }: NewTileProps) {
         draggable
         pauseOnHover={false}
       />
+
+      {/* Information Dialog */}
+      <Dialog open={info} handler={handleInfo}>
+        <DialogHeader>Query Prompt</DialogHeader>
+        <DialogBody>
+          Describe the data insights you want to extract from your uploaded
+          data.
+        </DialogBody>
+        <DialogFooter>
+          <Button variant="text" onClick={handleInfo}>
+            Close
+          </Button>
+        </DialogFooter>
+      </Dialog>
     </div>
   );
 }

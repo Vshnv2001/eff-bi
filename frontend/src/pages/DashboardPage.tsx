@@ -212,7 +212,7 @@ export default function DashboardPage() {
       <Dialog
         open={isNewTileDialogOpen}
         handler={() => setIsNewTileDialogOpen(false)}
-        size="xl"
+        size="md"
       >
         <NewTile onClose={handleNewTileClose} />
       </Dialog>

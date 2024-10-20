@@ -2,16 +2,13 @@ import {
   Dialog,
   DialogHeader,
   DialogBody,
-  DialogFooter,
   Typography,
   Textarea,
-  IconButton,
   ThemeProvider,
   Button,
 } from "@material-tailwind/react";
 import { Box } from "@mui/material";
 import { useState, useEffect } from "react";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 
 interface DashboardFormProps {
@@ -116,9 +113,6 @@ export default function DashboardForm({
     }
   };
 
-  const [info, setInfo] = useState(false);
-  const handleInfo = () => setInfo(!info);
-
   return (
     <ThemeProvider value={customTheme}>
       <Dialog
@@ -153,25 +147,18 @@ export default function DashboardForm({
             />
           </div>
 
-          <div className="mb-4">
+          <div>
             <div className="flex items-center mb-2">
               <Typography
                 variant="h6"
                 color="blue-gray"
                 className="font-medium mr-2"
               >
-                Data Query Prompt
+                Dashboard Description
               </Typography>
-              <IconButton
-                variant="text"
-                className="w-5 h-5 p-0"
-                onClick={handleInfo}
-              >
-                <InformationCircleIcon className="h-5 w-5" />
-              </IconButton>
             </div>
             <Textarea
-              placeholder="e.g., 'Show monthly sales trends and top-performing products'"
+              placeholder="Enter dashboard description"
               value={dashboardDescription}
               onChange={(e) => setDashboardDescription(e.target.value)}
               className="!border border-gray-400 focus:!border-blue-500 w-full min-h-[120px]"
@@ -182,7 +169,7 @@ export default function DashboardForm({
           </div>
         </DialogBody>
 
-        <Box className="flex justify-center gap-2 mb-2">
+        <Box className="flex justify-center gap-2 mb-4">
           <Button
             color="red"
             onClick={handleOpen}
@@ -197,7 +184,7 @@ export default function DashboardForm({
             color="blue"
             disabled={isLoading}
             className="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white"
-            onClick={handleCreate} // Assuming this is your submit handler
+            onClick={handleCreate}
           >
             {isLoading ? (
               <>
@@ -228,19 +215,6 @@ export default function DashboardForm({
             )}
           </Button>
         </Box>
-      </Dialog>
-
-      <Dialog open={info} handler={handleInfo}>
-        <DialogHeader>Query Prompt</DialogHeader>
-        <DialogBody>
-          Describe the data insights you want to extract from your uploaded
-          data.
-        </DialogBody>
-        <DialogFooter>
-          <Button variant="text" onClick={handleInfo}>
-            Close
-          </Button>
-        </DialogFooter>
       </Dialog>
     </ThemeProvider>
   );
