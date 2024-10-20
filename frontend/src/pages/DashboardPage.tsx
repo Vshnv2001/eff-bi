@@ -5,6 +5,7 @@ import {
   Typography,
   Dialog,
   Button,
+  Spinner,
 } from "@material-tailwind/react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -93,12 +94,6 @@ export default function DashboardPage() {
     fetchTiles();
   };
 
-  if (loading)
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading...
-      </div>
-    );
   if (error)
     return (
       <div className="min-h-screen flex items-center justify-center text-red-500">
@@ -108,6 +103,11 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-800 p-8">
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <Spinner className="h-10 w-10" />
+        </div>
+      )}
       <div className="flex items-center justify-between mb-8 relative mt-4">
         <div className="absolute inset-x-0 text-center">
           <Typography color="white" className="text-3xl font-bold">

@@ -82,7 +82,7 @@ export default function DashboardForm({
         setLoading(false);
         return;
       }
-
+      
       if (!dashboardDescription.trim()) {
         onDashboardCreated?.(false, "Dashboard description is required");
         setLoading(false);
@@ -163,7 +163,7 @@ export default function DashboardForm({
               placeholder="Enter dashboard description"
               value={dashboardDescription}
               onChange={(e) => setDashboardDescription(e.target.value)}
-              className="!border border-gray-400 focus:!border-blue-500 w-full min-h-[120px]"
+              className="border border-gray-400 focus:!border-blue-500 w-full min-h-[120px]"
               labelProps={{
                 className: "hidden",
               }}

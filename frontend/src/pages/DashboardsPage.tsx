@@ -1,6 +1,6 @@
 // DashboardsPage.tsx
 import { useState, useEffect } from "react";
-import { Typography, Button } from "@material-tailwind/react";
+import { Typography, Button, Spinner } from "@material-tailwind/react";
 import DashboardForm from "../components/Dashboard/DashboardForm";
 import DashboardCard from "../components/Dashboard/DashboardCard";
 import axios from "axios";
@@ -13,6 +13,7 @@ export default function DashboardsPage() {
   const [dashboardName, setDashboardName] = useState("");
   const [dashboardDescription, setDashboardDescription] = useState("");
   const [dashboards, setDashboards] = useState<DashboardProps[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     console.log("fetching dashboards");
@@ -27,6 +28,8 @@ export default function DashboardsPage() {
       setDashboards(response.data.data);
     } catch (error) {
       toast.error("Failed to fetch dashboards");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -48,6 +51,11 @@ export default function DashboardsPage() {
 
   return (
     <div className="min-h-screen bg-gray-800 p-8">
+      {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <Spinner className="h-10 w-10" />
+        </div>
+      )}
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -59,7 +67,6 @@ export default function DashboardsPage() {
         draggable
         pauseOnHover={false}
         theme="colored"
-        className="z-[9999] !important"
       />
 
       <div className="flex items-center justify-between mb-8 relative mt-4">
@@ -113,7 +120,11 @@ export default function DashboardsPage() {
         {!dashboards.length && (
           <div className="col-span-1 md:col-span-2 lg:col-span-3">
             <Typography color="white" className="text-xl text-center italic">
-              No dashboards found. Create one to get started.
+              {!isLoading && (
+                <div className="text-center text-gray-500">
+                  No dashboards found. Create one to get started.
+                </div>
+              )}
             </Typography>
           </div>
         )}

@@ -96,11 +96,11 @@ export default function NewTile({ onClose }: NewTileProps) {
           </div>
           <Textarea
             size="lg"
-            placeholder="Enter your query to generate the chart (e.g., 'Show me monthly sales data for the past year')"
+            placeholder="Enter query to generate the chart (e.g., 'Show me monthly sales data for the past year')"
             value={queryPrompt}
             onChange={(e) => setQueryPrompt(e.target.value)}
             rows={4}
-            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+            className="border border-gray-400 focus:!border-blue-500 w-full min-h-[60px]"
             labelProps={{
               className: "before:content-none after:content-none",
             }}
