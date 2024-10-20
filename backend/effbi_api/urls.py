@@ -33,6 +33,7 @@ user_access_paths = [
 
 connection_paths = [
     path("", connection_views.create_connection, name="create_connection"),
+    path("refresh/", connection_views.refresh_connection, name="refresh_connection"),
     path("<str:user_id>/", connection_views.get_view_data_tables, name="get_view_data_tables"),
 ]
 
