@@ -43,7 +43,7 @@ export default function DashboardsPage() {
   };
 
   const handleOpen = () => {
-    toast.dismiss(); // Dismiss any active toasts
+    toast.dismiss();
     setOpen(!open);
     setDashboardName("");
     setDashboardDescription("");
@@ -72,13 +72,29 @@ export default function DashboardsPage() {
           </Typography>
         </div>
         <div className="flex-1" />
+
+
         <Button
           variant="text"
           size="sm"
           color="white"
-          className="font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
+          className="flex items-center gap-2 justify-center font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
           onClick={handleOpen}
         >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="h-5 w-5"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 4.5v15m7.5-7.5h-15"
+            />
+          </svg>
           Create Dashboard
         </Button>
       </div>

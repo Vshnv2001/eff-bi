@@ -4,12 +4,12 @@ import {
   DialogHeader,
   DialogBody,
   DialogFooter,
-  Button,
   Typography,
   Textarea,
   IconButton,
   ThemeProvider,
 } from "@material-tailwind/react";
+import { Box, Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
@@ -175,24 +175,22 @@ export default function DashboardForm({
           </div>
         </DialogBody>
 
-        <div className="flex justify-between w-full p-4">
+        <Box className="flex justify-center gap-2 mb-2">
           <Button
-            variant="text"
-            color="red"
+            variant="contained"
             onClick={handleOpen}
-            className="text-red-500 hover:bg-red-500/10"
+            color="error"
           >
             Cancel
           </Button>
           <Button
-            variant="gradient"
-            color="green"
+            variant="contained"
             onClick={handleCreate}
-            className="bg-green-500 hover:bg-green-600"
+            color="success"
           >
             Create
           </Button>
-        </div>
+        </Box>
       </Dialog>
 
       <Dialog open={info} handler={handleInfo}>
