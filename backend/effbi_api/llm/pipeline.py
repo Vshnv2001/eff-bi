@@ -36,8 +36,8 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     
     print("SQL QUERY: ", sql_query)
     
-    # if not sql_query.get('is_relevant', False):
-    #     return {"sql_query": "NOT_RELEVANT", "is_relevant": False}
+    if not sql_query.get('is_relevant', False):
+        return {"sql_query": "NOT_RELEVANT", "is_relevant": False}
     
     state.sql_query = sql_query.get('sql_query', '')
     
