@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
-import { Card, CardBody, Typography, Dialog } from "@material-tailwind/react";
-import { Button } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+  Card,
+  CardBody,
+  Typography,
+  Dialog,
+  Button,
+} from "@material-tailwind/react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import { componentMapping } from "../components/Dashboard/ComponentMapping";
 import { TileProps } from "../components/Dashboard/TileProps";
@@ -103,7 +108,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-800 p-8">
-      <div className="flex items-center justify-between mb-8 relative">
+      <div className="flex items-center justify-between mb-8 relative mt-4">
         <div className="absolute inset-x-0 text-center">
           <Typography color="white" className="text-3xl font-bold">
             {dashboardName}
@@ -112,12 +117,11 @@ export default function DashboardPage() {
         <div className="flex-1" />
 
         <Button
-          variant="contained"
-          size="medium"
+          variant="text"
+          size="sm"
+          color="white"
+          className="flex items-center gap-2 justify-center font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
           onClick={handleNewTileClick}
-          sx={{
-            borderRadius: "20px",
-          }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -125,7 +129,7 @@ export default function DashboardPage() {
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            className="h-5 w-5 mr-2"
+            className="h-5 w-5"
           >
             <path
               strokeLinecap="round"
@@ -133,7 +137,7 @@ export default function DashboardPage() {
               d="M12 4.5v15m7.5-7.5h-15"
             />
           </svg>
-          Create New Tile
+          Create Tile
         </Button>
       </div>
 
