@@ -9,11 +9,11 @@ class DatabaseManager:
         self.db_uri = db_uri
         self.organization_id = organization_id
         
-    def get_schema(self) -> dict:
+    def get_schema(self, accessible_table_names: List[str]) -> dict:
         """Retrieve the database schema."""
         try:
             # Fetch all OrgTables rows where organization_id matches
-            org_tables = OrgTables.objects.filter(organization_id=self.organization_id)
+            org_tables = OrgTables.objects.filter(organization_id=self.organization_id, table_name__in=accessible_table_names)
             # Convert the queryset to JSON
             org_tables_json = serializers.serialize('json', org_tables)
             # print(org_tables_json)
