@@ -5,6 +5,7 @@ import {
   signIn,
   doesEmailExist,
 } from "supertokens-web-js/recipe/emailpassword";
+import { BACKEND_API_URL } from "../../config";
 import { useAuth } from "./AuthenticationContext";
 import OrganizationSelection from "./OrganizationSelection";
 import {
@@ -18,8 +19,16 @@ import {
 } from "@mui/material";
 
 const Authentication = () => {
-  const { email, setEmail, firstName, setFirstName, lastName, setLastName } =
-    useAuth();
+  const {
+    email,
+    setEmail,
+    firstName,
+    setFirstName,
+    lastName,
+    setLastName,
+    setUserId,
+    setOrganizationId,
+  } = useAuth();
 
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
@@ -91,13 +100,43 @@ const Authentication = () => {
       } else if (response.status === "WRONG_CREDENTIALS_ERROR") {
         setErrorMessage("Email password combination is incorrect.");
         setInputError({ email: true, password: true });
-      } else {
+      } else if (response.status == "OK") {
+        console.log("response", response);
+        const userId = response.user.id;
+        await fetchUserData(userId);
         setErrorMessage("");
-        navigate("/auth/fetch");
+        //navigate("/auth/fetch");
       }
     } catch (err) {
       setErrorMessage("Oops! Something went wrong.");
       setInputError({ email: true, password: true });
+    }
+  };
+
+  const fetchUserData = async (userId: string) => {
+    try {
+      const response = await fetch(`${BACKEND_API_URL}/api/users/${userId}/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        console.log("User data fetched:", userData);
+
+        setUserId(userId);
+        setFirstName(userData.first_name);
+        setLastName(userData.last_name);
+        setEmail(userData.email);
+        setOrganizationId(userData.organization_id);
+        navigate("/dashboards");
+      } else {
+        console.error("Error fetching user data:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
     }
   };
 
