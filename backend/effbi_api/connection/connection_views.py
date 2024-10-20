@@ -106,7 +106,9 @@ def refresh_connection(request):
     '''
     Refreshes table data
     '''
-    org_id = request.data.get('org_id', None)
+    user_id = request.data.get('user_id', None)
+    user = get_object_or_404(User, id=user_id)
+    org_id = user.organization.id
     if not org_id:
         return JsonResponse({'error': 'Organization ID is required'}, status=status.HTTP_400_BAD_REQUEST)
 
