@@ -127,6 +127,7 @@ const Authentication = () => {
     }
   };
 
+  // TODO ask reyaaz, what is this func supposed to do?
   const handleOrgSubmit = async (orgData: any) => {
     console.log("Organization data:", orgData);
   };

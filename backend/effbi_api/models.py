@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 
@@ -19,6 +20,11 @@ class Organization(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     database_uri = models.CharField(max_length=255, blank=True, null=True, default="")
+    super_user = ArrayField(
+        models.CharField(max_length=255),  
+        blank=True,                       
+        default=list
+    )
     
     class Meta:
         db_table = "organizations"
@@ -29,13 +35,11 @@ class Organization(models.Model):
 class OrgTables(models.Model):
     id = models.AutoField(primary_key=True)
     organization = models.ForeignKey('Organization', on_delete=models.CASCADE)
-    # organization_name = models.CharField(max_length=100, default='')
     table_name = models.CharField(max_length=100)
     table_schema = models.TextField()
     column_descriptions = models.JSONField()
     column_types = models.JSONField()
     table_description = models.TextField(default='')
-    # Next Sprint: Add database_uri to this table
     
     class Meta:
         db_table = "organization_tables"
@@ -71,7 +75,7 @@ class Tile(models.Model):
     sql_query = models.TextField(null=True, blank=True)
     tile_props = models.JSONField(default=dict, null=True, blank=True)
     component = models.CharField(max_length=100, default='')
-    
+
     class Meta:
         db_table = "tiles"
         managed = True
