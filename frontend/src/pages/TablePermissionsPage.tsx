@@ -279,17 +279,13 @@ const TablePermissionsPage = () => {
         </DialogBody>
         <DialogFooter className="space-x-5 justify-center">
           <Button
+            color="red"
             variant="gradient"
-            className="bg-black"
             onClick={onClickCloseAddDialog}
           >
             <span>Cancel</span>
           </Button>
-          <Button
-            variant="gradient"
-            className="bg-black"
-            onClick={giveUserPermissions}
-          >
+          <Button variant="gradient" color="blue" onClick={giveUserPermissions}>
             <span>Confirm</span>
           </Button>
         </DialogFooter>
@@ -324,15 +320,15 @@ const TablePermissionsPage = () => {
         </DialogBody>
         <DialogFooter className="space-x-5 justify-center">
           <Button
+            color="red"
             variant="gradient"
-            className="bg-black"
             onClick={onClickCloseRemoveDialog}
           >
             <span>Cancel</span>
           </Button>
           <Button
+            color="blue"
             variant="gradient"
-            className="bg-black"
             onClick={removeUserPermissions}
           >
             <span>Confirm</span>
