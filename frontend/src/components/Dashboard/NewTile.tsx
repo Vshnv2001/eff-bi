@@ -9,7 +9,6 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useParams } from "react-router-dom";
 import { Box } from "@mui/material";
 import axios from "axios";
@@ -59,7 +58,7 @@ export default function NewTile({ onClose }: NewTileProps) {
   };
 
   return (
-    <div className="p-6 bg-white">
+    <div className="p-6 bg-white rounded-md">
       <Typography variant="h4" color="blue-gray" className="mb-4">
         Create New Tile
       </Typography>
@@ -107,7 +106,7 @@ export default function NewTile({ onClose }: NewTileProps) {
           />
         </div>
 
-        <Box className="flex justify-center gap-2 mb-4">
+        <Box className="flex justify-center space-x-5 mb-4">
           <Button color="red" onClick={onClose} disabled={isLoading}>
             Cancel
           </Button>
@@ -149,6 +148,7 @@ export default function NewTile({ onClose }: NewTileProps) {
       </form>
 
       <ToastContainer
+        className="pt-14"
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
@@ -156,8 +156,7 @@ export default function NewTile({ onClose }: NewTileProps) {
         closeOnClick
         rtl={false}
         pauseOnFocusLoss
-        draggable
-        pauseOnHover={false}
+        pauseOnHover
       />
 
       {/* Information Dialog */}
