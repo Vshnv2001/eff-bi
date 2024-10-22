@@ -85,8 +85,8 @@ class Tile(models.Model):
 
 class UserAccessPermissions(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
-    table = models.ForeignKey('OrgTables', on_delete=models.CASCADE)
+    user_id = models.ForeignKey('User', on_delete=models.CASCADE)
+    table_id = models.ForeignKey('OrgTables', on_delete=models.CASCADE)
     permission = models.CharField(max_length=100, choices=[
         ('Admin', 'Admin'),
         ('View', 'View')
