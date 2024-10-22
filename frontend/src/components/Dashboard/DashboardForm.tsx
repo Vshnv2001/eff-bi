@@ -82,7 +82,7 @@ export default function DashboardForm({
         setLoading(false);
         return;
       }
-      
+
       if (!dashboardDescription.trim()) {
         onDashboardCreated?.(false, "Dashboard description is required");
         setLoading(false);
@@ -171,7 +171,7 @@ export default function DashboardForm({
           </div>
         </DialogBody>
 
-        <Box className="flex justify-center gap-2 mb-4">
+        <Box className="flex justify-center space-x-5 mb-4">
           <Button
             color="red"
             onClick={handleOpen}

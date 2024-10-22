@@ -144,7 +144,7 @@ export default function DBSettingsPage() {
 
     const reqBody = {
       org_id: Number(organizationId),
-      user_id: userId
+      user_id: userId,
     };
 
     try {
@@ -153,7 +153,8 @@ export default function DBSettingsPage() {
       // console.log(reqBody);
       // console.log(userId);
       const response = await axios.post(
-        `${BACKEND_API_URL}/api/connection/refresh/`, reqBody
+        `${BACKEND_API_URL}/api/connection/refresh/`,
+        reqBody
       );
 
       if (response.status === 200) {
@@ -283,7 +284,6 @@ export default function DBSettingsPage() {
               </Button>
             </div>
           )}
-          {/* </div> */}
         </div>
       </div>
       <ToastContainer

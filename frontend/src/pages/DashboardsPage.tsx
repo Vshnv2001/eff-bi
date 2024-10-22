@@ -5,7 +5,6 @@ import DashboardCard from "../components/Dashboard/DashboardCard";
 import axios from "axios";
 import { DashboardProps } from "../components/Dashboard/DashboardProps";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import NotificationDialog from "../components/Dashboard/NotificationDialog";
 import { useNavigate } from "react-router-dom";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
@@ -121,16 +120,15 @@ export default function DashboardsPage() {
       </Breadcrumbs>
 
       <ToastContainer
+        className="pt-14"
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
-        newestOnTop
+        newestOnTop={false}
         closeOnClick
         rtl={false}
         pauseOnFocusLoss
-        draggable
-        pauseOnHover={false}
-        theme="colored"
+        pauseOnHover
       />
 
       <div className="flex items-center justify-between mb-8 relative mt-4">
