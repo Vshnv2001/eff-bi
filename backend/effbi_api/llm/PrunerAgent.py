@@ -7,7 +7,11 @@ class PrunerAgent:
         self.prompt = ChatPromptTemplate.from_messages([
             ("system", '''You are a data analyst that can help summarize SQL tables and parse user questions about a database. 
 Given the question and database schema, identify the relevant tables and columns. 
-If the question is not relevant to the database or if there is not enough information to answer the question, set is_relevant to false.
+Set is_relevant to false under the following conditions:
+1. The question is not relevant to the database.
+2. There is not enough information to answer the question.
+3. The question is not relevant to any of the accessible tables.
+4. An important column has a foreign key to a table that is not accessible.
 
 Your response should be in the following JSON format:
 {{

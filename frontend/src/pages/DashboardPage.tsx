@@ -46,7 +46,6 @@ export default function DashboardPage() {
     }
   };
 
-  console.log("dashboardName: ", dashboardName);
 
   const fetchTiles = async () => {
     setLoading(true);
@@ -59,16 +58,23 @@ export default function DashboardPage() {
         }
       );
 
-      if (response.data && response.data.data) {
+      console.log("Response: ", response);
+
+      if (response.status === 200 && response.data && response.data.data) {
         setTilesData(response.data.data);
       } else {
-        setError("No data found");
+        console.log("Error: ", response);
       }
     } catch (error) {
+      console.log("Error: ", error);
       if (axios.isAxiosError(error)) {
-        setError("Error fetching tiles");
+        if (error.response?.status === 400) {
+          console.error("Question is not relevant to the database");
+        } else {
+          console.error("Error fetching tiles");
+        }
       } else {
-        setError("Unexpected error occurred");
+        console.error("Unexpected error occurred");
       }
     } finally {
       setLoading(false);
@@ -250,49 +256,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-/*
-  const fetchTiles = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const mockTilesData: TileProps[] = [
-        {
-          id: 1,
-          dash_id: 101,
-          title: "Sales Trends",
-          description: "Monthly sales trends for desktop products.",
-          component: "LineChartTemplate",
-          tile_props: {
-            series: [
-              {
-                name: "Desktops",
-                data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
-              },
-            ],
-            categories: [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "May",
-              "Jun",
-              "Jul",
-              "Aug",
-              "Sep",
-            ],
-            height: 400,
-          },
-        },
-        // You can add more mock tiles here following the same structure
-      ];
-
-      setTilesData(mockTilesData);
-    } catch (error) {
-      console.error("Error setting mock data:", error);
-      setError("Error setting mock data");
-    } finally {
-      setLoading(false);
-    }
-  };
-  */
