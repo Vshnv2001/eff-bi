@@ -10,10 +10,56 @@ import { useNavigate } from "react-router-dom";
 import { signOut } from "supertokens-auth-react/recipe/session";
 import { Link } from "react-router-dom";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
+import { useState, useEffect } from "react";
+
+const useScrollDirection = () => {
+  const [scrollDirection, setScrollDirection] = useState("up");
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const threshold = 100;
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const updateScrollDirection = () => {
+      const scrollY = window.scrollY;
+
+      if (Math.abs(scrollY - lastScrollY) < threshold) {
+        ticking = false;
+        return;
+      }
+
+      // At the very top of the page, always show the navbar
+      if (scrollY < threshold) {
+        setVisible(true);
+        setScrollDirection("up");
+      } else {
+        setVisible(scrollY < lastScrollY);
+        setScrollDirection(scrollY > lastScrollY ? "down" : "up");
+      }
+
+      lastScrollY = scrollY > 0 ? scrollY : 0;
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScrollDirection);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [scrollDirection]);
+
+  return visible;
+};
 
 export default function EffBINavbar() {
   const navigate = useNavigate();
   const sessionContext = useSessionContext();
+  const isVisible = useScrollDirection();
 
   const isUserLoggedIn =
     sessionContext.loading || sessionContext.doesSessionExist;
@@ -24,7 +70,11 @@ export default function EffBINavbar() {
   }
 
   return (
-    <Navbar className="sticky top-0 z-50 max-w-full px-6 py-3 bg-gray-800 rounded-none">
+    <Navbar
+      className={`fixed top-0 z-50 max-w-full px-6 py-3 bg-gray-800 rounded-none transition-transform duration-300 ${
+        isVisible ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
       <div className="flex items-center justify-between text-blue-gray-900 w-full">
         <div className="flex items-center gap-4">
           <Link to="/">

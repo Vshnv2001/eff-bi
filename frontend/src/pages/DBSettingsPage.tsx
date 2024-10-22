@@ -140,30 +140,37 @@ export default function DBSettingsPage() {
       toast.error("Database URI is required!");
       return;
     }
-    // TODO do finalize after refresh api implemented
     console.log("refresh!");
 
-    // try {
-    //   setIsLoading(true);
-    //   const response = await axios.post(
-    //     `${BACKEND_API_URL}/api/connection/refresh`
-    //   );
+    const reqBody = {
+      org_id: Number(organizationId),
+      user_id: userId
+    };
 
-    //   if (response.status === 200) {
-    //     toast.success("Database refreshed successfully!");
-    //   }
-    // } catch (error) {
-    //   if ((error as any).response) {
-    //     console.error("Backend error:", (error as any).response.data);
-    //   } else if ((error as any).request) {
-    //     console.error("Network error:", (error as any).request);
-    //   } else {
-    //     console.error("Error:", (error as any).message);
-    //   }
-    //   toast.error("Failed to refresh data");
-    // } finally {
-    //   setIsLoading(false);
-    // }
+    try {
+      setIsLoading(true);
+      // console.log(organizationId);
+      // console.log(reqBody);
+      // console.log(userId);
+      const response = await axios.post(
+        `${BACKEND_API_URL}/api/connection/refresh/`, reqBody
+      );
+
+      if (response.status === 200) {
+        toast.success("Database refreshed successfully!");
+      }
+    } catch (error) {
+      if ((error as any).response) {
+        console.error("Backend error:", (error as any).response.data);
+      } else if ((error as any).request) {
+        console.error("Network error:", (error as any).request);
+      } else {
+        console.error("Error:", (error as any).message);
+      }
+      toast.error("Failed to refresh data");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

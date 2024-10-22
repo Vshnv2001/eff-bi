@@ -39,7 +39,7 @@ const FetchUserData: React.FC = () => {
           setLastName(userData.last_name);
           setEmail(userData.email);
           setOrganizationId(userData.organization_id);
-          navigate("/");
+          navigate("/dashboards");
         } else {
           console.error("Error fetching user data:", response.statusText);
         }
@@ -59,7 +59,7 @@ const FetchUserData: React.FC = () => {
     setLastName,
     setOrganizationId,
     navigate,
-  ]); // Update dependencies
+  ]);
 
   return isLoading ? <div>Loading user data...</div> : null;
 };

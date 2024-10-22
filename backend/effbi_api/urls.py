@@ -1,5 +1,6 @@
 from django.urls import path, include
 from . import views
+from .connection import connection_views
 from .users import user_views
 from .user_access_permissions import user_access_views
 from .organizations import organization_views
@@ -30,13 +31,18 @@ user_access_paths = [
          name="get_user_permissions_by_table")
 ]
 
+connection_paths = [
+    path("", connection_views.create_connection, name="create_connection"),
+    path("refresh/", connection_views.refresh_connection, name="refresh_connection"),
+    path("<str:user_id>/", connection_views.get_view_data_tables, name="get_view_data_tables"),
+]
+
 urlpatterns = [
     path("health/", views.health_check, name="health_check"),
     path("users/", include(user_paths)),
     path("organizations/", include(organization_paths)),
     path("user-access-permissions/", include(user_access_paths)),
-    path("connection/", views.create_connection, name="create_connection"),
-    path("tables/<str:user_id>", views.get_view_data_tables, name="get_view_data_tables"),
+    path("connection/", include(connection_paths)),
     path("sessioninfo/", views.SessionInfoAPI.as_view()),
     path("tenants/", views.TenantsAPI.as_view()),
     path("dashboard/", views.create_dashboard, name="create_dashboard"),

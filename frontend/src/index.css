@@ -13,3 +13,7 @@
 .animate-shake {
     animation: shake 0.5s;
 }
+
+.dialog-backdrop {
+    z-index: 9998 !important;
+  }

@@ -17,7 +17,6 @@ const Steps: React.FC = () => {
             <LaptopDisplay
               content={
                 <img
-                  // TODO replace with dashboards image once dashboard is done
                   src="/assets/db-permissions.png"
                   alt="Laptop Display"
                   className="object-contain mt-4 rounded-lg max-w-full"
