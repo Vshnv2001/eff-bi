@@ -218,6 +218,7 @@ export default function DashboardPage() {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
+                        className="draggable-item" // Add your class for fixed height and transition
                       >
                         <Card className="text-black">
                           <CardBody className="flex flex-col items-center">

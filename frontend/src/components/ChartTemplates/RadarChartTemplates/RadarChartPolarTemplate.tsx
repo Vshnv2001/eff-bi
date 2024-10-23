@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import ApexCharts from 'apexcharts';
 import { ApexOptions } from 'apexcharts';
 import html2canvas from 'html2canvas';
+import { IconButton, Menu, MenuItem } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 interface PolarChartProps {
   series: number[];
@@ -13,6 +15,7 @@ const PolarChartTemplate: React.FC<PolarChartProps> = ({
   chartWidth = 380,
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   useEffect(() => {
     const options: ApexOptions = {
@@ -81,14 +84,60 @@ const PolarChartTemplate: React.FC<PolarChartProps> = ({
         }
       });
     }
+    handleClose();
+  };
+
+  const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   return (
     <div>
       <div ref={chartRef} id="polar-chart" />
       <div style={{ marginTop: "10px" }}>
-        <button onClick={() => handleDownload("SVG")}>Download as SVG</button>
-        <button onClick={() => handleDownload("PNG")}>Download as PNG</button>
+        <IconButton onClick={handleMenuClick} size="small">
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          PaperProps={{
+            style: {
+              borderRadius: 8,
+              marginTop: 5,
+            },
+          }}
+        >
+          <MenuItem
+            onClick={() => handleDownload("SVG")}
+            sx={{
+              typography: "body2",
+              color: "text.primary",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.08)",
+              },
+            }}
+          >
+            Download as SVG
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleDownload("PNG")}
+            sx={{
+              typography: "body2",
+              color: "text.primary",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.08)",
+              },
+            }}
+          >
+            Download as PNG
+          </MenuItem>
+        </Menu>
       </div>
     </div>
   );
