@@ -71,7 +71,7 @@ export default function DashboardPage() {
         if (error.response?.status === 400) {
           console.error("Question is not relevant to the database");
         } else {
-          console.error("Error fetching tiles");
+          console.error("Error fetching tiles LOL");
         }
       } else {
         console.error("Unexpected error occurred");
