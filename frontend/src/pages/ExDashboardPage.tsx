@@ -5,7 +5,6 @@ import { DonutChartTemplate } from "../components/ChartTemplates/PieChartTemplat
 import { AreaChartTemplate } from "../components/ChartTemplates/AreaChartTemplates/AreaChartTemplate";
 import { PyramidBarChartTemplate } from "../components/ChartTemplates/BarChartTemplates/PyramidBarChartTemplate";
 import LineColumnChartTemplate from "../components/ChartTemplates/LineChartTemplates/LineColumnChartTemplate";
-import MultipleYAxisLineChartTemplate from "../components/ChartTemplates/LineChartTemplates/MultipleYAxisLineChartTemplate";
 import PieChartTemplate from "../components/ChartTemplates/PieChartTemplates/PieChartTemplate";
 import RadarChartTemplate from "../components/ChartTemplates/RadarChartTemplates/RadarChartTemplate";
 import RadarChartMultipleTemplate from "../components/ChartTemplates/RadarChartTemplates/RadarChartMultipleTemplate";
@@ -29,10 +28,6 @@ import {
   columnData,
   lineData,
   labels,
-  incomeData,
-  cashflowData,
-  revenueData,
-  categories,
   pieChartSeriesData,
   pieChartLabelsData,
   radarChartSeriesData,
@@ -53,25 +48,6 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
-
-// const component_mapping = {
-//   'LineChartTemplate': LineChartTemplate,
-//   'BarChartTemplate': BarChartTemplate,
-//   'HorizontalBarChartTemplate': HorizontalBarChartTemplate,
-//   'DonutChartTemplate': DonutChartTemplate,
-//   'AreaChartTemplate': AreaChartTemplate,
-//   'StackedGroupBarChartTemplate': StackedGroupBarChartTemplate,
-//   'PyramidBarChartTemplate': PyramidBarChartTemplate,
-//   'LineColumnChartTemplate': LineColumnChartTemplate,
-//   'MultipleYAxisLineChartTemplate': MultipleYAxisLineChartTemplate,
-//   'PieChartTemplate': PieChartTemplate,
-//   'RadarChartTemplate': RadarChartTemplate,
-//   'RadarChartMultipleTemplate': RadarChartMultipleTemplate,
-//   'RadarChartPolarTemplate': RadarChartPolarTemplate,
-//   'ScatterChartTemplate': ScatterChartTemplate,
-//   'CandlestickTemplate': CandlestickTemplate,
-//   'BoxPlotTemplate': BoxPlotTemplate,
-// }
 
 const chartComponents = [
   {
@@ -128,16 +104,6 @@ const chartComponents = [
       columnName: "Website Blog",
       lineName: "Social Media",
       chartTitle: "Traffic Sources",
-    },
-  },
-  {
-    component: MultipleYAxisLineChartTemplate,
-    props: {
-      incomeData,
-      cashflowData,
-      revenueData,
-      categories,
-      chartTitle: "XYZ - Stock Analysis (2009 - 2016)",
     },
   },
   {

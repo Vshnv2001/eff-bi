@@ -5,7 +5,6 @@ import { DonutChartTemplate } from "../ChartTemplates/PieChartTemplates/DonutCha
 import { AreaChartTemplate } from "../ChartTemplates/AreaChartTemplates/AreaChartTemplate";
 import { PyramidBarChartTemplate } from "../ChartTemplates/BarChartTemplates/PyramidBarChartTemplate";
 import LineColumnChartTemplate from "../ChartTemplates/LineChartTemplates/LineColumnChartTemplate";
-import MultipleYAxisLineChartTemplate from "../ChartTemplates/LineChartTemplates/MultipleYAxisLineChartTemplate";
 import PieChartTemplate from "../ChartTemplates/PieChartTemplates/PieChartTemplate";
 import RadarChartTemplate from "../ChartTemplates/RadarChartTemplates/RadarChartTemplate";
 import RadarChartMultipleTemplate from "../ChartTemplates/RadarChartTemplates/RadarChartMultipleTemplate";
@@ -24,7 +23,6 @@ export const componentMapping = {
   'StackedGroupBarChartTemplate': StackedGroupBarChartTemplate,
   'PyramidBarChartTemplate': PyramidBarChartTemplate,
   'LineColumnChartTemplate': LineColumnChartTemplate,
-  'MultipleYAxisLineChartTemplate': MultipleYAxisLineChartTemplate,
   'PieChartTemplate': PieChartTemplate,
   'RadarChartTemplate': RadarChartTemplate,
   'RadarChartMultipleTemplate': RadarChartMultipleTemplate,
