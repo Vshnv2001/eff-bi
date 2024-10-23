@@ -121,7 +121,7 @@ export default function DashboardForm({
         open={open}
         handler={handleOpen}
         size="md"
-        className="bg-gray-300 border-4 border-black text-black flex flex-col items-center justify-between h-[55%]"
+        className="bg-gray-300 border-4 border-black text-black flex flex-col items-center justify-between h-[70%] w-full overflow-y-scroll"
         animate={{
           mount: { scale: 1, y: 0 },
           unmount: { scale: 0.9, y: -100 },
@@ -129,7 +129,7 @@ export default function DashboardForm({
       >
         <DialogHeader className="text-black">Create Dashboard</DialogHeader>
 
-        <DialogBody className="overflow-y-scroll pr-2 w-full">
+        <DialogBody className=" pr-2 w-full">
           <div className="mb-4">
             <Typography
               variant="h6"
