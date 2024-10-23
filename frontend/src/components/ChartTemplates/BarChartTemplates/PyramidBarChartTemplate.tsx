@@ -39,7 +39,9 @@ export function PyramidBarChartTemplate({
   };
 
   const handleDownload = async (format: string) => {
-    const chartElement = document.querySelector(".apexcharts-canvas") as HTMLElement;
+    const chartElement = document.querySelector(
+      ".apexcharts-canvas"
+    ) as HTMLElement;
 
     if (!chartElement) return;
 
@@ -90,11 +92,35 @@ export function PyramidBarChartTemplate({
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleClose}
+              PaperProps={{
+                style: {
+                  borderRadius: 8,
+                  marginTop: 5,
+                },
+              }}
             >
-              <MenuItem onClick={() => handleDownload("SVG")}>
+              <MenuItem
+                onClick={() => handleDownload("SVG")}
+                sx={{
+                  typography: "body2",
+                  color: "text.primary",
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.08)",
+                  },
+                }}
+              >
                 Download as SVG
               </MenuItem>
-              <MenuItem onClick={() => handleDownload("PNG")}>
+              <MenuItem
+                onClick={() => handleDownload("PNG")}
+                sx={{
+                  typography: "body2",
+                  color: "text.primary",
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.08)",
+                  },
+                }}
+              >
                 Download as PNG
               </MenuItem>
             </Menu>
@@ -124,7 +150,7 @@ function useChartOptions(categories: string[]): ApexOptions {
       stacked: true,
       toolbar: { show: false },
     },
-    colors: ['#008FFB', '#FF4560'],
+    colors: ["#008FFB", "#FF4560"],
     dataLabels: { enabled: false },
     fill: { opacity: 1, type: "solid" },
     grid: {

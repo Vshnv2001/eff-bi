@@ -37,7 +37,9 @@ export function StackedGroupBarChartTemplate({
   };
 
   const handleDownload = async (format: string) => {
-    const chartElement = document.querySelector("#stacked-bar-chart") as HTMLElement;
+    const chartElement = document.querySelector(
+      "#stacked-bar-chart"
+    ) as HTMLElement;
 
     if (!chartElement) return;
 
@@ -77,7 +79,10 @@ export function StackedGroupBarChartTemplate({
   };
 
   React.useEffect(() => {
-    const chart = new ApexCharts(document.querySelector("#stacked-bar-chart"), chartOptions);
+    const chart = new ApexCharts(
+      document.querySelector("#stacked-bar-chart"),
+      chartOptions
+    );
     chart.render();
 
     return () => {
@@ -97,11 +102,35 @@ export function StackedGroupBarChartTemplate({
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleClose}
+              PaperProps={{
+                style: {
+                  borderRadius: 8,
+                  marginTop: 5,
+                },
+              }}
             >
-              <MenuItem onClick={() => handleDownload("SVG")}>
+              <MenuItem
+                onClick={() => handleDownload("SVG")}
+                sx={{
+                  typography: "body2",
+                  color: "text.primary",
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.08)",
+                  },
+                }}
+              >
                 Download as SVG
               </MenuItem>
-              <MenuItem onClick={() => handleDownload("PNG")}>
+              <MenuItem
+                onClick={() => handleDownload("PNG")}
+                sx={{
+                  typography: "body2",
+                  color: "text.primary",
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.08)",
+                  },
+                }}
+              >
                 Download as PNG
               </MenuItem>
             </Menu>
@@ -117,20 +146,20 @@ export function StackedGroupBarChartTemplate({
 }
 
 function useChartOptions(
-  chartSeries: { name: string; group: string; data: number[] }[], 
+  chartSeries: { name: string; group: string; data: number[] }[],
   categories: string[]
 ): ApexOptions {
   return {
     series: chartSeries,
     chart: {
-      type: 'bar',
+      type: "bar",
       height: 350,
       stacked: true,
       toolbar: { show: false },
     },
     stroke: {
       width: 1,
-      colors: ['#fff'],
+      colors: ["#fff"],
     },
     dataLabels: {
       formatter: (val: number | string) => {
@@ -153,10 +182,10 @@ function useChartOptions(
     fill: {
       opacity: 1,
     },
-    colors: ['#80c7fd', '#008FFB', '#80f1cb', '#00E396'],
+    colors: ["#80c7fd", "#008FFB", "#80f1cb", "#00E396"],
     legend: {
-      position: 'top',
-      horizontalAlign: 'left',
+      position: "top",
+      horizontalAlign: "left",
     },
   };
 }

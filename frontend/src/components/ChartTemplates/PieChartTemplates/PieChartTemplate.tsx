@@ -95,7 +95,7 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
   };
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative", marginTop: 30 }}>
       <div style={{ position: "absolute", top: -20, right: 10, zIndex: 1 }}>
         <IconButton onClick={handleMenuClick} size="small">
           <MoreVertIcon />
@@ -137,6 +137,7 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
           </MenuItem>
         </Menu>
       </div>
+
       <div ref={chartRef} />
     </div>
   );

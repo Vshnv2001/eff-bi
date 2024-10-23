@@ -91,11 +91,35 @@ export function BarChartTemplate({
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleClose}
+              PaperProps={{
+                style: {
+                  borderRadius: 8,
+                  marginTop: 5,
+                },
+              }}
             >
-              <MenuItem onClick={() => handleDownload("SVG")}>
+              <MenuItem
+                onClick={() => handleDownload("SVG")}
+                sx={{
+                  typography: "body2",
+                  color: "text.primary",
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.08)",
+                  },
+                }}
+              >
                 Download as SVG
               </MenuItem>
-              <MenuItem onClick={() => handleDownload("PNG")}>
+              <MenuItem
+                onClick={() => handleDownload("PNG")}
+                sx={{
+                  typography: "body2",
+                  color: "text.primary",
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.08)",
+                  },
+                }}
+              >
                 Download as PNG
               </MenuItem>
             </Menu>

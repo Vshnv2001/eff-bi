@@ -1,9 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardHeader from "@mui/material/CardHeader";
 import { useTheme } from "@mui/material/styles";
 import type { SxProps } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
@@ -13,11 +10,12 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Chart } from "../Chart";
 import { ApexOptions } from "apexcharts";
 import html2canvas from "html2canvas";
+import Box from "@mui/material/Box";
 
 export interface AreaChartProps {
   chartSeries: { name: string; data: number[] }[];
   labels: string[];
-  sx: SxProps;
+  sx?: SxProps;
 }
 
 export function AreaChartTemplate({
@@ -73,29 +71,49 @@ export function AreaChartTemplate({
   };
 
   return (
-    <Card sx={sx}>
-      <CardHeader
-        action={
-          <div>
-            <IconButton onClick={handleMenuClick} size="small">
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={() => handleDownload("SVG")}>
-                Download as SVG
-              </MenuItem>
-              <MenuItem onClick={() => handleDownload("PNG")}>
-                Download as PNG
-              </MenuItem>
-            </Menu>
-          </div>
-        }
-      />
-      <CardContent ref={chartRef}>
+    <Box sx={{ border: "1px solid #ccc", borderRadius: 2, p: 2, ...sx }}>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <IconButton onClick={handleMenuClick} size="small">
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          PaperProps={{
+            style: {
+              borderRadius: 8,
+              marginTop: 5,
+            },
+          }}
+        >
+          <MenuItem
+            onClick={() => handleDownload("SVG")}
+            sx={{
+              typography: "body2",
+              color: "text.primary",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.08)",
+              },
+            }}
+          >
+            Download as SVG
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleDownload("PNG")}
+            sx={{
+              typography: "body2",
+              color: "text.primary",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.08)",
+              },
+            }}
+          >
+            Download as PNG
+          </MenuItem>
+        </Menu>
+      </div>
+      <div ref={chartRef} style={{ marginTop: 16 }}>
         <Chart
           height={400}
           options={chartOptions}
@@ -103,17 +121,18 @@ export function AreaChartTemplate({
           type="area"
           width="100%"
         />
-      </CardContent>
-    </Card>
+      </div>
+    </Box>
   );
 }
 
-function useChartOptions(labels: string[], chartSeries: { name: string; data: number[] }[]): ApexOptions {
+function useChartOptions(
+  labels: string[],
+  chartSeries: { name: string; data: number[] }[]
+): ApexOptions {
   const theme = useTheme();
 
-  const maxYValue = Math.max(
-    ...chartSeries.flatMap((series) => series.data)
-  );
+  const maxYValue = Math.max(...chartSeries.flatMap((series) => series.data));
 
   return {
     chart: {

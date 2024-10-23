@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import ApexCharts from 'apexcharts';
-import { ApexOptions } from 'apexcharts';
-import html2canvas from 'html2canvas';
-import { Menu, MenuItem, IconButton } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import React, { useEffect, useRef, useState } from "react";
+import ApexCharts from "apexcharts";
+import { ApexOptions } from "apexcharts";
+import html2canvas from "html2canvas";
+import { Menu, MenuItem, IconButton } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 interface LineColumnChartProps {
   columnData: number[];
@@ -30,18 +30,18 @@ const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
       series: [
         {
           name: columnName,
-          type: 'column',
+          type: "column",
           data: columnData,
         },
         {
           name: lineName,
-          type: 'line',
+          type: "line",
           data: lineData,
         },
       ],
       chart: {
         height: 350,
-        type: 'line',
+        type: "line",
         toolbar: { show: false },
       },
       stroke: {
@@ -91,30 +91,30 @@ const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
 
     if (!chartElement) return;
 
-    if (format === 'SVG') {
-      const svgData = chartElement.querySelector('svg');
+    if (format === "SVG") {
+      const svgData = chartElement.querySelector("svg");
       if (svgData) {
         const serializer = new XMLSerializer();
         const svgBlob = new Blob([serializer.serializeToString(svgData)], {
-          type: 'image/svg+xml;charset=utf-8',
+          type: "image/svg+xml;charset=utf-8",
         });
         const url = URL.createObjectURL(svgBlob);
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = url;
-        a.download = 'line-column-chart.svg';
+        a.download = "line-column-chart.svg";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
       }
-    } else if (format === 'PNG') {
+    } else if (format === "PNG") {
       const canvas = await html2canvas(chartElement);
       canvas.toBlob((blob: Blob | null) => {
         if (blob) {
           const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
+          const a = document.createElement("a");
           a.href = url;
-          a.download = 'line-column-chart.png';
+          a.download = "line-column-chart.png";
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
@@ -128,18 +128,46 @@ const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
 
   return (
     <div>
-      <IconButton onClick={handleMenuClick} size="small" style={{ marginBottom: '10px' }}>
+      <IconButton
+        onClick={handleMenuClick}
+        size="small"
+        style={{ marginBottom: "10px" }}
+      >
         <MoreVertIcon />
       </IconButton>
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleClose}
+        PaperProps={{
+          style: {
+            borderRadius: 8,
+            marginTop: 5,
+          },
+        }}
       >
-        <MenuItem onClick={() => handleDownload('SVG')}>
+        <MenuItem
+          onClick={() => handleDownload("SVG")}
+          sx={{
+            typography: "body2",
+            color: "text.primary",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.08)",
+            },
+          }}
+        >
           Download as SVG
         </MenuItem>
-        <MenuItem onClick={() => handleDownload('PNG')}>
+        <MenuItem
+          onClick={() => handleDownload("PNG")}
+          sx={{
+            typography: "body2",
+            color: "text.primary",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.08)",
+            },
+          }}
+        >
           Download as PNG
         </MenuItem>
       </Menu>
