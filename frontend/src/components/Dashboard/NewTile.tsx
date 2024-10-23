@@ -39,6 +39,10 @@ export default function NewTile({ onClose }: NewTileProps) {
           description: queryPrompt,
         }
       );
+      if (response.data.error) {
+        toast.error(response.data.error);
+        return;
+      }
 
       console.log(response.data);
       setTileName("");
@@ -46,8 +50,13 @@ export default function NewTile({ onClose }: NewTileProps) {
       toast.success("KPI generated successfully!");
       onClose();
     } catch (error) {
-      console.error("Error creating new tile:", error);
-      toast.error("Failed to create new tile. Please try again.");
+      if (axios.isAxiosError(error)) {
+        console.error("Error creating new tile:", error.response?.data.error);
+        toast.error(error.response?.data.error);
+      } else {
+        console.error("Error creating new tile:", error);
+        toast.error("Failed to create new tile. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }

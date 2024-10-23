@@ -12,3 +12,4 @@ class State:
         self.formatted_data = {}
         self.visualization = ""
         self.visualization_reasoning = ""
+        self.error = ""
