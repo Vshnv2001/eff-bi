@@ -36,7 +36,7 @@ export function DonutChartTemplate({
   const [baseColor, setBaseColor] = React.useState<string>("#ff0000");
   const themeColors = generateColors(chartSeries.length, colorTheme, baseColor);
   const chartOptions = useChartOptions(labels, themeColors);
-  const chartRef = React.useRef<HTMLDivElement>(null); // Ref to access the chart DOM element
+  const chartRef = React.useRef<HTMLDivElement>(null);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);

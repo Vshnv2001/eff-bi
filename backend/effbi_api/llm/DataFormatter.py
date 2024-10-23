@@ -9,7 +9,6 @@ from enum import Enum
 
 class ChartType(Enum):
     AreaChartTemplate = "AreaChartTemplate"
-
     LineChartTemplate = "LineChartTemplate"
     BarChartTemplate = "BarChartTemplate"
     HorizontalBarChartTemplate = "HorizontalBarChartTemplate"
@@ -19,7 +18,6 @@ class ChartType(Enum):
     PyramidBarChartTemplate = "PyramidBarChartTemplate"
     LineColumnChartTemplate = "LineColumnChartTemplate"
     RadarChartTemplate = "RadarChartTemplate"
-    RadarChartMultipleTemplate = "RadarChartMultipleTemplate"
     RadarChartPolarTemplate = "RadarChartPolarTemplate"
     ScatterChartTemplate = "ScatterChartTemplate"
     CandlestickTemplate = "CandlestickTemplate"
@@ -52,7 +50,59 @@ viz_props = {
     ChartType.PieChartTemplate: {
         "series": [],
         "labels": []
-    }
+    },
+    ChartType.DonutChartTemplate: {
+        "chartSeries": [],
+        "labels": []
+    },
+    ChartType.StackedGroupBarChartTemplate: {
+        "chartSeries": [
+            {"name": "", "group": "", "data": []}
+        ],
+        "categories": []
+    },
+    ChartType.PyramidBarChartTemplate: {
+        "chartSeries": [
+            {"name": "", "data": []}
+        ],
+        "categories": []
+    },
+    ChartType.LineColumnChartTemplate: {
+        "columnData": [],
+        "lineData": [],
+        "columnName": "",
+        "lineName": "",
+        "chartTitle": "",
+        "labels": [],
+    },
+    ChartType.RadarChartTemplate: {
+        "series": [
+            {"name": "", "data": []}
+        ],
+        "categories": [],
+    },
+    ChartType.RadarChartPolarTemplate: {
+        "series": [],
+    },
+    ChartType.ScatterChartTemplate: {
+        "series": [
+            {"name": "", "data": [[]]}
+        ],
+    },
+    ChartType.CandlestickTemplate: {
+        "data": [
+            {"x": None, "y": [0, 0, 0, 0]},
+            {"x": None, "y": [0, 0, 0, 0]}
+        ],
+    },
+    ChartType.BoxPlotTemplate: {
+        "data": [
+            {"x": None, "y": [0, 0, 0, 0]},
+            {"x": None, "y": [0, 0, 0, 0]}
+        ],
+    },
+
+
 }
 
 
@@ -78,16 +128,35 @@ class DataFormatter:
                 - BarChartTemplate: Best for comparing categorical data or showing changes over time when categories are discrete and the number of categories is more than 2.
                 - HorizontalBarChartTemplate: Best for comparing categorical data or showing changes over time when the number of categories is small or the disparity between categories is large.
                 - PieChartTemplate: Ideal for showing proportions or percentages within a whole.
-                - LineChartTemplate: Best for showing trends and distributions over time. Best used when both x axis and y axis are continuous.
+                - LineChartTemplate: Best for showing trends and distributions over time. Best used when both x-axis and y-axis are continuous.
                 - AreaChartTemplate: Suitable for showing trends over time while emphasizing the magnitude of values.
+                - DonutChartTemplate: A variation of the PieChart, useful for showing proportions, but allows for more data visualization in the center of the chart.
+                - StackedGroupBarChartTemplate: Best for comparing multiple categories simultaneously while also showing the composition of each category.
+                - PyramidBarChartTemplate: Useful for visualizing distributions or hierarchies, especially in population pyramids or scenarios where one side represents one group and the other side another group.
+                - LineColumnChartTemplate: A combination chart type, best for showing two types of data where one is better visualized with lines (e.g., trends) and the other with columns (e.g., discrete categories).
+                - RadarChartTemplate: Ideal for comparing multiple variables against each other in a circular layout, showing the strengths and weaknesses of each variable.
+                - RadarChartPolarTemplate: Similar to a RadarChart, but with a polar grid for emphasizing categories with values on a continuous scale.
+                - ScatterChartTemplate: Best for showing relationships between two variables and identifying correlations, trends, or outliers.
+                - CandlestickTemplate: Commonly used in financial data to show price movements, particularly for stocks, over time. It emphasizes opening, closing, high, and low prices.
+                - BoxPlotTemplate: Best for showing the distribution of data based on five summary statistics: minimum, first quartile, median, third quartile, and maximum.
 
             Make sure that the chart type you choose is one of the above. 'HorizontalBarChartTemplate' is allowed but not 'HorizontalBarChartTemplate .'.
             Consider these types of questions when recommending a visualization:
-            1. Aggregations and Summarizations (e.g., "What is the average revenue by month?" - Line Chart)
-            2. Comparisons (e.g., "Compare the sales figures of Product A and Product B over the last year." - Line or Column Chart)
-            3. Trends Over Time (e.g., "What is the trend in the number of active users over the past year?" - Line Chart)
-            4. Proportions (e.g., "What is the market share of the products?" - Pie Chart)
-            5. Emphasizing Total Values Over Time (e.g., "What is the trend in monthly sales?" - Area Chart)
+            
+            1. Aggregations and Summarizations: (e.g., "What is the average revenue by month?" - Line Chart)
+            2. Comparisons: (e.g., "Compare the sales figures of Product A and Product B over the last year." - Line or Column Chart)
+            3. Trends Over Time: (e.g., "What is the trend in the number of active users over the past year?" - Line Chart)
+            4. Proportions: (e.g., "What is the market share of the products?" - Pie or Donut Chart)
+            5. Emphasizing Total Values Over Time: (e.g., "What is the trend in monthly sales?" - Area Chart)
+            6. Multiple Data Comparisons: (e.g., "What are the revenue, profit, and expense comparisons over the last year?" - LineColumnChartTemplate)
+            7. Distributions and Outliers: (e.g., "What is the salary distribution across departments?" - BoxPlotTemplate)
+            8. Categorical Data Comparisons: (e.g., "How do different product categories perform in sales?" - BarChartTemplate)
+            9. Time Series Comparisons: (e.g., "Compare the sales trends of multiple products over the last year." - HorizontalBarChartTemplate)
+            10. Relationships Between Variables: (e.g., "Is there a correlation between advertising spend and sales?" - ScatterChartTemplate)
+            11. Variable Comparisons Across Categories: (e.g., "How does each department's performance compare across various metrics?" - RadarChartTemplate)
+            12. Market Trends in Financial Data: (e.g., "What is the historical price movement of a stock?" - CandlestickTemplate)
+            13. Proportions in Multiple Groups: (e.g., "What is the contribution of different products to total sales?" - StackedGroupBarChartTemplate)
+            14. Demographic Distributions: (e.g., "What is the age distribution of customers?" - PyramidBarChartTemplate)
             
             As much as possible, try to provide a visualization and try not to recommend none.
 

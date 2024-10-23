@@ -30,9 +30,6 @@ const RadarChartMultipleTemplate: React.FC<RadarChartProps> = ({
         },
         toolbar: { show: false },
       },
-      title: {
-        text: "Radar Chart - Multi Series",
-      },
       stroke: {
         width: 2,
       },

@@ -8,18 +8,18 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 interface LineColumnChartProps {
   columnData: number[];
   lineData: number[];
-  columnName?: string;
-  lineName?: string;
-  chartTitle?: string;
+  columnName: string;
+  lineName: string;
+  chartTitle: string;
   labels: string[];
 }
 
 const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
   columnData,
   lineData,
-  columnName = 'Column',
-  lineName = 'Line',
-  chartTitle = 'Line & Column Chart',
+  columnName,
+  lineName,
+  chartTitle,
   labels,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);

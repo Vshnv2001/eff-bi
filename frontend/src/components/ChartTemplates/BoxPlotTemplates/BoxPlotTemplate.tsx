@@ -11,11 +11,10 @@ type BoxPlotData = {
 
 type BoxPlotTemplateProps = {
   data: BoxPlotData[];
-  title: string;
   height?: number;
 };
 
-const BoxPlotTemplate: React.FC<BoxPlotTemplateProps> = ({ data, title, height = 350 }) => {
+const BoxPlotTemplate: React.FC<BoxPlotTemplateProps> = ({ data, height = 350 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   useEffect(() => {
@@ -30,10 +29,6 @@ const BoxPlotTemplate: React.FC<BoxPlotTemplateProps> = ({ data, title, height =
         type: 'boxPlot',
         height: height,
         toolbar: { show: false },
-      },
-      title: {
-        text: title,
-        align: 'left'
       },
       plotOptions: {
         boxPlot: {
@@ -51,7 +46,7 @@ const BoxPlotTemplate: React.FC<BoxPlotTemplateProps> = ({ data, title, height =
     return () => {
       chart.destroy();
     };
-  }, [data, title, height]);
+  }, [data, height]);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
