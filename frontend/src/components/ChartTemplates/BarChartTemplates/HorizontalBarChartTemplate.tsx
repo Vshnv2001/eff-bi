@@ -51,7 +51,7 @@ export function HorizontalBarChartTemplate({
       <CardHeader
         action={
           <div>
-            <IconButton onClick={handleMenuClick} size="small">
+            {/* <IconButton onClick={handleMenuClick} size="small">
               <MoreVertIcon />
             </IconButton>
             <Menu
@@ -77,7 +77,7 @@ export function HorizontalBarChartTemplate({
               }
             >
               Sync
-            </Button>
+            </Button> */}
           </div>
         }
         title=""
@@ -93,13 +93,13 @@ export function HorizontalBarChartTemplate({
       </CardContent>
       <Divider />
       <CardActions sx={{ justifyContent: "flex-end" }}>
-        <Button
+        {/* <Button
           color="inherit"
           endIcon={<ArrowRightIcon fontSize="var(--icon-fontSize-md)" />}
           size="small"
         >
           View Data
-        </Button>
+        </Button> */}
       </CardActions>
     </Card>
   );
