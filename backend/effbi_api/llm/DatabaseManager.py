@@ -1,6 +1,12 @@
 import requests
 import psycopg2
 from typing import List, Any
+
+from .SQLValidator import SQLValidator
+
+from .State import State
+
+from .SQLAgent import SQLAgent
 from ..models import OrgTables
 from django.core import serializers
 
@@ -21,14 +27,30 @@ class DatabaseManager:
         except OrgTables.DoesNotExist:
             raise Exception(f"Database schema not found for organization {self.organization_id}")
 
-    def execute_query(self, sql_query: str) -> List[Any]:
+    def execute_query(self, state: State, sql_agent: SQLAgent, sql_validator: SQLValidator, num_tries:int = 0) -> List[Any]:
         """Execute SQL query on the remote database and return results."""
         try:
             conn = psycopg2.connect(self.db_uri)
             cursor = conn.cursor()
-            cursor.execute(sql_query)
+            cursor.execute(state.sql_query)
             results = cursor.fetchall()
+            count = 0
+            while len(results) == 0 and count < 5:
+                error = "No Results found. Please modify the query to return results. Perhaps you can relax the filters?"
+                validated_sql_query = sql_validator.validate_and_fix_sql(state, error)
+                state.sql_query = validated_sql_query.get('corrected_query', state.sql_query)
+                cursor.execute(state.sql_query)
+                results = cursor.fetchall()
+                count += 1
             print("printing results", results)
             return results
-        except requests.RequestException as e:
-            raise Exception(f"Error executing query: {str(e)}")
+        except Exception as e:
+            print("Error executing query: ", str(e))
+            print("Number of tries: ", num_tries)
+            if num_tries >= 5:
+                raise Exception(f"Error executing query: {str(e)}")
+            else:
+                validated_sql_query = sql_validator.validate_and_fix_sql(state, str(e))
+                print("Validated SQL Query: ", validated_sql_query)
+                state.sql_query = validated_sql_query.get('corrected_query', state.sql_query)
+                return self.execute_query(state, sql_agent, sql_validator, num_tries + 1)

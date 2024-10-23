@@ -1,3 +1,4 @@
+from .SQLValidator import SQLValidator
 from .DatabaseManager import DatabaseManager
 from .SQLAgent import SQLAgent
 from .DataFormatter import DataFormatter
@@ -51,11 +52,12 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     
     # state.sql_query = validate_and_fix_sql.get('corrected_query', '')
     
+    sql_validator = SQLValidator()
+    
     # Execute the SQL query and get the results
-    results = db_manager.execute_query(state.sql_query)
+    results = db_manager.execute_query(state, sql_agent, sql_validator, 0)
     
     state.results = results
-    
     
     # # Format the results
     formatter = DataFormatter(state)

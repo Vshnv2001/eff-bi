@@ -2,11 +2,10 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 
 from .State import State
-from .DatabaseManager import DatabaseManager
 from .LLMManager import LLMManager
 
 class SQLAgent:
-    def __init__(self, db_manager: DatabaseManager):
+    def __init__(self, db_manager):
         self.db_manager = db_manager
         self.llm_manager = LLMManager()
 
@@ -24,17 +23,7 @@ Another faulty example is SELECT rider, stage, rank FROM results_individual WHER
 If there is not enough information to write a SQL query, respond with "NOT_ENOUGH_INFO".
 Do not compare numeric columns with empty strings '' or 'N/A'.
 
-You may get foreign keys. In that case, design the query in such a way that it uses the foreign key to get the data from the related table. Example:
-
-SELECT r.name, SUM(ri.time + ri.penalty - ri.bonus) AS total_time
-FROM results_individual ri
-JOIN riders r ON ri.rider = r.bib
-WHERE r.name IS NOT NULL AND r.name != '' AND r.name != 'N/A'
-GROUP BY r.name
-ORDER BY total_time ASC
-LIMIT 5;
-
-gets the names of the top 5 riders based on the total time.
+You may get foreign keys. In that case, design the query in such a way that it uses the foreign key to get the data from the related table.
 
 Here are some examples:
 
@@ -82,117 +71,7 @@ Generate SQL query string'''),
         if response.strip() == "NOT_ENOUGH_INFO":
             return {"sql_query": "NOT_RELEVANT"}
         else:
-            return {"sql_query": response}
-
-    def validate_and_fix_sql(self, state: State) -> dict:
-        """Validate and fix the generated SQL query."""
-        sql_query = state.sql_query
-
-        if sql_query == "NOT_RELEVANT":
-            return {"sql_query": "NOT_RELEVANT", "sql_valid": False}
-        
-        schema = state.database_schema
-
-        prompt = ChatPromptTemplate.from_messages([
-            ("system", '''
-You are an AI assistant that validates and fixes SQL queries. Your task is to:
-1. Check if the SQL query is valid.
-2. Ensure all table and column names are correctly spelled and exist in the schema. All the table and column names should be enclosed in backticks.
-3. If there are any issues, fix them and provide the corrected SQL query.
-4. If no issues are found, return the original query.
-
-Check for the following issues:
-- Single quotes not double quotes around empty strings, double quotes ONLY make delimited identifiers, and "" isn't a meaningful identifier.
-- For numeric types, do not check for empty strings '' or 'N/A'.
-- Ensure all table and column names are correctly spelled and exist in the schema.
-- Ensure that the conditions in the WHERE clause are valid with respect to the column types. For example, for string columns, ensure that the comparison is done with a string value. For numeric columns, ensure that the comparison is done with a numeric value.
-- Ensure that the correct table, schema, and column names are used. The correct format for table name is "schema_name.table_name".
-- The schema name and table name should not be modified, if it is dash-separated, it should remain dash-separated. 
-- If the table name is incorrect, provide the correct table name.
-- For every column, if the column name is incorrect, provide the correct column name.
-- Use table_name.column_name format for column names.
-- Check for any other issues that may cause the query to fail.
-
-Respond in JSON format with the following structure. Only respond with the JSON:
-{{
-    "valid": boolean,
-    "issues": string or null,
-    "corrected_query": string
-}}
-'''),
-            ("human", '''===Database schema:
-{schema}
-
-===Generated SQL query:
-{sql_query}
-
-Respond in JSON format with the following structure. Only respond with the JSON:
-{{
-    "valid": boolean,
-    "issues": string or null,
-    "corrected_query": string
-}}
-
-For example:
-1. {{
-    "valid": true,
-    "issues": null,
-    "corrected_query": "None"
-}}
-             
-2. {{
-    "valid": false,
-    "issues": "Column USERS does not exist",
-    "corrected_query": "SELECT * FROM users WHERE age > 25"
-}}
-
-3. {{
-    "valid": false,
-    "issues": "Column names and table names should be enclosed in backticks if they contain spaces or special characters",
-    "corrected_query": "SELECT * FROM gross income WHERE age > 25"
-}}
-
-4. {{
-    "valid": false,
-    "issues": "Backticks are not used correctly in SELECT `rider`, `rank`, `time` FROM `public`.`results_individual` WHERE `time` > 100",
-    "corrected_query": "SELECT rider, rank, time FROM results_individual WHERE time > 100"
-}}
-
-5. {{
-    "valid": false,
-    "issues": "Syntax of input types is incorrect. invalid input syntax for type integer: \"\" and your incorrect query was SELECT rider, stage, rank FROM results_individual WHERE rank IS NOT NULL AND rider IS NOT NULL AND stage IS NOT NULL AND rank != '' as rank is an integer column",
-    "corrected_query": "SELECT rider, stage, rank FROM results_individual WHERE rank IS NOT NULL AND rider IS NOT NULL AND stage IS NOT NULL AND rank IS NOT NULL"
-}}
-             
-'''),
-        ])
-
-        output_parser = JsonOutputParser()
-        response = self.llm_manager.invoke(prompt, schema=schema, sql_query=sql_query)
-        result = output_parser.parse(response)
-
-        if result["valid"] and result["issues"] is None:
-            return {"sql_query": result["corrected_query"], "sql_valid": True}
-        else:
-            return {
-                "sql_query": result["corrected_query"],
-                "sql_valid": result["valid"],
-                "sql_issues": result["issues"]
-            }
-
-    # def execute_sql(self, state: dict) -> dict:
-    #     """Execute SQL query and return results."""
-    #     query = state['sql_query']
-    #     uuid = state['uuid']
-        
-    #     if query == "NOT_RELEVANT":
-    #         return {"results": "NOT_RELEVANT"}
-
-    #     try:
-    #         results = self.db_manager.execute_query(uuid, query)
-    #         return {"results": results}
-    #     except Exception as e:
-    #         return {"error": str(e)}
+            return {"sql_query": response.strip()}
 
     def format_results(self, state: dict) -> dict:
         """Format query results into a human-readable response."""

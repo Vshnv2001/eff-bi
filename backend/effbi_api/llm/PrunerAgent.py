@@ -6,7 +6,7 @@ class PrunerAgent:
     def __init__(self, model="gpt-4o"):
         self.prompt = ChatPromptTemplate.from_messages([
             ("system", '''You are a data analyst that can help summarize SQL tables and parse user questions about a database. 
-Given the question and database schema, identify the relevant tables and columns. 
+Given the question and database schema, identify the relevant tables and columns. When in doubt about a table/column, always include it. 
 Set is_relevant to false under the following conditions:
 1. The question is not relevant to the database.
 2. There is not enough information to answer the question.
