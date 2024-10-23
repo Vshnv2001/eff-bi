@@ -101,7 +101,6 @@ export function BarChartTemplate({
             </Menu>
           </div>
         }
-        title=""
       />
       <CardContent>
         <Chart

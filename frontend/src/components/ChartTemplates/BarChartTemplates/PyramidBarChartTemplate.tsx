@@ -1,16 +1,12 @@
 "use client";
 
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import Divider from "@mui/material/Divider";
 import { useTheme } from "@mui/material/styles";
 import type { SxProps } from "@mui/material/styles";
-import { ArrowClockwise as ArrowClockwiseIcon } from "@phosphor-icons/react/dist/ssr/ArrowClockwise";
-import { ArrowRight as ArrowRightIcon } from "@phosphor-icons/react/dist/ssr/ArrowRight";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
@@ -102,18 +98,8 @@ export function PyramidBarChartTemplate({
                 Download as PNG
               </MenuItem>
             </Menu>
-            <Button
-              color="inherit"
-              size="small"
-              startIcon={
-                <ArrowClockwiseIcon fontSize="var(--icon-fontSize-md)" />
-              }
-            >
-              Sync
-            </Button>
           </div>
         }
-        title="Population Pyramid"
       />
       <CardContent>
         <Chart
@@ -125,15 +111,6 @@ export function PyramidBarChartTemplate({
         />
       </CardContent>
       <Divider />
-      <CardActions sx={{ justifyContent: "flex-end" }}>
-        <Button
-          color="inherit"
-          endIcon={<ArrowRightIcon fontSize="var(--icon-fontSize-md)" />}
-          size="small"
-        >
-          View Data
-        </Button>
-      </CardActions>
     </Card>
   );
 }

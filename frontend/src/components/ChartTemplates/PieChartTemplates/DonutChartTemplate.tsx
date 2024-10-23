@@ -16,6 +16,7 @@ import Select from "@mui/material/Select";
 import { Chart } from "../Chart";
 import { ApexOptions } from "apexcharts";
 import { generateColors } from "../colorUtils";
+import html2canvas from "html2canvas";
 
 type ColorTheme = "homogeneous" | "analogous" | "complementary" | "triadic";
 
@@ -35,6 +36,7 @@ export function DonutChartTemplate({
   const [baseColor, setBaseColor] = React.useState<string>("#ff0000");
   const themeColors = generateColors(chartSeries.length, colorTheme, baseColor);
   const chartOptions = useChartOptions(labels, themeColors);
+  const chartRef = React.useRef<HTMLDivElement>(null); // Ref to access the chart DOM element
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -44,13 +46,48 @@ export function DonutChartTemplate({
     setAnchorEl(null);
   };
 
-  const handleDownload = (format: string) => {
-    console.log(`Download chart as: ${format}`);
+  const handleDownload = async (format: string) => {
+    const chartElement = chartRef.current;
+
+    if (!chartElement) return;
+
+    if (format === "SVG") {
+      const svgData = chartElement.querySelector("svg");
+      if (svgData) {
+        const serializer = new XMLSerializer();
+        const svgBlob = new Blob([serializer.serializeToString(svgData)], {
+          type: "image/svg+xml;charset=utf-8",
+        });
+        const url = URL.createObjectURL(svgBlob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "donut-chart.svg";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    } else if (format === "PNG") {
+      const canvas = await html2canvas(chartElement);
+      canvas.toBlob((blob: Blob | null) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "donut-chart.png";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }
+      });
+    }
+
     handleClose();
   };
 
   return (
-    <Card sx={sx}>
+    <Card sx={sx} ref={chartRef}>
       <CardHeader
         action={
           <div>
@@ -90,7 +127,7 @@ export function DonutChartTemplate({
             />
           </div>
         }
-        title="Traffic source"
+        title="Traffic Source"
       />
       <CardContent>
         <Stack spacing={2}>

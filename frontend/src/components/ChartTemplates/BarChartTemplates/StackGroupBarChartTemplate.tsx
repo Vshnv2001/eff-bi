@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
@@ -18,14 +17,12 @@ import { SxProps } from "@mui/material/styles";
 export interface StackedBarChartProps {
   chartSeries: { name: string; group: string; data: number[] }[];
   categories: string[];
-  title: string; // Added dynamic title prop
   sx?: SxProps;
 }
 
 export function StackedGroupBarChartTemplate({
   chartSeries,
   categories,
-  title,
   sx,
 }: StackedBarChartProps): React.JSX.Element {
   const chartOptions = useChartOptions(chartSeries, categories);
@@ -110,7 +107,6 @@ export function StackedGroupBarChartTemplate({
             </Menu>
           </div>
         }
-        title={title} // Using dynamic title here
       />
       <CardContent>
         <div id="stacked-bar-chart" />

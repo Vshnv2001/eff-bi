@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import Divider from "@mui/material/Divider";
@@ -108,14 +107,11 @@ export function HorizontalBarChartTemplate({
           height={350}
           options={chartOptions}
           series={chartSeries}
-          type="bar" // Keeping the type as 'bar'
+          type="bar"
           width="100%"
         />
       </CardContent>
       <Divider />
-      <CardActions sx={{ justifyContent: "flex-end" }}>
-        {/* Additional actions can be added here */}
-      </CardActions>
     </Card>
   );
 }
