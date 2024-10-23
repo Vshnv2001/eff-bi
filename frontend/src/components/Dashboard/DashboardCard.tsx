@@ -27,7 +27,7 @@ const DashboardCard: React.FC<DashboardProp> = ({ dashboard }) => {
         />
       </CardHeader>
       <CardBody className="p-6 pt-0">
-        <p> Insert Dashboard Preview Here</p>
+        <p> {dashboard.description}</p>
         <div className="mt-4 flex items-center gap-4">
           <Typography variant="small" color="blue-gray" className="font-normal text-gray-400">
             Created by {dashboard.created_by}
