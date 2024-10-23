@@ -15,7 +15,6 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import NewTile from "../components/Dashboard/NewTile";
-import { BarChartTemplate } from "../components/ChartTemplates/BarChartTemplates/BarChartTemplate";
 
 type ComponentKeys = keyof typeof componentMapping;
 
@@ -71,7 +70,7 @@ export default function DashboardPage() {
         if (error.response?.status === 400) {
           console.error("Question is not relevant to the database");
         } else {
-          console.error("Error fetching tiles LOL");
+          console.error("Error fetching tiles");
         }
       } else {
         console.error("Unexpected error occurred");
@@ -201,6 +200,7 @@ export default function DashboardPage() {
                 if (typeof tileData.tile_props === "string") {
                   try {
                     componentProps = JSON.parse(tileData.tile_props);
+                    console.log("component prop", componentProps);
                   } catch (error) {
                     console.error("Error parsing tile props", error);
                     return null;

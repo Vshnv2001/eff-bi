@@ -100,7 +100,6 @@ export function HorizontalBarChartTemplate({
             </Menu>
           </div>
         }
-        title=""
       />
       <CardContent>
         <Chart
