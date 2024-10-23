@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Typography,
-  Textarea,
   Button,
   Dialog,
   DialogHeader,
@@ -70,45 +69,41 @@ export default function NewTile({ onClose }: NewTileProps) {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
-          <Typography variant="h6" color="blue-gray" className="mb-2">
-            Tile Name
-          </Typography>
-
-          <Textarea
-            placeholder="Enter tile name"
-            value={tileName}
-            onChange={(e) => setTileName(e.target.value)}
-            className="border border-gray-400 focus:!border-blue-500 w-full min-h-[60px]"
-            labelProps={{
-              className: "hidden",
-            }}
-          />
-        </div>
-
-        <div>
-          <div className="flex items-center mb-2">
-            <Typography variant="h6" color="blue-gray" className="mr-2">
-              Query Prompt
+          <div className="relative mb-4">
+            <Typography variant="h6" color="blue-gray" className="mb-1">
+              Tile Name
             </Typography>
-            <IconButton
-              variant="text"
-              className="w-5 h-5 p-0"
-              onClick={handleInfo}
-            >
-              <InformationCircleIcon className="h-5 w-5" />
-            </IconButton>
+            <textarea
+              placeholder="Enter tile name"
+              value={tileName}
+              onChange={(e) => setTileName(e.target.value)}
+              className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
+            />
           </div>
-          <Textarea
-            size="lg"
-            placeholder="Enter query to generate the chart (e.g., 'Show me monthly sales data for the past year')"
-            value={queryPrompt}
-            onChange={(e) => setQueryPrompt(e.target.value)}
-            rows={4}
-            className="border border-gray-400 focus:!border-blue-500 w-full min-h-[60px]"
-            labelProps={{
-              className: "before:content-none after:content-none",
-            }}
-          />
+
+          <div>
+            <div className="flex items-center mb-2">
+              <Typography variant="h6" color="blue-gray" className="mr-2">
+                Query Prompt
+              </Typography>
+              <IconButton
+                variant="text"
+                className="w-5 h-5 p-0"
+                onClick={handleInfo}
+              >
+                <InformationCircleIcon className="h-5 w-5" />
+              </IconButton>
+            </div>
+            <div className="relative">
+              <textarea
+                placeholder="Enter query to generate the chart (e.g., 'Show me monthly sales data for the past year"
+                value={queryPrompt}
+                onChange={(e) => setQueryPrompt(e.target.value)}
+                rows={4}
+                className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
+              />
+            </div>
+          </div>
         </div>
 
         <Box className="flex justify-center space-x-5 mb-4">
@@ -164,7 +159,6 @@ export default function NewTile({ onClose }: NewTileProps) {
         pauseOnHover
       />
 
-      {/* Information Dialog */}
       <Dialog open={info} handler={handleInfo}>
         <DialogHeader>Query Prompt</DialogHeader>
         <DialogBody>

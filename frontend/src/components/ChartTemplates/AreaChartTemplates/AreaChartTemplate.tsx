@@ -12,6 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Chart } from "../Chart";
 import { ApexOptions } from "apexcharts";
+import html2canvas from "html2canvas";
 
 export interface AreaChartProps {
   chartSeries: { name: string; data: number[] }[];
@@ -26,6 +27,7 @@ export function AreaChartTemplate({
 }: AreaChartProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartOptions = useChartOptions(labels);
+  const chartRef = React.useRef<HTMLDivElement | null>(null);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -35,8 +37,38 @@ export function AreaChartTemplate({
     setAnchorEl(null);
   };
 
-  const handleDownload = (format: string) => {
-    console.log(`Download chart as: ${format}`);
+  const handleDownload = async (format: string) => {
+    if (format === "SVG") {
+      const svgElement = chartRef.current?.querySelector("svg");
+      if (svgElement) {
+        const serializer = new XMLSerializer();
+        const svgBlob = new Blob([serializer.serializeToString(svgElement)], {
+          type: "image/svg+xml;charset=utf-8",
+        });
+        const url = URL.createObjectURL(svgBlob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "area-chart.svg";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    } else if (format === "PNG") {
+      const canvas = await html2canvas(chartRef.current as HTMLElement);
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "area-chart.png";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }
+      });
+    }
     handleClose();
   };
 
@@ -59,16 +91,13 @@ export function AreaChartTemplate({
               <MenuItem onClick={() => handleDownload("PNG")}>
                 Download as PNG
               </MenuItem>
-              <MenuItem onClick={() => handleDownload("CSV")}>
-                Download as CSV
-              </MenuItem>
             </Menu>
           </div>
         }
         title="Fundamental Analysis of Stocks"
         subheader="Price Movements"
       />
-      <CardContent>
+      <CardContent ref={chartRef}>
         <Chart
           height={350}
           options={chartOptions}
@@ -86,30 +115,30 @@ function useChartOptions(labels: string[]): ApexOptions {
 
   return {
     chart: {
-      type: 'area',
+      type: "area",
       height: 350,
       zoom: { enabled: false },
       background: "transparent",
     },
     dataLabels: { enabled: false },
-    stroke: { curve: 'smooth' },
+    stroke: { curve: "smooth" },
     title: {
-      text: 'Fundamental Analysis of Stocks',
-      align: 'left',
+      text: "Fundamental Analysis of Stocks",
+      align: "left",
     },
     subtitle: {
-      text: 'Price Movements',
-      align: 'left',
+      text: "Price Movements",
+      align: "left",
     },
     labels,
     xaxis: {
-      type: 'datetime',
+      type: "datetime",
     },
     yaxis: {
       opposite: true,
     },
     legend: {
-      horizontalAlign: 'left',
+      horizontalAlign: "left",
     },
     tooltip: {
       shared: true,

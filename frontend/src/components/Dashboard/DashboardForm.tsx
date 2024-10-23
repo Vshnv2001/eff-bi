@@ -1,90 +1,40 @@
-import {
-  Dialog,
-  DialogHeader,
-  DialogBody,
-  Typography,
-  Textarea,
-  ThemeProvider,
-  Button,
-} from "@material-tailwind/react";
-import { Box } from "@mui/material";
-import { useState, useEffect } from "react";
+import { Typography, Textarea, Button } from "@material-tailwind/react";
+import { useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import { Box } from "@mui/material"; // Import Box from MUI for layout
 
 interface DashboardFormProps {
-  open: boolean;
-  handleOpen: () => void;
-  setOpen: (open: boolean) => void;
   dashboardName: string;
   setDashboardName: (name: string) => void;
   dashboardDescription: string;
   setDashboardDescription: (description: string) => void;
-  onDashboardCreated?: (success: boolean, message: string) => void;
+  onDashboardCreated?: () => void;
+  onClose: () => void; // Added onClose prop for cancel button
 }
 
-const customTheme = {
-  dialog: {
-    defaultProps: {
-      size: "md",
-      dismiss: {},
-      animate: {
-        unmount: {},
-        mount: {},
-      },
-      className: "",
-    },
-    valid: {
-      sizes: ["xs", "sm", "md", "lg", "xl", "xxl"],
-    },
-    styles: {
-      base: {
-        backdrop: {
-          display: "grid",
-          placeItems: "place-items-center",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "w-screen",
-          height: "h-screen",
-          backgroundColor: "bg-black",
-          backgroundOpacity: "bg-opacity-0",
-          backdropFilter: "backdrop-blur-xs",
-        },
-      },
-    },
-  },
-};
-
 export default function DashboardForm({
-  open,
-  handleOpen,
-  setOpen,
   dashboardName,
   setDashboardName,
   dashboardDescription,
   setDashboardDescription,
   onDashboardCreated,
+  onClose, // Destructure onClose
 }: DashboardFormProps) {
-  const [isMounted, setIsMounted] = useState(true);
   const [isLoading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-    return () => setIsMounted(false);
-  }, []);
 
   const handleCreate = async () => {
     try {
       setLoading(true);
 
       if (!dashboardName.trim()) {
-        onDashboardCreated?.(false, "Dashboard name is required");
+        toast.error("Dashboard name is required");
         setLoading(false);
         return;
       }
 
       if (!dashboardDescription.trim()) {
-        onDashboardCreated?.(false, "Dashboard description is required");
+        toast.error("Dashboard description is required");
         setLoading(false);
         return;
       }
@@ -97,96 +47,54 @@ export default function DashboardForm({
         }
       );
 
-      console.log("response", response);
-
-      if (isMounted) {
-        onDashboardCreated?.(true, "Dashboard created successfully!");
-        setOpen(false);
+      if (response.status === 201) {
+        toast.success("Dashboard successfully created!");
+        onDashboardCreated?.();
+      } else {
+        toast.error("Failed to create dashboard");
       }
-    } catch (error: any) {
-      console.error("Error creating dashboard:", error);
-      const errorMessage =
-        error.response?.data?.message || "Failed to create dashboard";
-      if (isMounted) {
-        onDashboardCreated?.(false, errorMessage);
-      }
+    } catch (error) {
+      toast.error("Error occurred while creating dashboard");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <ThemeProvider value={customTheme}>
-      <Dialog
-        open={open}
-        handler={handleOpen}
-        size="md"
-        className="bg-gray-300 border-4 border-black text-black flex flex-col items-center justify-between h-[70%] w-full overflow-y-scroll"
-        animate={{
-          mount: { scale: 1, y: 0 },
-          unmount: { scale: 0.9, y: -100 },
-        }}
-      >
-        <DialogHeader className="text-black">Create Dashboard</DialogHeader>
-
-        <DialogBody className=" pr-2 w-full px-4">
-          <div className="mb-4">
-            <Typography
-              variant="h6"
-              color="blue-gray"
-              className="font-medium mb-2"
-            >
-              Dashboard Name
-            </Typography>
-            <Textarea
-              placeholder="Enter dashboard name"
-              value={dashboardName}
-              onChange={(e) => setDashboardName(e.target.value)}
-              className="border border-gray-400 focus:!border-blue-500 w-full min-h-[60px] mb-4"
-              labelProps={{
-                className: "hidden",
-              }}
-            />
-          </div>
-
-          <div>
-            <div className="flex items-center mb-2">
-              <Typography
-                variant="h6"
-                color="blue-gray"
-                className="font-medium mr-2"
-              >
-                Dashboard Description
-              </Typography>
-            </div>
-            <Textarea
-              placeholder="Enter dashboard description"
-              value={dashboardDescription}
-              onChange={(e) => setDashboardDescription(e.target.value)}
-              className="border border-gray-400 focus:!border-blue-500 w-full min-h-[120px] mb-4"
-              labelProps={{
-                className: "hidden",
-              }}
-            />
-          </div>
-        </DialogBody>
-
-        <Box className="flex justify-center space-x-5 mb-4">
-          <Button
-            color="red"
-            onClick={handleOpen}
+    <div className="bg-white p-6 rounded-md shadow-md">
+      <Typography color="blue-gray" className="text-xl mb-4 font-bold">
+        Create New Dashboard
+      </Typography>
+      <div className="space-y-4">
+        <div className="w-full">
+          <Textarea
+            label="Dashboard Name"
+            size="md"
+            color="blue"
+            onChange={(e) => setDashboardName(e.target.value)}
+            value={dashboardName}
             disabled={isLoading}
-            className="bg-red-500 hover:bg-red-600 text-white"
-          >
+          />
+        </div>
+        <div className="w-full">
+          <Textarea
+            label="Description"
+            size="md"
+            color="blue"
+            onChange={(e) => setDashboardDescription(e.target.value)}
+            value={dashboardDescription}
+            disabled={isLoading}
+          />
+        </div>
+        <Box className="flex justify-center space-x-5 mt-4 mb-4">
+          <Button color="red" onClick={onClose} disabled={isLoading}>
             Cancel
           </Button>
-
           <Button
-            type="submit"
+            className="flex items-center justify-center"
             color="blue"
-            disabled={isLoading}
-            className="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white"
             onClick={handleCreate}
+            disabled={isLoading}
           >
             {isLoading ? (
               <>
@@ -210,14 +118,15 @@ export default function DashboardForm({
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                Generating...
+                Creating...
               </>
             ) : (
-              "Create"
+              "Create Dashboard"
             )}
           </Button>
         </Box>
-      </Dialog>
-    </ThemeProvider>
+      </div>
+      <ToastContainer />
+    </div>
   );
 }

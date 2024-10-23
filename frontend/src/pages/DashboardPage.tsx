@@ -46,7 +46,6 @@ export default function DashboardPage() {
     }
   };
 
-
   const fetchTiles = async () => {
     setLoading(true);
     setError(null);
@@ -145,7 +144,7 @@ export default function DashboardPage() {
         </Link>
       </Breadcrumbs>
 
-      <div className="flex items-center justify-between mb-8 relative">
+      <div className="flex items-center justify-between mb-8 relative mt-4">
         <div className="absolute inset-x-0 text-center">
           <Typography color="white" className="text-3xl font-bold">
             {dashboardName}

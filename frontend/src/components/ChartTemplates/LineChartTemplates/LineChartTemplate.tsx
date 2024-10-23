@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
+import html2canvas from "html2canvas";
+import { Menu, MenuItem, IconButton } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 type LineChartTemplateProps = {
   series: {
@@ -18,6 +21,9 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
   categories,
   height = 350,
 }) => {
+  const chartRef = useRef<HTMLDivElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
   const options: ApexOptions = {
     chart: {
       height,
@@ -30,7 +36,7 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
       enabled: false,
     },
     stroke: {
-      curve: "straight",
+      curve: "smooth",
     },
     title: {
       text: title,
@@ -41,8 +47,73 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
     },
   };
 
+  const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDownload = async (format: string) => {
+    const chartElement = chartRef.current;
+
+    if (!chartElement) return;
+
+    if (format === "SVG") {
+      const svgData = chartElement.querySelector("svg");
+      if (svgData) {
+        const serializer = new XMLSerializer();
+        const svgBlob = new Blob([serializer.serializeToString(svgData)], {
+          type: "image/svg+xml;charset=utf-8",
+        });
+        const url = URL.createObjectURL(svgBlob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "line-chart.svg";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    } else if (format === "PNG") {
+      const canvas = await html2canvas(chartElement);
+      canvas.toBlob((blob: Blob | null) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "line-chart.png";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }
+      });
+    }
+
+    handleClose();
+  };
+
   return (
-    <Chart options={options} series={series} type="line" height={height} />
+    <div ref={chartRef}>
+      <IconButton onClick={handleMenuClick} size="small" style={{ marginBottom: '10px' }}>
+        <MoreVertIcon />
+      </IconButton>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={() => handleDownload("SVG")}>
+          Download as SVG
+        </MenuItem>
+        <MenuItem onClick={() => handleDownload("PNG")}>
+          Download as PNG
+        </MenuItem>
+      </Menu>
+      <Chart options={options} series={series} type="line" height={height} />
+    </div>
   );
 };
 

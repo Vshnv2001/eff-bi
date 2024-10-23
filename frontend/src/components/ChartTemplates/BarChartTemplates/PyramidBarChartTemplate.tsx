@@ -1,20 +1,17 @@
 "use client";
 
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import Divider from "@mui/material/Divider";
 import { useTheme } from "@mui/material/styles";
 import type { SxProps } from "@mui/material/styles";
-import { ArrowClockwise as ArrowClockwiseIcon } from "@phosphor-icons/react/dist/ssr/ArrowClockwise";
-import { ArrowRight as ArrowRightIcon } from "@phosphor-icons/react/dist/ssr/ArrowRight";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import html2canvas from "html2canvas";
 import type { ApexOptions } from "apexcharts";
 
 import { Chart } from "../Chart";
@@ -41,8 +38,43 @@ export function PyramidBarChartTemplate({
     setAnchorEl(null);
   };
 
-  const handleDownload = (format: string) => {
-    console.log(`Download chart as: ${format}`);
+  const handleDownload = async (format: string) => {
+    const chartElement = document.querySelector(".apexcharts-canvas") as HTMLElement;
+
+    if (!chartElement) return;
+
+    if (format === "SVG") {
+      const svgData = chartElement.querySelector("svg");
+      if (svgData) {
+        const serializer = new XMLSerializer();
+        const svgBlob = new Blob([serializer.serializeToString(svgData)], {
+          type: "image/svg+xml;charset=utf-8",
+        });
+        const url = URL.createObjectURL(svgBlob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "chart.svg";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    } else if (format === "PNG") {
+      const canvas = await html2canvas(chartElement);
+      canvas.toBlob((blob: Blob | null) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "chart.png";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }
+      });
+    }
+
     handleClose();
   };
 
@@ -65,42 +97,20 @@ export function PyramidBarChartTemplate({
               <MenuItem onClick={() => handleDownload("PNG")}>
                 Download as PNG
               </MenuItem>
-              <MenuItem onClick={() => handleDownload("CSV")}>
-                Download as CSV
-              </MenuItem>
             </Menu>
-            <Button
-              color="inherit"
-              size="small"
-              startIcon={
-                <ArrowClockwiseIcon fontSize="var(--icon-fontSize-md)" />
-              }
-            >
-              Sync
-            </Button>
           </div>
         }
-        title="Population Pyramid"
       />
       <CardContent>
         <Chart
-          height={440} // Adjusted height based on your original code
+          height={440}
           options={chartOptions}
           series={chartSeries}
-          type="bar" // Keeping the type as 'bar'
+          type="bar"
           width="100%"
         />
       </CardContent>
       <Divider />
-      <CardActions sx={{ justifyContent: "flex-end" }}>
-        <Button
-          color="inherit"
-          endIcon={<ArrowRightIcon fontSize="var(--icon-fontSize-md)" />}
-          size="small"
-        >
-          View Data
-        </Button>
-      </CardActions>
     </Card>
   );
 }
@@ -111,24 +121,24 @@ function useChartOptions(categories: string[]): ApexOptions {
   return {
     chart: {
       background: "transparent",
-      stacked: true, // Set to true for a stacked bar chart
+      stacked: true,
       toolbar: { show: false },
     },
-    colors: ['#008FFB', '#FF4560'], // Your specified colors
+    colors: ['#008FFB', '#FF4560'],
     dataLabels: { enabled: false },
     fill: { opacity: 1, type: "solid" },
     grid: {
       borderColor: theme.palette.divider,
       strokeDashArray: 2,
-      xaxis: { lines: { show: true } }, // Show grid lines on the x-axis
-      yaxis: { lines: { show: false } }, // Hide grid lines on the y-axis
+      xaxis: { lines: { show: true } },
+      yaxis: { lines: { show: false } },
     },
     legend: { show: false },
-    plotOptions: { bar: { horizontal: true } }, // Set horizontal to true for horizontal bars
+    plotOptions: { bar: { horizontal: true } },
     stroke: { colors: ["transparent"], show: true, width: 2 },
     theme: { mode: theme.palette.mode },
     xaxis: {
-      categories: categories, // Set categories here for horizontal bars
+      categories: categories,
       axisBorder: { color: theme.palette.divider, show: true },
       axisTicks: { color: theme.palette.divider, show: true },
       labels: { offsetY: 5, style: { colors: theme.palette.text.secondary } },
@@ -141,11 +151,8 @@ function useChartOptions(categories: string[]): ApexOptions {
     tooltip: {
       shared: false,
       y: {
-        formatter: (val) => `${Math.abs(val)}%`, // Adjusted to ensure it returns a string correctly
+        formatter: (val) => `${Math.abs(val)}%`,
       },
-    },
-    title: {
-      text: 'Mauritius Population Pyramid 2011', // Adjusted title based on your original code
     },
   };
 }

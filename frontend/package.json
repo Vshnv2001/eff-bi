@@ -28,6 +28,7 @@
         "@visx/visx": "^3.11.0",
         "apexcharts": "^3.54.0",
         "axios": "^1.7.7",
+        "html2canvas": "^1.4.1",
         "next": "^14.2.14",
         "papaparse": "^5.4.1",
         "react": "^18.3.1",
