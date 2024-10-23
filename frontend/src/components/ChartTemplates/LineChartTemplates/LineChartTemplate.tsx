@@ -31,6 +31,7 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
       zoom: {
         enabled: true,
       },
+      toolbar: { show: false },
     },
     dataLabels: {
       enabled: false,

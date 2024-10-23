@@ -20,6 +20,7 @@ const PolarChartTemplate: React.FC<PolarChartProps> = ({
       chart: {
         type: 'polarArea',
         width: chartWidth,
+        toolbar: { show: false },
       },
       stroke: {
         colors: ['#fff'],

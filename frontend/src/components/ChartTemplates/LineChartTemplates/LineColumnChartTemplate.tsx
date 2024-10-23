@@ -42,6 +42,7 @@ const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
       chart: {
         height: 350,
         type: 'line',
+        toolbar: { show: false },
       },
       stroke: {
         width: [0, 4],

@@ -22,6 +22,7 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
       chart: {
         width: chartWidth,
         type: 'pie',
+        toolbar: { show: false },
       },
       labels: labels,
       responsive: [

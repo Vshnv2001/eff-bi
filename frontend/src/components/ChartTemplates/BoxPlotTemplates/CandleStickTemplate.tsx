@@ -27,6 +27,7 @@ const CandlestickTemplate: React.FC<CandlestickChartProps> = ({ data, title = 'C
       chart: {
         type: 'candlestick',
         height: height,
+        toolbar: { show: false },
       },
       title: {
         text: title,

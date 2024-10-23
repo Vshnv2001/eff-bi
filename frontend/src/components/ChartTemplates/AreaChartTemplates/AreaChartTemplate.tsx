@@ -17,7 +17,7 @@ import html2canvas from "html2canvas";
 export interface AreaChartProps {
   chartSeries: { name: string; data: number[] }[];
   labels: string[];
-  sx?: SxProps;
+  sx: SxProps;
 }
 
 export function AreaChartTemplate({
@@ -94,8 +94,6 @@ export function AreaChartTemplate({
             </Menu>
           </div>
         }
-        title="Fundamental Analysis of Stocks"
-        subheader="Price Movements"
       />
       <CardContent ref={chartRef}>
         <Chart
@@ -116,20 +114,12 @@ function useChartOptions(labels: string[]): ApexOptions {
   return {
     chart: {
       type: "area",
-      height: 350,
       zoom: { enabled: false },
       background: "transparent",
+      toolbar: { show: false },
     },
     dataLabels: { enabled: false },
     stroke: { curve: "smooth" },
-    title: {
-      text: "Fundamental Analysis of Stocks",
-      align: "left",
-    },
-    subtitle: {
-      text: "Price Movements",
-      align: "left",
-    },
     labels,
     xaxis: {
       type: "datetime",

@@ -22,6 +22,7 @@ const RadarChartTemplate: React.FC<RadarChartProps> = ({
       chart: {
         height: chartHeight,
         type: 'radar',
+        toolbar: { show: false },
       },
       title: {
         text: 'Radar Chart',

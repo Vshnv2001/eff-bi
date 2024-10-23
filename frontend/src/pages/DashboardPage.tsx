@@ -15,6 +15,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import NewTile from "../components/Dashboard/NewTile";
+import { AreaChartTemplate } from "../components/ChartTemplates/AreaChartTemplates/AreaChartTemplate";
 
 type ComponentKeys = keyof typeof componentMapping;
 
@@ -101,6 +102,28 @@ export default function DashboardPage() {
     fetchTiles();
   };
 
+  const dummyData = {
+    chartSeries: [
+      {
+        name: "Series 1",
+        data: [10, 20, 15, 30, 25, 40, 35],
+      },
+      {
+        name: "Series 2",
+        data: [5, 15, 10, 25, 20, 30, 28],
+      },
+    ],
+    labels: [
+      "2023-01-01",
+      "2023-02-01",
+      "2023-03-01",
+      "2023-04-01",
+      "2023-05-01",
+      "2023-06-01",
+      "2023-07-01",
+    ],
+  };
+
   if (error)
     return (
       <div className="min-h-screen flex items-center justify-center text-red-500">
@@ -110,6 +133,11 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-800 p-8">
+      <AreaChartTemplate
+        chartSeries={dummyData.chartSeries}
+        labels={dummyData.labels}
+        sx={{ margin: 2 }}
+      />
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <Spinner className="h-10 w-10" />

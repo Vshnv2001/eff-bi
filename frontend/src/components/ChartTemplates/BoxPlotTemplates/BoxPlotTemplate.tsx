@@ -28,7 +28,8 @@ const BoxPlotTemplate: React.FC<BoxPlotTemplateProps> = ({ data, title, height =
       ],
       chart: {
         type: 'boxPlot',
-        height: height
+        height: height,
+        toolbar: { show: false },
       },
       title: {
         text: title,

@@ -166,7 +166,7 @@ function useChartOptions(labels: string[], colors: string[]): ApexOptions {
   const theme = useTheme();
 
   return {
-    chart: { background: "transparent" },
+    chart: { background: "transparent", toolbar: { show: false } },
     colors: colors,
     dataLabels: { enabled: false },
     labels,

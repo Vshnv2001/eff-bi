@@ -30,6 +30,7 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
           enabled: true,
           type: 'xy',
         },
+        toolbar: { show: false },
       },
       xaxis: {
         tickAmount: 10,
