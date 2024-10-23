@@ -6,6 +6,7 @@ from .State import State
 
 from enum import Enum
 
+
 class ChartType(Enum):
     AreaChartTemplate = "AreaChartTemplate"
 
