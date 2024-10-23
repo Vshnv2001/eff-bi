@@ -10,23 +10,18 @@ type LineChartTemplateProps = {
     name: string;
     data: number[];
   }[];
-  title: string;
   categories: string[];
-  height?: number;
 };
 
 const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
   series,
-  title,
   categories,
-  height = 350,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const options: ApexOptions = {
     chart: {
-      height,
       type: "line",
       zoom: {
         enabled: true,
@@ -38,10 +33,6 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
     },
     stroke: {
       curve: "smooth",
-    },
-    title: {
-      text: title,
-      align: "left",
     },
     xaxis: {
       categories,
@@ -113,7 +104,7 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
           Download as PNG
         </MenuItem>
       </Menu>
-      <Chart options={options} series={series} type="line" height={height} />
+      <Chart options={options} series={series} type="line" height={400} />
     </div>
   );
 };

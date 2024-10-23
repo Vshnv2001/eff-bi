@@ -26,7 +26,7 @@ export function AreaChartTemplate({
   sx,
 }: AreaChartProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const chartOptions = useChartOptions(labels);
+  const chartOptions = useChartOptions(labels, chartSeries);
   const chartRef = React.useRef<HTMLDivElement | null>(null);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -97,7 +97,7 @@ export function AreaChartTemplate({
       />
       <CardContent ref={chartRef}>
         <Chart
-          height={350}
+          height={400}
           options={chartOptions}
           series={chartSeries}
           type="area"
@@ -108,8 +108,12 @@ export function AreaChartTemplate({
   );
 }
 
-function useChartOptions(labels: string[]): ApexOptions {
+function useChartOptions(labels: string[], chartSeries: { name: string; data: number[] }[]): ApexOptions {
   const theme = useTheme();
+
+  const maxYValue = Math.max(
+    ...chartSeries.flatMap((series) => series.data)
+  );
 
   return {
     chart: {
@@ -126,6 +130,8 @@ function useChartOptions(labels: string[]): ApexOptions {
     },
     yaxis: {
       opposite: true,
+      min: 0,
+      max: maxYValue * 1.1,
     },
     legend: {
       horizontalAlign: "left",
