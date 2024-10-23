@@ -39,9 +39,9 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     
     print("SQL QUERY: ", sql_query)
     
-    if not sql_query.get('is_relevant', False):
-        state.error = "We do not have the necessary data to answer this question. Either check your database tables and ensure you have the correct permissions, or rephrase your question."
-        return state
+    # if not sql_query.get('is_relevant', False):
+    #     state.error = "We do not have the necessary data to answer this question. Either check your database tables and ensure you have the correct permissions, or rephrase your question."
+    #     return state
 
     state.sql_query = sql_query.get('sql_query', '')
     

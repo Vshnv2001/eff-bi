@@ -80,7 +80,7 @@ export function HorizontalBarChartTemplate({
             </Button>
           </div>
         }
-        title="Sales"
+        title=""
       />
       <CardContent>
         <Chart

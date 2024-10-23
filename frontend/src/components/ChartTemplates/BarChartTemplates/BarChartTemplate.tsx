@@ -80,7 +80,7 @@ export function BarChartTemplate({
             </Button>
           </div>
         }
-        title="Sales"
+        title=""
       />
       <CardContent>
         <Chart
