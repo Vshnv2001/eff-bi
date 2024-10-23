@@ -11,12 +11,12 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 
 export default function DashboardsPage() {
-  const [open, setOpen] = useState(false); // For the Dialog open/close
+  const [open, setOpen] = useState(false);
   const [dashboardName, setDashboardName] = useState("");
   const [dashboardDescription, setDashboardDescription] = useState("");
   const [dashboards, setDashboards] = useState<DashboardProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isDialogOpen, setIsDialogOpen] = useState(false); // For another dialog
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dbUri, setDbUri] = useState("");
   const [isDisabledField, setIsDisabledField] = useState(false);
   const sessionContext = useSessionContext();
@@ -64,13 +64,13 @@ export default function DashboardsPage() {
   };
 
   const handleDashboardCreated = () => {
-    fetchDashboards(); // Refresh dashboards after creation
-    setOpen(false); // Close the dialog after creating a dashboard
+    fetchDashboards();
+    setOpen(false);
   };
 
   const handleOpen = () => {
-    setOpen(!open); // Toggle the Dialog open state
-    setDashboardName(""); // Clear the form fields
+    setOpen(!open);
+    setDashboardName("");
     setDashboardDescription("");
   };
 
@@ -157,7 +157,6 @@ export default function DashboardsPage() {
         )}
       </div>
 
-      {/* Dialog for Creating a New Dashboard */}
       <Dialog
         open={open}
         handler={handleOpen}
@@ -169,11 +168,10 @@ export default function DashboardsPage() {
           dashboardDescription={dashboardDescription}
           setDashboardDescription={setDashboardDescription}
           onDashboardCreated={handleDashboardCreated}
-          onClose={() => setOpen(false)} // Pass the onClose handler
+          onClose={() => setOpen(false)}
         />
       </Dialog>
 
-      {/* Other Notification Dialog */}
       <NotificationDialog
         open={isDialogOpen}
         onClose={handleDialogClose}

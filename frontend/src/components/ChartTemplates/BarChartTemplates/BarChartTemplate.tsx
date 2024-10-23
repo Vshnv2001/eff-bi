@@ -1,22 +1,18 @@
 "use client";
 
 import * as React from "react";
-// import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import Divider from "@mui/material/Divider";
 import { useTheme } from "@mui/material/styles";
 import type { SxProps } from "@mui/material/styles";
-// import { ArrowClockwise as ArrowClockwiseIcon } from "@phosphor-icons/react/dist/ssr/ArrowClockwise";
-// import { ArrowRight as ArrowRightIcon } from "@phosphor-icons/react/dist/ssr/ArrowRight";
-// import Menu from "@mui/material/Menu";
-// import MenuItem from "@mui/material/MenuItem";
-// import IconButton from "@mui/material/IconButton";
-// import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import IconButton from "@mui/material/IconButton";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import html2canvas from "html2canvas";
 import type { ApexOptions } from "apexcharts";
-
 import { Chart } from "../Chart";
 
 export interface SalesProps {
@@ -30,29 +26,65 @@ export function BarChartTemplate({
   categories,
   sx,
 }: SalesProps): React.JSX.Element {
-  // const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartOptions = useChartOptions(categories);
 
+  const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-  // const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
+  const handleDownload = async (format: string) => {
+    const chartElement = document.querySelector(
+      ".apexcharts-canvas"
+    ) as HTMLElement;
 
-  // const handleDownload = (format: string) => {
-  //   console.log(`Download chart as: ${format}`);
-  //   handleClose();
-  // };
+    if (!chartElement) return;
+
+    if (format === "SVG") {
+      const svgData = chartElement.querySelector("svg");
+      if (svgData) {
+        const serializer = new XMLSerializer();
+        const svgBlob = new Blob([serializer.serializeToString(svgData)], {
+          type: "image/svg+xml;charset=utf-8",
+        });
+        const url = URL.createObjectURL(svgBlob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "chart.svg";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    } else if (format === "PNG") {
+      const canvas = await html2canvas(chartElement);
+      canvas.toBlob((blob: Blob | null) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "chart.png";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }
+      });
+    }
+
+    handleClose();
+  };
 
   return (
     <Card sx={sx}>
       <CardHeader
         action={
           <div>
-            {/* <IconButton onClick={handleMenuClick} size="small">
+            <IconButton onClick={handleMenuClick} size="small">
               <MoreVertIcon />
             </IconButton>
             <Menu
@@ -66,19 +98,7 @@ export function BarChartTemplate({
               <MenuItem onClick={() => handleDownload("PNG")}>
                 Download as PNG
               </MenuItem>
-              <MenuItem onClick={() => handleDownload("CSV")}>
-                Download as CSV
-              </MenuItem>
             </Menu>
-            <Button
-              color="inherit"
-              size="small"
-              startIcon={
-                <ArrowClockwiseIcon fontSize="var(--icon-fontSize-md)" />
-              }
-            >
-              Sync
-            </Button> */}
           </div>
         }
         title=""
@@ -93,15 +113,6 @@ export function BarChartTemplate({
         />
       </CardContent>
       <Divider />
-      <CardActions sx={{ justifyContent: "flex-end" }}>
-        {/* <Button
-          color="inherit"
-          endIcon={<ArrowRightIcon fontSize="var(--icon-fontSize-md)" />}
-          size="small"
-        >
-          View Data
-        </Button> */}
-      </CardActions>
     </Card>
   );
 }

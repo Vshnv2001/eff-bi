@@ -68,9 +68,6 @@ export function DonutChartTemplate({
               <MenuItem onClick={() => handleDownload("PNG")}>
                 Download as PNG
               </MenuItem>
-              <MenuItem onClick={() => handleDownload("CSV")}>
-                Download as CSV
-              </MenuItem>
             </Menu>
             <Select
               value={colorTheme}
