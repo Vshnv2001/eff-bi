@@ -39,10 +39,6 @@ export default function NewTile({ onClose }: NewTileProps) {
           description: queryPrompt,
         }
       );
-      if (response.data.error) {
-        toast.error(response.data.error);
-        return;
-      }
 
       console.log(response.data);
       setTileName("");

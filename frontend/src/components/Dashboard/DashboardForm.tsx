@@ -121,7 +121,7 @@ export default function DashboardForm({
         open={open}
         handler={handleOpen}
         size="md"
-        className="bg-gray-300 border-4 border-black text-black flex flex-col items-center justify-between h-[55%]"
+        className="bg-gray-300 border-4 border-black text-black flex flex-col items-center justify-between h-[70%] w-full overflow-y-scroll"
         animate={{
           mount: { scale: 1, y: 0 },
           unmount: { scale: 0.9, y: -100 },
@@ -129,7 +129,7 @@ export default function DashboardForm({
       >
         <DialogHeader className="text-black">Create Dashboard</DialogHeader>
 
-        <DialogBody className="overflow-y-scroll pr-2 w-full">
+        <DialogBody className=" pr-2 w-full px-4">
           <div className="mb-4">
             <Typography
               variant="h6"
@@ -142,7 +142,7 @@ export default function DashboardForm({
               placeholder="Enter dashboard name"
               value={dashboardName}
               onChange={(e) => setDashboardName(e.target.value)}
-              className="border border-gray-400 focus:!border-blue-500 w-full min-h-[60px]"
+              className="border border-gray-400 focus:!border-blue-500 w-full min-h-[60px] mb-4"
               labelProps={{
                 className: "hidden",
               }}
@@ -163,7 +163,7 @@ export default function DashboardForm({
               placeholder="Enter dashboard description"
               value={dashboardDescription}
               onChange={(e) => setDashboardDescription(e.target.value)}
-              className="border border-gray-400 focus:!border-blue-500 w-full min-h-[120px]"
+              className="border border-gray-400 focus:!border-blue-500 w-full min-h-[120px] mb-4"
               labelProps={{
                 className: "hidden",
               }}
