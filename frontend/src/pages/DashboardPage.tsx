@@ -46,7 +46,6 @@ export default function DashboardPage() {
     }
   };
 
-
   const fetchTiles = async () => {
     setLoading(true);
     setError(null);

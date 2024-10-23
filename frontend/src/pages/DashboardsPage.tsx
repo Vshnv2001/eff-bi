@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { Typography, Button, Spinner } from "@material-tailwind/react";
+import { Typography, Button, Spinner, Dialog } from "@material-tailwind/react";
 import DashboardForm from "../components/Dashboard/DashboardForm";
 import DashboardCard from "../components/Dashboard/DashboardCard";
 import axios from "axios";
 import { DashboardProps } from "../components/Dashboard/DashboardProps";
-import { ToastContainer, toast } from "react-toastify";
 import NotificationDialog from "../components/Dashboard/NotificationDialog";
 import { useNavigate } from "react-router-dom";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
@@ -12,12 +11,12 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 
 export default function DashboardsPage() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // For the Dialog open/close
   const [dashboardName, setDashboardName] = useState("");
   const [dashboardDescription, setDashboardDescription] = useState("");
   const [dashboards, setDashboards] = useState<DashboardProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false); // For another dialog
   const [dbUri, setDbUri] = useState("");
   const [isDisabledField, setIsDisabledField] = useState(false);
   const sessionContext = useSessionContext();
@@ -36,7 +35,7 @@ export default function DashboardsPage() {
       );
       setDashboards(response.data.data);
     } catch (error) {
-      toast.error("Failed to fetch dashboards");
+      console.error("Failed to fetch dashboards");
     } finally {
       setIsLoading(false);
     }
@@ -49,12 +48,10 @@ export default function DashboardsPage() {
       );
       if (response.status === 200) {
         setDbUri(response.data.database_uri);
-        console.log("uri", dbUri);
         if (response.data.database_uri === "") {
           setIsDialogOpen(true);
         } else {
           setIsDisabledField(true);
-          console.log("disabled field", isDisabledField);
         }
       } else {
         console.error("Failed to fetch db settings:", response);
@@ -66,19 +63,14 @@ export default function DashboardsPage() {
     }
   };
 
-  const handleDashboardCreated = (success: boolean, message: string) => {
-    if (success) {
-      toast.success(message);
-      fetchDashboards();
-    } else {
-      toast.error(message);
-    }
+  const handleDashboardCreated = () => {
+    fetchDashboards(); // Refresh dashboards after creation
+    setOpen(false); // Close the dialog after creating a dashboard
   };
 
   const handleOpen = () => {
-    toast.dismiss();
-    setOpen(!open);
-    setDashboardName("");
+    setOpen(!open); // Toggle the Dialog open state
+    setDashboardName(""); // Clear the form fields
     setDashboardDescription("");
   };
 
@@ -119,18 +111,6 @@ export default function DashboardsPage() {
         </Link>
       </Breadcrumbs>
 
-      <ToastContainer
-        className="pt-14"
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        pauseOnHover
-      />
-
       <div className="flex items-center justify-between mb-8 relative mt-4">
         <div className="absolute inset-x-0 text-center">
           <Typography color="white" className="text-3xl font-bold">
@@ -164,17 +144,6 @@ export default function DashboardsPage() {
         </Button>
       </div>
 
-      <DashboardForm
-        open={open}
-        handleOpen={handleOpen}
-        setOpen={setOpen}
-        dashboardName={dashboardName}
-        setDashboardName={setDashboardName}
-        dashboardDescription={dashboardDescription}
-        setDashboardDescription={setDashboardDescription}
-        onDashboardCreated={handleDashboardCreated}
-      />
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {dashboards.map((dashboard) => (
           <DashboardCard key={dashboard.dash_id} dashboard={dashboard} />
@@ -182,13 +151,29 @@ export default function DashboardsPage() {
         {!dashboards.length && (
           <div className="col-span-1 md:col-span-2 lg:col-span-3">
             <Typography color="white" className="text-xl text-center italic">
-              {!isLoading
-                ? "No dashboards found. Create one to get started."
-                : ""}
+              {!isLoading ? "No dashboards found. Create one to get started." : ""}
             </Typography>
           </div>
         )}
       </div>
+
+      {/* Dialog for Creating a New Dashboard */}
+      <Dialog
+        open={open}
+        handler={handleOpen}
+        size="md"
+      >
+        <DashboardForm
+          dashboardName={dashboardName}
+          setDashboardName={setDashboardName}
+          dashboardDescription={dashboardDescription}
+          setDashboardDescription={setDashboardDescription}
+          onDashboardCreated={handleDashboardCreated}
+          onClose={() => setOpen(false)} // Pass the onClose handler
+        />
+      </Dialog>
+
+      {/* Other Notification Dialog */}
       <NotificationDialog
         open={isDialogOpen}
         onClose={handleDialogClose}
