@@ -1,10 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -23,7 +19,6 @@ export interface StackedBarChartProps {
 export function StackedGroupBarChartTemplate({
   chartSeries,
   categories,
-  sx,
 }: StackedBarChartProps): React.JSX.Element {
   const chartOptions = useChartOptions(chartSeries, categories);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -91,57 +86,52 @@ export function StackedGroupBarChartTemplate({
   }, [chartOptions]);
 
   return (
-    <Card sx={sx}>
-      <CardHeader
-        action={
-          <div>
-            <IconButton onClick={handleMenuClick} size="small">
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              PaperProps={{
-                style: {
-                  borderRadius: 8,
-                  marginTop: 5,
+    <div style={{ position: "relative", textAlign: "center" }}>
+      <div style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}>
+        <div>
+          <IconButton onClick={handleMenuClick} size="small">
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            PaperProps={{
+              style: {
+                borderRadius: 8,
+                marginTop: 5,
+              },
+            }}
+          >
+            <MenuItem
+              onClick={() => handleDownload("SVG")}
+              sx={{
+                typography: "body2",
+                color: "text.primary",
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)",
                 },
               }}
             >
-              <MenuItem
-                onClick={() => handleDownload("SVG")}
-                sx={{
-                  typography: "body2",
-                  color: "text.primary",
-                  "&:hover": {
-                    backgroundColor: "rgba(0, 0, 0, 0.08)",
-                  },
-                }}
-              >
-                Download as SVG
-              </MenuItem>
-              <MenuItem
-                onClick={() => handleDownload("PNG")}
-                sx={{
-                  typography: "body2",
-                  color: "text.primary",
-                  "&:hover": {
-                    backgroundColor: "rgba(0, 0, 0, 0.08)",
-                  },
-                }}
-              >
-                Download as PNG
-              </MenuItem>
-            </Menu>
-          </div>
-        }
-      />
-      <CardContent>
-        <div id="stacked-bar-chart" />
-      </CardContent>
-      <Divider />
-    </Card>
+              Download as SVG
+            </MenuItem>
+            <MenuItem
+              onClick={() => handleDownload("PNG")}
+              sx={{
+                typography: "body2",
+                color: "text.primary",
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)",
+                },
+              }}
+            >
+              Download as PNG
+            </MenuItem>
+          </Menu>
+        </div>
+      </div>
+      <div id="stacked-bar-chart" style={{ width: "100%", height: "350px" }} />
+    </div>
   );
 }
 

@@ -113,6 +113,7 @@ const BoxPlotTemplate: React.FC<BoxPlotTemplateProps> = ({
       >
         <MoreVertIcon />
       </IconButton>
+
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -149,6 +150,7 @@ const BoxPlotTemplate: React.FC<BoxPlotTemplateProps> = ({
           Download as PNG
         </MenuItem>
       </Menu>
+
       <div id="boxplot-chart" />
     </div>
   );

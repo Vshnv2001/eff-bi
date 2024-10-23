@@ -1,12 +1,9 @@
 "use client";
 
 import * as React from "react";
-import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardHeader from "@mui/material/CardHeader";
 import Divider from "@mui/material/Divider";
 import { useTheme } from "@mui/material/styles";
-import type { SxProps } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
@@ -18,13 +15,11 @@ import { Chart } from "../Chart";
 export interface SalesProps {
   chartSeries: { name: string; data: number[] }[];
   categories: string[];
-  sx?: SxProps;
 }
 
 export function BarChartTemplate({
   chartSeries,
   categories,
-  sx,
 }: SalesProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartOptions = useChartOptions(categories);
@@ -80,52 +75,52 @@ export function BarChartTemplate({
   };
 
   return (
-    <Card sx={sx}>
-      <CardHeader
-        action={
-          <div>
-            <IconButton onClick={handleMenuClick} size="small">
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              PaperProps={{
-                style: {
-                  borderRadius: 8,
-                  marginTop: 5,
-                },
-              }}
-            >
-              <MenuItem
-                onClick={() => handleDownload("SVG")}
-                sx={{
-                  typography: "body2",
-                  color: "text.primary",
-                  "&:hover": {
-                    backgroundColor: "rgba(0, 0, 0, 0.08)",
-                  },
-                }}
-              >
-                Download as SVG
-              </MenuItem>
-              <MenuItem
-                onClick={() => handleDownload("PNG")}
-                sx={{
-                  typography: "body2",
-                  color: "text.primary",
-                  "&:hover": {
-                    backgroundColor: "rgba(0, 0, 0, 0.08)",
-                  },
-                }}
-              >
-                Download as PNG
-              </MenuItem>
-            </Menu>
-          </div>
-        }
-      />
+    <div style={{ position: "relative", marginTop: 30 }}>
+      <div style={{ position: "absolute", top: -20, right: 10, zIndex: 1 }}>
+        <IconButton
+          onClick={handleMenuClick}
+          size="small"
+          style={{ position: "absolute", top: 0, right: 0 }}
+        >
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          PaperProps={{
+            style: {
+              borderRadius: 8,
+              marginTop: 5,
+            },
+          }}
+        >
+          <MenuItem
+            onClick={() => handleDownload("SVG")}
+            sx={{
+              typography: "body2",
+              color: "text.primary",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.08)",
+              },
+            }}
+          >
+            Download as SVG
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleDownload("PNG")}
+            sx={{
+              typography: "body2",
+              color: "text.primary",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.08)",
+              },
+            }}
+          >
+            Download as PNG
+          </MenuItem>
+        </Menu>
+      </div>
       <CardContent>
         <Chart
           height={350}
@@ -136,7 +131,7 @@ export function BarChartTemplate({
         />
       </CardContent>
       <Divider />
-    </Card>
+    </div>
   );
 }
 
