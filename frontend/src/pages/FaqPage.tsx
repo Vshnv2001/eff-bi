@@ -127,7 +127,7 @@ const FaqPage = () => {
         </div>
         <div className="w-[55rem] m-20 text-center">
           <Typography color="white" className="text-xl">
-            Welcome to EffBI, Your all-in-one tool for data management and visualization! <br/>
+            Welcome to EffBI 👋, Your all-in-one tool for data management and visualization! <br/>
             Let's guide you through the initial setup and key features to kickstart your journey.
           </Typography>
         </div>
