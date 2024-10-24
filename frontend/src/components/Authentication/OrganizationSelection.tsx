@@ -32,8 +32,6 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
   const [orgData, setOrgData] = useState({
     orgId: "",
     name: "",
-    databaseUri: "",
-    dbType: "",
   });
   const [showTransition, setShowTransition] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
@@ -83,39 +81,12 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
     setOrgData((prevData) => ({
       ...prevData,
       [name]: value,
-      ...(name === "databaseUri" ? { dbType: "" } : {}),
     }));
   };
 
-  const handleDbTypeChange = (event: SelectChangeEvent<string>) => {
-    setOrgData((prevData) => ({
-      ...prevData,
-      dbType: event.target.value as string,
-    }));
-  };
 
   const handleSubmit = async () => {
     if (step === "create") {
-      if (orgData.databaseUri) {
-        const connectionResponse = await fetch(`${BACKEND_API_URL}/api/connection/`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            uri: orgData.databaseUri,
-            db_type: orgData.dbType,
-          }),
-        });
-
-        if (!connectionResponse.ok) {
-          const errorData = await connectionResponse.json();
-          setErrorMessage(errorData.message || "Error connecting to database");
-          setIsShaking(true);
-          setTimeout(() => setIsShaking(false), 1000);
-          return;
-        }
-      }
 
       const response = await fetch(`${BACKEND_API_URL}/api/organizations/`, {
         method: "POST",
@@ -124,7 +95,6 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
         },
         body: JSON.stringify({
           name: orgData.name,
-          database_uri: orgData.databaseUri,
         }),
       });
 
@@ -227,33 +197,6 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
                 value={orgData.name}
                 onChange={handleInputChange}
               />
-              <TextField
-                margin="normal"
-                fullWidth
-                name="databaseUri"
-                label="Database URI (Optional)"
-                type="text"
-                value={orgData.databaseUri}
-                onChange={handleInputChange}
-              />
-              <FormControl fullWidth sx={{ mt: 2 }}>
-                <Select
-                  value={orgData.dbType}
-                  onChange={handleDbTypeChange} // This is now correctly typed
-                  displayEmpty
-                  inputProps={{ 'aria-label': 'Database Type' }}
-                  disabled={!orgData.databaseUri} // Disable if databaseUri is empty
-                >
-                  <MenuItem value="" disabled>
-                    Select Database Type
-                  </MenuItem>
-                  <MenuItem value="postgres">Postgres</MenuItem>
-                  <MenuItem value="mysql">MySQL</MenuItem>
-                  <MenuItem value="oracle">Oracle</MenuItem>
-                  <MenuItem value="sqlite">SQLite</MenuItem>
-                </Select>
-                <FormHelperText>Select the database type</FormHelperText>
-              </FormControl>
             </>
           )}
 
