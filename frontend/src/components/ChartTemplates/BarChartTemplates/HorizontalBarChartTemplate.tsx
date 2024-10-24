@@ -1,31 +1,23 @@
 "use client";
 
 import * as React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardHeader from "@mui/material/CardHeader";
-import Divider from "@mui/material/Divider";
-import { useTheme } from "@mui/material/styles";
-import type { SxProps } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import html2canvas from "html2canvas";
+import { useTheme } from "@mui/material/styles";
 import type { ApexOptions } from "apexcharts";
-
 import { Chart } from "../Chart";
 
 export interface HorizontalBarChartProps {
   chartSeries: { name: string; data: number[] }[];
   categories: string[];
-  sx?: SxProps;
 }
 
 export function HorizontalBarChartTemplate({
   chartSeries,
   categories,
-  sx,
 }: HorizontalBarChartProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartOptions = useChartOptions(categories);
@@ -39,7 +31,9 @@ export function HorizontalBarChartTemplate({
   };
 
   const handleDownload = async (format: string) => {
-    const chartElement = document.querySelector(".apexcharts-canvas") as HTMLElement;
+    const chartElement = document.querySelector(
+      ".apexcharts-canvas"
+    ) as HTMLElement;
 
     if (!chartElement) return;
 
@@ -79,30 +73,50 @@ export function HorizontalBarChartTemplate({
   };
 
   return (
-    <Card sx={sx}>
-      <CardHeader
-        action={
-          <div>
-            <IconButton onClick={handleMenuClick} size="small">
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={() => handleDownload("SVG")}>
-                Download as SVG
-              </MenuItem>
-              <MenuItem onClick={() => handleDownload("PNG")}>
-                Download as PNG
-              </MenuItem>
-            </Menu>
-          </div>
-        }
-        title=""
-      />
-      <CardContent>
+    <div style={{ position: "relative", textAlign: "center" }}>
+      <div style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}>
+        <IconButton onClick={handleMenuClick} size="small">
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          PaperProps={{
+            style: {
+              borderRadius: 8,
+              marginTop: 5,
+            },
+          }}
+        >
+          <MenuItem
+            onClick={() => handleDownload("SVG")}
+            sx={{
+              typography: "body2",
+              color: "text.primary",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.08)",
+              },
+            }}
+          >
+            Download as SVG
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleDownload("PNG")}
+            sx={{
+              typography: "body2",
+              color: "text.primary",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.08)",
+              },
+            }}
+          >
+            Download as PNG
+          </MenuItem>
+        </Menu>
+      </div>
+
+      <div style={{ marginTop: 30 }}>
         <Chart
           height={350}
           options={chartOptions}
@@ -110,9 +124,8 @@ export function HorizontalBarChartTemplate({
           type="bar"
           width="100%"
         />
-      </CardContent>
-      <Divider />
-    </Card>
+      </div>
+    </div>
   );
 }
 

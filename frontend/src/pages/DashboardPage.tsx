@@ -70,7 +70,7 @@ export default function DashboardPage() {
         if (error.response?.status === 400) {
           console.error("Question is not relevant to the database");
         } else {
-          console.error("Error fetching tiles LOL");
+          console.error("Error fetching tiles");
         }
       } else {
         console.error("Unexpected error occurred");
@@ -200,6 +200,7 @@ export default function DashboardPage() {
                 if (typeof tileData.tile_props === "string") {
                   try {
                     componentProps = JSON.parse(tileData.tile_props);
+                    console.log("component prop", componentProps);
                   } catch (error) {
                     console.error("Error parsing tile props", error);
                     return null;
@@ -217,6 +218,7 @@ export default function DashboardPage() {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
+                        className="draggable-item" // Add your class for fixed height and transition
                       >
                         <Card className="text-black">
                           <CardBody className="flex flex-col items-center">

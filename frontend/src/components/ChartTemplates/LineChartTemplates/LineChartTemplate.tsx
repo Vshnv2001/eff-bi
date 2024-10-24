@@ -2,45 +2,37 @@ import React, { useRef, useState } from "react";
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import html2canvas from "html2canvas";
-import { Menu, MenuItem, IconButton } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Menu, MenuItem, IconButton } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 type LineChartTemplateProps = {
   series: {
     name: string;
     data: number[];
   }[];
-  title: string;
   categories: string[];
-  height?: number;
 };
 
 const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
   series,
-  title,
   categories,
-  height = 350,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const options: ApexOptions = {
     chart: {
-      height,
       type: "line",
       zoom: {
         enabled: true,
       },
+      toolbar: { show: false },
     },
     dataLabels: {
       enabled: false,
     },
     stroke: {
       curve: "smooth",
-    },
-    title: {
-      text: title,
-      align: "left",
     },
     xaxis: {
       categories,
@@ -97,22 +89,50 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
 
   return (
     <div ref={chartRef}>
-      <IconButton onClick={handleMenuClick} size="small" style={{ marginBottom: '10px' }}>
+      <IconButton
+        onClick={handleMenuClick}
+        size="small"
+        style={{ marginBottom: "10px" }}
+      >
         <MoreVertIcon />
       </IconButton>
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleClose}
+        PaperProps={{
+          style: {
+            borderRadius: 8,
+            marginTop: 5,
+          },
+        }}
       >
-        <MenuItem onClick={() => handleDownload("SVG")}>
+        <MenuItem
+          onClick={() => handleDownload("SVG")}
+          sx={{
+            typography: "body2",
+            color: "text.primary",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.08)",
+            },
+          }}
+        >
           Download as SVG
         </MenuItem>
-        <MenuItem onClick={() => handleDownload("PNG")}>
+        <MenuItem
+          onClick={() => handleDownload("PNG")}
+          sx={{
+            typography: "body2",
+            color: "text.primary",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.08)",
+            },
+          }}
+        >
           Download as PNG
         </MenuItem>
       </Menu>
-      <Chart options={options} series={series} type="line" height={height} />
+      <Chart options={options} series={series} type="line" height={400} />
     </div>
   );
 };
