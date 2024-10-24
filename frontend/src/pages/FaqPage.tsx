@@ -26,6 +26,50 @@ function Icon({ id, open }: { id: number; open: number }) {
     </svg>
   );
 }
+const tips = [
+  {
+    topic: "Connecting Your Database",
+    answer:
+      "Begin by connecting your database to unlock the full capabilities of EffBI. " +
+        "Navigate to the Settings tab, select 'Database Settings,' and enter your database URI. " +
+        "This setup is essential for accessing the key features of EffBI."
+  },
+  {
+    topic: "View Data",
+    answer:
+      "After connecting your database, explore your tables by navigating to the 'Tables' tab. " +
+        "Here, you can preview sample data from your accessible tables, providing a quick snapshot of the information."
+  },
+  {
+    topic: "Creating Dashboards",
+    answer:
+      "Dashboards are essential for visualizing data interactions and trends! " +
+        "Start creating your own by visiting the 'Dashboard' page and clicking the 'Create Dashboard' button. " +
+        "This allows you to assemble a collection of tiles showcase data insights."
+  },
+  {
+    topic: "Creating Tiles",
+    answer:
+      "Tiles are where the magic of EffBI is showcased!" +
+        "Create a new tile by navigating to the 'Dashboard' page and selecting 'Create Tile.' " +
+        "Enter your data query and our application would produce a dynamic visual representations of the results. "
+  },
+  {
+    topic: "User Permissions Page",
+    answer:
+      "The User Permissions page provides a comprehensive overview of your current access rights." +
+        " If you hold administrator rights for a table, you can modify access levels. "
+  },
+  {
+    topic: "Managing User Permissions",
+    answer:
+      "To manage user permissions effectively, first go to the 'User Permissions' page. " +
+        "As a table administrator, you have the authority to adjust user access." +
+        " You can revoke existing permissions with the 'Remove' button " +
+        "or extend access by selecting 'Add Users' and entering your colleagues' email with the respective permission type."
+  }
+];
+
 
 const faqs = [
   {
@@ -78,26 +122,57 @@ const FaqPage = () => {
       <div className="flex flex-col items-center justify-between mb-8 relative">
         <div className="absolute inset-x-0 text-center">
           <Typography color="white" className="text-3xl font-bold">
+            Getting Started
+          </Typography>
+        </div>
+        <div className="w-[55rem] m-20 text-center">
+          <Typography color="white" className="text-xl">
+            Welcome to EffBI, Your all-in-one tool for data management and visualization! <br/>
+            Let's guide you through the initial setup and key features to kickstart your journey.
+          </Typography>
+        </div>
+        <div className="w-[55rem]">
+          {tips.map((tip, idx) => {
+            return (
+                <Accordion
+                    open={open === idx}
+                    icon={<Icon id={idx} open={open}/>}
+                >
+                  <AccordionHeader
+                      className="text-white hover:text-blue-400"
+                      onClick={() => handleOpen(idx)}
+                  >
+                    {tip.topic}
+                  </AccordionHeader>
+                  <AccordionBody className="text-white text-lg">
+                    {tip.answer}
+                  </AccordionBody>
+                </Accordion>
+            );
+          })}
+        </div>
+        <div className="w-[55rem] mt-20 text-center">
+          <Typography color="white" className="text-3xl font-bold">
             Frequently Asked Questions
           </Typography>
         </div>
         <div className="w-[55rem] mt-20">
           {faqs.map((faq, idx) => {
             return (
-              <Accordion
-                open={open === idx}
-                icon={<Icon id={idx} open={open} />}
-              >
-                <AccordionHeader
-                  className="text-white hover:text-blue-400"
-                  onClick={() => handleOpen(idx)}
+                <Accordion
+                    open={open === idx}
+                    icon={<Icon id={idx} open={open}/>}
                 >
-                  {faq.question}
-                </AccordionHeader>
-                <AccordionBody className="text-white text-lg">
-                  {faq.answer}
-                </AccordionBody>
-              </Accordion>
+                  <AccordionHeader
+                      className="text-white hover:text-blue-400"
+                      onClick={() => handleOpen(idx)}
+                  >
+                    {faq.question}
+                  </AccordionHeader>
+                  <AccordionBody className="text-white text-lg">
+                    {faq.answer}
+                  </AccordionBody>
+                </Accordion>
             );
           })}
         </div>
