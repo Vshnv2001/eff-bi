@@ -4,11 +4,14 @@ from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from ..models import Organization
 from ..serializer import OrganizationSerializer
+import logging 
+
+logger = logging.getLogger(__name__)
 
 @api_view(["POST"])
 def create_organization(request):
     try:
-        # print(request.data)
+        # logger.error(request.data)
         name = request.data.get('name', None)
         database_uri = request.data.get('database_uri', "")
         
@@ -36,7 +39,7 @@ def create_organization(request):
             status=status.HTTP_201_CREATED
         )
     except Exception as e:
-        # print(e)
+        # logger.error(e)
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(["GET", "PATCH", "DELETE"])

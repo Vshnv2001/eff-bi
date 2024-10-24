@@ -7,6 +7,9 @@ from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from ..models import User
 from django.core.exceptions import ObjectDoesNotExist
+import logging 
+
+logger = logging.getLogger(__name__)
 
 @api_view(["GET"])
 def get_user_permissions_by_table(request, table_id):
@@ -25,7 +28,7 @@ def get_user_permissions_by_table(request, table_id):
     """
     try:
         table = get_object_or_404(OrgTables, id=table_id)
-        # print(table)
+        # logger.error(table)
         permissions = UserAccessPermissions.objects.select_related('user_id').filter(table_id=table_id)
         permissions_data = [
             {

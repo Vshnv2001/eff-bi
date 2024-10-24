@@ -1,10 +1,11 @@
-import json
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from .LLMManager import LLMManager
 from .State import State
-
 from enum import Enum
+import logging 
+
+logger = logging.getLogger(__name__)
 
 class ChartType(Enum):
     LineChartTemplate = "LineChartTemplate"
@@ -106,14 +107,14 @@ class DataFormatter:
         question = self.state.question
         sql_query = self.state.sql_query
         
-        print("chosen visualization: ", visualization)
+        logger.error("chosen visualization: ", visualization)
 
         if visualization == "none":
             return {"formatted_data_for_visualization": None}
         
         visualization_props = viz_props[ChartType(visualization)]
         
-        print("visualization_props: ", visualization_props)
+        logger.error("visualization_props: ", visualization_props)
         prompt = ChatPromptTemplate.from_messages([
             ("system", '''
             You are an AI assistant that formats data for data visualizations.
@@ -139,14 +140,14 @@ class DataFormatter:
             '''),
         ])
         
-        print("invoking llm_manager")
+        logger.error("invoking llm_manager")
         try:
             response = self.llm_manager.invoke(prompt, sql_query=sql_query, results=results, visualization=visualization, question=question, visualization_props=visualization_props)
         except Exception as e:
-            print("Error invoking llm_manager: ", e)
+            logger.error("Error invoking llm_manager: ", e)
             raise e
         
-        print("response: ", response)
+        logger.error("response: ", response)
         
         self.state.formatted_data = JsonOutputParser().parse(response)
         
