@@ -9,10 +9,6 @@ import {
   FormControlLabel,
   FormControl,
   Slide,
-  Select,
-  MenuItem,
-  FormHelperText,
-  SelectChangeEvent,
 } from "@mui/material";
 import { useAuth } from "./AuthenticationContext";
 import { useNavigate } from "react-router-dom";
