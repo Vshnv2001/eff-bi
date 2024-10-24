@@ -4,14 +4,16 @@ from .DataFormatter import DataFormatter
 from .PrunerAgent import PrunerAgent
 from .State import State
 from ..helpers.access_check import get_accessible_table_names
+import logging 
 
+logger = logging.getLogger(__name__)
 
 def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_id: int):
     state = State()
     state.question = user_query
     
     accessible_table_names = get_accessible_table_names(user_id)
-    print("ACCESSIBLE TABLE NAMES: ", accessible_table_names)
+    logger.error("ACCESSIBLE TABLE NAMES: ", accessible_table_names)
     
     # Get the database schema
     db_manager = DatabaseManager(db_uri, organization_id)
@@ -23,7 +25,7 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     pruner = PrunerAgent()
     parsed_question = pruner.prune(state)
     
-    print(parsed_question)
+    logger.error(parsed_question)
     
     state.parsed_question = parsed_question
     
@@ -35,9 +37,9 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     sql_agent = SQLAgent(db_manager)
     sql_query = sql_agent.generate_sql(state)
     
-    print(type(sql_query))
+    logger.error(type(sql_query))
     
-    print("SQL QUERY: ", sql_query)
+    logger.error("SQL QUERY: ", sql_query)
     
     # if not sql_query.get('is_relevant', False):
     #     state.error = "We do not have the necessary data to answer this question. Either check your database tables and ensure you have the correct permissions, or rephrase your question."
@@ -47,7 +49,7 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     
     # validate_and_fix_sql = sql_agent.validate_and_fix_sql(state)
     
-    # print("VALIDATE AND FIX SQL: ", validate_and_fix_sql)
+    # logger.error("VALIDATE AND FIX SQL: ", validate_and_fix_sql)
     
     # state.sql_query = validate_and_fix_sql.get('corrected_query', '')
     
@@ -60,14 +62,14 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     # # Format the results
     formatter = DataFormatter(state)
     visualization_choice = formatter.choose_visualization()
-    print("VISUALIZATION CHOICE: ", visualization_choice)
+    logger.error("VISUALIZATION CHOICE: ", visualization_choice)
     state.visualization = visualization_choice
     try:
         formatted_data = formatter.format_data_for_visualization()
     except Exception as e:
-        print("Error formatting data for visualization: ", e)
+        logger.error("Error formatting data for visualization: ", e)
         raise e
     
-    print("FORMATTED DATA: ", formatted_data)
+    logger.error("FORMATTED DATA: ", formatted_data)
 
     return state
