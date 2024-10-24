@@ -46,7 +46,7 @@ const SaveUserData: React.FC = () => {
 
           setUserId(userId);
           setIsSaved(true);
-          navigate("/dashboards");
+          navigate("/faq");
         }
       } catch (error) {
         console.error("Error creating user:", error);
