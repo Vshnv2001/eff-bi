@@ -1,6 +1,9 @@
 from .LLMManager import LLMManager
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
+import logging 
+
+logger = logging.getLogger(__name__)
 
 class PrunerAgent:
     def __init__(self, model="gpt-4o"):
@@ -36,7 +39,7 @@ The "noun_columns" field should contain only the columns that are relevant to th
     def prune(self, state):
         output_parser = JsonOutputParser()
         response = self.llm_manager.invoke(self.prompt, question=state.question, schema=state.database_schema)
-        print(response)
+        logger.error(response)
         output = output_parser.parse(response)
         return output
     

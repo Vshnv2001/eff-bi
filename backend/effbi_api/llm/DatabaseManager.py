@@ -3,6 +3,9 @@ import psycopg2
 from typing import List, Any
 from ..models import OrgTables
 from django.core import serializers
+import logging 
+
+logger = logging.getLogger(__name__)
 
 class DatabaseManager:
     def __init__(self, db_uri: str, organization_id: str):
@@ -16,7 +19,7 @@ class DatabaseManager:
             org_tables = OrgTables.objects.filter(organization_id=self.organization_id, table_name__in=accessible_table_names)
             # Convert the queryset to JSON
             org_tables_json = serializers.serialize('json', org_tables)
-            # print(org_tables_json)
+            # logger.error(org_tables_json)
             return org_tables_json
         except OrgTables.DoesNotExist:
             raise Exception(f"Database schema not found for organization {self.organization_id}")
@@ -28,7 +31,7 @@ class DatabaseManager:
             cursor = conn.cursor()
             cursor.execute(sql_query)
             results = cursor.fetchall()
-            print("printing results", results)
+            logger.error("results", results)
             return results
         except requests.RequestException as e:
             raise Exception(f"Error executing query: {str(e)}")
