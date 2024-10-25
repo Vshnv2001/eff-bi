@@ -39,7 +39,7 @@ The "noun_columns" field should contain only the columns that are relevant to th
     def prune(self, state):
         output_parser = JsonOutputParser()
         response = self.llm_manager.invoke(self.prompt, question=state.question, schema=state.database_schema)
-        logger.error(response)
+        logger.info(response)
         output = output_parser.parse(response)
         return output
     

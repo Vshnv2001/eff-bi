@@ -28,7 +28,7 @@ def get_user_permissions_by_table(request, table_id):
     """
     try:
         table = get_object_or_404(OrgTables, id=table_id)
-        # logger.error(table)
+        # logger.info(table)
         permissions = UserAccessPermissions.objects.select_related('user_id').filter(table_id=table_id)
         permissions_data = [
             {

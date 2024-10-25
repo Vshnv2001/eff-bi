@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 @api_view(["POST"])
 def create_organization(request):
     try:
-        # logger.error(request.data)
+        # logger.info(request.data)
         name = request.data.get('name', None)
         database_uri = request.data.get('database_uri', "")
         
@@ -39,7 +39,7 @@ def create_organization(request):
             status=status.HTTP_201_CREATED
         )
     except Exception as e:
-        # logger.error(e)
+        # logger.info(e)
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(["GET", "PATCH", "DELETE"])

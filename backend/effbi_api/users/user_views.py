@@ -12,13 +12,13 @@ logger = logging.getLogger(__name__)
 @api_view(["POST"])
 def create_user(request):
     try:
-        # logger.error(request.data)
+        # logger.info(request.data)
         user_data = request.data.copy() 
         is_super_admin = user_data.pop('is_super_admin', False)
 
         serializer = UserSerializer(data=user_data)
         if serializer.is_valid():
-            # logger.error(serializer)
+            # logger.info(serializer)
             serializer.save()
 
             if is_super_admin:
@@ -45,9 +45,9 @@ def create_user(request):
 @api_view(["GET", "PATCH", "DELETE"])
 def user_details(request, user_id):
     try:
-        logger.error(user_id)
+        logger.info(user_id)
         user = get_object_or_404(User, id=str(user_id))
-        logger.error("USER: ", user)
+        logger.info("USER: ", user)
 
         if request.method == "GET":
             # Return user details
@@ -70,7 +70,7 @@ def user_details(request, user_id):
             return JsonResponse({'message': 'User deleted successfully'}, status=status.HTTP_200_OK)
 
     except Exception as e:
-        logger.error(e)
+        logger.info(e)
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -95,9 +95,9 @@ def get_organization_uri(request, user_id):
     try:
         user = get_object_or_404(User, id=user_id)
         org_uri = user.organization.database_uri
-        logger.error("hit get organization uri")
+        logger.info("hit get organization uri")
         return JsonResponse({'message': 'Organization URI retrieved successfully', 'database_uri': org_uri}, status=status.HTTP_200_OK)
 
     except Exception as e:
-        logger.error(str(e))
+        logger.info(str(e))
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

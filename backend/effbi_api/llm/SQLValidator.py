@@ -27,7 +27,8 @@ Your task is to modify the SQL query to correct the error. It is crucial that th
 
 Respond in JSON format with the following structure. Only respond with the JSON:
 {{
-    "corrected_query": string
+    "corrected_query": string,
+    "corrected_query_reason": string
 }}
 
 Ensure the corrected query addresses the error. Do not return the same query. If the error is unclear, make a reasonable assumption to correct the query.
@@ -42,7 +43,8 @@ Ensure the corrected query addresses the error. Do not return the same query. If
 
 Respond in JSON format with the following structure. Only respond with the JSON:
 {{
-    "corrected_query": string
+    "corrected_query": string,
+    "corrected_query_reason": string
 }}
 
 For example, 

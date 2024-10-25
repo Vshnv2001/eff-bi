@@ -25,7 +25,7 @@ class DatabaseManager:
             org_tables = OrgTables.objects.filter(organization_id=self.organization_id, table_name__in=accessible_table_names)
             # Convert the queryset to JSON
             org_tables_json = serializers.serialize('json', org_tables)
-            # logger.error(org_tables_json)
+            # logger.info(org_tables_json)
             return org_tables_json
         except OrgTables.DoesNotExist:
             raise Exception(f"Database schema not found for organization {self.organization_id}")
@@ -35,6 +35,7 @@ class DatabaseManager:
         try:
             conn = psycopg2.connect(self.db_uri)
             cursor = conn.cursor()
+            print("state.sql_query", state.sql_query)
             cursor.execute(state.sql_query)
             results = cursor.fetchall()
             count = 0
@@ -45,7 +46,7 @@ class DatabaseManager:
                 cursor.execute(state.sql_query)
                 results = cursor.fetchall()
                 count += 1
-            logger.error("results", results)
+            logger.info("results", results)
             return results
         except Exception as e:
             print("Error executing query: ", str(e))
@@ -55,5 +56,5 @@ class DatabaseManager:
             else:
                 validated_sql_query = sql_validator.validate_and_fix_sql(state, str(e))
                 print("Validated SQL Query: ", validated_sql_query)
-                state.sql_query = validated_sql_query.get('corrected_query', state.sql_query)
+                state.sql_query = validated_sql_query.get('sql_query', state.sql_query)
                 return self.execute_query(state, sql_agent, sql_validator, num_tries + 1)
