@@ -170,3 +170,26 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_HEADERS: List[str] = list(default_headers) + [
     "Content-Type"
 ] + get_all_cors_headers()
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'effbi_api': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
