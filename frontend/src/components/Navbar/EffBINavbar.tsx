@@ -128,6 +128,12 @@ export default function EffBINavbar() {
                   >
                     Access Permissions
                   </MenuItem>
+                  <MenuItem
+                    className="flex items-center text-white gap-2 p-3 bg-gray-800 border-none"
+                    onClick={() => navigate("/profile")}
+                  >
+                    User profile
+                  </MenuItem>
                 </MenuList>
               </Menu>
               <Button

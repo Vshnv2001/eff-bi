@@ -31,6 +31,7 @@ import ExDashboardPage from "./pages/ExDashboardPage";
 import TablePermissionsPage from "./pages/TablePermissionsPage";
 import ViewDataPage from "./pages/ViewDataPage";
 import FaqPage from "./pages/FaqPage";
+import UserProfilePage from "./pages/UserProfilePage";
 
 // Initialize SuperTokens
 SuperTokens.init(SuperTokensConfig);
@@ -132,6 +133,14 @@ const router = createBrowserRouter(
         element={
           <SessionAuth>
             <FaqPage />
+          </SessionAuth>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <SessionAuth>
+            <UserProfilePage />
           </SessionAuth>
         }
       />
