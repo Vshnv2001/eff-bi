@@ -13,7 +13,7 @@ import ScatterChartTemplate from "../ChartTemplates/LineChartTemplates/ScatterCh
 import CandlestickTemplate from "../ChartTemplates/BoxPlotTemplates/CandleStickTemplate";
 import BoxPlotTemplate from "../ChartTemplates/BoxPlotTemplates/BoxPlotTemplate";
 import LineChartTemplate from "../ChartTemplates/LineChartTemplates/LineChartTemplate";
-
+import TableTemplate from "../ChartTemplates/TableTemplate/TableTemplate";
 export const componentMapping = {
   'LineChartTemplate': LineChartTemplate,
   'BarChartTemplate': BarChartTemplate,
@@ -30,4 +30,5 @@ export const componentMapping = {
   'ScatterChartTemplate': ScatterChartTemplate,
   'CandlestickTemplate': CandlestickTemplate,
   'BoxPlotTemplate': BoxPlotTemplate,
+  'TableTemplate': TableTemplate,
 }

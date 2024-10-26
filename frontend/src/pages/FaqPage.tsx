@@ -30,14 +30,14 @@ const tips = [
   {
     topic: "Connecting Your Database",
     answer:
-      "Begin by connecting your database to unlock the full capabilities of EffBI. " +
-      "Navigate to the Settings tab, select 'Database Settings,' and enter your database URI. " +
-      "This setup is essential for accessing the key features of EffBI.",
+      "Begin by connecting your database to unlock the full capabilities of Eff BI. " +
+      "Navigate to the Settings tab, select 'Database Settings', and enter your database URI. " +
+      "This setup is essential for accessing the key features of Eff BI.",
   },
   {
     topic: "View Data",
     answer:
-      "After connecting your database, explore your tables by navigating to the 'Tables' tab. " +
+      "After connecting your database, explore your tables by navigating to the 'View Data' tab. " +
       "Here, you can preview sample data from your accessible tables, providing a quick snapshot of the information.",
   },
   {
@@ -50,7 +50,7 @@ const tips = [
   {
     topic: "Creating Tiles",
     answer:
-      "Tiles are where the magic of EffBI is showcased!" +
+      "Tiles are where the magic of Eff BI is showcased! " +
       "Create a new tile by navigating to the 'Dashboard' page and selecting 'Create Tile.' " +
       "Enter your data query and our application would produce a dynamic visual representations of the results. ",
   },
@@ -87,9 +87,9 @@ const faqs = [
       "Our system only supports 1 database URI per organization at the moment. As such, if your organization has previously added a database URI, the SAVE button will be disabled. If you urgently need to update your database URI, do reach out to us at effortlessbi@gmail.com. Thank you for bearing with us as we continue to develop Eff BI!",
   },
   {
-    question: "What is the difference between dashboards and dashboard?",
+    question: "What does the refresh button in database settings do?",
     answer:
-      "Dashboard (without s) contains multiple tiles. Dashboards (with s) is a collection of all your dashboard.",
+      "Whenever your original data has been updated e.g. a new table or column added, you can trigger a refresh on Eff BI side for us to have the most updated version for your database.",
   },
   {
     question: "What happens if I rename a table in the database?",
@@ -126,7 +126,7 @@ const FaqPage = () => {
         </div>
         <div className="w-[55rem] m-20 text-center">
           <Typography color="white" className="text-xl">
-            Welcome to EffBI 👋, Your all-in-one tool for data management and
+            Welcome to Eff BI 👋, Your all-in-one tool for data management and
             visualization! <br />
             Let's guide you through the initial setup and key features to
             kickstart your journey.

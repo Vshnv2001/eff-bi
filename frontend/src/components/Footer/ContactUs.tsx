@@ -42,7 +42,7 @@ const Footer: React.FC = () => {
       <div className="container mx-auto flex flex-col items-center">
         {/* Contact Us Section */}
         <div className="w-full max-w-md mb-4 text-center">
-          <h2 className="text-white text-4xl font-black uppercase text-slate-500 text-center mb-6">
+          <h2 className="text-white text-4xl font-black text-slate-500 text-center mb-6">
             Contact Us
           </h2>
           <p className="mb-6 text-lg">We'd love to hear from you!</p>
