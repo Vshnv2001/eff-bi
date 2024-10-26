@@ -7,6 +7,7 @@ import {
   ThemeProvider,
   Button,
   Spinner,
+  Tooltip,
 } from "@material-tailwind/react";
 import axios from "axios";
 import { useAuth } from "../components/Authentication/AuthenticationContext";
@@ -263,13 +264,34 @@ export default function DBSettingsPage() {
                 Refresh Data
               </Typography>
               <div className="flex">
-                <Button
-                  color="blue"
-                  className={`w-full text-md tracking-widest`}
-                  onClick={handleRefresh}
+                <Tooltip
+                  content={
+                    <div className="w-80">
+                      <Typography
+                        variant="small"
+                        color="white"
+                        className="font-medium opacity-80"
+                      >
+                        Refresh is used when you have updates in your original
+                        database and want Eff BI to update our snapshot of your
+                        data
+                      </Typography>
+                    </div>
+                  }
+                  placement="top"
+                  animate={{
+                    mount: { scale: 1, y: 0 },
+                    unmount: { scale: 0, y: 25 },
+                  }}
                 >
-                  Refresh
-                </Button>
+                  <Button
+                    color="blue"
+                    className={`w-full text-md tracking-widest`}
+                    onClick={handleRefresh}
+                  >
+                    Refresh
+                  </Button>
+                </Tooltip>
               </div>
             </>
           ) : (
