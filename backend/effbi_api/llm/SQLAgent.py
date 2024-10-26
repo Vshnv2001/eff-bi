@@ -23,14 +23,13 @@ DO NOT do empty string checks like != '' or != 'N/A' on numeric columns.
              
 You may get foreign keys. In that case, design the query in such a way that it uses the foreign key to get the data from the related table.
 
-             
+You are allowed to use common table expressions or views if that simplifies the query
              
 THE RESULTS SHOULD ONLY BE IN THE FOLLOWING FORMAT, SO MAKE SURE TO ONLY GIVE TWO OR THREE COLUMNS:
 [[x, y]]
 or 
 [[label, x, y]]
         
-For questions like "plot a distribution of the fares for men and women", count the frequency of each fare and plot it. The x axis should be the fare and the y axis should be the count of people who paid that fare.
 SKIP ALL ROWS WHERE ANY COLUMN IS NULL or "N/A" or "".
 Just give the query string. Do not format it. Make sure to use the correct spellings of nouns as provided in the unique nouns list. All the table and column names should be enclosed in backticks.
 '''),

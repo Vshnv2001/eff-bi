@@ -18,14 +18,14 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     logger.info("ACCESSIBLE TABLE NAMES: ", accessible_table_names)
     
     # Get the database schema
-    print("stage 1")
+    print("stage_1")
     db_manager = DatabaseManager(db_uri, organization_id)
     database_schema = db_manager.get_schema(accessible_table_names)
     
     state.database_schema = database_schema
     
     # Prune the database schema to identify relevant tables and columns
-    print("stage 2")
+    print("stage_2")
     pruner = PrunerAgent()
     parsed_question = pruner.prune(state)
     
@@ -38,7 +38,7 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
         return state
 
     # Pass the pruned schema to the SQL agent to generate a SQL query
-    print("stage 3")
+    print("stage_3")
     sql_agent = SQLAgent(db_manager)
     sql_query = sql_agent.generate_sql(state)
 
@@ -48,7 +48,7 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     
     logger.info(type(sql_query))
 
-    print("sql query", sql_query)
+    print("sql_query", sql_query)
     
     logger.info("SQL QUERY: ", sql_query)
     
@@ -68,7 +68,7 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     state.results = results
     
     # Format the results
-    print("stage 4")
+    print("stage_4")
     formatter = DataFormatter(state)
     visualization_choice = formatter.choose_visualization()
     logger.info("VISUALIZATION CHOICE: ", visualization_choice)
