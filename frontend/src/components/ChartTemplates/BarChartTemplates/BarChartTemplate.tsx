@@ -17,6 +17,8 @@ export interface BarProps {
   categories: string[];
   xAxisLabel: string;
   yAxisLabel: string;
+  title: string;
+  description: string;
 }
 
 export function BarChartTemplate({
@@ -24,6 +26,8 @@ export function BarChartTemplate({
   categories,
   xAxisLabel,
   yAxisLabel,
+  title,
+  description,
 }: BarProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartOptions = useChartOptions(categories, xAxisLabel, yAxisLabel);
@@ -125,6 +129,13 @@ export function BarChartTemplate({
           </MenuItem>
         </Menu>
       </div>
+
+      {/* Title and Description */}
+      <div style={{ textAlign: "center", marginBottom: 16 }}>
+        <h2 style={{ margin: 0 }}>{title}</h2>
+        <p style={{ margin: 0 }}>{description}</p>
+      </div>
+
       <CardContent>
         <Chart
           height={350}

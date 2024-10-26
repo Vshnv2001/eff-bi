@@ -7,6 +7,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Typography from "@mui/material/Typography";
 import { Chart } from "../Chart";
 import { ApexOptions } from "apexcharts";
 import html2canvas from "html2canvas";
@@ -16,12 +17,16 @@ export interface AreaChartProps {
   chartSeries: { name: string; data: number[] }[];
   labels: string[];
   sx?: SxProps;
+  title?: string;
+  description?: string;
 }
 
 export function AreaChartTemplate({
   chartSeries,
   labels,
   sx,
+  title = "Area Chart",
+  description = "This area chart shows the trend of data over time.",
 }: AreaChartProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartOptions = useChartOptions(labels, chartSeries);
@@ -72,47 +77,60 @@ export function AreaChartTemplate({
 
   return (
     <Box sx={{ border: "1px solid #ccc", borderRadius: 2, p: 2, ...sx }}>
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+      {/* Title and Download Menu */}
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Box>
+          <Typography variant="h6" component="h2" sx={{ fontWeight: "bold", mb: 1 }}>
+            {title}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {description}
+          </Typography>
+        </Box>
         <IconButton onClick={handleMenuClick} size="small">
           <MoreVertIcon />
         </IconButton>
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-          PaperProps={{
-            style: {
-              borderRadius: 8,
-              marginTop: 5,
+      </Box>
+
+      {/* Download Menu Options */}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            borderRadius: 8,
+            marginTop: 5,
+          },
+        }}
+      >
+        <MenuItem
+          onClick={() => handleDownload("SVG")}
+          sx={{
+            typography: "body2",
+            color: "text.primary",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.08)",
             },
           }}
         >
-          <MenuItem
-            onClick={() => handleDownload("SVG")}
-            sx={{
-              typography: "body2",
-              color: "text.primary",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.08)",
-              },
-            }}
-          >
-            Download as SVG
-          </MenuItem>
-          <MenuItem
-            onClick={() => handleDownload("PNG")}
-            sx={{
-              typography: "body2",
-              color: "text.primary",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.08)",
-              },
-            }}
-          >
-            Download as PNG
-          </MenuItem>
-        </Menu>
-      </div>
+          Download as SVG
+        </MenuItem>
+        <MenuItem
+          onClick={() => handleDownload("PNG")}
+          sx={{
+            typography: "body2",
+            color: "text.primary",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.08)",
+            },
+          }}
+        >
+          Download as PNG
+        </MenuItem>
+      </Menu>
+
+      {/* Chart Display */}
       <div ref={chartRef} style={{ marginTop: 16 }}>
         <Chart
           height={400}

@@ -2,19 +2,23 @@ import React, { useEffect, useRef } from "react";
 import ApexCharts from "apexcharts";
 import { ApexOptions } from "apexcharts";
 import html2canvas from "html2canvas";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem, Typography } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 interface PieChartTemplateProps {
   series: number[];
   labels: string[];
   chartWidth?: number;
+  title: string;     
+  description: string;    
 }
 
 const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
   series,
   labels,
-  chartWidth = 500, // Increase default width
+  chartWidth = 500,
+  title,          
+  description,     
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -22,7 +26,6 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
   useEffect(() => {
     const fontSize = series.length > 10 ? "12px" : "14px";
 
-    // Dynamically generate colors
     const generateColors = (count: number) => {
       const colors = [];
       const baseHue = 30;
@@ -36,30 +39,33 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
       series: series,
       chart: {
         width: chartWidth,
-        type: "donut",
+        type: "pie",
         toolbar: { show: true, tools: { zoom: false, pan: false } },
       },
       labels: labels,
       colors: generateColors(series.length),
       dataLabels: {
-        enabled: series.length <= 8,
+        enabled: true, // Always show labels
         style: { fontSize, colors: ["#333"] },
         dropShadow: { enabled: false },
         formatter: (val, { seriesIndex, w }) => {
+          // Show full label without truncation
           const label = w.globals.labels[seriesIndex];
-          const displayLabel =
-            label.length > 10 ? label.slice(0, 10) + "…" : label;
           return typeof val === "number"
-            ? `${displayLabel}: ${val.toFixed(1)}%`
+            ? `${label}: ${val.toFixed(1)}%`
             : "";
         },
+        textAnchor: 'middle',
+        distributed: true,
       },
       responsive: [
         {
           breakpoint: 480,
           options: {
-            chart: { width: 300 },
-            legend: { position: "bottom" },
+            chart: { width: 200 },
+            legend: {
+              height: 200,
+            }
           },
         },
       ],
@@ -67,8 +73,22 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
         position: "right",
         fontSize: fontSize,
         floating: false,
+        height: 400, // Increased height for scrollability
+        formatter: function(seriesName, opts) {
+          // Show full legend text
+          return seriesName + ` - ${series[opts.seriesIndex].toFixed(1)}%`;
+        },
+        itemMargin: {
+          horizontal: 5,
+          vertical: 5
+        }
       },
-      tooltip: { enabled: true },
+      tooltip: { 
+        enabled: true,
+        y: {
+          formatter: (value) => `${value.toFixed(1)}%`
+        }
+      },
     };
 
     const chart = new ApexCharts(chartRef.current as HTMLElement, options);
@@ -162,7 +182,21 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
         </Menu>
       </div>
 
-      <div ref={chartRef} />
+      <Typography variant="h6" style={{ textAlign: "center", marginBottom: 10 }}>
+        {title}
+      </Typography>
+      <Typography variant="body2" style={{ textAlign: "center", marginBottom: 20 }}>
+        {description}
+      </Typography>
+
+      <div 
+        ref={chartRef}
+        style={{
+          maxHeight: "600px",  // Set maximum height
+          overflowY: "auto",   // Enable vertical scrolling
+          overflowX: "hidden" // Hide horizontal scrollbar
+        }}
+      />
     </div>
   );
 };

@@ -13,11 +13,15 @@ import { Chart } from "../Chart";
 export interface HorizontalBarChartProps {
   chartSeries: { name: string; data: number[] }[];
   categories: string[];
+  title: string;
+  description: string;
 }
 
 export function HorizontalBarChartTemplate({
   chartSeries,
   categories,
+  title,
+  description,
 }: HorizontalBarChartProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartOptions = useChartOptions(categories);
@@ -74,6 +78,8 @@ export function HorizontalBarChartTemplate({
 
   return (
     <div style={{ position: "relative", textAlign: "center" }}>
+      <h2>{title}</h2> {/* Display title */}
+      <p>{description}</p> {/* Display description */}
       <div style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}>
         <IconButton onClick={handleMenuClick} size="small">
           <MoreVertIcon />

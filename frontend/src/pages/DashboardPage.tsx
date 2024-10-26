@@ -188,17 +188,14 @@ export default function DashboardPage() {
           return (
             <Card key={tileData.id} className="text-black">
               <CardBody className="flex flex-col items-center">
-                <Typography
-                  variant="h5"
-                  className="text-black mb-2 text-center"
-                >
-                  {tileData.title}
-                </Typography>
-                <Typography className="text-gray-800 text-center mb-4">
-                  {tileData.description}
-                </Typography>
                 <div className="w-full">
-                  {Component && <Component {...componentProps} />}
+                  {Component && (
+                    <Component
+                      {...componentProps}
+                      title={tileData.title}
+                      description={tileData.description}
+                    />
+                  )}
                 </div>
               </CardBody>
             </Card>
