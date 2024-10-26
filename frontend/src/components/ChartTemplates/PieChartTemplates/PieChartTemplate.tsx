@@ -73,9 +73,8 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
         position: "right",
         fontSize: fontSize,
         floating: false,
-        height: 400, // Increased height for scrollability
+        height: 400,
         formatter: function(seriesName, opts) {
-          // Show full legend text
           return seriesName + ` - ${series[opts.seriesIndex].toFixed(1)}%`;
         },
         itemMargin: {

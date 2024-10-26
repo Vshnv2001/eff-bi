@@ -11,11 +11,15 @@ type LineChartTemplateProps = {
     data: number[];
   }[];
   categories: string[];
+  title: string;
+  description: string;
 };
 
 const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
   series,
   categories,
+  title,
+  description,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -89,6 +93,10 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
 
   return (
     <div ref={chartRef}>
+      <h2 style={{ textAlign: "center", marginBottom: "10px" }}>{title}</h2>
+      <p style={{ textAlign: "center", marginBottom: "20px" }}>
+        {description}
+      </p>
       <IconButton
         onClick={handleMenuClick}
         size="small"

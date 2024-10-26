@@ -4,6 +4,7 @@ from langchain_core.output_parsers import JsonOutputParser
 from .State import State
 from .LLMManager import LLMManager
 
+
 class SQLAgent:
     def __init__(self, db_manager):
         self.db_manager = db_manager
@@ -14,14 +15,22 @@ class SQLAgent:
 
         prompt = ChatPromptTemplate.from_messages([
             ("system", '''
+
 You are an AI assistant that generates SQL queries based on user questions, database schema, and unique nouns found in the relevant tables. Generate a valid SQL query to answer the user's question.
+
 Please do not put `` around the column names. Also, check the column descriptions (in schema) and types and make sure that the syntax of the input types are correct. A faulty example is "SELECT * FROM users WHERE age > '25'".
 Another faulty example is SELECT rider, stage, rank FROM results_individual WHERE rank IS NOT NULL AND rider IS NOT NULL AND stage IS NOT NULL AND rank != ''. The error is invalid input syntax for type integer: ""
+
 If there is not enough information to write a SQL query, respond with "NOT_ENOUGH_INFO".
              
 DO NOT do empty string checks like != '' or != 'N/A' on numeric columns.
              
 You may get foreign keys. In that case, design the query in such a way that it uses the foreign key to get the data from the related table.
+
+When dealing with aggregations:
+1. Consider what level of detail (granularity) is needed before aggregating
+2. Group by all relevant dimensions first if counting distinct occurrences
+3. Use common table expressions to break down complex aggregations into steps
 
 You are allowed to use common table expressions or views if that simplifies the query
              

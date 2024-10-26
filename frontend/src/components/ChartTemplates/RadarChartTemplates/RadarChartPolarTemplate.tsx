@@ -2,17 +2,21 @@ import React, { useEffect, useRef } from 'react';
 import ApexCharts from 'apexcharts';
 import { ApexOptions } from 'apexcharts';
 import html2canvas from 'html2canvas';
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 interface PolarChartProps {
   series: number[];
   chartWidth?: number;
+  title?: string;
+  description?: string;
 }
 
 const PolarChartTemplate: React.FC<PolarChartProps> = ({
   series,
   chartWidth = 380,
+  title,
+  description,
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -97,6 +101,16 @@ const PolarChartTemplate: React.FC<PolarChartProps> = ({
 
   return (
     <div>
+      {title && (
+        <Typography variant="h6" component="h2" style={{ marginBottom: "8px" }}>
+          {title}
+        </Typography>
+      )}
+      {description && (
+        <Typography variant="body2" style={{ marginBottom: "16px", color: '#666' }}>
+          {description}
+        </Typography>
+      )}
       <div ref={chartRef} id="polar-chart" />
       <div style={{ marginTop: "10px" }}>
         <IconButton onClick={handleMenuClick} size="small">

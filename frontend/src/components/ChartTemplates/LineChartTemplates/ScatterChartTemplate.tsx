@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ApexCharts from "apexcharts";
 import { ApexOptions } from "apexcharts";
 import html2canvas from "html2canvas";
-import { Menu, MenuItem, IconButton } from "@mui/material";
+import { Menu, MenuItem, IconButton, Typography } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 interface ScatterChartProps {
@@ -11,11 +11,15 @@ interface ScatterChartProps {
     data: [number, number][];
   }[];
   chartHeight?: number;
+  title?: string;
+  description?: string;
 }
 
 const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
   series,
   chartHeight = 350,
+  title,
+  description,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -103,6 +107,10 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
 
   return (
     <div>
+      {/* Display title and description */}
+      {title && <Typography variant="h6">{title}</Typography>}
+      {description && <Typography variant="body2" color="text.secondary">{description}</Typography>}
+      
       <IconButton
         onClick={handleMenuClick}
         size="small"

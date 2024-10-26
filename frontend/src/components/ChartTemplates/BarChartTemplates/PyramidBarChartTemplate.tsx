@@ -13,12 +13,15 @@ import { Chart } from "../Chart";
 export interface HorizontalBarChartProps {
   chartSeries: { name: string; data: number[] }[];
   categories: string[];
-
+  title: string;          
+  description: string;
 }
 
 export function PyramidBarChartTemplate({
   chartSeries,
   categories,
+  title,
+  description,
 }: HorizontalBarChartProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartOptions = useChartOptions(categories);
@@ -75,7 +78,8 @@ export function PyramidBarChartTemplate({
 
   return (
     <div style={{ position: "relative", textAlign: "center" }}>
-      <div style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}>
+      {/* Menu button positioned at the top right */}
+      <div style={{ position: "absolute", top: 10, right: 10, zIndex: 1 }}>
         <IconButton onClick={handleMenuClick} size="small">
           <MoreVertIcon />
         </IconButton>
@@ -116,6 +120,12 @@ export function PyramidBarChartTemplate({
           </MenuItem>
         </Menu>
       </div>
+
+      {/* Title and Description */}
+      <h2 style={{ margin: '20px 0' }}>{title}</h2>
+      <p style={{ marginBottom: '20px', color: '#555' }}>{description}</p>
+
+      {/* Chart component */}
       <div>
         <Chart
           height={440}

@@ -2,19 +2,23 @@ import React, { useEffect, useRef } from "react";
 import ApexCharts from "apexcharts";
 import { ApexOptions } from "apexcharts";
 import html2canvas from "html2canvas";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem, Typography } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 interface RadarChartProps {
   series: { name: string; data: number[] }[];
   categories: string[];
   chartHeight?: number;
+  title?: string;         
+  description?: string;   
 }
 
 const RadarChartMultipleTemplate: React.FC<RadarChartProps> = ({
   series,
   categories,
   chartHeight = 350,
+  title,               
+  description,        
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -103,6 +107,8 @@ const RadarChartMultipleTemplate: React.FC<RadarChartProps> = ({
 
   return (
     <div>
+      {title && <Typography variant="h6" gutterBottom>{title}</Typography>}
+      {description && <Typography variant="body2" color="text.secondary" gutterBottom>{description}</Typography>}
       <div ref={chartRef} id="radar-chart-multiple" />
       <div style={{ marginTop: "10px" }}>
         <IconButton onClick={handleMenuClick} size="small">

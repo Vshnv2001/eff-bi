@@ -11,13 +11,15 @@ type CandlestickData = {
 
 interface CandlestickChartProps {
   data: CandlestickData[];
-  title?: string;
+  title: string;
+  description: string;
   height?: number;
 }
 
 const CandlestickTemplate: React.FC<CandlestickChartProps> = ({
   data,
-  title = "Candlestick Chart",
+  title,
+  description,
   height = 350,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
@@ -105,6 +107,10 @@ const CandlestickTemplate: React.FC<CandlestickChartProps> = ({
 
   return (
     <div>
+      <h2 style={{ textAlign: "center", marginBottom: "10px" }}>{title}</h2>
+      <p style={{ textAlign: "center", marginBottom: "20px" }}>
+        {description}
+      </p>
       <IconButton
         onClick={handleMenuClick}
         size="small"

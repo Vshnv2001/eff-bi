@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import ApexCharts from 'apexcharts';
 import { ApexOptions } from 'apexcharts';
 import html2canvas from 'html2canvas';
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 interface RadarChartProps {
@@ -91,6 +91,13 @@ const RadarChartTemplate: React.FC<RadarChartProps> = ({
 
   return (
     <div>
+      <Typography variant="h6" gutterBottom>
+        Radar Chart
+      </Typography>
+      <Typography variant="body2" color="text.secondary" paragraph>
+        This radar chart visualizes multiple dimensions of data, allowing for quick comparisons across categories. 
+        Each series represents a different dataset, and the values indicate performance across specified categories.
+      </Typography>
       <div ref={chartRef} id="radar-chart" />
       <div style={{ marginTop: "10px" }}>
         <IconButton onClick={handleMenuClick} size="small">
