@@ -15,14 +15,18 @@ import { Chart } from "../Chart";
 export interface SalesProps {
   chartSeries: { name: string; data: number[] }[];
   categories: string[];
+  xAxisLabel: string;
+  yAxisLabel: string;
 }
 
 export function BarChartTemplate({
   chartSeries,
   categories,
+  xAxisLabel,
+  yAxisLabel,
 }: SalesProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const chartOptions = useChartOptions(categories);
+  const chartOptions = useChartOptions(categories, xAxisLabel, yAxisLabel);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -135,7 +139,11 @@ export function BarChartTemplate({
   );
 }
 
-function useChartOptions(categories: string[]): ApexOptions {
+function useChartOptions(
+  categories: string[],
+  xAxisLabel: string,
+  yAxisLabel: string
+): ApexOptions {
   const theme = useTheme();
 
   const columnWidth = Math.max(40, 100 / categories.length);
@@ -175,13 +183,15 @@ function useChartOptions(categories: string[]): ApexOptions {
       axisTicks: { color: theme.palette.divider, show: true },
       categories: categories,
       labels: { offsetY: 5, style: { colors: theme.palette.text.secondary } },
+      title: { text: xAxisLabel, style: { color: theme.palette.text.primary } },
     },
     yaxis: {
       labels: {
-        formatter: (value) => (value > 0 ? `${value}` : `${value}`),
+        formatter: (value) => value.toFixed(2),
         offsetX: -10,
         style: { colors: theme.palette.text.secondary },
       },
+      title: { text: yAxisLabel, style: { color: theme.palette.text.primary } },
     },
   };
 }
