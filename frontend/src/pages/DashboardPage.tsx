@@ -11,7 +11,6 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { componentMapping } from "../components/Dashboard/ComponentMapping";
 import { TileProps } from "../components/Dashboard/TileProps";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import NewTile from "../components/Dashboard/NewTile";
@@ -78,18 +77,6 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const onDragEnd = (result: any) => {
-    if (!result.destination) {
-      return;
-    }
-
-    const items = Array.from(tilesData);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    setTilesData(items);
   };
 
   const handleNewTileClick = () => {
@@ -177,75 +164,47 @@ export default function DashboardPage() {
         </Button>
       </div>
 
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="tiles">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            >
-              {tilesData.map((tileData, index) => {
-                const Component =
-                  componentMapping[tileData.component as ComponentKeys] || null;
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {tilesData.map((tileData, index) => {
+          const Component =
+            componentMapping[tileData.component as ComponentKeys] || null;
 
-                if (!Component) {
-                  console.error(
-                    `Invalid component for tile: ${tileData.title}`
-                  );
-                  return null;
-                }
+          if (!Component) {
+            console.error(`Invalid component for tile: ${tileData.title}`);
+            return null;
+          }
 
-                let componentProps = tileData.tile_props;
-                if (typeof tileData.tile_props === "string") {
-                  try {
-                    componentProps = JSON.parse(tileData.tile_props);
-                    console.log("component prop", componentProps);
-                  } catch (error) {
-                    console.error("Error parsing tile props", error);
-                    return null;
-                  }
-                }
+          let componentProps = tileData.tile_props;
+          if (typeof tileData.tile_props === "string") {
+            try {
+              componentProps = JSON.parse(tileData.tile_props);
+              console.log("component prop", componentProps);
+            } catch (error) {
+              console.error("Error parsing tile props", error);
+              return null;
+            }
+          }
 
-                return (
-                  <Draggable
-                    key={tileData.id}
-                    draggableId={tileData.id.toString()}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className="draggable-item" // Add your class for fixed height and transition
-                      >
-                        <Card className="text-black">
-                          <CardBody className="flex flex-col items-center">
-                            <Typography
-                              variant="h5"
-                              className="text-black mb-2 text-center"
-                            >
-                              {tileData.title}
-                            </Typography>
-                            <Typography className="text-gray-800 text-center mb-4">
-                              {tileData.description}
-                            </Typography>
-                            <div className="w-full">
-                              {Component && <Component {...componentProps} />}
-                            </div>
-                          </CardBody>
-                        </Card>
-                      </div>
-                    )}
-                  </Draggable>
-                );
-              })}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+          return (
+            <Card key={tileData.id} className="text-black">
+              <CardBody className="flex flex-col items-center">
+                <Typography
+                  variant="h5"
+                  className="text-black mb-2 text-center"
+                >
+                  {tileData.title}
+                </Typography>
+                <Typography className="text-gray-800 text-center mb-4">
+                  {tileData.description}
+                </Typography>
+                <div className="w-full">
+                  {Component && <Component {...componentProps} />}
+                </div>
+              </CardBody>
+            </Card>
+          );
+        })}
+      </div>
 
       <Dialog
         open={isNewTileDialogOpen}
