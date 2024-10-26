@@ -31,45 +31,44 @@ const tips = [
     topic: "Connecting Your Database",
     answer:
       "Begin by connecting your database to unlock the full capabilities of EffBI. " +
-        "Navigate to the Settings tab, select 'Database Settings,' and enter your database URI. " +
-        "This setup is essential for accessing the key features of EffBI."
+      "Navigate to the Settings tab, select 'Database Settings,' and enter your database URI. " +
+      "This setup is essential for accessing the key features of EffBI.",
   },
   {
     topic: "View Data",
     answer:
       "After connecting your database, explore your tables by navigating to the 'Tables' tab. " +
-        "Here, you can preview sample data from your accessible tables, providing a quick snapshot of the information."
+      "Here, you can preview sample data from your accessible tables, providing a quick snapshot of the information.",
   },
   {
     topic: "Creating Dashboards",
     answer:
       "Dashboards are essential for visualizing data interactions and trends! " +
-        "Start creating your own by visiting the 'Dashboard' page and clicking the 'Create Dashboard' button. " +
-        "This allows you to assemble a collection of tiles showcase data insights."
+      "Start creating your own by visiting the 'Dashboard' page and clicking the 'Create Dashboard' button. " +
+      "This allows you to assemble a collection of tiles showcase data insights.",
   },
   {
     topic: "Creating Tiles",
     answer:
       "Tiles are where the magic of EffBI is showcased!" +
-        "Create a new tile by navigating to the 'Dashboard' page and selecting 'Create Tile.' " +
-        "Enter your data query and our application would produce a dynamic visual representations of the results. "
+      "Create a new tile by navigating to the 'Dashboard' page and selecting 'Create Tile.' " +
+      "Enter your data query and our application would produce a dynamic visual representations of the results. ",
   },
   {
     topic: "User Permissions Page",
     answer:
       "The User Permissions page provides a comprehensive overview of your current access rights." +
-        " If you hold administrator rights for a table, you can modify access levels. "
+      " If you hold administrator rights for a table, you can modify access levels. ",
   },
   {
     topic: "Managing User Permissions",
     answer:
       "To manage user permissions effectively, first go to the 'User Permissions' page. " +
-        "As a table administrator, you have the authority to adjust user access." +
-        " You can revoke existing permissions with the 'Remove' button " +
-        "or extend access by selecting 'Add Users' and entering your colleagues' email with the respective permission type."
-  }
+      "As a table administrator, you have the authority to adjust user access." +
+      " You can revoke existing permissions with the 'Remove' button " +
+      "or extend access by selecting 'Add Users' and entering your colleagues' email with the respective permission type.",
+  },
 ];
-
 
 const faqs = [
   {
@@ -96,15 +95,15 @@ const faqs = [
     question: "What happens if I rename a table in the database?",
     answer:
       "Upon renaming a table in your database and refreshing, the renamed table is treated as a new table and the original table is deleted. " +
-        "Consequently all user-specific permissions linked to the original table will be deleted.\n" +
-        "The new table will be added as a fresh entry with admin permissions set only for your organization's Super Admins.",
+      "Consequently all user-specific permissions linked to the original table will be deleted.\n" +
+      "The new table will be added as a fresh entry with admin permissions set only for your organization's Super Admins.",
   },
   {
     question: "Who is a Super Admin?",
     answer:
       "Super Admins are the Effortless BI coordinators of your organization. " +
-        "They have the highest level of permissions in the application and have admin permissions to all tables by default. " +
-        "They can grant admin/view permissions to other users in your company.",
+      "They have the highest level of permissions in the application and have admin permissions to all tables by default. " +
+      "They can grant admin/view permissions to other users in your company.",
   },
   {
     question: "None of the above answers my question, what should I do?",
@@ -127,27 +126,30 @@ const FaqPage = () => {
         </div>
         <div className="w-[55rem] m-20 text-center">
           <Typography color="white" className="text-xl">
-            Welcome to EffBI 👋, Your all-in-one tool for data management and visualization! <br/>
-            Let's guide you through the initial setup and key features to kickstart your journey.
+            Welcome to EffBI 👋, Your all-in-one tool for data management and
+            visualization! <br />
+            Let's guide you through the initial setup and key features to
+            kickstart your journey.
           </Typography>
         </div>
         <div className="w-[55rem]">
           {tips.map((tip, idx) => {
             return (
-                <Accordion
-                    open={open === idx}
-                    icon={<Icon id={idx} open={open}/>}
+              <Accordion
+                key={`tip-${idx}`}
+                open={open === idx}
+                icon={<Icon id={idx} open={open} />}
+              >
+                <AccordionHeader
+                  className="text-white hover:text-blue-400"
+                  onClick={() => handleOpen(idx)}
                 >
-                  <AccordionHeader
-                      className="text-white hover:text-blue-400"
-                      onClick={() => handleOpen(idx)}
-                  >
-                    {tip.topic}
-                  </AccordionHeader>
-                  <AccordionBody className="text-white text-lg">
-                    {tip.answer}
-                  </AccordionBody>
-                </Accordion>
+                  {tip.topic}
+                </AccordionHeader>
+                <AccordionBody className="text-white text-lg">
+                  {tip.answer}
+                </AccordionBody>
+              </Accordion>
             );
           })}
         </div>
@@ -159,20 +161,21 @@ const FaqPage = () => {
         <div className="w-[55rem] mt-20">
           {faqs.map((faq, idx) => {
             return (
-                <Accordion
-                    open={open === idx}
-                    icon={<Icon id={idx} open={open}/>}
+              <Accordion
+                key={`faq-${idx}`}
+                open={open === idx}
+                icon={<Icon id={idx} open={open} />}
+              >
+                <AccordionHeader
+                  className="text-white hover:text-blue-400"
+                  onClick={() => handleOpen(idx)}
                 >
-                  <AccordionHeader
-                      className="text-white hover:text-blue-400"
-                      onClick={() => handleOpen(idx)}
-                  >
-                    {faq.question}
-                  </AccordionHeader>
-                  <AccordionBody className="text-white text-lg">
-                    {faq.answer}
-                  </AccordionBody>
-                </Accordion>
+                  {faq.question}
+                </AccordionHeader>
+                <AccordionBody className="text-white text-lg">
+                  {faq.answer}
+                </AccordionBody>
+              </Accordion>
             );
           })}
         </div>

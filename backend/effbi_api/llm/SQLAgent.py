@@ -23,6 +23,8 @@ DO NOT do empty string checks like != '' or != 'N/A' on numeric columns.
              
 You may get foreign keys. In that case, design the query in such a way that it uses the foreign key to get the data from the related table.
 
+             
+             
 THE RESULTS SHOULD ONLY BE IN THE FOLLOWING FORMAT, SO MAKE SURE TO ONLY GIVE TWO OR THREE COLUMNS:
 [[x, y]]
 or 
