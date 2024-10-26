@@ -29,23 +29,23 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     logger.info(parsed_question)
     
     state.parsed_question = parsed_question
-    
-    if not state.parsed_question.get('is_relevant', False):
+
+    if not state.parsed_question['is_relevant']:
         state.error = "We do not have the necessary data to answer this question. Either check your database tables and ensure you have the correct permissions, or rephrase your question."
         return state
-    
+
     # Pass the pruned schema to the SQL agent to generate a SQL query
     sql_agent = SQLAgent(db_manager)
     sql_query = sql_agent.generate_sql(state)
+
+    if sql_query["sql_query"] == "NOT_RELEVANT":
+        state.error = "We do not have the necessary data to answer this question. Either check your database tables and ensure you have the correct permissions, or rephrase your question."
+        return state
     
     logger.info(type(sql_query))
     
     logger.info("SQL QUERY: ", sql_query)
     
-    # if not sql_query.get('is_relevant', False):
-    #     state.error = "We do not have the necessary data to answer this question. Either check your database tables and ensure you have the correct permissions, or rephrase your question."
-    #     return state
-
     state.sql_query = sql_query.get('sql_query', '')
     
     # validate_and_fix_sql = sql_agent.validate_and_fix_sql(state)
@@ -61,7 +61,7 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     
     state.results = results
     
-    # # Format the results
+    # Format the results
     formatter = DataFormatter(state)
     visualization_choice = formatter.choose_visualization()
     logger.info("VISUALIZATION CHOICE: ", visualization_choice)

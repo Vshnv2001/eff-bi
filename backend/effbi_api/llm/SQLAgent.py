@@ -11,9 +11,6 @@ class SQLAgent:
 
     def generate_sql(self, state: State) -> dict:
         """Generate SQL query based on parsed question and unique nouns."""
-
-        if not state.parsed_question['is_relevant']:
-            return {"sql_query": "NOT_RELEVANT", "is_relevant": False}
     
         prompt = ChatPromptTemplate.from_messages([
             ("system", '''
@@ -30,7 +27,7 @@ THE RESULTS SHOULD ONLY BE IN THE FOLLOWING FORMAT, SO MAKE SURE TO ONLY GIVE TW
 [[x, y]]
 or 
 [[label, x, y]]
-             
+        
 For questions like "plot a distribution of the fares for men and women", count the frequency of each fare and plot it. The x axis should be the fare and the y axis should be the count of people who paid that fare.
 SKIP ALL ROWS WHERE ANY COLUMN IS NULL or "N/A" or "".
 Just give the query string. Do not format it. Make sure to use the correct spellings of nouns as provided in the unique nouns list. All the table and column names should be enclosed in backticks.

@@ -12,7 +12,7 @@ import html2canvas from "html2canvas";
 import type { ApexOptions } from "apexcharts";
 import { Chart } from "../Chart";
 
-export interface SalesProps {
+export interface BarProps {
   chartSeries: { name: string; data: number[] }[];
   categories: string[];
   xAxisLabel: string;
@@ -24,7 +24,7 @@ export function BarChartTemplate({
   categories,
   xAxisLabel,
   yAxisLabel,
-}: SalesProps): React.JSX.Element {
+}: BarProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartOptions = useChartOptions(categories, xAxisLabel, yAxisLabel);
 
