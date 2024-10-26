@@ -165,7 +165,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {tilesData.map((tileData, index) => {
+        {tilesData.map((tileData) => {
           const Component =
             componentMapping[tileData.component as ComponentKeys] || null;
 
