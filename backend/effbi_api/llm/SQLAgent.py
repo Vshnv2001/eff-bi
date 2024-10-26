@@ -37,8 +37,13 @@ You are allowed to use common table expressions or views if that simplifies the 
 THE RESULTS SHOULD ONLY BE IN THE FOLLOWING FORMAT, SO MAKE SURE TO ONLY GIVE TWO OR THREE COLUMNS:
 [[x, y]]
 or 
-[[label, x, y]]
-        
+
+[[label, x, y]].
+
+If there are more than 10 rows, only give the first 10 rows. This is a STRICT requirement.
+             
+For questions like "plot a distribution of the fares for men and women", count the frequency of each fare and plot it. The x axis should be the fare and the y axis should be the count of people who paid that fare.
+
 SKIP ALL ROWS WHERE ANY COLUMN IS NULL or "N/A" or "".
 Just give the query string. Do not format it. Make sure to use the correct spellings of nouns as provided in the unique nouns list. All the table and column names should be enclosed in backticks.
 '''),
