@@ -70,7 +70,8 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
         formatted_data = formatter.format_data_for_visualization()
     except Exception as e:
         logger.info("Error formatting data for visualization: ", e)
-        raise e
+        state.error = "We are unable to visualize the data. Please try a different question or provide more information."
+        return state
     
     logger.info("FORMATTED DATA: ", formatted_data)
 

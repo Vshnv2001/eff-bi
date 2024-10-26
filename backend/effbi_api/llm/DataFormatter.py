@@ -199,7 +199,7 @@ class DataFormatter:
         logger.info("chosen visualization: ", visualization)
 
         if visualization == "none":
-            return {"formatted_data_for_visualization": None}
+            raise Exception("We are unable to visualize the data. Please try a different question or provide more information.")
 
         visualization_props = viz_props[ChartType(visualization)]
         
