@@ -16,7 +16,14 @@ import {
   Container,
   Paper,
   Slide,
+  FormControl,
+  InputLabel,
+  InputAdornment,
+  OutlinedInput,
+  IconButton,
 } from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const Authentication = () => {
   const {
@@ -38,6 +45,21 @@ const Authentication = () => {
     password: false,
   });
   const [showOrgSelection, setShowOrgSelection] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
+  const handleMouseUpPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
 
   const navigate = useNavigate();
 
@@ -244,19 +266,43 @@ const Authentication = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     error={inputError.email}
                   />
-                  <TextField
-                    margin="normal"
-                    required
+                  <FormControl
                     fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    error={inputError.password}
-                  />
+                    required
+                    variant="outlined"
+                    margin="normal"
+                  >
+                    <InputLabel htmlFor="outlined-adornment-password">
+                      Password
+                    </InputLabel>
+                    <OutlinedInput
+                      id="password"
+                      label="Password"
+                      name="password"
+                      autoComplete="current-password"
+                      type={showPassword ? "text" : "password"}
+                      onChange={(e) => setPassword(e.target.value)}
+                      error={inputError.password}
+                      value={password}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label={
+                              showPassword
+                                ? "hide the password"
+                                : "display the password"
+                            }
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            onMouseUp={handleMouseUpPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                  </FormControl>
                   {isSignUp && (
                     <>
                       <TextField
