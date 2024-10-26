@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ApexCharts from "apexcharts";
 import html2canvas from "html2canvas";
-import { Menu, MenuItem, IconButton } from "@mui/material";
+import { Menu, MenuItem, IconButton, Typography } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 type BoxPlotData = {
@@ -12,11 +12,15 @@ type BoxPlotData = {
 type BoxPlotTemplateProps = {
   data: BoxPlotData[];
   height?: number;
+  title?: string;
+  description?: string;
 };
 
 const BoxPlotTemplate: React.FC<BoxPlotTemplateProps> = ({
   data,
   height = 350,
+  title,
+  description,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -106,6 +110,17 @@ const BoxPlotTemplate: React.FC<BoxPlotTemplateProps> = ({
 
   return (
     <div>
+      {title && (
+        <Typography variant="h6" gutterBottom>
+          {title}
+        </Typography>
+      )}
+      {description && (
+        <Typography variant="body2" color="text.secondary" paragraph>
+          {description}
+        </Typography>
+      )}
+
       <IconButton
         onClick={handleMenuClick}
         size="small"

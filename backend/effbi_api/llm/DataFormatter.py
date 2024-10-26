@@ -216,7 +216,9 @@ class DataFormatter:
             You need to format the data for the visualization.
             
             Available chart types (in Javascript) Make sure to use the exact names ONLY:
-            LineChartTemplate, BarChartTemplate, HorizontalBarChartTemplate, PieChartTemplate, AreaChartTemplate
+            BarChartTemplate, HorizontalBarChartTemplate, PieChartTemplate, LineChartTemplate, AreaChartTemplate, DonutChartTemplate, StackedGroupBarChartTemplate,
+            PyramidBarChartTemplate, LineColumnChartTemplate, RadarChartTemplate, RadarChartPolarTemplate, ScatterChartTemplate, CandlestickTemplate, BoxPlotTemplate, TableTemplate
+
             '''),
             ("human", '''
             SQL query: {sql_query}

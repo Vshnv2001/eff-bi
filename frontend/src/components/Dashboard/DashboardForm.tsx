@@ -2,7 +2,7 @@ import { Typography, Textarea, Button } from "@material-tailwind/react";
 import { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import { Box } from "@mui/material"; // Import Box from MUI for layout
+import { Box } from "@mui/material";
 
 interface DashboardFormProps {
   dashboardName: string;
@@ -10,7 +10,7 @@ interface DashboardFormProps {
   dashboardDescription: string;
   setDashboardDescription: (description: string) => void;
   onDashboardCreated?: () => void;
-  onClose: () => void; // Added onClose prop for cancel button
+  onClose: () => void;
 }
 
 export default function DashboardForm({
@@ -19,7 +19,7 @@ export default function DashboardForm({
   dashboardDescription,
   setDashboardDescription,
   onDashboardCreated,
-  onClose, // Destructure onClose
+  onClose,
 }: DashboardFormProps) {
   const [isLoading, setLoading] = useState(false);
 
@@ -29,12 +29,6 @@ export default function DashboardForm({
 
       if (!dashboardName.trim()) {
         toast.error("Dashboard name is required");
-        setLoading(false);
-        return;
-      }
-
-      if (!dashboardDescription.trim()) {
-        toast.error("Dashboard description is required");
         setLoading(false);
         return;
       }
@@ -78,7 +72,7 @@ export default function DashboardForm({
         </div>
         <div className="w-full">
           <Textarea
-            label="Description"
+            label="Description (optional)"
             size="md"
             color="blue"
             onChange={(e) => setDashboardDescription(e.target.value)}
@@ -86,6 +80,7 @@ export default function DashboardForm({
             disabled={isLoading}
           />
         </div>
+
         <Box className="flex justify-center space-x-5 mt-4 mb-4">
           <Button color="red" onClick={onClose} disabled={isLoading}>
             Cancel

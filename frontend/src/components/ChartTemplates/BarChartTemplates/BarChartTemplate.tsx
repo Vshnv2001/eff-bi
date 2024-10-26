@@ -12,17 +12,24 @@ import html2canvas from "html2canvas";
 import type { ApexOptions } from "apexcharts";
 import { Chart } from "../Chart";
 
-export interface SalesProps {
+export interface BarProps {
   chartSeries: { name: string; data: number[] }[];
   categories: string[];
+  xAxisLabel: string;
+  title: string;
+  description: string;
 }
 
 export function BarChartTemplate({
   chartSeries,
   categories,
-}: SalesProps): React.JSX.Element {
+  xAxisLabel,
+  title,
+  description,
+}: BarProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const chartOptions = useChartOptions(categories);
+  const yAxisLabel = chartSeries[0]?.name || ''; // Use the name of the first series as the Y-axis label
+  const chartOptions = useChartOptions(categories, xAxisLabel, yAxisLabel);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -121,6 +128,13 @@ export function BarChartTemplate({
           </MenuItem>
         </Menu>
       </div>
+
+      {/* Title and Description */}
+      <div style={{ textAlign: "center", marginBottom: 16 }}>
+        <h2 style={{ margin: 0 }}>{title}</h2>
+        <p style={{ margin: 0 }}>{description}</p>
+      </div>
+
       <CardContent>
         <Chart
           height={350}
@@ -135,7 +149,11 @@ export function BarChartTemplate({
   );
 }
 
-function useChartOptions(categories: string[]): ApexOptions {
+function useChartOptions(
+  categories: string[],
+  xAxisLabel: string,
+  yAxisLabel: string
+): ApexOptions {
   const theme = useTheme();
 
   const columnWidth = Math.max(40, 100 / categories.length);
@@ -175,13 +193,14 @@ function useChartOptions(categories: string[]): ApexOptions {
       axisTicks: { color: theme.palette.divider, show: true },
       categories: categories,
       labels: { offsetY: 5, style: { colors: theme.palette.text.secondary } },
+      title: { text: xAxisLabel, style: { color: theme.palette.text.primary } },
     },
     yaxis: {
       labels: {
-        formatter: (value) => (value > 0 ? `${value}` : `${value}`),
-        offsetX: -10,
+        formatter: (value) => value.toFixed(2),
         style: { colors: theme.palette.text.secondary },
       },
+      title: { text: yAxisLabel, style: { color: theme.palette.text.primary } },
     },
   };
 }

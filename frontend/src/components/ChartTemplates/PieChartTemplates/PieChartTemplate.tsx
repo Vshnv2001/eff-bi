@@ -2,45 +2,92 @@ import React, { useEffect, useRef } from "react";
 import ApexCharts from "apexcharts";
 import { ApexOptions } from "apexcharts";
 import html2canvas from "html2canvas";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem, Typography } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 interface PieChartTemplateProps {
   series: number[];
   labels: string[];
   chartWidth?: number;
+  title: string;     
+  description: string;    
 }
 
 const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
   series,
   labels,
-  chartWidth = 380,
+  chartWidth = 500,
+  title,          
+  description,     
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   useEffect(() => {
+    const fontSize = series.length > 10 ? "12px" : "14px";
+
+    const generateColors = (count: number) => {
+      const colors = [];
+      const baseHue = 30;
+      for (let i = 0; i < count; i++) {
+        colors.push(`hsl(${(baseHue + (i * 360) / count) % 360}, 70%, 50%)`);
+      }
+      return colors;
+    };
+
     const options: ApexOptions = {
       series: series,
       chart: {
         width: chartWidth,
         type: "pie",
-        toolbar: { show: false },
+        toolbar: { show: true, tools: { zoom: false, pan: false } },
       },
       labels: labels,
+      colors: generateColors(series.length),
+      dataLabels: {
+        enabled: true, // Always show labels
+        style: { fontSize, colors: ["#333"] },
+        dropShadow: { enabled: false },
+        formatter: (val, { seriesIndex, w }) => {
+          // Show full label without truncation
+          const label = w.globals.labels[seriesIndex];
+          return typeof val === "number"
+            ? `${label}: ${val.toFixed(1)}%`
+            : "";
+        },
+        textAnchor: 'middle',
+        distributed: true,
+      },
       responsive: [
         {
           breakpoint: 480,
           options: {
-            chart: {
-              width: 200,
-            },
+            chart: { width: 200 },
             legend: {
-              position: "bottom",
-            },
+              height: 200,
+            }
           },
         },
       ],
+      legend: {
+        position: "right",
+        fontSize: fontSize,
+        floating: false,
+        height: 400,
+        formatter: function(seriesName, opts) {
+          return seriesName + ` - ${series[opts.seriesIndex].toFixed(1)}%`;
+        },
+        itemMargin: {
+          horizontal: 5,
+          vertical: 5
+        }
+      },
+      tooltip: { 
+        enabled: true,
+        y: {
+          formatter: (value) => `${value.toFixed(1)}%`
+        }
+      },
     };
 
     const chart = new ApexCharts(chartRef.current as HTMLElement, options);
@@ -116,9 +163,7 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
             sx={{
               typography: "body2",
               color: "text.primary",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.08)",
-              },
+              "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.08)" },
             }}
           >
             Download as SVG
@@ -128,9 +173,7 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
             sx={{
               typography: "body2",
               color: "text.primary",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.08)",
-              },
+              "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.08)" },
             }}
           >
             Download as PNG
@@ -138,7 +181,21 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
         </Menu>
       </div>
 
-      <div ref={chartRef} />
+      <Typography variant="h6" style={{ textAlign: "center", marginBottom: 10 }}>
+        {title}
+      </Typography>
+      <Typography variant="body2" style={{ textAlign: "center", marginBottom: 20 }}>
+        {description}
+      </Typography>
+
+      <div 
+        ref={chartRef}
+        style={{
+          maxHeight: "600px",  // Set maximum height
+          overflowY: "auto",   // Enable vertical scrolling
+          overflowX: "hidden" // Hide horizontal scrollbar
+        }}
+      />
     </div>
   );
 };

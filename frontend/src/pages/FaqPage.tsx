@@ -136,6 +136,7 @@ const FaqPage = () => {
           {tips.map((tip, idx) => {
             return (
               <Accordion
+                key={`tip-${idx}`}
                 open={open === idx}
                 icon={<Icon id={idx} open={open} />}
               >
@@ -161,6 +162,7 @@ const FaqPage = () => {
           {faqs.map((faq, idx) => {
             return (
               <Accordion
+                key={`faq-${idx}`}
                 open={open === idx}
                 icon={<Icon id={idx} open={open} />}
               >

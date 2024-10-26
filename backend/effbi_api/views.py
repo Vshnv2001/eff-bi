@@ -116,7 +116,6 @@ def get_dashboard_tiles(request: HttpRequest):
     logger.info("data", serializer.data)
     return JsonResponse({'data': serializer.data}, status=200)
 
-
 @api_view(["POST"])
 @verify_session()
 def create_dashboard_tile(request: HttpRequest):

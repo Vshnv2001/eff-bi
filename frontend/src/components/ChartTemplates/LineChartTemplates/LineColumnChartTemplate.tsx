@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ApexCharts from "apexcharts";
 import { ApexOptions } from "apexcharts";
 import html2canvas from "html2canvas";
-import { Menu, MenuItem, IconButton } from "@mui/material";
+import { Menu, MenuItem, IconButton, Typography } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 interface LineColumnChartProps {
@@ -10,7 +10,8 @@ interface LineColumnChartProps {
   lineData: number[];
   columnName: string;
   lineName: string;
-  chartTitle: string;
+  title: string;
+  description?: string;
   labels: string[];
 }
 
@@ -19,7 +20,8 @@ const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
   lineData,
   columnName,
   lineName,
-  chartTitle,
+  title,
+  description,
   labels,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
@@ -48,7 +50,7 @@ const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
         width: [0, 4],
       },
       title: {
-        text: chartTitle,
+        text: title,
       },
       dataLabels: {
         enabled: true,
@@ -76,7 +78,7 @@ const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
     return () => {
       chart.destroy();
     };
-  }, [columnData, lineData, columnName, lineName, chartTitle, labels]);
+  }, [columnData, lineData, columnName, lineName, title, labels]);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -128,6 +130,14 @@ const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
 
   return (
     <div>
+      <Typography variant="h6" component="h2" gutterBottom>
+        {title}
+      </Typography>
+      {description && (
+        <Typography variant="body2" color="text.secondary" paragraph>
+          {description}
+        </Typography>
+      )}
       <IconButton
         onClick={handleMenuClick}
         size="small"

@@ -13,12 +13,16 @@ import { SxProps } from "@mui/material/styles";
 export interface StackedBarChartProps {
   chartSeries: { name: string; group: string; data: number[] }[];
   categories: string[];
+  title: string;
+  description: string;
   sx?: SxProps;
 }
 
 export function StackedGroupBarChartTemplate({
   chartSeries,
   categories,
+  title,
+  description,
 }: StackedBarChartProps): React.JSX.Element {
   const chartOptions = useChartOptions(chartSeries, categories);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -130,6 +134,8 @@ export function StackedGroupBarChartTemplate({
           </Menu>
         </div>
       </div>
+      <h2>{title}</h2>
+      <p>{description}</p>
       <div id="stacked-bar-chart" style={{ width: "100%", height: "350px" }} />
     </div>
   );

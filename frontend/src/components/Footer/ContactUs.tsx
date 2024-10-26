@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FaTwitter, FaLinkedin, FaEnvelope } from "react-icons/fa";
+import { FaLinkedin, FaEnvelope } from "react-icons/fa";
+import {FaXTwitter} from 'react-icons/fa6'
 import emailjs, { EmailJSResponseStatus } from "@emailjs/browser";
 
 const Footer: React.FC = () => {
@@ -99,8 +100,8 @@ const Footer: React.FC = () => {
               href="https://x.com/effbi3216"
               target="_blank"
             >
-              <FaTwitter size={30} />
-              <span className="text-xs">Twitter</span>
+              <FaXTwitter size={30} />
+              <span className="text-xs">X</span>
             </a>
           </li>
           <li>

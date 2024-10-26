@@ -8,29 +8,29 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Select from "@mui/material/Select";
 import { Chart } from "../Chart";
 import { ApexOptions } from "apexcharts";
 import { generateColors } from "../colorUtils";
 import html2canvas from "html2canvas";
 import Stack from "@mui/material/Stack";
 
-type ColorTheme = "homogeneous" | "analogous" | "complementary" | "triadic";
-
 export interface TrafficProps {
   chartSeries: number[];
   labels: string[];
   sx?: SxProps;
+  title?: string;
+  description?: string;
 }
 
 export function DonutChartTemplate({
   chartSeries,
   labels,
+  title,
+  description,
 }: TrafficProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [colorTheme, setColorTheme] = React.useState<ColorTheme>("homogeneous");
   const [baseColor, setBaseColor] = React.useState<string>("#ff0000");
-  const themeColors = generateColors(chartSeries.length, colorTheme, baseColor);
+  const themeColors = generateColors(chartSeries.length, "homogeneous", baseColor); // Set color theme to homogeneous
   const chartOptions = useChartOptions(labels, themeColors);
   const chartRef = React.useRef<HTMLDivElement>(null);
 
@@ -85,7 +85,12 @@ export function DonutChartTemplate({
   return (
     <div style={{ position: "relative", textAlign: "center" }}>
       <div style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}>
-        <Typography variant="h6">Traffic Source</Typography>
+        {title && <Typography variant="h6">{title}</Typography>}
+        {description && (
+          <Typography variant="body2" color="text.secondary">
+            {description}
+          </Typography>
+        )}
         <div>
           <IconButton onClick={handleMenuClick} size="small">
             <MoreVertIcon />
@@ -126,18 +131,6 @@ export function DonutChartTemplate({
               Download as PNG
             </MenuItem>
           </Menu>
-          <Select
-            value={colorTheme}
-            onChange={(e) => setColorTheme(e.target.value as ColorTheme)}
-            variant="outlined"
-            size="small"
-            sx={{ ml: 1 }}
-          >
-            <MenuItem value="homogeneous">Homogeneous</MenuItem>
-            <MenuItem value="analogous">Analogous</MenuItem>
-            <MenuItem value="complementary">Complementary</MenuItem>
-            <MenuItem value="triadic">Triadic</MenuItem>
-          </Select>
           <input
             type="color"
             value={baseColor}
@@ -153,6 +146,7 @@ export function DonutChartTemplate({
           series={chartSeries}
           type="donut"
           width="100%"
+          ref={chartRef}
         />
         <Stack
           direction="row"

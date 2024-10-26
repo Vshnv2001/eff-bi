@@ -170,10 +170,15 @@ export default function NewTile({ onClose }: NewTileProps) {
       />
 
       <Dialog open={info} handler={handleInfo}>
-        <DialogHeader>Query Prompt</DialogHeader>
+        <DialogHeader>Query Details</DialogHeader>
         <DialogBody>
-          Describe the data insights you want to extract from your uploaded
-          data.
+          The data insights to be extracted from the uploaded data should be
+          clearly specified. For optimal results, it is recommended to indicate
+          the type of chart desired as well as the specific data for comparison.
+          For example, when analyzing top players, it is important to define the
+          metrics used to determine their ranking. An ideal specification could
+          be to highlight the top players based on the number of gold medals
+          they have won.
         </DialogBody>
         <DialogFooter>
           <Button variant="text" onClick={handleInfo}>
