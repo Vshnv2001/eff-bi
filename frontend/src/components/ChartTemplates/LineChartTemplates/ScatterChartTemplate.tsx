@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import ApexCharts from 'apexcharts';
-import { ApexOptions } from 'apexcharts';
-import html2canvas from 'html2canvas';
-import { Menu, MenuItem, IconButton } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import React, { useEffect, useRef, useState } from "react";
+import ApexCharts from "apexcharts";
+import { ApexOptions } from "apexcharts";
+import html2canvas from "html2canvas";
+import { Menu, MenuItem, IconButton } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 interface ScatterChartProps {
   series: {
@@ -25,16 +25,17 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
       series: series,
       chart: {
         height: chartHeight,
-        type: 'scatter',
+        type: "scatter",
         zoom: {
           enabled: true,
-          type: 'xy',
+          type: "xy",
         },
+        toolbar: { show: false },
       },
       xaxis: {
         tickAmount: 10,
         labels: {
-          formatter: function(val) {
+          formatter: function (val) {
             return parseFloat(val as any).toFixed(1);
           },
         },
@@ -65,30 +66,30 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
 
     if (!chartElement) return;
 
-    if (format === 'SVG') {
-      const svgData = chartElement.querySelector('svg');
+    if (format === "SVG") {
+      const svgData = chartElement.querySelector("svg");
       if (svgData) {
         const serializer = new XMLSerializer();
         const svgBlob = new Blob([serializer.serializeToString(svgData)], {
-          type: 'image/svg+xml;charset=utf-8',
+          type: "image/svg+xml;charset=utf-8",
         });
         const url = URL.createObjectURL(svgBlob);
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = url;
-        a.download = 'scatter-chart.svg';
+        a.download = "scatter-chart.svg";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
       }
-    } else if (format === 'PNG') {
+    } else if (format === "PNG") {
       const canvas = await html2canvas(chartElement);
       canvas.toBlob((blob: Blob | null) => {
         if (blob) {
           const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
+          const a = document.createElement("a");
           a.href = url;
-          a.download = 'scatter-chart.png';
+          a.download = "scatter-chart.png";
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
@@ -102,18 +103,46 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
 
   return (
     <div>
-      <IconButton onClick={handleMenuClick} size="small" style={{ marginBottom: '10px' }}>
+      <IconButton
+        onClick={handleMenuClick}
+        size="small"
+        style={{ marginBottom: "10px" }}
+      >
         <MoreVertIcon />
       </IconButton>
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleClose}
+        PaperProps={{
+          style: {
+            borderRadius: 8,
+            marginTop: 5,
+          },
+        }}
       >
-        <MenuItem onClick={() => handleDownload('SVG')}>
+        <MenuItem
+          onClick={() => handleDownload("SVG")}
+          sx={{
+            typography: "body2",
+            color: "text.primary",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.08)",
+            },
+          }}
+        >
           Download as SVG
         </MenuItem>
-        <MenuItem onClick={() => handleDownload('PNG')}>
+        <MenuItem
+          onClick={() => handleDownload("PNG")}
+          sx={{
+            typography: "body2",
+            color: "text.primary",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.08)",
+            },
+          }}
+        >
           Download as PNG
         </MenuItem>
       </Menu>
