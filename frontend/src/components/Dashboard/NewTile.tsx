@@ -27,9 +27,19 @@ export default function NewTile({ onClose }: NewTileProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+
+    if (!tileName || tileName.trim() === "") {
+      toast.error("Tile name is required!");
+      return;
+    }
+
+    if (!queryPrompt || queryPrompt.trim() === "") {
+      toast.error("Query prompt is required!");
+      return;
+    }
 
     try {
+      setIsLoading(true);
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
         {
