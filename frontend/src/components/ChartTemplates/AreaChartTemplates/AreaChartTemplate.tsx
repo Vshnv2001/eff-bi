@@ -1,9 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardHeader from "@mui/material/CardHeader";
 import { useTheme } from "@mui/material/styles";
 import type { SxProps } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
@@ -13,6 +10,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Chart } from "../Chart";
 import { ApexOptions } from "apexcharts";
 import html2canvas from "html2canvas";
+import Box from "@mui/material/Box";
 
 export interface AreaChartProps {
   chartSeries: { name: string; data: number[] }[];
@@ -26,7 +24,7 @@ export function AreaChartTemplate({
   sx,
 }: AreaChartProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const chartOptions = useChartOptions(labels);
+  const chartOptions = useChartOptions(labels, chartSeries);
   const chartRef = React.useRef<HTMLDivElement | null>(null);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -73,69 +71,86 @@ export function AreaChartTemplate({
   };
 
   return (
-    <Card sx={sx}>
-      <CardHeader
-        action={
-          <div>
-            <IconButton onClick={handleMenuClick} size="small">
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={() => handleDownload("SVG")}>
-                Download as SVG
-              </MenuItem>
-              <MenuItem onClick={() => handleDownload("PNG")}>
-                Download as PNG
-              </MenuItem>
-            </Menu>
-          </div>
-        }
-        title="Fundamental Analysis of Stocks"
-        subheader="Price Movements"
-      />
-      <CardContent ref={chartRef}>
+    <Box sx={{ border: "1px solid #ccc", borderRadius: 2, p: 2, ...sx }}>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <IconButton onClick={handleMenuClick} size="small">
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          PaperProps={{
+            style: {
+              borderRadius: 8,
+              marginTop: 5,
+            },
+          }}
+        >
+          <MenuItem
+            onClick={() => handleDownload("SVG")}
+            sx={{
+              typography: "body2",
+              color: "text.primary",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.08)",
+              },
+            }}
+          >
+            Download as SVG
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleDownload("PNG")}
+            sx={{
+              typography: "body2",
+              color: "text.primary",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.08)",
+              },
+            }}
+          >
+            Download as PNG
+          </MenuItem>
+        </Menu>
+      </div>
+      <div ref={chartRef} style={{ marginTop: 16 }}>
         <Chart
-          height={350}
+          height={400}
           options={chartOptions}
           series={chartSeries}
           type="area"
           width="100%"
         />
-      </CardContent>
-    </Card>
+      </div>
+    </Box>
   );
 }
 
-function useChartOptions(labels: string[]): ApexOptions {
+function useChartOptions(
+  labels: string[],
+  chartSeries: { name: string; data: number[] }[]
+): ApexOptions {
   const theme = useTheme();
+
+  const maxYValue = Math.max(...chartSeries.flatMap((series) => series.data));
 
   return {
     chart: {
       type: "area",
-      height: 350,
       zoom: { enabled: false },
       background: "transparent",
+      toolbar: { show: false },
     },
     dataLabels: { enabled: false },
     stroke: { curve: "smooth" },
-    title: {
-      text: "Fundamental Analysis of Stocks",
-      align: "left",
-    },
-    subtitle: {
-      text: "Price Movements",
-      align: "left",
-    },
     labels,
     xaxis: {
       type: "datetime",
     },
     yaxis: {
       opposite: true,
+      min: 0,
+      max: maxYValue * 1.1,
     },
     legend: {
       horizontalAlign: "left",

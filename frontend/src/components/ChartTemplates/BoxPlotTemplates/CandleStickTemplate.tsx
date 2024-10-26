@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
-import ApexCharts from 'apexcharts';
-import html2canvas from 'html2canvas';
-import { Menu, MenuItem, IconButton } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import React, { useEffect, useRef, useState } from "react";
+import ApexCharts from "apexcharts";
+import html2canvas from "html2canvas";
+import { Menu, MenuItem, IconButton } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 type CandlestickData = {
   x: Date | number;
@@ -15,31 +15,38 @@ interface CandlestickChartProps {
   height?: number;
 }
 
-const CandlestickTemplate: React.FC<CandlestickChartProps> = ({ data, title = 'Candlestick Chart', height = 350 }) => {
+const CandlestickTemplate: React.FC<CandlestickChartProps> = ({
+  data,
+  title = "Candlestick Chart",
+  height = 350,
+}) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   useEffect(() => {
     const options = {
-      series: [{
-        data: data
-      }],
+      series: [
+        {
+          data: data,
+        },
+      ],
       chart: {
-        type: 'candlestick',
+        type: "candlestick",
         height: height,
+        toolbar: { show: false },
       },
       title: {
         text: title,
-        align: 'left'
+        align: "left",
       },
       xaxis: {
-        type: 'datetime'
+        type: "datetime",
       },
       yaxis: {
         tooltip: {
-          enabled: true
-        }
-      }
+          enabled: true,
+        },
+      },
     };
 
     const chart = new ApexCharts(chartRef.current, options);
@@ -98,18 +105,46 @@ const CandlestickTemplate: React.FC<CandlestickChartProps> = ({ data, title = 'C
 
   return (
     <div>
-      <IconButton onClick={handleMenuClick} size="small" style={{ marginBottom: '10px' }}>
+      <IconButton
+        onClick={handleMenuClick}
+        size="small"
+        style={{ marginBottom: "10px" }}
+      >
         <MoreVertIcon />
       </IconButton>
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleClose}
+        PaperProps={{
+          style: {
+            borderRadius: 8,
+            marginTop: 5,
+          },
+        }}
       >
-        <MenuItem onClick={() => handleDownload("SVG")}>
+        <MenuItem
+          onClick={() => handleDownload("SVG")}
+          sx={{
+            typography: "body2",
+            color: "text.primary",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.08)",
+            },
+          }}
+        >
           Download as SVG
         </MenuItem>
-        <MenuItem onClick={() => handleDownload("PNG")}>
+        <MenuItem
+          onClick={() => handleDownload("PNG")}
+          sx={{
+            typography: "body2",
+            color: "text.primary",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.08)",
+            },
+          }}
+        >
           Download as PNG
         </MenuItem>
       </Menu>
