@@ -23,7 +23,7 @@ class ChartType(Enum):
     ScatterChartTemplate = "ScatterChartTemplate"
     CandlestickTemplate = "CandlestickTemplate"
     BoxPlotTemplate = "BoxPlotTemplate"
-
+    TableTemplate = "TableTemplate"
 
 viz_props = {
     ChartType.AreaChartTemplate: {
@@ -102,6 +102,12 @@ viz_props = {
             {"x": None, "y": [0, 0, 0, 0]}
         ],
     },
+    ChartType.TableTemplate: {
+        "data": [
+            {"label": "", "values": []},
+            {"label": "", "values": []},
+        ],
+    },
 
 
 }
@@ -140,7 +146,8 @@ class DataFormatter:
                 - ScatterChartTemplate: Best for showing relationships between two variables and identifying correlations, trends, or outliers.
                 - CandlestickTemplate: Commonly used in financial data to show price movements, particularly for stocks, over time. It emphasizes opening, closing, high, and low prices.
                 - BoxPlotTemplate: Best for showing the distribution of data based on five summary statistics: minimum, first quartile, median, third quartile, and maximum.
-
+                - TableTemplate: Best for showing data in a tabular format.
+                
             Make sure that the chart type you choose is one of the above. 'HorizontalBarChartTemplate' is allowed but not 'HorizontalBarChartTemplate .'.
             Consider these types of questions when recommending a visualization:
             
@@ -159,7 +166,7 @@ class DataFormatter:
             13. Proportions in Multiple Groups: (e.g., "What is the contribution of different products to total sales?" - StackedGroupBarChartTemplate)
             14. Demographic Distributions: (e.g., "What is the age distribution of customers?" - PyramidBarChartTemplate)
             
-            As much as possible, try to provide a visualization and try not to recommend none.
+            As much as possible, try to provide a visualization and try not to recommend none. If you really cannot find a visualization, recommend TableTemplate.
 
             Provide your response in the following format:
             Recommended Visualization: [Chart type or "None"]. ONLY use the above given names.
