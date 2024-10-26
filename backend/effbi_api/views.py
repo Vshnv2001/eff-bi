@@ -118,42 +118,6 @@ def get_dashboard_tiles(request: HttpRequest):
     logger.info("data", serializer.data)
     return JsonResponse({'data': serializer.data}, status=200)
 
-
-'''
-@api_view(["POST"])
-@verify_session()
-def create_dashboard_tile(request: HttpRequest):
-    try:
-        dash_id = request.data.get('dash_id', None)
-        logger.info(dash_id)
-        if not dash_id:
-            return JsonResponse({'error': "Dash_id is required"}, status=status.HTTP_400_BAD_REQUEST)
-        user_id = request.supertokens.get_user_id()
-        user = get_object_or_404(User, id=user_id)
-        org_id = user.organization.id
-        db_uri = user.organization.database_uri
-        response : State = response_pipeline(request.data.get('description'), db_uri, org_id, user_id)
-        logger.info("Pipeline complete")
-        if response.error != "":
-            logger.info(response.error)
-            return JsonResponse({'error': response.error}, status=status.HTTP_400_BAD_REQUEST)
-        request.data['organization'] = org_id
-        request.data['sql_query'] = response.sql_query
-        request.data['component'] = response.visualization.get('visualization', '')
-        request.data['tile_props'] = response.formatted_data
-        logger.info(request.data)
-        serializer = TileSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse({'data': serializer.data}, status=201)
-        logger.info(serializer.errors)
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    except Exception as e:
-        logger.info(e)
-        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-'''
-
-# '''
 @api_view(["POST"])
 @verify_session()
 def create_dashboard_tile(request: HttpRequest):
@@ -187,8 +151,6 @@ def create_dashboard_tile(request: HttpRequest):
     except Exception as e:
         logger.error(e)
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-# '''
-
 
 @api_view(["POST"])
 @verify_session()
