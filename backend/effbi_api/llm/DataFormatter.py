@@ -189,15 +189,14 @@ class DataFormatter:
         question = self.state.question
         sql_query = self.state.sql_query
         
-        logger.error("chosen visualization: ", visualization)
+        logger.info("chosen visualization: ", visualization)
 
         if visualization == "none":
             return {"formatted_data_for_visualization": None}
 
         visualization_props = viz_props[ChartType(visualization)]
         
-        logger.error("visualization_props: ", visualization_props)
-
+        logger.info("visualization_props: ", visualization_props)
         prompt = ChatPromptTemplate.from_messages([
             ("system", '''
             You are an AI assistant that formats data for data visualizations.
@@ -223,16 +222,15 @@ class DataFormatter:
             '''),
         ])
         
-        logger.error("invoking llm_manager")
-
+        logger.info("invoking llm_manager")
         try:
             response = self.llm_manager.invoke(prompt, sql_query=sql_query, results=results,
                                                visualization=visualization, question=question, visualization_props=visualization_props)
         except Exception as e:
-            logger.error("Error invoking llm_manager: ", e)
+            logger.info("Error invoking llm_manager: ", e)
             raise e
         
-        logger.error("response: ", response)
+        logger.info("response: ", response)
         
         self.state.formatted_data = JsonOutputParser().parse(response)
 

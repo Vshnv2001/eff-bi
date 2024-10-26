@@ -1,3 +1,4 @@
+from .SQLValidator import SQLValidator
 from .DatabaseManager import DatabaseManager
 from .SQLAgent import SQLAgent
 from .DataFormatter import DataFormatter
@@ -13,7 +14,7 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     state.question = user_query
     
     accessible_table_names = get_accessible_table_names(user_id)
-    logger.error("ACCESSIBLE TABLE NAMES: ", accessible_table_names)
+    logger.info("ACCESSIBLE TABLE NAMES: ", accessible_table_names)
     
     # Get the database schema
     db_manager = DatabaseManager(db_uri, organization_id)
@@ -25,7 +26,7 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     pruner = PrunerAgent()
     parsed_question = pruner.prune(state)
     
-    logger.error(parsed_question)
+    logger.info(parsed_question)
     
     state.parsed_question = parsed_question
     
@@ -37,9 +38,9 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     sql_agent = SQLAgent(db_manager)
     sql_query = sql_agent.generate_sql(state)
     
-    logger.error(type(sql_query))
+    logger.info(type(sql_query))
     
-    logger.error("SQL QUERY: ", sql_query)
+    logger.info("SQL QUERY: ", sql_query)
     
     # if not sql_query.get('is_relevant', False):
     #     state.error = "We do not have the necessary data to answer this question. Either check your database tables and ensure you have the correct permissions, or rephrase your question."
@@ -49,27 +50,28 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     
     # validate_and_fix_sql = sql_agent.validate_and_fix_sql(state)
     
-    # logger.error("VALIDATE AND FIX SQL: ", validate_and_fix_sql)
+    # logger.info("VALIDATE AND FIX SQL: ", validate_and_fix_sql)
     
     # state.sql_query = validate_and_fix_sql.get('corrected_query', '')
     
+    sql_validator = SQLValidator()
+    
     # Execute the SQL query and get the results
-    results = db_manager.execute_query(state.sql_query)
+    results = db_manager.execute_query(state, sql_agent, sql_validator, 0)
     
     state.results = results
-    
     
     # # Format the results
     formatter = DataFormatter(state)
     visualization_choice = formatter.choose_visualization()
-    logger.error("VISUALIZATION CHOICE: ", visualization_choice)
+    logger.info("VISUALIZATION CHOICE: ", visualization_choice)
     state.visualization = visualization_choice
     try:
         formatted_data = formatter.format_data_for_visualization()
     except Exception as e:
-        logger.error("Error formatting data for visualization: ", e)
+        logger.info("Error formatting data for visualization: ", e)
         raise e
     
-    logger.error("FORMATTED DATA: ", formatted_data)
+    logger.info("FORMATTED DATA: ", formatted_data)
 
     return state
