@@ -16,7 +16,6 @@ export interface BarProps {
   chartSeries: { name: string; data: number[] }[];
   categories: string[];
   xAxisLabel: string;
-  yAxisLabel: string;
   title: string;
   description: string;
 }
@@ -25,11 +24,11 @@ export function BarChartTemplate({
   chartSeries,
   categories,
   xAxisLabel,
-  yAxisLabel,
   title,
   description,
 }: BarProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const yAxisLabel = chartSeries[0]?.name || ''; // Use the name of the first series as the Y-axis label
   const chartOptions = useChartOptions(categories, xAxisLabel, yAxisLabel);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -199,7 +198,6 @@ function useChartOptions(
     yaxis: {
       labels: {
         formatter: (value) => value.toFixed(2),
-        offsetX: -10,
         style: { colors: theme.palette.text.secondary },
       },
       title: { text: yAxisLabel, style: { color: theme.palette.text.primary } },

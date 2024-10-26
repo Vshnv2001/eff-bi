@@ -24,7 +24,8 @@ export function HorizontalBarChartTemplate({
   description,
 }: HorizontalBarChartProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const chartOptions = useChartOptions(categories);
+  const xAxisLabel = chartSeries.length > 0 ? chartSeries[0].name : "Value";
+  const chartOptions = useChartOptions(categories, xAxisLabel);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -78,8 +79,8 @@ export function HorizontalBarChartTemplate({
 
   return (
     <div style={{ position: "relative", textAlign: "center" }}>
-      <h2>{title}</h2> {/* Display title */}
-      <p>{description}</p> {/* Display description */}
+      <h2>{title}</h2>
+      <p>{description}</p>
       <div style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}>
         <IconButton onClick={handleMenuClick} size="small">
           <MoreVertIcon />
@@ -135,7 +136,7 @@ export function HorizontalBarChartTemplate({
   );
 }
 
-function useChartOptions(categories: string[]): ApexOptions {
+function useChartOptions(categories: string[], xAxisLabel: string): ApexOptions {
   const theme = useTheme();
 
   const generateBlueShades = (count: number): string[] => {
@@ -173,6 +174,7 @@ function useChartOptions(categories: string[]): ApexOptions {
       axisBorder: { color: theme.palette.divider, show: true },
       axisTicks: { color: theme.palette.divider, show: true },
       labels: { offsetY: 5, style: { colors: theme.palette.text.secondary } },
+      title: { text: xAxisLabel, style: { color: theme.palette.text.primary } }, // Set the x-axis title here
     },
     yaxis: {
       labels: {

@@ -10,7 +10,7 @@ interface DashboardFormProps {
   dashboardDescription: string;
   setDashboardDescription: (description: string) => void;
   onDashboardCreated?: () => void;
-  onClose: () => void; // Added onClose prop for cancel button
+  onClose: () => void;
 }
 
 export default function DashboardForm({
@@ -19,7 +19,7 @@ export default function DashboardForm({
   dashboardDescription,
   setDashboardDescription,
   onDashboardCreated,
-  onClose, // Destructure onClose
+  onClose,
 }: DashboardFormProps) {
   const [isLoading, setLoading] = useState(false);
 
@@ -29,12 +29,6 @@ export default function DashboardForm({
 
       if (!dashboardName.trim()) {
         toast.error("Dashboard name is required");
-        setLoading(false);
-        return;
-      }
-
-      if (!dashboardDescription.trim()) {
-        toast.error("Dashboard description is required");
         setLoading(false);
         return;
       }
