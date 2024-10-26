@@ -126,13 +126,13 @@ export default function EffBINavbar() {
                     className="flex items-center text-white gap-2 p-3 bg-gray-800 border-none"
                     onClick={() => navigate("/settings/access-permissions")}
                   >
-                    Access Permissions
+                    Table Permissions
                   </MenuItem>
                   <MenuItem
                     className="flex items-center text-white gap-2 p-3 bg-gray-800 border-none"
                     onClick={() => navigate("/profile")}
                   >
-                    User profile
+                    User Profile
                   </MenuItem>
                 </MenuList>
               </Menu>
