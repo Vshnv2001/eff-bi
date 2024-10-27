@@ -14,6 +14,7 @@ import CandlestickTemplate from "../ChartTemplates/BoxPlotTemplates/CandleStickT
 import BoxPlotTemplate from "../ChartTemplates/BoxPlotTemplates/BoxPlotTemplate";
 import LineChartTemplate from "../ChartTemplates/LineChartTemplates/LineChartTemplate";
 import TableTemplate from "../ChartTemplates/TableTemplate/TableTemplate";
+import SingleValueTemplate from "../ChartTemplates/SingleValueTemplate/SingleValueTemplate";
 export const componentMapping = {
   'LineChartTemplate': LineChartTemplate,
   'BarChartTemplate': BarChartTemplate,
@@ -31,4 +32,25 @@ export const componentMapping = {
   'CandlestickTemplate': CandlestickTemplate,
   'BoxPlotTemplate': BoxPlotTemplate,
   'TableTemplate': TableTemplate,
+  'SingleValueTemplate': SingleValueTemplate,
+}
+
+export const componentNames = {
+  'Line Chart': 'LineChartTemplate',
+  'Bar Chart': 'BarChartTemplate',
+  'Horizontal Bar Chart': 'HorizontalBarChartTemplate',
+  'Donut Chart': 'DonutChartTemplate',
+  'Area Chart': 'AreaChartTemplate',
+  'Stacked Group Bar Chart': 'StackedGroupBarChartTemplate',
+  'Pyramid Bar Chart': 'PyramidBarChartTemplate',
+  'Line Column Chart': 'LineColumnChartTemplate',
+  'Pie Chart': 'PieChartTemplate',
+  'Radar Chart': 'RadarChartTemplate',
+  'Radar Chart Multiple': 'RadarChartMultipleTemplate',
+  'Radar Chart Polar': 'RadarChartPolarTemplate',
+  'Scatter Chart': 'ScatterChartTemplate',
+  'Candlestick Chart': 'CandlestickTemplate',
+  'Box Plot Chart': 'BoxPlotTemplate',
+  'Table': 'TableTemplate',
+  'Single Value': 'SingleValueTemplate',
 }
