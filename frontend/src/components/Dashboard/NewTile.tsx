@@ -10,7 +10,7 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { Box, Chip } from "@mui/material";
-import axios from "axios";
+import axios, { CancelTokenSource } from "axios";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { IconButton } from "@material-tailwind/react";
 import { componentMapping, componentNames } from "./ComponentMapping";
@@ -36,7 +36,6 @@ export default function NewTile({ onClose }: NewTileProps) {
   const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-
   const handleDialogOpen = () => {
     setDialogOpen(true);
   };
@@ -60,6 +59,17 @@ export default function NewTile({ onClose }: NewTileProps) {
 
     setIsLoading(true);
 
+    let cancelToken: CancelTokenSource | undefined;
+    const timeout = setTimeout(() => {
+      if (cancelToken) {
+        const cancelReason = "Unable to generate tile. Request took too long.";
+        cancelToken.cancel(cancelReason);
+        toast.error(cancelReason);
+        setIsLoading(false);
+        return;
+      }
+    }, 60000); // 60 seconds timeout
+
     if (submitType === "preview") {
       let description = queryPrompt;
       try {
@@ -68,6 +78,7 @@ export default function NewTile({ onClose }: NewTileProps) {
           componentNamesString = selectedTemplates.join(",");
           description = `${queryPrompt}\n\nTry to generate a chart that is any of the following: ${componentNamesString}.`;
         }
+        cancelToken = axios.CancelToken.source();
 
         const response = await axios.post(
           `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
@@ -75,13 +86,14 @@ export default function NewTile({ onClose }: NewTileProps) {
             dash_id: dashboardId,
             title: tileName,
             description: description,
-          }
+          },
+          { cancelToken: cancelToken.token }
         );
-
 
         setPreviewComponent(response.data.component);
         setPreviewProps(response.data.tile_props);
         setIsPreviewGenerated(true);
+        clearTimeout(timeout);
 
         setApiData({
           dash_id: dashboardId,
@@ -90,6 +102,7 @@ export default function NewTile({ onClose }: NewTileProps) {
           ...response.data,
         });
       } catch (error) {
+        clearTimeout(timeout);
         if (axios.isAxiosError(error)) {
           console.error(
             "Error generating preview:",
@@ -103,13 +116,17 @@ export default function NewTile({ onClose }: NewTileProps) {
       }
     } else if (submitType === "save") {
       try {
+        cancelToken = axios.CancelToken.source();
         await axios.post(
           `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile-save/`,
-          apiData
+          apiData,
+          { cancelToken: cancelToken.token }
         );
         toast.success("KPI saved successfully!");
+        clearTimeout(timeout);
         onClose();
       } catch (error) {
+        clearTimeout(timeout);
         if (axios.isAxiosError(error)) {
           console.error("Error saving tile:", error.response?.data.error);
           toast.error(error.response?.data.error);
@@ -174,7 +191,11 @@ export default function NewTile({ onClose }: NewTileProps) {
                           : [...prev, component]
                       );
                     }}
-                    color={selectedTemplates.includes(component) ? "primary" : "default"}
+                    color={
+                      selectedTemplates.includes(component)
+                        ? "primary"
+                        : "default"
+                    }
                   />
                 ))}
               </Box>
