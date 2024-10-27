@@ -75,6 +75,25 @@ export function AreaChartTemplate({
     handleClose();
   };
 
+  // Check if chartSeries or labels are empty
+  if (chartSeries.length === 0 || labels.length === 0) {
+    return (
+      <Box
+        sx={{
+          border: "1px solid #ccc",
+          borderRadius: 2,
+          p: 2,
+          ...sx,
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="body2">
+          Query returned empty result, so no visualization needed.
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ border: "1px solid #ccc", borderRadius: 2, p: 2, ...sx }}>
       {/* Title and Download Menu */}

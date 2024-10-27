@@ -29,6 +29,10 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
     console.log("series", series);
     console.log("labels", labels);
 
+    if (series.length === 0 || labels.length === 0) {
+      return;
+    }
+
     const generateColors = (count: number) => {
       const colors = [];
       const baseHue = 30;
@@ -177,14 +181,23 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
         {description}
       </Typography>
 
-      <div
-        ref={chartRef}
-        style={{
-          maxHeight: "600px",
-          overflowY: "auto",
-          overflowX: "hidden",
-        }}
-      />
+      {series.length === 0 || labels.length === 0 ? (
+        <Typography
+          variant="body2"
+          style={{ textAlign: "center", marginTop: 20, color: "red" }}
+        >
+          Query returned empty result, so no visualization needed.
+        </Typography>
+      ) : (
+        <div
+          ref={chartRef}
+          style={{
+            maxHeight: "600px",
+            overflowY: "auto",
+            overflowX: "hidden",
+          }}
+        />
+      )}
     </div>
   );
 };

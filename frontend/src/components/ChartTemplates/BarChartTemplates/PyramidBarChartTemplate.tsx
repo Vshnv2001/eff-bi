@@ -137,14 +137,23 @@ export function PyramidBarChartTemplate({
       </div>
 
       {/* Chart component */}
-      <div>
-        <Chart
-          height={440}
-          options={chartOptions}
-          series={chartSeries}
-          type="bar"
-          width="100%"
-        />
+      <div style={{ marginTop: 30 }}>
+        {chartSeries.length === 0 ? (
+          <Typography
+            variant="body2"
+            style={{ textAlign: "center", margin: "20px 0" }}
+          >
+            No data available to display the chart.
+          </Typography>
+        ) : (
+          <Chart
+            height={440}
+            options={chartOptions}
+            series={chartSeries}
+            type="bar"
+            width="100%"
+          />
+        )}
       </div>
     </div>
   );

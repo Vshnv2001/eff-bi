@@ -148,9 +148,7 @@ export function StackedGroupBarChartTemplate({
             </MenuItem>
           </Menu>
         </div>
-      </div>
-      <h2>{title}</h2>
-      <p>{description}</p>
+      </div>      
       <div id="stacked-bar-chart" style={{ width: "100%", height: "350px" }} />
     </div>
   );

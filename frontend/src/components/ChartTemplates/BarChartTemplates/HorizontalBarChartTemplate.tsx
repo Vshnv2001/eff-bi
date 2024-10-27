@@ -136,13 +136,22 @@ export function HorizontalBarChartTemplate({
       </div>
 
       <div style={{ marginTop: 30 }}>
-        <Chart
-          height={350}
-          options={chartOptions}
-          series={chartSeries}
-          type="bar"
-          width="100%"
-        />
+        {chartSeries.length === 0 ? (
+          <Typography
+            variant="body2"
+            style={{ textAlign: "center", margin: "20px 0" }}
+          >
+            No data available to display the chart.
+          </Typography>
+        ) : (
+          <Chart
+            height={350}
+            options={chartOptions}
+            series={chartSeries}
+            type="bar"
+            width="100%"
+          />
+        )}
       </div>
     </div>
   );
@@ -189,7 +198,7 @@ function useChartOptions(
       axisBorder: { color: theme.palette.divider, show: true },
       axisTicks: { color: theme.palette.divider, show: true },
       labels: { offsetY: 5, style: { colors: theme.palette.text.secondary } },
-      title: { text: xAxisLabel, style: { color: theme.palette.text.primary } }, // Set the x-axis title here
+      title: { text: xAxisLabel, style: { color: theme.palette.text.primary } },
     },
     yaxis: {
       labels: {

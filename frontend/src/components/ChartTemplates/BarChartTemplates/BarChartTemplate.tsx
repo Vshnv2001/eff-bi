@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
@@ -29,7 +27,7 @@ export function BarChartTemplate({
   description,
 }: BarProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const yAxisLabel = chartSeries[0]?.name || ""; // Use the name of the first series as the Y-axis label
+  const yAxisLabel = chartSeries[0]?.name || "";
   const chartOptions = useChartOptions(categories, xAxisLabel, yAxisLabel);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -145,13 +143,22 @@ export function BarChartTemplate({
       </Typography>
 
       <CardContent>
-        <Chart
-          height={350}
-          options={chartOptions}
-          series={chartSeries}
-          type="bar"
-          width="100%"
-        />
+        {chartSeries.length === 0 ? (
+          <Typography
+            variant="body1"
+            style={{ textAlign: "center", color: "gray", marginTop: 20 }}
+          >
+            Query returned empty result, so no visualization needed.
+          </Typography>
+        ) : (
+          <Chart
+            height={350}
+            options={chartOptions}
+            series={chartSeries}
+            type="bar"
+            width="100%"
+          />
+        )}
       </CardContent>
       <Divider />
     </div>
