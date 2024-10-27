@@ -39,7 +39,7 @@ export default function DashboardPage() {
       setCopiedIndex(index);
       setTimeout(() => setCopiedIndex(null), 2000);
     } catch (err) {
-      console.error('Failed to copy text: ', err);
+      console.error("Failed to copy text: ", err);
     }
   };
 
@@ -95,40 +95,66 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div
+      className={`min-h-screen bg-gray-800 p-8 ${
+        isNewTileDialogOpen ? "opacity-60" : ""
+      }`}
+    >
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <Spinner className="h-10 w-10" />
         </div>
       )}
 
-      <Breadcrumbs aria-label="breadcrumb" className="text-gray-700 mb-4">
-        <Link underline="hover" color="inherit" href="/">
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        style={{ color: "white", fontSize: "16px" }}
+      >
+        <Link
+          underline="hover"
+          color="inherit"
+          href="/"
+          style={{ color: "#fff" }}
+        >
           Home
         </Link>
-        <Link underline="hover" color="inherit" href="/dashboards">
+        <Link
+          underline="hover"
+          href="/dashboards"
+          color="inherit"
+          style={{ color: "#fff" }}
+        >
           Dashboards
         </Link>
-        <Link underline="hover" color="text.primary" className="text-blue-500">
+        <Link
+          underline="hover"
+          color="text.primary"
+          style={{ color: "#4995ec" }}
+        >
           {dashboardName}
         </Link>
       </Breadcrumbs>
 
-      <div className="flex items-center justify-between mb-8">
-        <Typography className="text-3xl font-semibold">
-          {dashboardName}
-        </Typography>
+      <div className="flex items-center justify-between mb-8 relative mt-4">
+        <div className="absolute inset-x-0 text-center">
+          <Typography color="white" className="text-3xl font-bold">
+            {dashboardName}
+          </Typography>
+        </div>
+        <div className="flex-1" />
+
         <Button
           variant="text"
           size="sm"
           color="white"
-          className="bg-blue-500 hover:bg-blue-600"
+          className="flex items-center gap-2 justify-center font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
           onClick={() => setIsNewTileDialogOpen(true)}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
+            strokeWidth={2}
             stroke="currentColor"
             className="h-5 w-5"
           >
@@ -192,7 +218,9 @@ export default function DashboardPage() {
                       <div className="relative">
                         {open === index + tilesData.length && (
                           <button
-                            onClick={() => handleCopy(tileData.sql_query, index)}
+                            onClick={() =>
+                              handleCopy(tileData.sql_query, index)
+                            }
                             className="absolute top-2 right-2 p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
                             title="Copy SQL"
                           >

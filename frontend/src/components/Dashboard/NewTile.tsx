@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Typography,
-  Button,
-  Dialog,
-  DialogHeader,
-  DialogBody,
-  DialogFooter,
-} from "@material-tailwind/react";
+import { Typography, Button } from "@material-tailwind/react";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { Box } from "@mui/material";
@@ -108,7 +101,11 @@ export default function NewTile({ onClose }: NewTileProps) {
   };
 
   const handleInfo = () => {
-    setInfo(!info);
+    setInfo((prevInfo) => !prevInfo);
+  };
+
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
   };
 
   const PreviewComponent = previewComponent
@@ -116,134 +113,144 @@ export default function NewTile({ onClose }: NewTileProps) {
     : null;
 
   return (
-    <div className="p-6 bg-white rounded-md max-h-[80vh] overflow-y-auto">
-      <Typography variant="h4" color="blue-gray" className="mb-4">
-        Create New Tile
-      </Typography>
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      onClick={handleBackdropClick}
+    >
+      <div
+        className="p-6 bg-white rounded-md max-h-[80vh] overflow-y-auto w-full max-w-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Typography variant="h4" color="blue-gray" className="mb-4">
+          Create New Tile
+        </Typography>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div className="relative mb-4">
-          <Typography variant="h6" color="blue-gray" className="mb-1">
-            Tile Name
-          </Typography>
-          <textarea
-            placeholder="Enter tile name"
-            value={tileName}
-            onChange={(e) => setTileName(e.target.value)}
-            className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
-          />
-        </div>
-
-        <div className="flex items-center mb-2">
-          <Typography variant="h6" color="blue-gray" className="mr-2">
-            Query Prompt
-          </Typography>
-          <IconButton
-            variant="text"
-            className="w-5 h-5 p-0"
-            onClick={handleInfo}
-          >
-            <InformationCircleIcon className="h-5 w-5" />
-          </IconButton>
-        </div>
-
-        <div className="relative">
-          <textarea
-            placeholder="Enter query to generate the chart (e.g., 'Show me monthly sales data for the past year')"
-            value={queryPrompt}
-            onChange={(e) => setQueryPrompt(e.target.value)}
-            rows={4}
-            className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
-          />
-        </div>
-
-        {/* New textarea for SQL Query */}
-        {sqlQuery && (
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="relative mb-4">
             <Typography variant="h6" color="blue-gray" className="mb-1">
-              SQL Query
+              Tile Name
             </Typography>
             <textarea
-              value={sqlQuery}
-              readOnly
-              className="border border-gray-400 bg-gray-100 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
+              placeholder="Enter tile name"
+              value={tileName}
+              onChange={(e) => setTileName(e.target.value)}
+              className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
             />
           </div>
-        )}
 
-        {PreviewComponent && previewProps && (
-          <div className="mt-4 border rounded-lg p-4">
-            <Typography variant="h6" color="blue-gray" className="mb-2">
-              Preview
+          <div className="flex items-center mb-2">
+            <Typography variant="h6" color="blue-gray" className="mr-2">
+              Query Prompt
             </Typography>
-            <PreviewComponent
-              {...previewProps}
-              title={tileName}
-              description={queryPrompt}
+            <IconButton
+              variant="text"
+              className="w-5 h-5 p-0"
+              onClick={handleInfo}
+            >
+              <InformationCircleIcon className="h-5 w-5" />
+            </IconButton>
+          </div>
+
+          <div className="relative">
+            <textarea
+              placeholder="Enter query to generate the chart (e.g., 'Show me monthly sales data for the past year')"
+              value={queryPrompt}
+              onChange={(e) => setQueryPrompt(e.target.value)}
+              rows={4}
+              className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
             />
           </div>
+
+          {/* New textarea for SQL Query */}
+          {sqlQuery && (
+            <div className="relative mb-4">
+              <Typography variant="h6" color="blue-gray" className="mb-1">
+                SQL Query
+              </Typography>
+              <textarea
+                value={sqlQuery}
+                readOnly
+                className="border border-gray-400 bg-gray-100 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
+              />
+            </div>
+          )}
+
+          {PreviewComponent && previewProps && (
+            <div className="mt-4 border rounded-lg p-4">
+              <Typography variant="h6" color="blue-gray" className="mb-2">
+                Preview
+              </Typography>
+              <PreviewComponent
+                {...previewProps}
+                title={tileName}
+                description={queryPrompt}
+              />
+            </div>
+          )}
+
+          <Box className="flex justify-center space-x-5 mb-4">
+            <Button color="red" onClick={onClose} disabled={isLoading}>
+              Cancel
+            </Button>
+            <Button
+              color="blue"
+              onClick={() => setSubmitType("preview")}
+              disabled={isLoading}
+              type="submit"
+            >
+              {isLoading ? "Generating..." : "Generate Preview"}
+            </Button>
+            <Button
+              color="green"
+              onClick={() => setSubmitType("save")}
+              disabled={!isPreviewGenerated || isLoading}
+              type="submit"
+            >
+              Save
+            </Button>
+          </Box>
+        </form>
+
+        <ToastContainer
+          className="pt-14"
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          pauseOnHover
+        />
+
+        {info && (
+          <div className="absolute z-10 p-4 bg-white border rounded-lg shadow-lg">
+            <Typography variant="h6" color="blue-gray" className="mb-1">
+              Query Details
+            </Typography>
+            <Typography color="gray">
+              For optimal results, it is recommended to indicate the type of
+              chart desired as well as the specific data for comparison. When
+              defining specific conditions,{" "}
+              <span className="text-red-500 font-bold">
+                always use precise values in conditions
+              </span>
+              . For example, if the condition is "injury," do not substitute
+              with synonyms or related terms like "injured" or "torn hamstring."
+              <br />
+              <br />
+              Ensure that the conditions match exactly what is recorded in the
+              dataset to avoid discrepancies in the analysis. It is also
+              important to clarify the metrics used to define vague terms. For
+              instance, an ideal specification could highlight the top players
+              based on the number of gold medals they have won.
+            </Typography>
+            <Button variant="text" onClick={handleInfo}>
+              Close
+            </Button>
+          </div>
         )}
-
-        <Box className="flex justify-center space-x-5 mb-4">
-          <Button color="red" onClick={onClose} disabled={isLoading}>
-            Cancel
-          </Button>
-          <Button
-            color="blue"
-            onClick={() => setSubmitType("preview")}
-            disabled={isLoading}
-            type="submit"
-          >
-            {isLoading ? "Generating..." : "Generate Preview"}
-          </Button>
-          <Button
-            color="green"
-            onClick={() => setSubmitType("save")}
-            disabled={!isPreviewGenerated || isLoading}
-            type="submit"
-          >
-            Save
-          </Button>
-        </Box>
-      </form>
-
-      <ToastContainer
-        className="pt-14"
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        pauseOnHover
-      />
-
-      <Dialog open={info} handler={handleInfo}>
-        <DialogHeader>Query Details</DialogHeader>
-        <DialogBody>
-          For optimal results, it is recommended to indicate the type of chart
-          desired as well as the specific data for comparison. When defining
-          specific conditions,{" "}
-          <span className="text-red-500 font-bold">
-            always use precise values in conditions
-          </span>
-          . For example, if the condition is "injury," do not substitute with
-          synonyms or related terms like "injured" or "torn hamstring."
-          <br />
-          <br />
-          Ensure that the conditions match exactly what is recorded in the
-          dataset to avoid discrepancies in the analysis. It is also important
-          to clarify the metrics used to define vague terms. For instance, an
-          ideal specification could highlight the top players based on the
-          number of gold medals they have won.
-        </DialogBody>
-        <DialogFooter>
-          <Button variant="text" onClick={handleInfo}>
-            Close
-          </Button>
-        </DialogFooter>
-      </Dialog>
+      </div>
     </div>
   );
 }
