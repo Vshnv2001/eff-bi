@@ -38,7 +38,7 @@ export function StackedGroupBarChartTemplate({
 
   const handleDownload = async (format: string) => {
     const chartElement = document.querySelector(
-      "#stacked-bar-chart"
+      ".apexcharts-canvas"
     ) as HTMLElement;
 
     if (!chartElement) return;
@@ -59,20 +59,23 @@ export function StackedGroupBarChartTemplate({
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
       }
-    } else if (format === "PNG") {
+    } else if (format === "PNG" || format === "JPEG" || format === "JPG") {
       const canvas = await html2canvas(chartElement);
-      canvas.toBlob((blob: Blob | null) => {
-        if (blob) {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "chart.png";
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        }
-      });
+      canvas.toBlob(
+        (blob: Blob | null) => {
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `chart.${format.toLowerCase()}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }
+        },
+        format === "JPEG" ? "image/jpeg" : undefined
+      );
     }
 
     handleClose();
@@ -146,9 +149,33 @@ export function StackedGroupBarChartTemplate({
             >
               Download as PNG
             </MenuItem>
+            <MenuItem
+              onClick={() => handleDownload("JPG")}
+              sx={{
+                typography: "body2",
+                color: "text.primary",
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)",
+                },
+              }}
+            >
+              Download as JPG
+            </MenuItem>
+            <MenuItem
+              onClick={() => handleDownload("JPEG")}
+              sx={{
+                typography: "body2",
+                color: "text.primary",
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)",
+                },
+              }}
+            >
+              Download as JPEG
+            </MenuItem>
           </Menu>
         </div>
-      </div>      
+      </div>
       <div id="stacked-bar-chart" style={{ width: "100%", height: "350px" }} />
     </div>
   );

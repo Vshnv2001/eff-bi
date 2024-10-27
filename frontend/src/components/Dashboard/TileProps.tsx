@@ -5,4 +5,5 @@ export interface TileProps {
     title: string;
     description: string;
     tile_props: any;
+    sql_query: string;
 }

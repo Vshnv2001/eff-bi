@@ -10,9 +10,9 @@ const ImageItem: React.FC<ImageItemProps> = ({ src, alt }) => {
     <div className="flex flex-col min-w-[240px] w-[316px]">
       <Card
         sx={{
-          boxShadow: 3, // Material-UI shadow level
-          borderRadius: 2, // Equivalent to Tailwind's rounded-2xl
-          overflow: 'hidden', // Ensures image doesn't overflow
+          boxShadow: 3,
+          borderRadius: 2,
+          overflow: 'hidden',
         }}
       >
         <Box
@@ -23,7 +23,7 @@ const ImageItem: React.FC<ImageItemProps> = ({ src, alt }) => {
           sx={{
             objectFit: 'contain',
             width: '100%',
-            aspectRatio: '1.1', // Matches the aspect-[1.1] class in Tailwind
+            aspectRatio: '1.1',
           }}
         />
       </Card>

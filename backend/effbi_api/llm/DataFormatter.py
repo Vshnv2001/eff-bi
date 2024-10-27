@@ -171,8 +171,10 @@ class DataFormatter:
             13. Proportions in Multiple Groups: (e.g., "What is the contribution of different products to total sales?" - StackedGroupBarChartTemplate)
             14. Demographic Distributions: (e.g., "What is the age distribution of customers?" - PyramidBarChartTemplate)
             15. Single Value: (e.g., "What is the total revenue?" - SingleValueTemplate)
-            As much as possible, try to provide a visualization and try not to recommend none. If you really cannot find a visualization, recommend TableTemplate.
 
+            If a specific chart type is requested, utilize the corresponding template for that chart.
+            For example, use PieChartTemplate for pie charts, BarChartTemplate for bar charts, and so on.
+            
             Provide your response in the following format:
             Recommended Visualization: [Chart type or "None"]. ONLY use the above given names.
             Reason: [Brief explanation for your recommendation]
