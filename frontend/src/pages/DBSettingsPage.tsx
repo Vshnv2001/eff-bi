@@ -17,14 +17,14 @@ import { ToastContainer, toast } from "react-toastify";
 
 const databases = [
   {
-    id: "mysql",
-    name: "MySQL",
-    logo: "https://www.vectorlogo.zone/logos/mysql/mysql-ar21.svg",
-  },
-  {
     id: "postgresql",
     name: "PostgreSQL",
     logo: "https://www.vectorlogo.zone/logos/postgresql/postgresql-ar21.svg",
+  },
+  {
+    id: "mysql",
+    name: "MySQL",
+    logo: "https://www.vectorlogo.zone/logos/mysql/mysql-ar21.svg",
   },
   {
     id: "sqlite",
@@ -206,8 +206,8 @@ export default function DBSettingsPage() {
                   selectedDb === db.id
                     ? "border-blue-500"
                     : "hover:border-blue-300"
-                }`}
-                onClick={() => setSelectedDb(db.id)}
+                } ${db.id !== "postgresql" ? "opacity-50 cursor-not-allowed" : ""}`}
+                onClick={() => db.id === "postgresql" && setSelectedDb(db.id)}
               >
                 <CardBody className="flex items-center justify-between p-4">
                   <div className="flex items-center space-x-4">
@@ -223,12 +223,12 @@ export default function DBSettingsPage() {
                     </Typography>
                   </div>
                   <Radio
-                    disabled={isDisabledField}
+                    disabled={isDisabledField || db.id !== "postgresql"}
                     crossOrigin={undefined}
                     name="database"
                     color="blue"
                     checked={selectedDb === db.id}
-                    onChange={() => setSelectedDb(db.id)}
+                    onChange={() => db.id === "postgresql" && setSelectedDb(db.id)}
                     className="checked:border-blue-500 checked:before:bg-blue-500"
                   />
                 </CardBody>
