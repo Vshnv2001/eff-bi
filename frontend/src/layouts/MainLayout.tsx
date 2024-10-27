@@ -18,9 +18,9 @@ const MainLayout = () => {
   );
 
   return (
-    <div className="bg-gray-custom">
+    <div className="bg-gray-custom min-h-screen">
       {shouldShowNavbar && <EffBINavbar />}
-      <div className="pt-[60px]">
+      <div className="relative top-[60px]">
         <Outlet />
       </div>
     </div>

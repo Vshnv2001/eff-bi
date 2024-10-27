@@ -9,6 +9,7 @@ import html2canvas from "html2canvas";
 import { useTheme } from "@mui/material/styles";
 import type { ApexOptions } from "apexcharts";
 import { Chart } from "../Chart";
+import Typography from "@mui/material/Typography";
 
 export interface HorizontalBarChartProps {
   chartSeries: { name: string; data: number[] }[];
@@ -79,8 +80,19 @@ export function HorizontalBarChartTemplate({
 
   return (
     <div style={{ position: "relative", textAlign: "center" }}>
-      <h2>{title}</h2>
-      <p>{description}</p>
+      <Typography
+        variant="h6"
+        style={{ textAlign: "center", marginBottom: 10 }}
+      >
+        {title}
+      </Typography>
+      <Typography
+        variant="body2"
+        style={{ textAlign: "center", marginBottom: 20 }}
+      >
+        {description}
+      </Typography>
+
       <div style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}>
         <IconButton onClick={handleMenuClick} size="small">
           <MoreVertIcon />
@@ -124,19 +136,31 @@ export function HorizontalBarChartTemplate({
       </div>
 
       <div style={{ marginTop: 30 }}>
-        <Chart
-          height={350}
-          options={chartOptions}
-          series={chartSeries}
-          type="bar"
-          width="100%"
-        />
+        {chartSeries.length === 0 ? (
+          <Typography
+            variant="body2"
+            style={{ textAlign: "center", margin: "20px 0" }}
+          >
+            No data available to display the chart.
+          </Typography>
+        ) : (
+          <Chart
+            height={350}
+            options={chartOptions}
+            series={chartSeries}
+            type="bar"
+            width="100%"
+          />
+        )}
       </div>
     </div>
   );
 }
 
-function useChartOptions(categories: string[], xAxisLabel: string): ApexOptions {
+function useChartOptions(
+  categories: string[],
+  xAxisLabel: string
+): ApexOptions {
   const theme = useTheme();
 
   const generateBlueShades = (count: number): string[] => {
@@ -174,7 +198,7 @@ function useChartOptions(categories: string[], xAxisLabel: string): ApexOptions 
       axisBorder: { color: theme.palette.divider, show: true },
       axisTicks: { color: theme.palette.divider, show: true },
       labels: { offsetY: 5, style: { colors: theme.palette.text.secondary } },
-      title: { text: xAxisLabel, style: { color: theme.palette.text.primary } }, // Set the x-axis title here
+      title: { text: xAxisLabel, style: { color: theme.palette.text.primary } },
     },
     yaxis: {
       labels: {

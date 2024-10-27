@@ -72,7 +72,10 @@ export default function NewTile({ onClose }: NewTileProps) {
         });
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          console.error("Error generating preview:", error.response?.data.error);
+          console.error(
+            "Error generating preview:",
+            error.response?.data.error
+          );
           toast.error(error.response?.data.error);
         } else {
           console.error("Error generating preview:", error);
@@ -203,13 +206,21 @@ export default function NewTile({ onClose }: NewTileProps) {
       <Dialog open={info} handler={handleInfo}>
         <DialogHeader>Query Details</DialogHeader>
         <DialogBody>
-          The data insights to be extracted from the uploaded data should be
-          clearly specified. For optimal results, it is recommended to indicate
-          the type of chart desired as well as the specific data for comparison.
-          For example, when analyzing top players, it is important to define the
-          metrics used to determine their ranking. An ideal specification could
-          be to highlight the top players based on the number of gold medals
-          they have won.
+          For optimal results, it is recommended to indicate the type of chart
+          desired as well as the specific data for comparison. When defining
+          specific conditions,{" "}
+          <span className="text-red-500 font-bold">
+            always use precise values in conditions
+          </span>
+          . For example, if the condition is "injury," do not substitute with
+          synonyms or related terms like "injured" or "torn hamstring."
+          <br />
+          <br />
+          Ensure that the conditions match exactly what is recorded in the
+          dataset to avoid discrepancies in the analysis. It is also important
+          to clarify the metrics used to define vague terms. For instance, an
+          ideal specification could highlight the top players based on the
+          number of gold medals they have won.
         </DialogBody>
         <DialogFooter>
           <Button variant="text" onClick={handleInfo}>

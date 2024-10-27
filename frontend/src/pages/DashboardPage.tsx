@@ -164,7 +164,7 @@ export default function DashboardPage() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         {tilesData.map((tileData) => {
           const Component =
             componentMapping[tileData.component as ComponentKeys] || null;
@@ -186,8 +186,11 @@ export default function DashboardPage() {
           }
 
           return (
-            <Card key={tileData.id} className="text-black">
-              <CardBody className="flex flex-col items-center">
+            <Card
+              key={tileData.id}
+              className="text-black p-4 rounded-lg overflow-visible"
+            >
+              <CardBody className="flex flex-col items-center w-full">
                 <div className="w-full">
                   {Component && (
                     <Component

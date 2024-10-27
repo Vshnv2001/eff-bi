@@ -107,10 +107,20 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
 
   return (
     <div>
-      {/* Display title and description */}
-      {title && <Typography variant="h6">{title}</Typography>}
-      {description && <Typography variant="body2" color="text.secondary">{description}</Typography>}
-      
+      {/* Title and Description */}
+      <Typography
+        variant="h6"
+        style={{ textAlign: "center", marginBottom: 10 }}
+      >
+        {title}
+      </Typography>
+      <Typography
+        variant="body2"
+        style={{ textAlign: "center", marginBottom: 20 }}
+      >
+        {description}
+      </Typography>
+
       <IconButton
         onClick={handleMenuClick}
         size="small"

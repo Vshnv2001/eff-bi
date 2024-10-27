@@ -110,16 +110,18 @@ const BoxPlotTemplate: React.FC<BoxPlotTemplateProps> = ({
 
   return (
     <div>
-      {title && (
-        <Typography variant="h6" gutterBottom>
-          {title}
-        </Typography>
-      )}
-      {description && (
-        <Typography variant="body2" color="text.secondary" paragraph>
-          {description}
-        </Typography>
-      )}
+      <Typography
+        variant="h6"
+        style={{ textAlign: "center", marginBottom: 10 }}
+      >
+        {title}
+      </Typography>
+      <Typography
+        variant="body2"
+        style={{ textAlign: "center", marginBottom: 20 }}
+      >
+        {description}
+      </Typography>
 
       <IconButton
         onClick={handleMenuClick}

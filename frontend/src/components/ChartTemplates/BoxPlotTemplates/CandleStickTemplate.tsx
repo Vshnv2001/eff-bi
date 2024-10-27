@@ -3,6 +3,7 @@ import ApexCharts from "apexcharts";
 import html2canvas from "html2canvas";
 import { Menu, MenuItem, IconButton } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Typography from "@mui/material/Typography";
 
 type CandlestickData = {
   x: Date | number;
@@ -107,10 +108,19 @@ const CandlestickTemplate: React.FC<CandlestickChartProps> = ({
 
   return (
     <div>
-      <h2 style={{ textAlign: "center", marginBottom: "10px" }}>{title}</h2>
-      <p style={{ textAlign: "center", marginBottom: "20px" }}>
+      {/* Title and Description */}
+      <Typography
+        variant="h6"
+        style={{ textAlign: "center", marginBottom: 10 }}
+      >
+        {title}
+      </Typography>
+      <Typography
+        variant="body2"
+        style={{ textAlign: "center", marginBottom: 20 }}
+      >
         {description}
-      </p>
+      </Typography>
       <IconButton
         onClick={handleMenuClick}
         size="small"

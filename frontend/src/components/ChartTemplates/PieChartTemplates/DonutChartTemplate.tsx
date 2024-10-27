@@ -30,7 +30,11 @@ export function DonutChartTemplate({
 }: TrafficProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [baseColor, setBaseColor] = React.useState<string>("#ff0000");
-  const themeColors = generateColors(chartSeries.length, "homogeneous", baseColor); // Set color theme to homogeneous
+  const themeColors = generateColors(
+    chartSeries.length,
+    "homogeneous",
+    baseColor
+  ); // Set color theme to homogeneous
   const chartOptions = useChartOptions(labels, themeColors);
   const chartRef = React.useRef<HTMLDivElement>(null);
 
@@ -85,12 +89,19 @@ export function DonutChartTemplate({
   return (
     <div style={{ position: "relative", textAlign: "center" }}>
       <div style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}>
-        {title && <Typography variant="h6">{title}</Typography>}
-        {description && (
-          <Typography variant="body2" color="text.secondary">
-            {description}
-          </Typography>
-        )}
+        {/* Title and Description */}
+        <Typography
+          variant="h6"
+          style={{ textAlign: "center", marginBottom: 10 }}
+        >
+          {title}
+        </Typography>
+        <Typography
+          variant="body2"
+          style={{ textAlign: "center", marginBottom: 20 }}
+        >
+          {description}
+        </Typography>
         <div>
           <IconButton onClick={handleMenuClick} size="small">
             <MoreVertIcon />

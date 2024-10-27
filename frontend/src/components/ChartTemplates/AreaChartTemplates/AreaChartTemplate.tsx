@@ -75,15 +75,46 @@ export function AreaChartTemplate({
     handleClose();
   };
 
+  // Check if chartSeries or labels are empty
+  if (chartSeries.length === 0 || labels.length === 0) {
+    return (
+      <Box
+        sx={{
+          border: "1px solid #ccc",
+          borderRadius: 2,
+          p: 2,
+          ...sx,
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="body2">
+          Query returned empty result, so no visualization needed.
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ border: "1px solid #ccc", borderRadius: 2, p: 2, ...sx }}>
       {/* Title and Download Menu */}
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Box>
-          <Typography variant="h6" component="h2" sx={{ fontWeight: "bold", mb: 1 }}>
+          <Typography
+            variant="h6"
+            style={{ textAlign: "center", marginBottom: 10 }}
+          >
             {title}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            style={{ textAlign: "center", marginBottom: 20 }}
+          >
             {description}
           </Typography>
         </Box>

@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
@@ -11,6 +9,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import html2canvas from "html2canvas";
 import type { ApexOptions } from "apexcharts";
 import { Chart } from "../Chart";
+import Typography from "@mui/material/Typography";
 
 export interface BarProps {
   chartSeries: { name: string; data: number[] }[];
@@ -28,7 +27,7 @@ export function BarChartTemplate({
   description,
 }: BarProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const yAxisLabel = chartSeries[0]?.name || ''; // Use the name of the first series as the Y-axis label
+  const yAxisLabel = chartSeries[0]?.name || "";
   const chartOptions = useChartOptions(categories, xAxisLabel, yAxisLabel);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -130,19 +129,36 @@ export function BarChartTemplate({
       </div>
 
       {/* Title and Description */}
-      <div style={{ textAlign: "center", marginBottom: 16 }}>
-        <h2 style={{ margin: 0 }}>{title}</h2>
-        <p style={{ margin: 0 }}>{description}</p>
-      </div>
+      <Typography
+        variant="h6"
+        style={{ textAlign: "center", marginBottom: 10 }}
+      >
+        {title}
+      </Typography>
+      <Typography
+        variant="body2"
+        style={{ textAlign: "center", marginBottom: 20 }}
+      >
+        {description}
+      </Typography>
 
       <CardContent>
-        <Chart
-          height={350}
-          options={chartOptions}
-          series={chartSeries}
-          type="bar"
-          width="100%"
-        />
+        {chartSeries.length === 0 ? (
+          <Typography
+            variant="body1"
+            style={{ textAlign: "center", color: "gray", marginTop: 20 }}
+          >
+            Query returned empty result, so no visualization needed.
+          </Typography>
+        ) : (
+          <Chart
+            height={350}
+            options={chartOptions}
+            series={chartSeries}
+            type="bar"
+            width="100%"
+          />
+        )}
       </CardContent>
       <Divider />
     </div>

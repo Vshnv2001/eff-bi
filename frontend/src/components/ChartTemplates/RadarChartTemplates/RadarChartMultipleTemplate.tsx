@@ -9,16 +9,16 @@ interface RadarChartProps {
   series: { name: string; data: number[] }[];
   categories: string[];
   chartHeight?: number;
-  title?: string;         
-  description?: string;   
+  title?: string;
+  description?: string;
 }
 
 const RadarChartMultipleTemplate: React.FC<RadarChartProps> = ({
   series,
   categories,
   chartHeight = 350,
-  title,               
-  description,        
+  title,
+  description,
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -107,8 +107,19 @@ const RadarChartMultipleTemplate: React.FC<RadarChartProps> = ({
 
   return (
     <div>
-      {title && <Typography variant="h6" gutterBottom>{title}</Typography>}
-      {description && <Typography variant="body2" color="text.secondary" gutterBottom>{description}</Typography>}
+      {/* Title and Description */}
+      <Typography
+        variant="h6"
+        style={{ textAlign: "center", marginBottom: 10 }}
+      >
+        {title}
+      </Typography>
+      <Typography
+        variant="body2"
+        style={{ textAlign: "center", marginBottom: 20 }}
+      >
+        {description}
+      </Typography>
       <div ref={chartRef} id="radar-chart-multiple" />
       <div style={{ marginTop: "10px" }}>
         <IconButton onClick={handleMenuClick} size="small">

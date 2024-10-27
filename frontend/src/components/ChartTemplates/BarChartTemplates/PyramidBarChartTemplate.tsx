@@ -9,11 +9,12 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import html2canvas from "html2canvas";
 import type { ApexOptions } from "apexcharts";
 import { Chart } from "../Chart";
+import Typography from "@mui/material/Typography";
 
 export interface HorizontalBarChartProps {
   chartSeries: { name: string; data: number[] }[];
   categories: string[];
-  title: string;          
+  title: string;
   description: string;
 }
 
@@ -78,6 +79,20 @@ export function PyramidBarChartTemplate({
 
   return (
     <div style={{ position: "relative", textAlign: "center" }}>
+      {/* Title and Description */}
+      <Typography
+        variant="h6"
+        style={{ textAlign: "center", marginBottom: 10 }}
+      >
+        {title}
+      </Typography>
+      <Typography
+        variant="body2"
+        style={{ textAlign: "center", marginBottom: 20 }}
+      >
+        {description}
+      </Typography>
+
       {/* Menu button positioned at the top right */}
       <div style={{ position: "absolute", top: 10, right: 10, zIndex: 1 }}>
         <IconButton onClick={handleMenuClick} size="small">
@@ -121,19 +136,24 @@ export function PyramidBarChartTemplate({
         </Menu>
       </div>
 
-      {/* Title and Description */}
-      <h2 style={{ margin: '20px 0' }}>{title}</h2>
-      <p style={{ marginBottom: '20px', color: '#555' }}>{description}</p>
-
       {/* Chart component */}
-      <div>
-        <Chart
-          height={440}
-          options={chartOptions}
-          series={chartSeries}
-          type="bar"
-          width="100%"
-        />
+      <div style={{ marginTop: 30 }}>
+        {chartSeries.length === 0 ? (
+          <Typography
+            variant="body2"
+            style={{ textAlign: "center", margin: "20px 0" }}
+          >
+            No data available to display the chart.
+          </Typography>
+        ) : (
+          <Chart
+            height={440}
+            options={chartOptions}
+            series={chartSeries}
+            type="bar"
+            width="100%"
+          />
+        )}
       </div>
     </div>
   );

@@ -9,22 +9,29 @@ interface PieChartTemplateProps {
   series: number[];
   labels: string[];
   chartWidth?: number;
-  title: string;     
-  description: string;    
+  title: string;
+  description: string;
 }
 
 const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
   series,
   labels,
   chartWidth = 500,
-  title,          
-  description,     
+  title,
+  description,
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   useEffect(() => {
     const fontSize = series.length > 10 ? "12px" : "14px";
+
+    console.log("series", series);
+    console.log("labels", labels);
+
+    if (series.length === 0 || labels.length === 0) {
+      return;
+    }
 
     const generateColors = (count: number) => {
       const colors = [];
@@ -38,26 +45,11 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
     const options: ApexOptions = {
       series: series,
       chart: {
-        width: chartWidth,
+        width: "100%",
         type: "pie",
-        toolbar: { show: true, tools: { zoom: false, pan: false } },
       },
       labels: labels,
       colors: generateColors(series.length),
-      dataLabels: {
-        enabled: true, // Always show labels
-        style: { fontSize, colors: ["#333"] },
-        dropShadow: { enabled: false },
-        formatter: (val, { seriesIndex, w }) => {
-          // Show full label without truncation
-          const label = w.globals.labels[seriesIndex];
-          return typeof val === "number"
-            ? `${label}: ${val.toFixed(1)}%`
-            : "";
-        },
-        textAnchor: 'middle',
-        distributed: true,
-      },
       responsive: [
         {
           breakpoint: 480,
@@ -65,7 +57,7 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
             chart: { width: 200 },
             legend: {
               height: 200,
-            }
+            },
           },
         },
       ],
@@ -73,20 +65,15 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
         position: "right",
         fontSize: fontSize,
         floating: false,
-        height: 400,
-        formatter: function(seriesName, opts) {
-          return seriesName + ` - ${series[opts.seriesIndex].toFixed(1)}%`;
+        formatter: function (seriesName, opts) {
+          return seriesName + ` - ${series[opts.seriesIndex].toFixed(1)}`;
         },
-        itemMargin: {
-          horizontal: 5,
-          vertical: 5
-        }
       },
-      tooltip: { 
+      tooltip: {
         enabled: true,
         y: {
-          formatter: (value) => `${value.toFixed(1)}%`
-        }
+          formatter: (value) => `${value.toFixed(1)}%`,
+        },
       },
     };
 
@@ -181,21 +168,36 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
         </Menu>
       </div>
 
-      <Typography variant="h6" style={{ textAlign: "center", marginBottom: 10 }}>
+      <Typography
+        variant="h6"
+        style={{ textAlign: "center", marginBottom: 10 }}
+      >
         {title}
       </Typography>
-      <Typography variant="body2" style={{ textAlign: "center", marginBottom: 20 }}>
+      <Typography
+        variant="body2"
+        style={{ textAlign: "center", marginBottom: 20 }}
+      >
         {description}
       </Typography>
 
-      <div 
-        ref={chartRef}
-        style={{
-          maxHeight: "600px",  // Set maximum height
-          overflowY: "auto",   // Enable vertical scrolling
-          overflowX: "hidden" // Hide horizontal scrollbar
-        }}
-      />
+      {series.length === 0 || labels.length === 0 ? (
+        <Typography
+          variant="body2"
+          style={{ textAlign: "center", marginTop: 20, color: "red" }}
+        >
+          Query returned empty result, so no visualization needed.
+        </Typography>
+      ) : (
+        <div
+          ref={chartRef}
+          style={{
+            maxHeight: "600px",
+            overflowY: "auto",
+            overflowX: "hidden",
+          }}
+        />
+      )}
     </div>
   );
 };
