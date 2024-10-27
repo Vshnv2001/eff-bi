@@ -18,7 +18,11 @@ const MainLayout = () => {
   );
 
   return (
-    <div className="bg-gray-custom min-h-screen">
+    <div
+      className={
+        location.pathname === "/" ? "bg-[#f0f2fe] h-full" : "bg-gray-800 h-full"
+      }
+    >
       {shouldShowNavbar && <EffBINavbar />}
       <div className="relative top-[60px]">
         <Outlet />
