@@ -34,7 +34,7 @@ const TableWithDescription: React.FC<TableWithDescriptionProps> = ({ table }) =>
 );
 
 export default function ViewDataPage() {
-  const [data, setData] = useState([] );
+  const [data, setData] = useState<Table[]>([]);
   const sessionContext = useSessionContext();
   const userId = sessionContext.loading ? null : sessionContext.userId;
   const [loading, setLoading] = useState(false);
@@ -45,24 +45,6 @@ export default function ViewDataPage() {
       setLoading(true);
       try {
         const response = await axios.get(`${BACKEND_API_URL}/api/connection/${userId}`);
-        //Example response:
-        //     {
-        //     "tables": [
-        //         {
-        //             "table_name": "rider_exits",
-        //             "column_headers": ["rider,"stage","reason"],
-        //             "rows": [[195, 1, "withdrawal"], [76, 4, "DNS"], [45, 8, "DNS"]],
-        //             "table_description": ""
-        //         },
-        //         {
-        //         "table_name": "locations",
-        //         "column_headers": ["name", "country"],
-        //         "rows": [["Agen", "FRA"], ["Alexandrie", "ITA"], ["Aoste", "FRA"]],
-        //         "table_description": ""
-        //         }
-        //     ]}
-        //     '''
-        // console.log(response.data);
         setData(response.data?.tables);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -73,7 +55,11 @@ export default function ViewDataPage() {
     fetchData();
   }, [userId]);
 
-  console.log(data);
+  const scrollToTable = (id: string) => {
+    const element = document.getElementById(id);
+    element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   if (loading) {
     return <div className="fixed inset-0 flex items-center justify-center bg-gray-800 min-h-screen">
       <Spinner className="h-10 w-10"/>
@@ -82,36 +68,44 @@ export default function ViewDataPage() {
 
   if (data.length == 0) {
     return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-800 p-10">
-      <Card className="w-full max-w-4xl p-10 rounded-xl">
-        <div className="text-lg text-center">
-          You do not have access to any tables, request for permissions with
-          your admin.
-        </div>
-      </Card>
-    </div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-800 p-10">
+        <Card className="w-full max-w-4xl p-10 rounded-xl">
+          <div className="text-lg text-center">
+            You do not have access to any tables, request for permissions with your admin.
+          </div>
+        </Card>
+      </div>
     );
   }
 
   return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-800 p-10">
-        <Typography
-            as="h2"
-            color="white"
-        className="mb-6 text-4xl font-bold text-center"
-      >
-        View Data
-      </Typography>
+    <div className="flex min-h-screen bg-gray-800 p-10">
+      <div className="w-64 p-4 space-y-4 bg-white fixed rounded-xl">
         {data.map((table, index) => (
-            <Card key={index} className="w-full max-w-4xl bg-white my-4 rounded-xl p-10 shadow-md">
-            <CardHeader floated={false} shadow={false} className="bg-gray-100 rounded-none" >
+          <button
+            key={index}
+            className="text-left p-2 hover:bg-blue-400 w-full rounded"
+            onClick={() => scrollToTable(`table-${index}`)}
+          >
+            {table.table_name}
+          </button>
+        ))}
+      </div>
+      <div className="flex flex-col items-center justify-center flex-grow overflow-auto p-4">
+        <Typography as="h2" color="white" className="mb-6 text-4xl font-bold text-center">
+          View Data
+        </Typography>
+        {data.map((table, index) => (
+          <Card key={index} id={`table-${index}`} className="w-full max-w-4xl bg-white my-4 rounded-xl p-10 shadow-md">
+            <CardHeader floated={false} shadow={false} className="bg-gray-100 rounded-none">
               <></>
-          </CardHeader>
-          <CardBody className="overflow-auto p-0">
-            <TableWithDescription table={table} />
-          </CardBody>
-        </Card>
-      ))}
+            </CardHeader>
+            <CardBody className="overflow-auto p-0">
+              <TableWithDescription table={table} />
+            </CardBody>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }
