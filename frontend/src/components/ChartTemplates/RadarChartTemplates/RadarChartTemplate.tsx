@@ -1,20 +1,24 @@
-import React, { useEffect, useRef } from 'react';
-import ApexCharts from 'apexcharts';
-import { ApexOptions } from 'apexcharts';
-import html2canvas from 'html2canvas';
-import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import React, { useEffect, useRef } from "react";
+import ApexCharts from "apexcharts";
+import { ApexOptions } from "apexcharts";
+import html2canvas from "html2canvas";
+import { IconButton, Menu, MenuItem, Typography } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 interface RadarChartProps {
   series: { name: string; data: number[] }[];
   categories: string[];
   chartHeight?: number;
+  title?: string;
+  description?: string;
 }
 
 const RadarChartTemplate: React.FC<RadarChartProps> = ({
   series,
   categories,
   chartHeight = 350,
+  title,
+  description,
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -24,11 +28,11 @@ const RadarChartTemplate: React.FC<RadarChartProps> = ({
       series: series,
       chart: {
         height: chartHeight,
-        type: 'radar',
+        type: "radar",
         toolbar: { show: false },
       },
       title: {
-        text: 'Radar Chart',
+        text: "Radar Chart",
       },
       yaxis: {
         stepSize: 20,
@@ -91,12 +95,18 @@ const RadarChartTemplate: React.FC<RadarChartProps> = ({
 
   return (
     <div>
-      <Typography variant="h6" gutterBottom>
-        Radar Chart
+      {/* Title and Description */}
+      <Typography
+        variant="h6"
+        style={{ textAlign: "center", marginBottom: 10 }}
+      >
+        {title}
       </Typography>
-      <Typography variant="body2" color="text.secondary" paragraph>
-        This radar chart visualizes multiple dimensions of data, allowing for quick comparisons across categories. 
-        Each series represents a different dataset, and the values indicate performance across specified categories.
+      <Typography
+        variant="body2"
+        style={{ textAlign: "center", marginBottom: 20 }}
+      >
+        {description}
       </Typography>
       <div ref={chartRef} id="radar-chart" />
       <div style={{ marginTop: "10px" }}>

@@ -38,26 +38,11 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
     const options: ApexOptions = {
       series: series,
       chart: {
-        width: chartWidth,
+        width: "100%",
         type: "pie",
-        toolbar: { show: true, tools: { zoom: false, pan: false } },
       },
       labels: labels,
       colors: generateColors(series.length),
-      dataLabels: {
-        enabled: true, // Always show labels
-        style: { fontSize, colors: ["#333"] },
-        dropShadow: { enabled: false },
-        formatter: (val, { seriesIndex, w }) => {
-          // Show full label without truncation
-          const label = w.globals.labels[seriesIndex];
-          return typeof val === "number"
-            ? `${label}: ${val.toFixed(1)}%`
-            : "";
-        },
-        textAnchor: 'middle',
-        distributed: true,
-      },
       responsive: [
         {
           breakpoint: 480,
@@ -73,14 +58,9 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
         position: "right",
         fontSize: fontSize,
         floating: false,
-        height: 400,
         formatter: function(seriesName, opts) {
-          return seriesName + ` - ${series[opts.seriesIndex].toFixed(1)}%`;
+          return seriesName + ` - ${series[opts.seriesIndex].toFixed(1)}`;
         },
-        itemMargin: {
-          horizontal: 5,
-          vertical: 5
-        }
       },
       tooltip: { 
         enabled: true,
@@ -191,9 +171,9 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
       <div 
         ref={chartRef}
         style={{
-          maxHeight: "600px",  // Set maximum height
-          overflowY: "auto",   // Enable vertical scrolling
-          overflowX: "hidden" // Hide horizontal scrollbar
+          maxHeight: "600px",
+          overflowY: "auto",
+          overflowX: "hidden"
         }}
       />
     </div>

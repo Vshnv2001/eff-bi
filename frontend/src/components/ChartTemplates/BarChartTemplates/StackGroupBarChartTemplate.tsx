@@ -9,6 +9,7 @@ import ApexCharts from "apexcharts";
 import type { ApexOptions } from "apexcharts";
 import html2canvas from "html2canvas";
 import { SxProps } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 
 export interface StackedBarChartProps {
   chartSeries: { name: string; group: string; data: number[] }[];
@@ -91,6 +92,20 @@ export function StackedGroupBarChartTemplate({
 
   return (
     <div style={{ position: "relative", textAlign: "center" }}>
+      {/* Title and Description */}
+      <Typography
+        variant="h6"
+        style={{ textAlign: "center", marginBottom: 10 }}
+      >
+        {title}
+      </Typography>
+      <Typography
+        variant="body2"
+        style={{ textAlign: "center", marginBottom: 20 }}
+      >
+        {description}
+      </Typography>
+
       <div style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}>
         <div>
           <IconButton onClick={handleMenuClick} size="small">

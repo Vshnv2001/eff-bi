@@ -130,14 +130,19 @@ const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
 
   return (
     <div>
-      <Typography variant="h6" component="h2" gutterBottom>
+      {/* Title and Description */}
+      <Typography
+        variant="h6"
+        style={{ textAlign: "center", marginBottom: 10 }}
+      >
         {title}
       </Typography>
-      {description && (
-        <Typography variant="body2" color="text.secondary" paragraph>
-          {description}
-        </Typography>
-      )}
+      <Typography
+        variant="body2"
+        style={{ textAlign: "center", marginBottom: 20 }}
+      >
+        {description}
+      </Typography>
       <IconButton
         onClick={handleMenuClick}
         size="small"

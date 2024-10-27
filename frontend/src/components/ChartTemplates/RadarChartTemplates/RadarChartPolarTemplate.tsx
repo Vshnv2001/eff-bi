@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from 'react';
-import ApexCharts from 'apexcharts';
-import { ApexOptions } from 'apexcharts';
-import html2canvas from 'html2canvas';
-import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import React, { useEffect, useRef } from "react";
+import ApexCharts from "apexcharts";
+import { ApexOptions } from "apexcharts";
+import html2canvas from "html2canvas";
+import { IconButton, Menu, MenuItem, Typography } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 interface PolarChartProps {
   series: number[];
@@ -25,27 +25,29 @@ const PolarChartTemplate: React.FC<PolarChartProps> = ({
     const options: ApexOptions = {
       series: series,
       chart: {
-        type: 'polarArea',
+        type: "polarArea",
         width: chartWidth,
         toolbar: { show: false },
       },
       stroke: {
-        colors: ['#fff'],
+        colors: ["#fff"],
       },
       fill: {
         opacity: 0.8,
       },
-      responsive: [{
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 200,
-          },
-          legend: {
-            position: 'bottom',
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200,
+            },
+            legend: {
+              position: "bottom",
+            },
           },
         },
-      }],
+      ],
     };
 
     const chart = new ApexCharts(chartRef.current as HTMLElement, options);
@@ -101,16 +103,19 @@ const PolarChartTemplate: React.FC<PolarChartProps> = ({
 
   return (
     <div>
-      {title && (
-        <Typography variant="h6" component="h2" style={{ marginBottom: "8px" }}>
-          {title}
-        </Typography>
-      )}
-      {description && (
-        <Typography variant="body2" style={{ marginBottom: "16px", color: '#666' }}>
-          {description}
-        </Typography>
-      )}
+      {/* Title and Description */}
+      <Typography
+        variant="h6"
+        style={{ textAlign: "center", marginBottom: 10 }}
+      >
+        {title}
+      </Typography>
+      <Typography
+        variant="body2"
+        style={{ textAlign: "center", marginBottom: 20 }}
+      >
+        {description}
+      </Typography>
       <div ref={chartRef} id="polar-chart" />
       <div style={{ marginTop: "10px" }}>
         <IconButton onClick={handleMenuClick} size="small">

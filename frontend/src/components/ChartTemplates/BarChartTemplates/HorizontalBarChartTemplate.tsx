@@ -9,6 +9,7 @@ import html2canvas from "html2canvas";
 import { useTheme } from "@mui/material/styles";
 import type { ApexOptions } from "apexcharts";
 import { Chart } from "../Chart";
+import Typography from "@mui/material/Typography";
 
 export interface HorizontalBarChartProps {
   chartSeries: { name: string; data: number[] }[];
@@ -79,8 +80,19 @@ export function HorizontalBarChartTemplate({
 
   return (
     <div style={{ position: "relative", textAlign: "center" }}>
-      <h2>{title}</h2>
-      <p>{description}</p>
+      <Typography
+        variant="h6"
+        style={{ textAlign: "center", marginBottom: 10 }}
+      >
+        {title}
+      </Typography>
+      <Typography
+        variant="body2"
+        style={{ textAlign: "center", marginBottom: 20 }}
+      >
+        {description}
+      </Typography>
+
       <div style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}>
         <IconButton onClick={handleMenuClick} size="small">
           <MoreVertIcon />
@@ -136,7 +148,10 @@ export function HorizontalBarChartTemplate({
   );
 }
 
-function useChartOptions(categories: string[], xAxisLabel: string): ApexOptions {
+function useChartOptions(
+  categories: string[],
+  xAxisLabel: string
+): ApexOptions {
   const theme = useTheme();
 
   const generateBlueShades = (count: number): string[] => {

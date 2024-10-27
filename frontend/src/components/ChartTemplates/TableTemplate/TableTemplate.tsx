@@ -1,7 +1,4 @@
-import {
-  Card,
-  CardBody,
-} from "@material-tailwind/react";
+import { Card, CardBody } from "@material-tailwind/react";
 
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -9,6 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import html2canvas from "html2canvas";
 import React from "react";
+import Typography from "@mui/material/Typography";
 
 interface TableData {
   label: string;
@@ -18,10 +16,15 @@ interface TableData {
 interface TableTemplateProps {
   data: TableData[];
   title?: string;
+  description?: string;
 }
 
-export default function TableTemplate({ data }: TableTemplateProps) {
-  const columns = data.map(row => row.label);
+export default function TableTemplate({
+  data,
+  title,
+  description,
+}: TableTemplateProps) {
+  const columns = data.map((row) => row.label);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -70,6 +73,19 @@ export default function TableTemplate({ data }: TableTemplateProps) {
 
   return (
     <Card className="overflow-x-auto w-full">
+      {/* Title and Description */}
+      <Typography
+        variant="h6"
+        style={{ textAlign: "center", marginBottom: 10 }}
+      >
+        {title}
+      </Typography>
+      <Typography
+        variant="body2"
+        style={{ textAlign: "center", marginBottom: 20 }}
+      >
+        {description}
+      </Typography>
       <div className="flex justify-end">
         <IconButton onClick={handleMenuClick} size="small">
           <MoreVertIcon />
