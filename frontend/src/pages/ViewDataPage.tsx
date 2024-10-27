@@ -34,7 +34,7 @@ const TableWithDescription: React.FC<TableWithDescriptionProps> = ({ table }) =>
 );
 
 export default function ViewDataPage() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Table[]>([]);
   const sessionContext = useSessionContext();
   const userId = sessionContext.loading ? null : sessionContext.userId;
   const [loading, setLoading] = useState(false);
@@ -55,9 +55,9 @@ export default function ViewDataPage() {
     fetchData();
   }, [userId]);
 
-  const scrollToTable = (id) => {
+  const scrollToTable = (id: string) => {
     const element = document.getElementById(id);
-    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   if (loading) {
