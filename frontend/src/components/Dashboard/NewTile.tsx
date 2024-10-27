@@ -9,7 +9,7 @@ import {
 } from "@material-tailwind/react";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
-import { Box, Chip, MenuItem, Select } from "@mui/material";
+import { Box, Chip } from "@mui/material";
 import axios from "axios";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { IconButton } from "@material-tailwind/react";
