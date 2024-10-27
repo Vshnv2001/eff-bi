@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 
-function Icon({ id, open }: { id: number; open: number }) {
+function Icon({ id, open, type }: { id: number; open: number[] }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -15,7 +15,7 @@ function Icon({ id, open }: { id: number; open: number }) {
       strokeWidth={2}
       stroke="currentColor"
       className={`${
-        id === open ? "rotate-180" : ""
+        open.includes(id) ? "rotate-180" : ""
       } h-5 w-5 transition-transform`}
     >
       <path
@@ -113,8 +113,20 @@ const faqs = [
 ];
 
 const FaqPage = () => {
-  const [open, setOpen] = useState(-1);
-  const handleOpen = (value: number) => setOpen(open === value ? -1 : value);
+  const [openTips, setOpenTips] = useState<number[]>([]);
+  const [openFaqs, setOpenFaqs] = useState<number[]>([]);
+  const [open, setOpen] = useState<number[]>([]);
+  const handleOpen = (value: number) => {
+    setOpen(open.includes(value) ? open.filter(id => id !== value) : [...open, value]);
+  };
+
+  const handleOpenTips = (value: number) => {
+    setOpenTips(openTips.includes(value) ? openTips.filter(id => id !== value) : [...openTips, value]);
+  };
+
+  const handleOpenFaqs = (value: number) => {
+    setOpenFaqs(openFaqs.includes(value) ? openFaqs.filter(id => id !== value) : [...openFaqs, value]);
+  };
 
   return (
     <div className="min-h-screen bg-gray-800 p-8">
@@ -137,12 +149,12 @@ const FaqPage = () => {
             return (
               <Accordion
                 key={`tip-${idx}`}
-                open={open === idx}
-                icon={<Icon id={idx} open={open} />}
+                open={openTips.includes(idx)}
+                icon={<Icon id={idx} open={openTips} type="tip"/>}
               >
                 <AccordionHeader
                   className="text-white hover:text-blue-400"
-                  onClick={() => handleOpen(idx)}
+                  onClick={() => handleOpenTips(idx)}
                 >
                   {tip.topic}
                 </AccordionHeader>
@@ -163,12 +175,12 @@ const FaqPage = () => {
             return (
               <Accordion
                 key={`faq-${idx}`}
-                open={open === idx}
-                icon={<Icon id={idx} open={open} />}
+                open={openFaqs.includes(idx)}
+                icon={<Icon id={idx} open={openFaqs} type="faq"/>}
               >
                 <AccordionHeader
                   className="text-white hover:text-blue-400"
-                  onClick={() => handleOpen(idx)}
+                  onClick={() => handleOpenFaqs(idx)}
                 >
                   {faq.question}
                 </AccordionHeader>
