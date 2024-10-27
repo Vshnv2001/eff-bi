@@ -30,9 +30,12 @@ const tips = [
   {
     topic: "Connecting Your Database",
     answer:
-      "Begin by connecting your database to unlock the full capabilities of Eff BI. " +
-      "Navigate to the Settings tab, select 'Database Settings', and enter your database URI. " +
-      "This setup is essential for accessing the key features of Eff BI.",
+      "As the Eff BI administrator for your organization, start by connecting your database to fully leverage the capabilities of Eff BI. " +
+      "To do so, navigate to the 'Settings' tab, select 'Database Settings', and enter the database URI. " +
+      "This initial setup is crucial, to allow your organization users access the core features of Eff BI. " +
+      "If you are not the administrator of your organization for Eff BI, a database may already be connected. " +
+      "Should you encounter any issues with database connectivity or if no database URI has been set up yet," +
+      " please contact your organization's administrator to resolve these matters."
   },
   {
     topic: "View Data",
@@ -51,19 +54,20 @@ const tips = [
     topic: "Creating Tiles",
     answer:
       "Tiles are where the magic of Eff BI is showcased! " +
-      "Create a new tile by navigating to the 'Dashboard' page and selecting 'Create Tile.' " +
-      "Enter your data query and our application would produce a dynamic visual representations of the results. ",
+      "Create a new tile by navigating to the 'Dashboard' page and open a dashboard. You may create a dashboard if there are no current dashboards." +
+        "Within the dashboard, select the 'Create Tile.' button." +
+      "Enter your data query and our application would produce a dynamic visual representations of the results! ",
   },
   {
-    topic: "User Permissions Page",
+    topic: "Table Permissions Page",
     answer:
-      "The User Permissions page provides a comprehensive overview of your current access rights." +
-      " If you hold administrator rights for a table, you can modify access levels. ",
+      "The Table Permissions page offers a detailed view of your current access rights. " +
+      "As an administrator of a table, you have the authority to modify access levels, allowing you to manage who can view or edit the table."
   },
   {
     topic: "Managing User Permissions",
     answer:
-      "To manage user permissions effectively, first go to the 'User Permissions' page. " +
+      "To manage user permissions effectively, firstly navigate to the Settings tab and open the 'Table Permissions' page. " +
       "As a table administrator, you have the authority to adjust user access." +
       " You can revoke existing permissions with the 'Remove' button " +
       "or extend access by selecting 'Add Users' and entering your colleagues' email with the respective permission type.",
