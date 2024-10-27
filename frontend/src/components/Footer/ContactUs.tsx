@@ -37,7 +37,7 @@ const Footer: React.FC = () => {
 
   return (
     <footer
-      className="bg-gray-800 text-white py-6 h-screen flex flex-col justify-center"
+      className="bg-black text-white py-6 h-screen flex flex-col justify-center"
       id="contact"
     >
       <div className="container mx-auto flex flex-col items-center">

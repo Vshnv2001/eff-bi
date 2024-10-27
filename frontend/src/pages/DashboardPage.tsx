@@ -6,6 +6,9 @@ import {
   Dialog,
   Button,
   Spinner,
+  Accordion,
+  AccordionHeader,
+  AccordionBody,
 } from "@material-tailwind/react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -14,6 +17,8 @@ import { TileProps } from "../components/Dashboard/TileProps";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import NewTile from "../components/Dashboard/NewTile";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { ClipboardIcon, CheckIcon } from "lucide-react";
 
 type ComponentKeys = keyof typeof componentMapping;
 
@@ -25,6 +30,18 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const [dashboardName, setDashboardName] = useState<string>("");
   const [isNewTileDialogOpen, setIsNewTileDialogOpen] = useState(false);
+  const [open, setOpen] = useState(-1);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+
+  const handleCopy = async (text: string, index: number) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedIndex(index);
+      setTimeout(() => setCopiedIndex(null), 2000);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  };
 
   useEffect(() => {
     fetchTiles();
@@ -56,52 +73,39 @@ export default function DashboardPage() {
         }
       );
 
-      console.log("Response: ", response);
-
       if (response.status === 200 && response.data && response.data.data) {
         setTilesData(response.data.data);
-      } else {
-        console.log("Error: ", response);
       }
     } catch (error) {
-      console.log("Error: ", error);
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 400) {
-          console.error("Question is not relevant to the database");
-        } else {
-          console.error("Error fetching tiles");
-        }
-      } else {
-        console.error("Unexpected error occurred");
-      }
+      console.error("Error fetching tiles:", error);
+      setError("Failed to load dashboard tiles");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleNewTileClick = () => {
-    setIsNewTileDialogOpen(true);
-  };
+  const handleOpen = (value: number) => setOpen(open === value ? -1 : value);
 
-  const handleNewTileClose = () => {
-    setIsNewTileDialogOpen(false);
-    fetchTiles();
-  };
-
-  if (error)
+  if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center text-red-500">
         {error}
       </div>
     );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-800 p-8">
+    <div
+      className={`min-h-screen bg-gray-800 p-8 ${
+        isNewTileDialogOpen ? "opacity-60" : ""
+      }`}
+    >
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <Spinner className="h-10 w-10" />
         </div>
       )}
+
       <Breadcrumbs
         aria-label="breadcrumb"
         style={{ color: "white", fontSize: "16px" }}
@@ -116,8 +120,8 @@ export default function DashboardPage() {
         </Link>
         <Link
           underline="hover"
-          color="inherit"
           href="/dashboards"
+          color="inherit"
           style={{ color: "#fff" }}
         >
           Dashboards
@@ -144,7 +148,7 @@ export default function DashboardPage() {
           size="sm"
           color="white"
           className="flex items-center gap-2 justify-center font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
-          onClick={handleNewTileClick}
+          onClick={() => setIsNewTileDialogOpen(true)}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -165,20 +169,14 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-        {tilesData.map((tileData) => {
+        {tilesData.map((tileData, index) => {
           const Component =
             componentMapping[tileData.component as ComponentKeys] || null;
-
-          if (!Component) {
-            console.error(`Invalid component for tile: ${tileData.title}`);
-            return null;
-          }
 
           let componentProps = tileData.tile_props;
           if (typeof tileData.tile_props === "string") {
             try {
               componentProps = JSON.parse(tileData.tile_props);
-              console.log("component prop", componentProps);
             } catch (error) {
               console.error("Error parsing tile props", error);
               return null;
@@ -186,22 +184,65 @@ export default function DashboardPage() {
           }
 
           return (
-            <Card
-              key={tileData.id}
-              className="text-black p-4 rounded-lg overflow-visible"
-            >
-              <CardBody className="flex flex-col items-center w-full">
-                <div className="w-full">
-                  {Component && (
-                    <Component
-                      {...componentProps}
-                      title={tileData.title}
-                      description={tileData.description}
-                    />
-                  )}
-                </div>
-              </CardBody>
-            </Card>
+            <div key={tileData.id} className="isolate">
+              <Card className="bg-white shadow rounded-lg">
+                <CardBody className="flex flex-col">
+                  <div className="w-full">
+                    {Component && (
+                      <Component {...componentProps} title={tileData.title} />
+                    )}
+                  </div>
+
+                  <Accordion
+                    open={open === index}
+                    icon={<Icon id={index} open={open} />}
+                  >
+                    <AccordionHeader onClick={() => handleOpen(index)}>
+                      User Query
+                    </AccordionHeader>
+                    <AccordionBody>
+                      <Typography>{tileData.description}</Typography>
+                    </AccordionBody>
+                  </Accordion>
+
+                  <Accordion
+                    open={open === index + tilesData.length}
+                    icon={<Icon id={index + tilesData.length} open={open} />}
+                  >
+                    <AccordionHeader
+                      onClick={() => handleOpen(index + tilesData.length)}
+                    >
+                      SQL Query
+                    </AccordionHeader>
+                    <AccordionBody>
+                      <div className="relative">
+                        {open === index + tilesData.length && (
+                          <button
+                            onClick={() =>
+                              handleCopy(tileData.sql_query, index)
+                            }
+                            className="absolute top-2 right-2 p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                            title="Copy SQL"
+                          >
+                            {copiedIndex === index ? (
+                              <CheckIcon className="h-4 w-4 text-green-500" />
+                            ) : (
+                              <ClipboardIcon className="h-4 w-4 text-gray-500" />
+                            )}
+                          </button>
+                        )}
+                        <SyntaxHighlighter
+                          language="sql"
+                          className="w-full rounded-lg"
+                        >
+                          {tileData.sql_query}
+                        </SyntaxHighlighter>
+                      </div>
+                    </AccordionBody>
+                  </Accordion>
+                </CardBody>
+              </Card>
+            </div>
           );
         })}
       </div>
@@ -211,8 +252,33 @@ export default function DashboardPage() {
         handler={() => setIsNewTileDialogOpen(false)}
         size="md"
       >
-        <NewTile onClose={handleNewTileClose} />
+        <NewTile
+          onClose={() => {
+            setIsNewTileDialogOpen(false);
+            fetchTiles();
+          }}
+        />
       </Dialog>
     </div>
+  );
+}
+
+function Icon({ id, open }: { id: number; open: number }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      className={`${
+        id === open ? "rotate-180" : ""
+      } h-5 w-5 transition-transform`}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+      />
+    </svg>
   );
 }

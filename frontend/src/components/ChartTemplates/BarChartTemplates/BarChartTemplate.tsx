@@ -61,20 +61,23 @@ export function BarChartTemplate({
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
       }
-    } else if (format === "PNG") {
+    } else if (format === "PNG" || format === "JPEG" || format === "JPG") {
       const canvas = await html2canvas(chartElement);
-      canvas.toBlob((blob: Blob | null) => {
-        if (blob) {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "chart.png";
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        }
-      });
+      canvas.toBlob(
+        (blob: Blob | null) => {
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `chart.${format.toLowerCase()}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }
+        },
+        format === "JPEG" ? "image/jpeg" : undefined
+      );
     }
 
     handleClose();
@@ -124,6 +127,30 @@ export function BarChartTemplate({
             }}
           >
             Download as PNG
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleDownload("JPG")}
+            sx={{
+              typography: "body2",
+              color: "text.primary",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.08)",
+              },
+            }}
+          >
+            Download as JPG
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleDownload("JPEG")}
+            sx={{
+              typography: "body2",
+              color: "text.primary",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.08)",
+              },
+            }}
+          >
+            Download as JPEG
           </MenuItem>
         </Menu>
       </div>
@@ -216,7 +243,10 @@ function useChartOptions(
         formatter: (value) => value.toFixed(2),
         style: { colors: theme.palette.text.secondary },
       },
-      title: { text: yAxisLabel, style: { color: theme.palette.text.primary } },
+      title: {
+        text: yAxisLabel,
+        style: { color: theme.palette.text.secondary },
+      },
     },
   };
 }

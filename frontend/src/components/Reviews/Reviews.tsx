@@ -3,7 +3,7 @@ import testimonials from "./Testimonials";
 
 const Reviews = forwardRef<HTMLDivElement, {}>((_, ref) => {
   return (
-    <section className="py-12" id="reviews">
+    <section className="py-12 bg-[#f0f2fe]" id="reviews">
       <div ref={ref} className="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <h2 className="text-3xl font-black text-slate-500 text-center mt-10">
           What Our Clients Say
