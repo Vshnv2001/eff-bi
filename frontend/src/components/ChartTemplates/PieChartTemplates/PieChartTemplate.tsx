@@ -9,22 +9,25 @@ interface PieChartTemplateProps {
   series: number[];
   labels: string[];
   chartWidth?: number;
-  title: string;     
-  description: string;    
+  title: string;
+  description: string;
 }
 
 const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
   series,
   labels,
   chartWidth = 500,
-  title,          
-  description,     
+  title,
+  description,
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   useEffect(() => {
     const fontSize = series.length > 10 ? "12px" : "14px";
+
+    console.log("series", series);
+    console.log("labels", labels);
 
     const generateColors = (count: number) => {
       const colors = [];
@@ -50,7 +53,7 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
             chart: { width: 200 },
             legend: {
               height: 200,
-            }
+            },
           },
         },
       ],
@@ -58,15 +61,15 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
         position: "right",
         fontSize: fontSize,
         floating: false,
-        formatter: function(seriesName, opts) {
+        formatter: function (seriesName, opts) {
           return seriesName + ` - ${series[opts.seriesIndex].toFixed(1)}`;
         },
       },
-      tooltip: { 
+      tooltip: {
         enabled: true,
         y: {
-          formatter: (value) => `${value.toFixed(1)}%`
-        }
+          formatter: (value) => `${value.toFixed(1)}%`,
+        },
       },
     };
 
@@ -161,19 +164,25 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
         </Menu>
       </div>
 
-      <Typography variant="h6" style={{ textAlign: "center", marginBottom: 10 }}>
+      <Typography
+        variant="h6"
+        style={{ textAlign: "center", marginBottom: 10 }}
+      >
         {title}
       </Typography>
-      <Typography variant="body2" style={{ textAlign: "center", marginBottom: 20 }}>
+      <Typography
+        variant="body2"
+        style={{ textAlign: "center", marginBottom: 20 }}
+      >
         {description}
       </Typography>
 
-      <div 
+      <div
         ref={chartRef}
         style={{
           maxHeight: "600px",
           overflowY: "auto",
-          overflowX: "hidden"
+          overflowX: "hidden",
         }}
       />
     </div>
