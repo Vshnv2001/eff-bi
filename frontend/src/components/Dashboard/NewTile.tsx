@@ -33,6 +33,7 @@ export default function NewTile({ onClose }: NewTileProps) {
   const [isPreviewGenerated, setIsPreviewGenerated] = useState(false);
   const [submitType, setSubmitType] = useState<"preview" | "save" | null>(null);
   const [apiData, setApiData] = useState<any>({});
+  const [sqlQuery, setSqlQuery] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,6 +63,7 @@ export default function NewTile({ onClose }: NewTileProps) {
 
         setPreviewComponent(response.data.component);
         setPreviewProps(response.data.tile_props);
+        setSqlQuery(response.data.sql_query);
         setIsPreviewGenerated(true);
 
         setApiData({
@@ -154,6 +156,20 @@ export default function NewTile({ onClose }: NewTileProps) {
             className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
           />
         </div>
+
+        {/* New textarea for SQL Query */}
+        {sqlQuery && (
+          <div className="relative mb-4">
+            <Typography variant="h6" color="blue-gray" className="mb-1">
+              SQL Query
+            </Typography>
+            <textarea
+              value={sqlQuery}
+              readOnly
+              className="border border-gray-400 bg-gray-100 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
+            />
+          </div>
+        )}
 
         {PreviewComponent && previewProps && (
           <div className="mt-4 border rounded-lg p-4">

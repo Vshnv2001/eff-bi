@@ -216,7 +216,7 @@ function useChartOptions(
         formatter: (value) => value.toFixed(2),
         style: { colors: theme.palette.text.secondary },
       },
-      title: { text: yAxisLabel, style: { color: theme.palette.text.primary } },
+      title: { text: yAxisLabel, style: { color: theme.palette.text.secondary } },
     },
   };
 }
