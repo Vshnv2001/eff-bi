@@ -37,37 +37,47 @@ export default function TableTemplate({
   };
 
   const handleDownload = async (format: string) => {
+    const chartElement = document.querySelector(
+      ".apexcharts-canvas"
+    ) as HTMLElement;
+
+    if (!chartElement) return;
+
     if (format === "SVG") {
-      const svgElement = chartRef.current?.querySelector("svg");
-      if (svgElement) {
+      const svgData = chartElement.querySelector("svg");
+      if (svgData) {
         const serializer = new XMLSerializer();
-        const svgBlob = new Blob([serializer.serializeToString(svgElement)], {
+        const svgBlob = new Blob([serializer.serializeToString(svgData)], {
           type: "image/svg+xml;charset=utf-8",
         });
         const url = URL.createObjectURL(svgBlob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "table.svg";
+        a.download = "chart.svg";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
       }
-    } else if (format === "PNG") {
-      const canvas = await html2canvas(chartRef.current as HTMLElement);
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "table.png";
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        }
-      });
+    } else if (format === "PNG" || format === "JPEG" || format === "JPG") {
+      const canvas = await html2canvas(chartElement);
+      canvas.toBlob(
+        (blob: Blob | null) => {
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `chart.${format.toLowerCase()}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }
+        },
+        format === "JPEG" ? "image/jpeg" : undefined
+      );
     }
+
     handleClose();
   };
 
@@ -124,6 +134,30 @@ export default function TableTemplate({
             }}
           >
             Download as PNG
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleDownload("JPG")}
+            sx={{
+              typography: "body2",
+              color: "text.primary",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.08)",
+              },
+            }}
+          >
+            Download as JPG
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleDownload("JPEG")}
+            sx={{
+              typography: "body2",
+              color: "text.primary",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.08)",
+              },
+            }}
+          >
+            Download as JPEG
           </MenuItem>
         </Menu>
       </div>

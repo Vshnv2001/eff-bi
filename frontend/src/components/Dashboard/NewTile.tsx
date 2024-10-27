@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Typography, Button } from "@material-tailwind/react";
+import { Typography, Button, Spinner } from "@material-tailwind/react";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { Box } from "@mui/material";
@@ -189,7 +189,7 @@ export default function NewTile({ onClose }: NewTileProps) {
           )}
 
           <Box className="flex justify-center space-x-5 mb-4">
-            <Button color="red" onClick={onClose} disabled={isLoading}>
+            <Button color="red" onClick={onClose}>
               Cancel
             </Button>
             <Button
@@ -198,7 +198,14 @@ export default function NewTile({ onClose }: NewTileProps) {
               disabled={isLoading}
               type="submit"
             >
-              {isLoading ? "Generating..." : "Generate Preview"}
+              {isLoading ? (
+                <div className="flex items-center">
+                  <span>Generating...</span>
+                  <Spinner className="h-5 w-5 ml-2 animate-spin" />
+                </div>
+              ) : (
+                "Generate Preview"
+              )}
             </Button>
             <Button
               color="green"

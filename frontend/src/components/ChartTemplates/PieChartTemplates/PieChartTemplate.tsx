@@ -102,21 +102,25 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
       }
-    } else if (format === "PNG") {
+    } else if (format === "PNG" || format === "JPEG" || format === "JPG") {
       const canvas = await html2canvas(chartRef.current as HTMLElement);
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "pie-chart.png";
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        }
-      });
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `pie-chart.${format.toLowerCase()}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }
+        },
+        format === "JPEG" ? "image/jpeg" : undefined
+      );
     }
+
     handleClose();
   };
 
@@ -164,6 +168,26 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
             }}
           >
             Download as PNG
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleDownload("JPG")}
+            sx={{
+              typography: "body2",
+              color: "text.primary",
+              "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.08)" },
+            }}
+          >
+            Download as JPG
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleDownload("JPEG")}
+            sx={{
+              typography: "body2",
+              color: "text.primary",
+              "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.08)" },
+            }}
+          >
+            Download as JPEG
           </MenuItem>
         </Menu>
       </div>
