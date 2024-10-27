@@ -7,6 +7,7 @@ import axios, { CancelTokenSource } from "axios";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { IconButton } from "@material-tailwind/react";
 import { componentMapping, componentNames } from "./ComponentMapping";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 
 type ComponentKeys = keyof typeof componentMapping;
 
@@ -220,11 +221,10 @@ export default function NewTile({ onClose }: NewTileProps) {
               <Typography variant="h6" color="blue-gray" className="mb-1">
                 SQL Query
               </Typography>
-              <textarea
-                value={sqlQuery}
-                readOnly
-                className="border border-gray-400 bg-gray-100 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
-              />
+
+              <SyntaxHighlighter language="sql" className="w-full rounded-lg">
+                {sqlQuery}
+              </SyntaxHighlighter>
             </div>
           )}
 
