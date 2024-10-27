@@ -18,6 +18,7 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import NewTile from "../components/Dashboard/NewTile";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { ClipboardIcon, CheckIcon } from "lucide-react";
 
 type ComponentKeys = keyof typeof componentMapping;
 
@@ -30,6 +31,17 @@ export default function DashboardPage() {
   const [dashboardName, setDashboardName] = useState<string>("");
   const [isNewTileDialogOpen, setIsNewTileDialogOpen] = useState(false);
   const [open, setOpen] = useState(-1);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+
+  const handleCopy = async (text: string, index: number) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedIndex(index);
+      setTimeout(() => setCopiedIndex(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
 
   useEffect(() => {
     fetchTiles();
@@ -73,13 +85,6 @@ export default function DashboardPage() {
   };
 
   const handleOpen = (value: number) => setOpen(open === value ? -1 : value);
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text).then(
-      () => alert("Copied to clipboard!"),
-      (err) => console.error("Could not copy text: ", err)
-    );
-  };
 
   if (error) {
     return (
@@ -153,56 +158,63 @@ export default function DashboardPage() {
           }
 
           return (
-            <Card key={tileData.id} className="bg-white shadow p-4 rounded-lg">
-              <CardBody className="flex flex-col items-center">
-                <div className="w-full">
-                  {Component && (
-                    <Component {...componentProps} title={tileData.title} />
-                  )}
-                </div>
+            <div key={tileData.id} className="isolate">
+              <Card className="bg-white shadow rounded-lg">
+                <CardBody className="flex flex-col">
+                  <div className="w-full">
+                    {Component && (
+                      <Component {...componentProps} title={tileData.title} />
+                    )}
+                  </div>
 
-                <Accordion
-                  open={open === index}
-                  icon={<Icon id={index} open={open} />}
-                >
-                  <AccordionHeader onClick={() => handleOpen(index)}>
-                    User Query
-                  </AccordionHeader>
-                  <AccordionBody>
-                    <Typography>{tileData.description}</Typography>
-                  </AccordionBody>
-                </Accordion>
-
-                <Accordion
-                  open={open === index + tilesData.length}
-                  icon={<Icon id={index + tilesData.length} open={open} />}
-                >
-                  <AccordionHeader
-                    onClick={() => handleOpen(index + tilesData.length)}
+                  <Accordion
+                    open={open === index}
+                    icon={<Icon id={index} open={open} />}
                   >
-                    SQL Query
-                  </AccordionHeader>
-                  <AccordionBody>
-                    <div className="relative">
-                      <Button
-                        variant="outlined"
-                        size="sm"
-                        className="absolute top-2 right-2 z-10"
-                        onClick={() => copyToClipboard(tileData.sql_query)}
-                      >
-                        Copy
-                      </Button>
-                      <SyntaxHighlighter
-                        language="sql"
-                        className="w-full rounded-lg"
-                      >
-                        {tileData.sql_query}
-                      </SyntaxHighlighter>
-                    </div>
-                  </AccordionBody>
-                </Accordion>
-              </CardBody>
-            </Card>
+                    <AccordionHeader onClick={() => handleOpen(index)}>
+                      User Query
+                    </AccordionHeader>
+                    <AccordionBody>
+                      <Typography>{tileData.description}</Typography>
+                    </AccordionBody>
+                  </Accordion>
+
+                  <Accordion
+                    open={open === index + tilesData.length}
+                    icon={<Icon id={index + tilesData.length} open={open} />}
+                  >
+                    <AccordionHeader
+                      onClick={() => handleOpen(index + tilesData.length)}
+                    >
+                      SQL Query
+                    </AccordionHeader>
+                    <AccordionBody>
+                      <div className="relative">
+                        {open === index + tilesData.length && (
+                          <button
+                            onClick={() => handleCopy(tileData.sql_query, index)}
+                            className="absolute top-2 right-2 p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                            title="Copy SQL"
+                          >
+                            {copiedIndex === index ? (
+                              <CheckIcon className="h-4 w-4 text-green-500" />
+                            ) : (
+                              <ClipboardIcon className="h-4 w-4 text-gray-500" />
+                            )}
+                          </button>
+                        )}
+                        <SyntaxHighlighter
+                          language="sql"
+                          className="w-full rounded-lg"
+                        >
+                          {tileData.sql_query}
+                        </SyntaxHighlighter>
+                      </div>
+                    </AccordionBody>
+                  </Accordion>
+                </CardBody>
+              </Card>
+            </div>
           );
         })}
       </div>
