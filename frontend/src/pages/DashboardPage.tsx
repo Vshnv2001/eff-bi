@@ -19,6 +19,7 @@ import Link from "@mui/material/Link";
 import NewTile from "../components/Dashboard/NewTile";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { ClipboardIcon, CheckIcon } from "lucide-react";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 type ComponentKeys = keyof typeof componentMapping;
 
@@ -107,6 +108,7 @@ export default function DashboardPage() {
       )}
 
       <Breadcrumbs
+        separator={<NavigateNextIcon fontSize="small" />}
         aria-label="breadcrumb"
         style={{ color: "white", fontSize: "16px" }}
       >

@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 export default function DashboardsPage() {
   const [open, setOpen] = useState(false);
@@ -93,6 +94,7 @@ export default function DashboardsPage() {
       )}
 
       <Breadcrumbs
+        separator={<NavigateNextIcon fontSize="small" />}
         aria-label="breadcrumb"
         style={{ color: "white", fontSize: "16px" }}
       >
