@@ -24,6 +24,7 @@ import {
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { Spinner } from "@material-tailwind/react";
 
 const Authentication = () => {
   const {
@@ -46,6 +47,7 @@ const Authentication = () => {
   });
   const [showOrgSelection, setShowOrgSelection] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -65,6 +67,7 @@ const Authentication = () => {
 
   const signUpClicked = async () => {
     try {
+      setIsLoading(true);
       let response = await signUp({
         formFields: [
           { id: "email", value: email },
@@ -95,11 +98,14 @@ const Authentication = () => {
       setErrorMessage("Oops! Something went wrong.");
       console.log("err", err);
       setInputError({ email: true, password: true });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const signInClicked = async () => {
     try {
+      setIsLoading(true);
       let response = await signIn({
         formFields: [
           { id: "email", value: email },
@@ -132,11 +138,14 @@ const Authentication = () => {
     } catch (err) {
       setErrorMessage("Oops! Something went wrong.");
       setInputError({ email: true, password: true });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const fetchUserData = async (userId: string) => {
     try {
+      setIsLoading(true);
       const response = await fetch(`${BACKEND_API_URL}/api/users/${userId}/`, {
         method: "GET",
         headers: {
@@ -159,6 +168,8 @@ const Authentication = () => {
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -205,6 +216,11 @@ const Authentication = () => {
         alignItems: "center",
       }}
     >
+      {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <Spinner className="h-10 w-10" />
+        </div>
+      )}
       <Container
         component="main"
         sx={{

@@ -30,7 +30,15 @@ export default function NotificationDialog({
         <Typography className="text-center font-normal">
           Please configure your database settings by visiting the settings page.
         </Typography>
-        <Box className="w-full flex justify-center gap-4 mb-4">
+        <Box className="w-full flex justify-center gap-4 mb-4 mt-4">
+          <Button
+            type="submit"
+            color="red"
+            className="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white"
+            onClick={onClose}
+          >
+            Close
+          </Button>
           <Button
             type="submit"
             color="blue"
