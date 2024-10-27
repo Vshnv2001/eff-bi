@@ -14,6 +14,7 @@ import CandlestickTemplate from "../ChartTemplates/BoxPlotTemplates/CandleStickT
 import BoxPlotTemplate from "../ChartTemplates/BoxPlotTemplates/BoxPlotTemplate";
 import LineChartTemplate from "../ChartTemplates/LineChartTemplates/LineChartTemplate";
 import TableTemplate from "../ChartTemplates/TableTemplate/TableTemplate";
+import SingleValueTemplate from "../ChartTemplates/SingleValueTemplate/SingleValueTemplate";
 export const componentMapping = {
   'LineChartTemplate': LineChartTemplate,
   'BarChartTemplate': BarChartTemplate,
@@ -31,4 +32,5 @@ export const componentMapping = {
   'CandlestickTemplate': CandlestickTemplate,
   'BoxPlotTemplate': BoxPlotTemplate,
   'TableTemplate': TableTemplate,
+  'SingleValueTemplate': SingleValueTemplate,
 }

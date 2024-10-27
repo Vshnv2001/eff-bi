@@ -60,6 +60,8 @@ export default function NewTile({ onClose }: NewTileProps) {
           }
         );
 
+        console.log("response", response.data);
+
         setPreviewComponent(response.data.component);
         setPreviewProps(response.data.tile_props);
         setIsPreviewGenerated(true);
