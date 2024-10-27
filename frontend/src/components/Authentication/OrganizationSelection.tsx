@@ -80,10 +80,8 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
     }));
   };
 
-
   const handleSubmit = async () => {
     if (step === "create") {
-
       const response = await fetch(`${BACKEND_API_URL}/api/organizations/`, {
         method: "POST",
         headers: {
@@ -229,9 +227,12 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
           onClick={step === "select" ? onClose : handleBack}
           variant="outlined"
         >
-          {step === "select" ? "Back" : "Previous"}
+          Back
         </Button>
-        <Button onClick={step === "select" ? handleNext : handleSubmit} variant="contained">
+        <Button
+          onClick={step === "select" ? handleNext : handleSubmit}
+          variant="contained"
+        >
           {step === "select" ? "Next" : "Submit"}
         </Button>
       </Box>

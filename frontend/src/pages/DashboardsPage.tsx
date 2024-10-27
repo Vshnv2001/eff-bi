@@ -153,17 +153,15 @@ export default function DashboardsPage() {
         {!dashboards.length && (
           <div className="col-span-1 md:col-span-2 lg:col-span-3">
             <Typography color="white" className="text-xl text-center italic">
-              {!isLoading ? "No dashboards found. Create one to get started." : ""}
+              {!isLoading
+                ? "No dashboards found. Create one to get started."
+                : ""}
             </Typography>
           </div>
         )}
       </div>
 
-      <Dialog
-        open={open}
-        handler={handleOpen}
-        size="md"
-      >
+      <Dialog open={open} handler={handleOpen} size="md">
         <DashboardForm
           dashboardName={dashboardName}
           setDashboardName={setDashboardName}

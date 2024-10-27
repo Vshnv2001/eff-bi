@@ -28,6 +28,13 @@ export default function TableTemplate({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartRef = React.useRef<HTMLDivElement | null>(null);
 
+  const rows = data[0].values.map((_, rowIndex) =>
+    data.reduce((acc, column) => {
+      acc[column.label] = column.values[rowIndex];
+      return acc;
+    }, {} as Record<string, string | number>)
+  );
+
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -174,10 +181,10 @@ export default function TableTemplate({
               </tr>
             </thead>
             <tbody>
-              {data[0].values.map((_, i) => (
+              {rows.map((row, i) => (
                 <tr key={i}>
-                  {data.map((row, j) => (
-                    <td key={j}>{row.values[i]}</td>
+                  {columns.map((column, j) => (
+                    <td key={j}>{row[column]}</td>
                   ))}
                 </tr>
               ))}
