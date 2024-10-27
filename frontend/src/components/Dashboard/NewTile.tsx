@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { Typography, Button, Spinner } from "@material-tailwind/react";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box, Chip } from "@mui/material";
 import axios, { CancelTokenSource } from "axios";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { IconButton } from "@material-tailwind/react";
-import { componentMapping } from "./ComponentMapping";
+import { componentMapping, componentNames } from "./ComponentMapping";
 
 type ComponentKeys = keyof typeof componentMapping;
 
@@ -27,7 +27,7 @@ export default function NewTile({ onClose }: NewTileProps) {
   const [submitType, setSubmitType] = useState<"preview" | "save" | null>(null);
   const [apiData, setApiData] = useState<any>({});
   const [sqlQuery, setSqlQuery] = useState<string>("");
-  const [selectedTemplates] = useState<string[]>([]);
+  const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +53,7 @@ export default function NewTile({ onClose }: NewTileProps) {
         setIsLoading(false);
         return;
       }
-    }, 60000); // 60 seconds timeout
+    }, 60000);
 
     if (submitType === "preview") {
       let description = queryPrompt;
@@ -165,9 +165,35 @@ export default function NewTile({ onClose }: NewTileProps) {
             />
           </div>
 
+          <div className="relative mb-4">
+            <Typography variant="h6" color="blue-gray" className="mb-1">
+              Chart Preferences
+            </Typography>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+              {Object.keys(componentNames).map((component) => (
+                <Chip
+                  key={component}
+                  label={component}
+                  onClick={() => {
+                    setSelectedTemplates((prev) =>
+                      prev.includes(component)
+                        ? prev.filter((item) => item !== component)
+                        : [...prev, component]
+                    );
+                  }}
+                  color={
+                    selectedTemplates.includes(component)
+                      ? "primary"
+                      : "default"
+                  }
+                />
+              ))}
+            </Box>
+          </div>
+
           <div className="flex items-center mb-2">
             <Typography variant="h6" color="blue-gray" className="mr-2">
-              Query Prompt
+              Visualization Instructions
             </Typography>
             <IconButton
               variant="text"
