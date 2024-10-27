@@ -80,7 +80,7 @@ export default function ViewDataPage() {
 
   return (
     <div className="flex min-h-screen bg-gray-800 p-10">
-      <div className="w-64 p-4 space-y-4 bg-white fixed rounded-xl">
+      <div className="w-64 p-4 space-y-4 bg-white fixed rounded-xl overflow-y-auto" style={{ maxHeight: 'calc(100vh - 140px)'}}>
         {data.map((table, index) => (
           <button
             key={index}
@@ -91,7 +91,7 @@ export default function ViewDataPage() {
           </button>
         ))}
       </div>
-      <div className="flex flex-col items-center justify-center flex-grow overflow-auto p-4">
+      <div className="flex flex-col items-center justify-center flex-grow overflow-auto pl-80 p-4">
         <Typography as="h2" color="white" className="mb-6 text-4xl font-bold text-center">
           View Data
         </Typography>
