@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 
-function Icon({ id, open, type }: { id: number; open: number[] }) {
+function Icon({ id, open }: { id: number; open: number[] }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -119,11 +119,6 @@ const faqs = [
 const FaqPage = () => {
   const [openTips, setOpenTips] = useState<number[]>([]);
   const [openFaqs, setOpenFaqs] = useState<number[]>([]);
-  const [open, setOpen] = useState<number[]>([]);
-  const handleOpen = (value: number) => {
-    setOpen(open.includes(value) ? open.filter(id => id !== value) : [...open, value]);
-  };
-
   const handleOpenTips = (value: number) => {
     setOpenTips(openTips.includes(value) ? openTips.filter(id => id !== value) : [...openTips, value]);
   };
@@ -154,7 +149,7 @@ const FaqPage = () => {
               <Accordion
                 key={`tip-${idx}`}
                 open={openTips.includes(idx)}
-                icon={<Icon id={idx} open={openTips} type="tip"/>}
+                icon={<Icon id={idx} open={openTips}/>}
               >
                 <AccordionHeader
                   className="text-white hover:text-blue-400"
@@ -180,7 +175,7 @@ const FaqPage = () => {
               <Accordion
                 key={`faq-${idx}`}
                 open={openFaqs.includes(idx)}
-                icon={<Icon id={idx} open={openFaqs} type="faq"/>}
+                icon={<Icon id={idx} open={openFaqs}/>}
               >
                 <AccordionHeader
                   className="text-white hover:text-blue-400"
