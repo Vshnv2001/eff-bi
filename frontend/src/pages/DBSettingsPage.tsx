@@ -245,7 +245,7 @@ export default function DBSettingsPage() {
             </Typography>
             <input
               disabled={isDisabledField}
-              type="text"
+              type="password"
               placeholder={"postgres://user@localhost/db"}
               className={`w-full p-2 rounded ${
                 isDisabledField ? "bg-gray-400" : "bg-white"
