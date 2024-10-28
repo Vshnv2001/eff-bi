@@ -32,7 +32,6 @@ export default function DashboardPage() {
   const [isNewTileDialogOpen, setIsNewTileDialogOpen] = useState(false);
   const [open, setOpen] = useState<number[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const handleCopy = async (text: string, index: number) => {
     try {
