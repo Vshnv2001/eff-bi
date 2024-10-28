@@ -8,42 +8,68 @@ from django.shortcuts import get_object_or_404
 from ..models import User
 from django.core.exceptions import ObjectDoesNotExist
 import logging 
-
+from supertokens_python.recipe.session.framework.django.syncio import verify_session
 logger = logging.getLogger(__name__)
 
 @api_view(["GET"])
+@verify_session()
 def get_user_permissions_by_table(request, table_id):
     """
-    Get all the users who have permission on the table.
+    Get all the users and indicate if they have Admin or View permissions on the table.
     Response
     {
     data: [
         {
             user_id : id,
             user_email: email,
-            permissions: 'Admin'
+            permissions: 'Admin' | 'View' | 'No Access'
         },  
       ]
     }
     """
     try:
+        logger.info(table_id)
         table = get_object_or_404(OrgTables, id=table_id)
-        # logger.info(table)
+        logger.info(table)
+        user_id = request.supertokens.get_user_id()
+        organization_id = table.organization.id
         permissions = UserAccessPermissions.objects.select_related('user_id').filter(table_id=table_id)
-        permissions_data = [
-            {
-                'user_id': permission.user_id.id,
-                'user_email': permission.user_id.email,
-                'permissions': permission.permission
-            }
-            for permission in permissions
-        ]
+        
+        # Create dict to track highest permission per user
+        user_permissions = {}
+        for permission in permissions:
+            user_id = permission.user_id.id
+            if user_id not in user_permissions or permission.permission == 'Admin':
+                user_permissions[user_id] = {
+                    'user_id': user_id,
+                    'user_email': permission.user_id.email,
+                    'permissions': permission.permission
+                }
+        
+        permissions_data = list(user_permissions.values())
+        # Sort by permissions - Admin first, then View
+        permissions_data.sort(key=lambda x: (x['permissions'] != 'Admin', x['permissions']))
 
-        filtered_permissions_data = filter_permissions(permissions_data)
-        if not filtered_permissions_data:
+        # Get users without permissions
+        existing_user_ids = set(user_permissions.keys())
+        not_allowed_users = [(user.id, user.email) 
+                           for user in User.objects.filter(organization=organization_id)
+                           if user.id not in existing_user_ids]
+                           
+        not_allowed_users_data = [
+            {
+                'user_id': user_id,
+                'user_email': user_email, 
+                'permissions': 'No Access'
+            }
+            for user_id, user_email in not_allowed_users
+        ]
+        permissions_data.extend(not_allowed_users_data)
+
+        if not permissions_data:
             return JsonResponse({'message': 'No permissions found for this table.'}, status=204)
 
-        return JsonResponse({'data': filtered_permissions_data})
+        return JsonResponse({'data': permissions_data})
 
     except ObjectDoesNotExist:
         return JsonResponse({'error': 'Table does not exist'}, status=404)
