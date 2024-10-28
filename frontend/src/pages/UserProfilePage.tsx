@@ -113,7 +113,7 @@ export default function UserProfilePage() {
                 )}
                 {userInfo && (
                   <TableRow
-                    identifier="Organization ID"
+                    identifier="Organization Code"
                     data={userInfo.organization}
                   />
                 )}

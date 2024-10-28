@@ -80,11 +80,11 @@ export default function DBAccessPermissionsPage() {
               <div className="mb-8 flex items-center justify-between gap-8">
                 <div>
                   <Typography variant="h5" color="blue-gray">
-                    Your Database Permissions
+                    Your Table Permissions
                   </Typography>
                   <Typography color="gray" className="mt-1 font-normal">
                     See access control permissions for each table you have
-                    access to
+                    access to in your database.
                   </Typography>
                 </div>
               </div>

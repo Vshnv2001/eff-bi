@@ -200,7 +200,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
               required
               fullWidth
               name="orgId"
-              label="Organization ID"
+              label="Organization Code"
               type="number"
               value={orgData.orgId}
               onChange={handleInputChange}
