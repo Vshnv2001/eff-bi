@@ -30,7 +30,7 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const [dashboardName, setDashboardName] = useState<string>("");
   const [isNewTileDialogOpen, setIsNewTileDialogOpen] = useState(false);
-  const [open, setOpen] = useState(-1);
+  const [open, setOpen] = useState<number[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const handleCopy = async (text: string, index: number) => {
@@ -84,7 +84,13 @@ export default function DashboardPage() {
     }
   };
 
-  const handleOpen = (value: number) => setOpen(open === value ? -1 : value);
+  const handleOpen = (value: number) => {
+    setOpen((prevOpen) =>
+      prevOpen.includes(value)
+        ? prevOpen.filter((id) => id !== value)
+        : [...prevOpen, value]
+    );
+  };
 
   if (error) {
     return (
@@ -185,19 +191,22 @@ export default function DashboardPage() {
 
           return (
             <div key={tileData.id} className="isolate">
-              <Card className="bg-white shadow rounded-lg">
+              <Card className="bg-white shadow rounded-lg w-full h-[45rem] overflow-auto">
                 <CardBody className="flex flex-col">
-                  <div className="w-full">
+                  <div className="w-full h-[32rem] overflow-auto">
                     {Component && (
                       <Component {...componentProps} title={tileData.title} />
                     )}
                   </div>
 
                   <Accordion
-                    open={open === index}
-                    icon={<Icon id={index} open={open} />}
+                    open={open.includes(index)}
+                    icon={<Icon isOpen={open.includes(index)} />}
                   >
-                    <AccordionHeader onClick={() => handleOpen(index)}>
+                    <AccordionHeader
+                      className="text-lg"
+                      onClick={() => handleOpen(index)}
+                    >
                       User Query
                     </AccordionHeader>
                     <AccordionBody>
@@ -206,17 +215,20 @@ export default function DashboardPage() {
                   </Accordion>
 
                   <Accordion
-                    open={open === index + tilesData.length}
-                    icon={<Icon id={index + tilesData.length} open={open} />}
+                    open={open.includes(index + tilesData.length)}
+                    icon={
+                      <Icon isOpen={open.includes(index + tilesData.length)} />
+                    }
                   >
                     <AccordionHeader
                       onClick={() => handleOpen(index + tilesData.length)}
+                      className="text-lg"
                     >
                       SQL Query
                     </AccordionHeader>
                     <AccordionBody>
                       <div className="relative">
-                        {open === index + tilesData.length && (
+                        {open.includes(index + tilesData.length) && (
                           <button
                             onClick={() =>
                               handleCopy(tileData.sql_query, index)
@@ -263,16 +275,14 @@ export default function DashboardPage() {
   );
 }
 
-function Icon({ id, open }: { id: number; open: number }) {
+function Icon({ isOpen }: { isOpen: boolean }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      className={`${
-        id === open ? "rotate-180" : ""
-      } h-5 w-5 transition-transform`}
+      className={`${isOpen ? "rotate-180" : ""} h-5 w-5 transition-transform`}
     >
       <path
         strokeLinecap="round"
