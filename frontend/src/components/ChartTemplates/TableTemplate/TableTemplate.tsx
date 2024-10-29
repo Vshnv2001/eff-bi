@@ -1,5 +1,4 @@
 import { Card, CardBody } from "@material-tailwind/react";
-
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
@@ -28,12 +27,28 @@ export default function TableTemplate({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartRef = React.useRef<HTMLDivElement | null>(null);
 
-  const rows = data[0].values.map((_, rowIndex) =>
-    data.reduce((acc, column) => {
-      acc[column.label] = column.values[rowIndex];
+  // Handle empty data case
+  if (!data.length) {
+    return (
+      <Card className="overflow-x-auto w-full">
+        <Typography
+          variant="h6"
+          style={{ textAlign: "center", marginBottom: 10 }}
+        >
+          No Data Available
+        </Typography>
+      </Card>
+    );
+  }
+
+  const maxRows = Math.max(...data.map((column) => column.values.length)); // Find the maximum number of rows
+  const rows = Array.from({ length: maxRows }, (_, rowIndex) => {
+    return data.reduce((acc, column) => {
+      acc[column.label] =
+        column.values[rowIndex] !== undefined ? column.values[rowIndex] : "N/A"; // Handle undefined values
       return acc;
-    }, {} as Record<string, string | number>)
-  );
+    }, {} as Record<string, string | number>);
+  });
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -118,52 +133,16 @@ export default function TableTemplate({
             },
           }}
         >
-          <MenuItem
-            onClick={() => handleDownload("SVG")}
-            sx={{
-              typography: "body2",
-              color: "text.primary",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.08)",
-              },
-            }}
-          >
+          <MenuItem onClick={() => handleDownload("SVG")}>
             Download as SVG
           </MenuItem>
-          <MenuItem
-            onClick={() => handleDownload("PNG")}
-            sx={{
-              typography: "body2",
-              color: "text.primary",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.08)",
-              },
-            }}
-          >
+          <MenuItem onClick={() => handleDownload("PNG")}>
             Download as PNG
           </MenuItem>
-          <MenuItem
-            onClick={() => handleDownload("JPG")}
-            sx={{
-              typography: "body2",
-              color: "text.primary",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.08)",
-              },
-            }}
-          >
+          <MenuItem onClick={() => handleDownload("JPG")}>
             Download as JPG
           </MenuItem>
-          <MenuItem
-            onClick={() => handleDownload("JPEG")}
-            sx={{
-              typography: "body2",
-              color: "text.primary",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.08)",
-              },
-            }}
-          >
+          <MenuItem onClick={() => handleDownload("JPEG")}>
             Download as JPEG
           </MenuItem>
         </Menu>
