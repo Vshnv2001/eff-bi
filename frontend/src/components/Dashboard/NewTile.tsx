@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Typography, Button, Spinner } from "@material-tailwind/react";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
@@ -13,9 +13,10 @@ type ComponentKeys = keyof typeof componentMapping;
 
 interface NewTileProps {
   onClose: () => void;
+  tileId?: number | null;
 }
 
-export default function NewTile({ onClose }: NewTileProps) {
+export default function NewTile({ onClose, tileId }: NewTileProps) {
   const [tileName, setTileName] = useState("");
   const [queryPrompt, setQueryPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +30,72 @@ export default function NewTile({ onClose }: NewTileProps) {
   const [apiData, setApiData] = useState<any>({});
   const [sqlQuery, setSqlQuery] = useState<string>("");
   const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
+  const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+
+  // Fetch existing tile data if in edit mode
+  useEffect(() => {
+    const fetchTileData = async () => {
+      if (tileId && !initialDataLoaded) {
+        setIsLoading(true);
+        try {
+          const response = await axios.get(
+            `${
+              import.meta.env.VITE_BACKEND_URL
+            }/api/dashboard-tiles/${tileId}/`,
+            {
+              params: { dash_id: dashboardId },
+            }
+          );
+
+          const tileData = response.data.data;
+
+          // Set all the form fields with existing data
+          setTileName(tileData.title);
+          setQueryPrompt(tileData.description);
+          setSqlQuery(tileData.sql_query);
+          setPreviewComponent(tileData.component);
+
+          // Handle the tile props
+          let parsedProps = tileData.tile_props;
+          if (typeof tileData.tile_props === "string") {
+            try {
+              parsedProps = JSON.parse(tileData.tile_props);
+            } catch (error) {
+              console.error("Error parsing tile props:", error);
+            }
+          }
+          setPreviewProps(parsedProps);
+
+          setApiData({
+            dash_id: dashboardId,
+            title: tileData.title,
+            description: tileData.description,
+            component: tileData.component,
+            tile_props: parsedProps,
+            sql_query: tileData.sql_query,
+          });
+
+          setIsPreviewGenerated(true);
+          setInitialDataLoaded(true);
+        } catch (error) {
+          if (axios.isAxiosError(error)) {
+            console.error(
+              "Error fetching tile data:",
+              error.response?.data.error
+            );
+            toast.error(error.response?.data.error);
+          } else {
+            console.error("Error fetching tile data:", error);
+            toast.error("Failed to fetch tile data");
+          }
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchTileData();
+  }, [tileId, dashboardId, initialDataLoaded]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,12 +171,22 @@ export default function NewTile({ onClose }: NewTileProps) {
     } else if (submitType === "save") {
       try {
         cancelToken = axios.CancelToken.source();
-        await axios.post(
-          `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile-save/`,
-          apiData,
-          { cancelToken: cancelToken.token }
+        const endpoint = tileId
+          ? `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tiles/${tileId}/`
+          : `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile-save/`;
+
+        const method = tileId ? "put" : "post";
+
+        await axios({
+          method,
+          url: endpoint,
+          data: apiData,
+          cancelToken: cancelToken.token,
+        });
+
+        toast.success(
+          tileId ? "Tile updated successfully!" : "Tile saved successfully!"
         );
-        toast.success("KPI saved successfully!");
         clearTimeout(timeout);
         onClose();
       } catch (error) {
@@ -150,7 +227,7 @@ export default function NewTile({ onClose }: NewTileProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <Typography variant="h4" color="blue-gray" className="mb-4">
-          Create New Tile
+          {tileId ? "Edit Tile" : "Create New Tile"}
         </Typography>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -215,13 +292,11 @@ export default function NewTile({ onClose }: NewTileProps) {
             />
           </div>
 
-          {/* New textarea for SQL Query */}
           {sqlQuery && (
             <div className="relative mb-4">
               <Typography variant="h6" color="blue-gray" className="mb-1">
                 SQL Query
               </Typography>
-
               <SyntaxHighlighter language="sql" className="w-full rounded-lg">
                 {sqlQuery}
               </SyntaxHighlighter>
@@ -266,7 +341,7 @@ export default function NewTile({ onClose }: NewTileProps) {
               disabled={!isPreviewGenerated || isLoading}
               type="submit"
             >
-              Save
+              {tileId ? "Update" : "Save"}
             </Button>
           </Box>
         </form>
