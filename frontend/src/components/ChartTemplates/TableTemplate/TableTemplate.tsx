@@ -18,12 +18,28 @@ export default function TableTemplate({
   title,
   description,
 }: TableTemplateProps) {
+  if (!data.length) {
+    return (
+      <Card className="overflow-x-auto w-full">
+        <Typography
+          variant="h6"
+          style={{ textAlign: "center", marginBottom: 10 }}
+        >
+          No Data Available
+        </Typography>
+      </Card>
+    );
+  }
+
   const columns = data.map((row) => row.label);
   const chartRef = React.useRef<HTMLDivElement | null>(null);
 
-  const rows = data[0].values.map((_, rowIndex) =>
+  // Check if all data items have values
+  const maxLength = Math.max(...data.map((column) => column.values.length));
+  const rows = Array.from({ length: maxLength }, (_, rowIndex) =>
     data.reduce((acc, column) => {
-      acc[column.label] = column.values[rowIndex];
+      acc[column.label] =
+        column.values[rowIndex] !== undefined ? column.values[rowIndex] : "N/A"; // Handle undefined values
       return acc;
     }, {} as Record<string, string | number>)
   );
