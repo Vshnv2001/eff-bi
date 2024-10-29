@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography, Button, Spinner } from "@material-tailwind/react";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { Box, Chip } from "@mui/material";
+import LinearProgressWithLabel from "./LinearProgressWithLabel";
 import axios, { CancelTokenSource } from "axios";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { IconButton } from "@material-tailwind/react";
@@ -30,8 +31,23 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
   const [apiData, setApiData] = useState<any>({});
   const [sqlQuery, setSqlQuery] = useState<string>("");
   const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
+  const [progress, setProgress] = useState(0);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isLoading && progress < 90) {
+      timer = setInterval(() => {
+        setProgress(prevProgress => (prevProgress >= 100 ? 100 : prevProgress + 1.25));
+      }, 150);
+    } else if (isLoading && progress < 98) {
+      timer = setInterval(() => {
+        setProgress(prevProgress => (prevProgress >= 100 ? 100 : prevProgress + 1));
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isLoading, progress]);
 
   useEffect(() => {
     const fetchTileData = async () => {
@@ -186,6 +202,7 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
     }
 
     if (submitType === "preview") {
+      setProgress(0);
       setIsLoading(true);
       let cancelToken: CancelTokenSource | undefined;
       const timeout = setTimeout(() => {
@@ -364,6 +381,13 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
               />
             </div>
           )}
+
+          {isLoading && submitType === 'preview' && (
+            <Box sx={{ width: '100%' }}>
+              <LinearProgressWithLabel value={progress} />
+            </Box>
+          )}
+
 
           <Box className="flex justify-center space-x-5 mb-4">
             <Button color="red" onClick={onClose}>
