@@ -113,16 +113,40 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
 
       const method = saveType === "update" ? "put" : "post";
 
+      if (!tileName || tileName.trim() === "") {
+        toast.error("Tile name is required!");
+        return;
+      }
+
+      if (!queryPrompt || queryPrompt.trim() === "") {
+        toast.error("Query prompt is required!");
+        return;
+      }
+
       const apiDataToSend =
         saveType === "update"
-          ? { ...apiData }
-          : { ...apiData, tile_id: undefined };
+          ? {
+              ...apiData,
+              title: tileName,
+              description: queryPrompt,
+              sql_query: sqlQuery,
+              tile_props: previewProps,
+            }
+          : {
+              ...apiData,
+              title: tileName,
+              description: queryPrompt,
+              sql_query: sqlQuery,
+              tile_props: previewProps,
+              id: undefined,
+            };
+
+      console.log("before sending name", apiDataToSend);
 
       await axios({
         method,
         url: endpoint,
-        //data: apiDataToSend,
-        data: apiData,
+        data: apiDataToSend,
         cancelToken: cancelToken.token,
       });
 

@@ -205,20 +205,21 @@ def save_dashboard_tile(request: HttpRequest):
     try:
         dash_id = request.data.get('dash_id', None)
         # Tile ID can be provided. If provided, then PUT. If not provided, then POST.
-        tile_id = request.data.get('tile_id', None)
+        id = request.data.get('id', None)
 
-        logger.info(f"Dash ID: {dash_id}, Tile ID: {tile_id}")
+        logger.info(f"Dash ID: {dash_id}, Tile ID: {id}")
 
         if not dash_id:
             return JsonResponse({'error': "Dash_id is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         logger.info(request.data)
 
-        if tile_id:
+        if id:
             print("tile_id_provided")
+            print("curr_tile_name", request.data.get('title', None))
             # If tile_id is provided, try to update the existing tile
             try:
-                tile = Tile.objects.get(id=tile_id)
+                tile = Tile.objects.get(id=id)
                 serializer = TileSerializer(tile, data=request.data)
                 if serializer.is_valid():
                     serializer.save()
@@ -230,6 +231,7 @@ def save_dashboard_tile(request: HttpRequest):
                 return JsonResponse({'error': "Tile not found"}, status=status.HTTP_404_NOT_FOUND)
 
         # If tile_id is not provided, create a new tile
+        print("curr_tile_name", request.data.get('title', None))
         serializer = TileSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
