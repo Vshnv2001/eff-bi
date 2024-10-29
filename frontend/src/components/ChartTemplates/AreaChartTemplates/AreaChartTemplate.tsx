@@ -3,14 +3,11 @@
 import * as React from "react";
 import { useTheme } from "@mui/material/styles";
 import type { SxProps } from "@mui/material/styles";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Typography from "@mui/material/Typography";
 import { Chart } from "../Chart";
 import { ApexOptions } from "apexcharts";
-import html2canvas from "html2canvas";
 import Box from "@mui/material/Box";
 
 export interface AreaChartProps {
@@ -38,45 +35,6 @@ export function AreaChartTemplate({
 
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleDownload = async (format: string) => {
-    if (format === "SVG") {
-      const svgElement = chartRef.current?.querySelector("svg");
-      if (svgElement) {
-        const serializer = new XMLSerializer();
-        const svgBlob = new Blob([serializer.serializeToString(svgElement)], {
-          type: "image/svg+xml;charset=utf-8",
-        });
-        const url = URL.createObjectURL(svgBlob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "area-chart.svg";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
-    } else if (format === "PNG" || format === "JPEG" || format === "JPG") {
-      const canvas = await html2canvas(chartRef.current as HTMLElement);
-      canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `area-chart.${format.toLowerCase()}`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-          }
-        },
-        format === "JPEG" ? "image/jpeg" : undefined
-      );
-    }
-
-    handleClose();
   };
 
   // Check if chartSeries or labels are empty
@@ -126,68 +84,6 @@ export function AreaChartTemplate({
           <MoreVertIcon />
         </IconButton>
       </Box>
-
-      {/* Download Menu Options */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-        PaperProps={{
-          style: {
-            borderRadius: 8,
-            marginTop: 5,
-          },
-        }}
-      >
-        <MenuItem
-          onClick={() => handleDownload("SVG")}
-          sx={{
-            typography: "body2",
-            color: "text.primary",
-            "&:hover": {
-              backgroundColor: "rgba(0, 0, 0, 0.08)",
-            },
-          }}
-        >
-          Download as SVG
-        </MenuItem>
-        <MenuItem
-          onClick={() => handleDownload("PNG")}
-          sx={{
-            typography: "body2",
-            color: "text.primary",
-            "&:hover": {
-              backgroundColor: "rgba(0, 0, 0, 0.08)",
-            },
-          }}
-        >
-          Download as PNG
-        </MenuItem>
-        <MenuItem
-          onClick={() => handleDownload("JPG")}
-          sx={{
-            typography: "body2",
-            color: "text.primary",
-            "&:hover": {
-              backgroundColor: "rgba(0, 0, 0, 0.08)",
-            },
-          }}
-        >
-          Download as JPG
-        </MenuItem>
-        <MenuItem
-          onClick={() => handleDownload("JPEG")}
-          sx={{
-            typography: "body2",
-            color: "text.primary",
-            "&:hover": {
-              backgroundColor: "rgba(0, 0, 0, 0.08)",
-            },
-          }}
-        >
-          Download as JPEG
-        </MenuItem>
-      </Menu>
 
       {/* Chart Display */}
       <div ref={chartRef} style={{ marginTop: 16 }}>
