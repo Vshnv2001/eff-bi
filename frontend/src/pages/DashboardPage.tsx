@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Card,
   CardBody,
@@ -9,6 +9,7 @@ import {
   Accordion,
   AccordionHeader,
   AccordionBody,
+  IconButton,
 } from "@material-tailwind/react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -18,13 +19,13 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import NewTile from "../components/Dashboard/NewTile";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { ClipboardIcon, CheckIcon } from "lucide-react";
+import { ClipboardIcon, CheckIcon, PencilIcon, RefreshCw } from "lucide-react";
+import { DownloadMenu } from "../components/Dashboard/DownloadMenu";
 
 type ComponentKeys = keyof typeof componentMapping;
 
 export default function DashboardPage() {
   const { dashboardId } = useParams();
-
   const [tilesData, setTilesData] = useState<TileProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,6 +33,11 @@ export default function DashboardPage() {
   const [isNewTileDialogOpen, setIsNewTileDialogOpen] = useState(false);
   const [open, setOpen] = useState<number[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [editingTileId, setEditingTileId] = useState<number | null>(null);
+
+  const chartRefs = useRef<{ [key: number]: React.RefObject<HTMLDivElement> }>(
+    {}
+  );
 
   const handleCopy = async (text: string, index: number) => {
     try {
@@ -59,6 +65,31 @@ export default function DashboardPage() {
       setDashboardName(response.data.data);
     } catch (error) {
       console.error("Error fetching dashboard name:", error);
+    }
+  };
+
+  const refreshTile = async (tileId: number) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tiles/${tileId}/`,
+        {
+          params: { dash_id: dashboardId },
+        }
+      );
+
+      if (response.status === 200 && response.data && response.data.data) {
+        setTilesData((prevTiles) =>
+          prevTiles.map((tile) =>
+            tile.id === tileId ? response.data.data : tile
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error refreshing tile:", error);
+      setError("Failed to refresh tile");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -176,6 +207,10 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         {tilesData.map((tileData, index) => {
+          if (!chartRefs.current[index]) {
+            chartRefs.current[index] = React.createRef<HTMLDivElement>();
+          }
+
           const Component =
             componentMapping[tileData.component as ComponentKeys] || null;
 
@@ -193,7 +228,33 @@ export default function DashboardPage() {
             <div key={tileData.id} className="isolate">
               <Card className="bg-white shadow rounded-lg w-full h-[45rem] overflow-auto">
                 <CardBody className="flex flex-col">
-                  <div className="w-full h-[32rem] overflow-auto">
+                  <div className="flex justify-end gap-2 mb-4">
+                    <IconButton
+                      variant="text"
+                      color="blue-gray"
+                      className="rounded-full w-8 h-8"
+                      onClick={() => {
+                        setEditingTileId(tileData.id);
+                        setIsNewTileDialogOpen(true);
+                      }}
+                    >
+                      <PencilIcon className="h-4 w-4" />
+                    </IconButton>
+                    <IconButton
+                      variant="text"
+                      color="blue-gray"
+                      className="rounded-full w-8 h-8"
+                      onClick={() => refreshTile(tileData.id)}
+                    >
+                      <RefreshCw className="h-4 w-4" />
+                    </IconButton>
+                    <DownloadMenu chartRef={chartRefs.current[index]} />
+                  </div>
+
+                  <div
+                    ref={chartRefs.current[index]}
+                    className="w-full h-[32rem] overflow-auto"
+                  >
                     {Component && (
                       <Component {...componentProps} title={tileData.title} />
                     )}
@@ -261,14 +322,19 @@ export default function DashboardPage() {
 
       <Dialog
         open={isNewTileDialogOpen}
-        handler={() => setIsNewTileDialogOpen(false)}
+        handler={() => {
+          setIsNewTileDialogOpen(false);
+          setEditingTileId(null);
+        }}
         size="md"
       >
         <NewTile
           onClose={() => {
             setIsNewTileDialogOpen(false);
+            setEditingTileId(null);
             fetchTiles();
           }}
+          tileId={editingTileId}
         />
       </Dialog>
     </div>
