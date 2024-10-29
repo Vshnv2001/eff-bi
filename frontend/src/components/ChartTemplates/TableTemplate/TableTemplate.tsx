@@ -1,12 +1,15 @@
-import { Card, CardBody } from "@material-tailwind/react";
+import { Card, CardBody, Spinner } from "@material-tailwind/react";
 
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import html2canvas from "html2canvas";
-import React from "react";
+import React, { useState } from "react";
 import Typography from "@mui/material/Typography";
+import axios from "axios";
+import { BACKEND_API_URL } from "../../../config/index";
 
 interface TableData {
   label: string;
@@ -17,19 +20,23 @@ interface TableTemplateProps {
   data: TableData[];
   title?: string;
   description?: string;
+  id: number;
 }
 
 export default function TableTemplate({
   data,
   title,
   description,
+  id,
 }: TableTemplateProps) {
-  const columns = data.map((row) => row.label);
+  const [tileData, setTileData] = useState<TableData[]>(data);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const columns = tileData.map((row) => row.label);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartRef = React.useRef<HTMLDivElement | null>(null);
 
-  const rows = data[0].values.map((_, rowIndex) =>
-    data.reduce((acc, column) => {
+  const rows = tileData[0].values.map((_, rowIndex) =>
+    tileData.reduce((acc, column) => {
       acc[column.label] = column.values[rowIndex];
       return acc;
     }, {} as Record<string, string | number>)
@@ -88,6 +95,26 @@ export default function TableTemplate({
     handleClose();
   };
 
+  async function handleRefresh(): Promise<void> {
+    console.log("Refresh clicked");
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${BACKEND_API_URL}/api/refresh-dashboard-tile/`, {
+        tile_id: id,
+      });
+      console.log(response.data.data.tile_props.data);
+      setTileData(response.data.data.tile_props.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
     <Card className="overflow-x-auto w-full">
       {/* Title and Description */}
@@ -104,69 +131,74 @@ export default function TableTemplate({
         {description}
       </Typography>
       <div className="flex justify-end">
-        <IconButton onClick={handleMenuClick} size="small">
-          <MoreVertIcon />
-        </IconButton>
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-          PaperProps={{
-            style: {
-              borderRadius: 8,
-              marginTop: 5,
-            },
-          }}
-        >
-          <MenuItem
-            onClick={() => handleDownload("SVG")}
-            sx={{
-              typography: "body2",
-              color: "text.primary",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.08)",
+        <div className="flex items-center gap-2">
+          <IconButton size="small">
+            <RefreshIcon onClick={handleRefresh} />
+          </IconButton>
+          <IconButton onClick={handleMenuClick} size="small">
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            PaperProps={{
+              style: {
+                borderRadius: 8,
+                marginTop: 5,
               },
             }}
           >
-            Download as SVG
-          </MenuItem>
-          <MenuItem
-            onClick={() => handleDownload("PNG")}
-            sx={{
-              typography: "body2",
-              color: "text.primary",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.08)",
-              },
-            }}
-          >
-            Download as PNG
-          </MenuItem>
-          <MenuItem
-            onClick={() => handleDownload("JPG")}
-            sx={{
-              typography: "body2",
-              color: "text.primary",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.08)",
-              },
-            }}
-          >
-            Download as JPG
-          </MenuItem>
-          <MenuItem
-            onClick={() => handleDownload("JPEG")}
-            sx={{
-              typography: "body2",
-              color: "text.primary",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.08)",
-              },
-            }}
-          >
-            Download as JPEG
-          </MenuItem>
-        </Menu>
+            <MenuItem
+              onClick={() => handleDownload("SVG")}
+              sx={{
+                typography: "body2",
+                color: "text.primary",
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)",
+                },
+              }}
+            >
+              Download as SVG
+            </MenuItem>
+            <MenuItem
+              onClick={() => handleDownload("PNG")}
+              sx={{
+                typography: "body2",
+                color: "text.primary",
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)",
+                },
+              }}
+            >
+              Download as PNG
+            </MenuItem>
+            <MenuItem
+              onClick={() => handleDownload("JPG")}
+              sx={{
+                typography: "body2",
+                color: "text.primary",
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)",
+                },
+              }}
+            >
+              Download as JPG
+            </MenuItem>
+            <MenuItem
+              onClick={() => handleDownload("JPEG")}
+              sx={{
+                typography: "body2",
+                color: "text.primary",
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)",
+                },
+              }}
+            >
+              Download as JPEG
+            </MenuItem>
+          </Menu>
+        </div>
       </div>
       <CardBody ref={chartRef} className="px-5 py-4">
         <div className="overflow-y-auto max-h-96">

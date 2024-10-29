@@ -171,3 +171,25 @@ def save_dashboard_tile(request: HttpRequest):
     except Exception as e:
         logger.info(e)
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(["POST"])
+@verify_session()
+def refresh_dashboard_tile(request: HttpRequest):
+    tile_id = request.data.get('tile_id', None)
+    logger.info(tile_id)
+    tile = get_object_or_404(Tile, id=tile_id)
+    logger.info(tile)
+    chart_type = tile.component
+    sql_query = tile.sql_query
+    db_uri = tile.organization.database_uri
+    user_id = request.supertokens.get_user_id()
+    state = State()
+    state.sql_query = sql_query
+    state.visualization = chart_type
+    state.question = tile.description
+    response: State = response_pipeline(state, db_uri, tile.organization.id, user_id)
+    updated_tile = Tile.objects.get(id=tile_id)
+    updated_tile.tile_props = response.formatted_data
+    updated_tile.save()
+    serializer = TileSerializer(updated_tile)
+    return JsonResponse({'data': serializer.data}, status=200)

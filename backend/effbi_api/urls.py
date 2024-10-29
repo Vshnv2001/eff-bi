@@ -51,4 +51,5 @@ urlpatterns = [
     path("dashboard-tiles/", views.get_dashboard_tiles, name="get_dashboard_tiles"),
     path("dashboard-tile-save/", views.save_dashboard_tile, name="save_dashboard_tile"),
     path("dashboard-tile/", views.create_dashboard_tile, name="create_dashboard_tile"),
+    path("refresh-dashboard-tile/", views.refresh_dashboard_tile, name="refresh_dashboard_tile"),
 ]

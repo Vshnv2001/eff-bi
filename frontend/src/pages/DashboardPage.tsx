@@ -189,7 +189,7 @@ export default function DashboardPage() {
                 <CardBody className="flex flex-col">
                   <div className="w-full">
                     {Component && (
-                      <Component {...componentProps} title={tileData.title} />
+                      <Component {...componentProps} title={tileData.title} id={tileData.id} />
                     )}
                   </div>
 

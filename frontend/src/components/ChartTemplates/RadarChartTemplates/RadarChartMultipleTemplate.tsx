@@ -11,6 +11,7 @@ interface RadarChartProps {
   chartHeight?: number;
   title?: string;
   description?: string;
+  id: number;
 }
 
 const RadarChartMultipleTemplate: React.FC<RadarChartProps> = ({
@@ -19,6 +20,7 @@ const RadarChartMultipleTemplate: React.FC<RadarChartProps> = ({
   chartHeight = 350,
   title,
   description,
+  id,
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

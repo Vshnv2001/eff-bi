@@ -13,6 +13,7 @@ type LineChartTemplateProps = {
   categories: string[];
   title: string;
   description: string;
+  id: number;
 };
 
 const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
@@ -20,9 +21,11 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
   categories,
   title,
   description,
+  id,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  console.log(id);
 
   const options: ApexOptions = {
     chart: {

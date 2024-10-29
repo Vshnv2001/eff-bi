@@ -19,6 +19,7 @@ export interface AreaChartProps {
   sx?: SxProps;
   title?: string;
   description?: string;
+  id: number;
 }
 
 export function AreaChartTemplate({
@@ -27,6 +28,7 @@ export function AreaChartTemplate({
   sx,
   title = "Area Chart",
   description = "This area chart shows the trend of data over time.",
+  id,
 }: AreaChartProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartOptions = useChartOptions(labels, chartSeries);

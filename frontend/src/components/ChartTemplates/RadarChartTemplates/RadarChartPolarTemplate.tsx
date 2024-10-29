@@ -10,6 +10,7 @@ interface PolarChartProps {
   chartWidth?: number;
   title?: string;
   description?: string;
+  id: number;
 }
 
 const PolarChartTemplate: React.FC<PolarChartProps> = ({
@@ -17,6 +18,7 @@ const PolarChartTemplate: React.FC<PolarChartProps> = ({
   chartWidth = 380,
   title,
   description,
+  id,
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

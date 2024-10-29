@@ -15,6 +15,7 @@ interface CandlestickChartProps {
   title: string;
   description: string;
   height?: number;
+  id: number;
 }
 
 const CandlestickTemplate: React.FC<CandlestickChartProps> = ({
@@ -22,6 +23,7 @@ const CandlestickTemplate: React.FC<CandlestickChartProps> = ({
   title,
   description,
   height = 350,
+  id,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

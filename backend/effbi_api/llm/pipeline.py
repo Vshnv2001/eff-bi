@@ -9,11 +9,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_id: int):
-    print("response pipeline")
-    state = State()
-    state.question = user_query
-    
+def response_pipeline(state: State, db_uri: str, organization_id: int, user_id: int):
+    print("response pipeline")        
     accessible_table_names = get_accessible_table_names(user_id)
     logger.info("ACCESSIBLE TABLE NAMES: ", accessible_table_names)
     
@@ -60,7 +57,7 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     sql_validator = SQLValidator()
     
     # Execute the SQL query and get the results
-    results = db_manager.execute_query(state, sql_agent, sql_validator, 0)
+    results = db_manager.execute_query(state, sql_validator, 0)
     
     state.results = results
     
@@ -79,3 +76,24 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     logger.info("FORMATTED DATA: ", formatted_data)
 
     return state
+
+def refresh_dashboard_tile_pipeline(tile_id: int, db_uri: str, organization_id: int, sql_query: str, visualization: str):
+    db_manager = DatabaseManager(db_uri, organization_id)
+    state = State()
+    state.sql_query = sql_query
+    state.visualization = visualization
+
+    sql_validator = SQLValidator()
+    
+    results = db_manager.execute_query(state, sql_validator, 0)
+    formatter = DataFormatter(state)
+    try:
+        formatted_data = formatter.format_data_for_visualization()
+    except Exception as e:
+        logger.info("Error formatting data for visualization: ", e)
+        state.error = "We are unable to visualize the data. Please try a different question or provide more information."
+        return state
+    
+    logger.info("FORMATTED DATA: ", formatted_data)
+    
+    return results

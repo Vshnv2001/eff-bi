@@ -16,6 +16,7 @@ export interface HorizontalBarChartProps {
   categories: string[];
   title: string;
   description: string;
+  id: number;
 }
 
 export function PyramidBarChartTemplate({
@@ -23,6 +24,7 @@ export function PyramidBarChartTemplate({
   categories,
   title,
   description,
+  id,
 }: HorizontalBarChartProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartOptions = useChartOptions(categories);

@@ -16,6 +16,7 @@ export interface HorizontalBarChartProps {
   categories: string[];
   title: string;
   description: string;
+  id: number;
 }
 
 export function HorizontalBarChartTemplate({
@@ -23,6 +24,7 @@ export function HorizontalBarChartTemplate({
   categories,
   title,
   description,
+  id,
 }: HorizontalBarChartProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const xAxisLabel = chartSeries.length > 0 ? chartSeries[0].name : "Value";

@@ -13,6 +13,7 @@ interface ScatterChartProps {
   chartHeight?: number;
   title?: string;
   description?: string;
+  id: number;
 }
 
 const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
@@ -20,6 +21,7 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
   chartHeight = 350,
   title,
   description,
+  id,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

@@ -11,6 +11,7 @@ interface PieChartTemplateProps {
   chartWidth?: number;
   title: string;
   description: string;
+  id: number;
 }
 
 const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
@@ -19,6 +20,7 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
   chartWidth = 500,
   title,
   description,
+  id,
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

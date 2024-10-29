@@ -13,6 +13,7 @@ interface LineColumnChartProps {
   title: string;
   description?: string;
   labels: string[];
+  id: number;
 }
 
 const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
@@ -23,6 +24,7 @@ const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
   title,
   description,
   labels,
+  id,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

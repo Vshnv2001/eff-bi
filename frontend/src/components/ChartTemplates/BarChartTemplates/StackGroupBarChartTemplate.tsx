@@ -17,6 +17,7 @@ export interface StackedBarChartProps {
   title: string;
   description: string;
   sx?: SxProps;
+  id: number;
 }
 
 export function StackedGroupBarChartTemplate({
@@ -24,6 +25,7 @@ export function StackedGroupBarChartTemplate({
   categories,
   title,
   description,
+  id,
 }: StackedBarChartProps): React.JSX.Element {
   const chartOptions = useChartOptions(chartSeries, categories);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

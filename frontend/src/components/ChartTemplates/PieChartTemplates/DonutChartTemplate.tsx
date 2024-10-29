@@ -20,6 +20,7 @@ export interface TrafficProps {
   sx?: SxProps;
   title?: string;
   description?: string;
+  id: number;
 }
 
 export function DonutChartTemplate({
@@ -27,6 +28,7 @@ export function DonutChartTemplate({
   labels,
   title,
   description,
+  id,
 }: TrafficProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [baseColor, setBaseColor] = React.useState<string>("#ff0000");
