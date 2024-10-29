@@ -1,7 +1,7 @@
 from .helpers.table_processing import get_sample_table_data
 from django.http import JsonResponse, HttpRequest
 from .llm.State import State
-from .llm.pipeline import response_pipeline
+from .llm.pipeline import refresh_dashboard_tile_pipeline, response_pipeline
 from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
 from supertokens_python.recipe.multitenancy.syncio import list_all_tenants
@@ -185,11 +185,16 @@ def refresh_dashboard_tile(request: HttpRequest):
     user_id = request.supertokens.get_user_id()
     state = State()
     state.sql_query = sql_query
-    state.visualization = chart_type
+    state.visualization = {"visualization": chart_type}
     state.question = tile.description
-    response: State = response_pipeline(state, db_uri, tile.organization.id, user_id)
-    updated_tile = Tile.objects.get(id=tile_id)
-    updated_tile.tile_props = response.formatted_data
-    updated_tile.save()
-    serializer = TileSerializer(updated_tile)
-    return JsonResponse({'data': serializer.data}, status=200)
+    try:
+        response: State = refresh_dashboard_tile_pipeline(state, db_uri, tile.organization.id)
+        logger.info(response)
+        updated_tile = Tile.objects.get(id=tile_id)
+        updated_tile.tile_props = response.formatted_data['formatted_data_for_visualization']
+        updated_tile.save()
+        serializer = TileSerializer(updated_tile)
+        return JsonResponse({'data': serializer.data}, status=200)
+    except Exception as e:
+        logger.info(e)
+        return JsonResponse({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

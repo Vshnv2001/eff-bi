@@ -4,7 +4,10 @@ import { ApexOptions } from "apexcharts";
 import html2canvas from "html2canvas";
 import { Menu, MenuItem, IconButton, Typography } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-
+import axios from "axios";
+import { BACKEND_API_URL } from "../../../config/index";
+import { Spinner } from "@material-tailwind/react";
+import RefreshIcon from "@mui/icons-material/Refresh";
 interface ScatterChartProps {
   series: {
     name: string;
@@ -23,12 +26,14 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
   description,
   id,
 }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currChartSeries, setCurrChartSeries] = useState(series);
   const chartRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   useEffect(() => {
     const options: ApexOptions = {
-      series: series,
+      series: currChartSeries,
       chart: {
         height: chartHeight,
         type: "scatter",
@@ -57,7 +62,21 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
     return () => {
       chart.destroy();
     };
-  }, [series, chartHeight]);
+  }, [currChartSeries, chartHeight]);
+
+  const handleRefresh = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${BACKEND_API_URL}/api/refresh-dashboard-tile/`, {
+        tile_id: id,
+      });
+      setCurrChartSeries(response.data.data.tile_props.series);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -66,6 +85,10 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   const handleDownload = async (format: string) => {
     const chartElement = document.querySelector(
@@ -127,9 +150,12 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
       >
         {description}
       </Typography>
-
-      <IconButton
-        onClick={handleMenuClick}
+      <div className="flex justify-end">
+        <IconButton onClick={handleRefresh} size="small">
+          <RefreshIcon />
+        </IconButton>
+        <IconButton
+          onClick={handleMenuClick}
         size="small"
         style={{ marginBottom: "10px" }}
       >
@@ -193,8 +219,9 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
           }}
         >
           Download as JPEG
-        </MenuItem>
-      </Menu>
+          </MenuItem>
+        </Menu>
+      </div>
       <div ref={chartRef} id="scatter-chart" />
     </div>
   );

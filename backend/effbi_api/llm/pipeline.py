@@ -77,23 +77,24 @@ def response_pipeline(state: State, db_uri: str, organization_id: int, user_id: 
 
     return state
 
-def refresh_dashboard_tile_pipeline(tile_id: int, db_uri: str, organization_id: int, sql_query: str, visualization: str):
+def refresh_dashboard_tile_pipeline(state: State, db_uri: str, organization_id: int):
     db_manager = DatabaseManager(db_uri, organization_id)
-    state = State()
-    state.sql_query = sql_query
-    state.visualization = visualization
 
     sql_validator = SQLValidator()
     
     results = db_manager.execute_query(state, sql_validator, 0)
+    state.results = results
+    logger.info(f"RESULTS: {results}")
     formatter = DataFormatter(state)
     try:
         formatted_data = formatter.format_data_for_visualization()
+        
     except Exception as e:
         logger.info("Error formatting data for visualization: ", e)
         state.error = "We are unable to visualize the data. Please try a different question or provide more information."
-        return state
+        raise Exception(state.error)
     
-    logger.info("FORMATTED DATA: ", formatted_data)
+    logger.info(f"FORMATTED DATA: {formatted_data}")
     
-    return results
+    state.formatted_data = formatted_data
+    return state

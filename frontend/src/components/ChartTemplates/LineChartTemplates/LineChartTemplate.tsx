@@ -4,6 +4,10 @@ import { ApexOptions } from "apexcharts";
 import html2canvas from "html2canvas";
 import { Menu, MenuItem, IconButton, Typography } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Spinner } from "@material-tailwind/react";
+import axios from "axios";
+import { BACKEND_API_URL } from "../../../config";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 type LineChartTemplateProps = {
   series: {
@@ -25,7 +29,8 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  console.log(id);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currChartSeries, setCurrChartSeries] = useState(series);
 
   const options: ApexOptions = {
     chart: {
@@ -53,6 +58,20 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleRefresh = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${BACKEND_API_URL}/api/refresh-dashboard-tile/`, {
+        tile_id: id,
+      });
+      setCurrChartSeries(response.data.data.tile_props.series);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const handleDownload = async (format: string) => {
     const chartElement = document.querySelector(
@@ -99,6 +118,10 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
     handleClose();
   };
 
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
     <div ref={chartRef}>
       {/* Title and Description */}
@@ -114,13 +137,21 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
       >
         {description}
       </Typography>
-      <IconButton
-        onClick={handleMenuClick}
-        size="small"
-        style={{ marginBottom: "10px" }}
-      >
-        <MoreVertIcon />
-      </IconButton>
+      <div className="flex justify-end">
+        <IconButton
+          onClick={handleRefresh}
+          size="small"
+          className="mb-2"
+        >
+          <RefreshIcon />
+        </IconButton>
+        <IconButton
+          onClick={handleMenuClick}
+          className="mb-2"
+        >
+          <MoreVertIcon />
+        </IconButton>
+      </div>
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}

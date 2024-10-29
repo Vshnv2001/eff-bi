@@ -1,9 +1,13 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ApexCharts from "apexcharts";
 import { ApexOptions } from "apexcharts";
 import html2canvas from "html2canvas";
 import { IconButton, Menu, MenuItem, Typography } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import axios from "axios";
+import { BACKEND_API_URL } from "../../../config/index";
+import { Spinner } from "@material-tailwind/react";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 interface PieChartTemplateProps {
   series: number[];
@@ -24,14 +28,15 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [chartSeries, setChartSeries] = useState(series);
   useEffect(() => {
-    const fontSize = series.length > 10 ? "12px" : "14px";
+    const fontSize = chartSeries.length > 10 ? "12px" : "14px";
 
-    console.log("series", series);
+    console.log("series", chartSeries);
     console.log("labels", labels);
 
-    if (series.length === 0 || labels.length === 0) {
+    if (chartSeries.length === 0 || labels.length === 0) {
       return;
     }
 
@@ -45,13 +50,13 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
     };
 
     const options: ApexOptions = {
-      series: series,
+      series: chartSeries,
       chart: {
         width: "100%",
         type: "pie",
       },
       labels: labels,
-      colors: generateColors(series.length),
+      colors: generateColors(chartSeries.length),
       responsive: [
         {
           breakpoint: 480,
@@ -68,7 +73,7 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
         fontSize: fontSize,
         floating: false,
         formatter: function (seriesName, opts) {
-          return seriesName + ` - ${series[opts.seriesIndex].toFixed(1)}`;
+          return seriesName + ` - ${chartSeries[opts.seriesIndex].toFixed(1)}`;
         },
       },
       tooltip: {
@@ -85,7 +90,7 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
     return () => {
       chart.destroy();
     };
-  }, [series, labels, chartWidth]);
+  }, [chartSeries, labels, chartWidth]);
 
   const handleDownload = async (format: string) => {
     if (format === "SVG") {
@@ -130,13 +135,34 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
     setAnchorEl(event.currentTarget);
   };
 
+  const handleRefresh = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${BACKEND_API_URL}/api/refresh-dashboard-tile/`, {
+        tile_id: id,
+      });
+      setChartSeries(response.data.data.tile_props.series);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   const handleClose = () => {
     setAnchorEl(null);
   };
 
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
     <div style={{ position: "relative", marginTop: 30 }}>
       <div style={{ position: "absolute", top: -20, right: 10, zIndex: 1 }}>
+        <IconButton onClick={handleRefresh} size="small">
+          <RefreshIcon />
+        </IconButton>
         <IconButton onClick={handleMenuClick} size="small">
           <MoreVertIcon />
         </IconButton>
@@ -207,7 +233,7 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
         {description}
       </Typography>
 
-      {series.length === 0 || labels.length === 0 ? (
+      {chartSeries.length === 0 || labels.length === 0 ? (
         <Typography
           variant="body2"
           style={{ textAlign: "center", marginTop: 20, color: "red" }}

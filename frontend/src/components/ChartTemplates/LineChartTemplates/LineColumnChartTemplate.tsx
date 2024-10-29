@@ -4,6 +4,10 @@ import { ApexOptions } from "apexcharts";
 import html2canvas from "html2canvas";
 import { Menu, MenuItem, IconButton, Typography } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Spinner } from "@material-tailwind/react";
+import axios from "axios";
+import { BACKEND_API_URL } from "../../../config";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 interface LineColumnChartProps {
   columnData: number[];
@@ -26,6 +30,9 @@ const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
   labels,
   id,
 }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currColumnData, setCurrColumnData] = useState(columnData);
+  const [currLineData, setCurrLineData] = useState(lineData);
   const chartRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -35,12 +42,12 @@ const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
         {
           name: columnName,
           type: "column",
-          data: columnData,
+          data: currColumnData,
         },
         {
           name: lineName,
           type: "line",
-          data: lineData,
+          data: currLineData,
         },
       ],
       chart: {
@@ -80,7 +87,7 @@ const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
     return () => {
       chart.destroy();
     };
-  }, [columnData, lineData, columnName, lineName, title, labels]);
+  }, [currColumnData, currLineData, columnName, lineName, title, labels]);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -89,6 +96,25 @@ const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  const handleRefresh = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${BACKEND_API_URL}/api/refresh-dashboard-tile/`, {
+        tile_id: id,
+      });
+      setCurrColumnData(response.data.data.tile_props.column_data);
+      setCurrLineData(response.data.data.tile_props.line_data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const handleDownload = async (format: string) => {
     const chartElement = document.querySelector(
@@ -150,13 +176,21 @@ const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
       >
         {description}
       </Typography>
-      <IconButton
-        onClick={handleMenuClick}
+      <div className="flex justify-end">
+        <IconButton
+          onClick={handleRefresh}
+          className="mb-2"
+        >
+          <RefreshIcon />
+        </IconButton>
+        <IconButton
+          onClick={handleMenuClick}
         size="small"
         style={{ marginBottom: "10px" }}
       >
-        <MoreVertIcon />
-      </IconButton>
+          <MoreVertIcon />
+        </IconButton>
+      </div>
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}

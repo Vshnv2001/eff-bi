@@ -4,6 +4,11 @@ import html2canvas from "html2canvas";
 import { Menu, MenuItem, IconButton } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Typography from "@mui/material/Typography";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import { Spinner } from "@material-tailwind/react";
+import axios from "axios";
+import { BACKEND_API_URL } from "../../../config";
+
 
 type CandlestickData = {
   x: Date | number;
@@ -27,12 +32,32 @@ const CandlestickTemplate: React.FC<CandlestickChartProps> = ({
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currData, setCurrData] = useState(data);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  const handleRefresh = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${BACKEND_API_URL}/api/refresh-dashboard-tile/`, {
+        tile_id: id,
+      });
+      setCurrData(response.data.data.tile_props.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   useEffect(() => {
     const options = {
       series: [
         {
-          data: data,
+          data: currData,
         },
       ],
       chart: {
@@ -58,7 +83,7 @@ const CandlestickTemplate: React.FC<CandlestickChartProps> = ({
     chart.render();
 
     return () => chart.destroy();
-  }, [data, title, height]);
+  }, [currData, title, height]);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -128,13 +153,22 @@ const CandlestickTemplate: React.FC<CandlestickChartProps> = ({
       >
         {description}
       </Typography>
-      <IconButton
-        onClick={handleMenuClick}
+      <div className="flex justify-end">
+        <IconButton
+          onClick={handleRefresh}
+          size="small"
+          className="mb-2"
+        >
+          <RefreshIcon />
+        </IconButton>
+        <IconButton
+          onClick={handleMenuClick}
         size="small"
-        style={{ marginBottom: "10px" }}
-      >
-        <MoreVertIcon />
-      </IconButton>
+          className="mb-2"
+        >
+          <MoreVertIcon />
+        </IconButton>
+      </div>
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}

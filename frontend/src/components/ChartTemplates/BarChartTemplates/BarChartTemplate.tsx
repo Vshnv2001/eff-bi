@@ -17,7 +17,6 @@ export interface BarProps {
   xAxisLabel: string;
   title: string;
   description: string;
-  id: number;
 }
 
 export function BarChartTemplate({
@@ -26,7 +25,6 @@ export function BarChartTemplate({
   xAxisLabel,
   title,
   description,
-  id,
 }: BarProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const yAxisLabel = chartSeries[0]?.name || "";

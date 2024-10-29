@@ -10,6 +10,11 @@ import html2canvas from "html2canvas";
 import type { ApexOptions } from "apexcharts";
 import { Chart } from "../Chart";
 import Typography from "@mui/material/Typography";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import { useState } from "react";
+import { Spinner } from "@material-tailwind/react";
+import axios from "axios";
+import { BACKEND_API_URL } from "../../../config";
 
 export interface HorizontalBarChartProps {
   chartSeries: { name: string; data: number[] }[];
@@ -27,7 +32,11 @@ export function PyramidBarChartTemplate({
   id,
 }: HorizontalBarChartProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const chartOptions = useChartOptions(categories);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currChartSeries, setCurrChartSeries] = useState(chartSeries);
+  const [currCategories, setCurrCategories] = useState(categories);
+
+  const chartOptions = useChartOptions(currCategories);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -167,7 +176,7 @@ export function PyramidBarChartTemplate({
 
       {/* Chart component */}
       <div style={{ marginTop: 30 }}>
-        {chartSeries.length === 0 ? (
+        {currChartSeries.length === 0 ? (
           <Typography
             variant="body2"
             style={{ textAlign: "center", margin: "20px 0" }}
@@ -178,7 +187,7 @@ export function PyramidBarChartTemplate({
           <Chart
             height={440}
             options={chartOptions}
-            series={chartSeries}
+            series={currChartSeries}
             type="bar"
             width="100%"
           />

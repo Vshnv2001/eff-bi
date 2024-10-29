@@ -1,9 +1,13 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ApexCharts from "apexcharts";
 import { ApexOptions } from "apexcharts";
 import html2canvas from "html2canvas";
 import { IconButton, Menu, MenuItem, Typography } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import axios from "axios";
+import { BACKEND_API_URL } from "../../../config/index";
+import { Spinner } from "@material-tailwind/react";
 
 interface RadarChartProps {
   series: { name: string; data: number[] }[];
@@ -23,11 +27,13 @@ const RadarChartMultipleTemplate: React.FC<RadarChartProps> = ({
   id,
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [chartSeries, setChartSeries] = useState(series);
 
   useEffect(() => {
     const options: ApexOptions = {
-      series: series,
+      series: chartSeries,
       chart: {
         height: chartHeight,
         type: "radar",
@@ -62,7 +68,25 @@ const RadarChartMultipleTemplate: React.FC<RadarChartProps> = ({
     return () => {
       chart.destroy();
     };
-  }, [series, categories, chartHeight]);
+  }, [chartSeries, categories, chartHeight]);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  const handleRefresh = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${BACKEND_API_URL}/api/refresh-dashboard-tile/`, {
+        tile_id: id,
+      });
+      setChartSeries(response.data.data.tile_props.series);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const handleDownload = async (format: string) => {
     const chartElement = document.querySelector(
@@ -134,6 +158,9 @@ const RadarChartMultipleTemplate: React.FC<RadarChartProps> = ({
       </Typography>
       <div ref={chartRef} id="radar-chart-multiple" />
       <div style={{ marginTop: "10px" }}>
+        <IconButton onClick={handleRefresh} size="small">
+          <RefreshIcon />
+        </IconButton>
         <IconButton onClick={handleMenuClick} size="small">
           <MoreVertIcon />
         </IconButton>

@@ -10,6 +10,11 @@ import { useTheme } from "@mui/material/styles";
 import type { ApexOptions } from "apexcharts";
 import { Chart } from "../Chart";
 import Typography from "@mui/material/Typography";
+import { useState } from "react";
+import { Spinner } from "@material-tailwind/react";
+import axios from "axios";
+import { BACKEND_API_URL } from "../../../config";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 export interface HorizontalBarChartProps {
   chartSeries: { name: string; data: number[] }[];
@@ -20,15 +25,43 @@ export interface HorizontalBarChartProps {
 }
 
 export function HorizontalBarChartTemplate({
-  chartSeries,
-  categories,
-  title,
-  description,
-  id,
+  chartSeries = [],
+  categories = [],
+  title = "",
+  description = "",
+  id = 0,
 }: HorizontalBarChartProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const xAxisLabel = chartSeries.length > 0 ? chartSeries[0].name : "Value";
-  const chartOptions = useChartOptions(categories, xAxisLabel);
+  const [currChartSeries, setCurrChartSeries] = useState(chartSeries);
+  const xAxisLabel =
+    currChartSeries.length > 0 ? currChartSeries[0].name : "Value";
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [currCategories, setCurrCategories] = useState(categories);
+  const chartOptions = useChartOptions(currCategories, xAxisLabel);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  console.log(currChartSeries);
+  console.log(currCategories);
+
+  const handleRefresh = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${BACKEND_API_URL}/api/refresh-dashboard-tile/`, {
+        tile_id: id,
+      });
+      console.log(response.data.data);
+      setCurrChartSeries(response.data.data.tile_props.chartSeries);
+      setCurrCategories(response.data.data.tile_props.categories);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -99,7 +132,17 @@ export function HorizontalBarChartTemplate({
       </Typography>
 
       <div style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}>
-        <IconButton onClick={handleMenuClick} size="small">
+          <IconButton
+          onClick={handleRefresh}
+          size="small"
+          className="mb-2"
+        >
+          <RefreshIcon />
+        </IconButton>
+        <IconButton
+          onClick={handleMenuClick}
+          size="small"
+        >
           <MoreVertIcon />
         </IconButton>
         <Menu
@@ -165,7 +208,7 @@ export function HorizontalBarChartTemplate({
       </div>
 
       <div style={{ marginTop: 30 }}>
-        {chartSeries.length === 0 ? (
+        {currChartSeries.length === 0 ? (
           <Typography
             variant="body2"
             style={{ textAlign: "center", margin: "20px 0" }}
@@ -176,7 +219,7 @@ export function HorizontalBarChartTemplate({
           <Chart
             height={350}
             options={chartOptions}
-            series={chartSeries}
+            series={currChartSeries}
             type="bar"
             width="100%"
           />

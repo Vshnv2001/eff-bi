@@ -10,6 +10,11 @@ import type { ApexOptions } from "apexcharts";
 import html2canvas from "html2canvas";
 import { SxProps } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { useState } from "react";
+import { Spinner } from "@material-tailwind/react";
+import axios from "axios";
+import { BACKEND_API_URL } from "../../../config";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 export interface StackedBarChartProps {
   chartSeries: { name: string; group: string; data: number[] }[];
@@ -27,7 +32,31 @@ export function StackedGroupBarChartTemplate({
   description,
   id,
 }: StackedBarChartProps): React.JSX.Element {
-  const chartOptions = useChartOptions(chartSeries, categories);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currChartSeries, setCurrChartSeries] = useState(chartSeries);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  const handleRefresh = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post(
+        `${BACKEND_API_URL}/api/refresh-dashboard-tile/`,
+        {
+          tile_id: id,
+        }
+      );
+      setCurrChartSeries(response.data.data.tile_props.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const chartOptions = useChartOptions(currChartSeries, categories);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -113,7 +142,17 @@ export function StackedGroupBarChartTemplate({
 
       <div style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}>
         <div>
-          <IconButton onClick={handleMenuClick} size="small">
+          <IconButton
+            onClick={handleRefresh}
+            size="small"
+            className="mb-2"
+          >
+            <RefreshIcon />
+          </IconButton>
+          <IconButton
+            onClick={handleMenuClick}
+            size="small"
+          >
             <MoreVertIcon />
           </IconButton>
           <Menu

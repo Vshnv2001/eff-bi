@@ -13,6 +13,11 @@ import { ApexOptions } from "apexcharts";
 import { generateColors } from "../colorUtils";
 import html2canvas from "html2canvas";
 import Stack from "@mui/material/Stack";
+import { useState } from "react";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import axios from "axios";
+import { BACKEND_API_URL } from "../../../config/index";
+import { Spinner } from "@material-tailwind/react";
 
 export interface TrafficProps {
   chartSeries: number[];
@@ -32,8 +37,25 @@ export function DonutChartTemplate({
 }: TrafficProps): React.JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [baseColor, setBaseColor] = React.useState<string>("#ff0000");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currChartSeries, setCurrChartSeries] = useState(chartSeries);
+
+  const handleRefresh = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${BACKEND_API_URL}/api/refresh-dashboard-tile/`, {
+        tile_id: id,
+      });
+      setCurrChartSeries(response.data.data.tile_props.series);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   const themeColors = generateColors(
-    chartSeries.length,
+    currChartSeries.length,
     "homogeneous",
     baseColor
   ); // Set color theme to homogeneous
@@ -93,6 +115,10 @@ export function DonutChartTemplate({
     handleClose();
   };
 
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
     <div style={{ position: "relative", textAlign: "center" }}>
       <div style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}>
@@ -110,6 +136,9 @@ export function DonutChartTemplate({
           {description}
         </Typography>
         <div>
+          <IconButton onClick={handleRefresh} size="small">
+            <RefreshIcon />
+          </IconButton>
           <IconButton onClick={handleMenuClick} size="small">
             <MoreVertIcon />
           </IconButton>
@@ -185,7 +214,7 @@ export function DonutChartTemplate({
         <Chart
           height={300}
           options={chartOptions}
-          series={chartSeries}
+          series={currChartSeries}
           type="donut"
           width="100%"
           ref={chartRef}
@@ -195,7 +224,7 @@ export function DonutChartTemplate({
           spacing={2}
           sx={{ alignItems: "center", justifyContent: "center" }}
         >
-          {chartSeries.map((item, index) => {
+          {currChartSeries.map((item, index) => {
             const label = labels[index];
 
             return (
