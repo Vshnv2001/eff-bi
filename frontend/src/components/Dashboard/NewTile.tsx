@@ -39,11 +39,15 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
     let timer: NodeJS.Timeout;
     if (isLoading && progress < 90) {
       timer = setInterval(() => {
-        setProgress(prevProgress => (prevProgress >= 100 ? 100 : prevProgress + 1.25));
+        setProgress((prevProgress) =>
+          prevProgress >= 100 ? 100 : prevProgress + 1.25
+        );
       }, 150);
     } else if (isLoading && progress < 98) {
       timer = setInterval(() => {
-        setProgress(prevProgress => (prevProgress >= 100 ? 100 : prevProgress + 1));
+        setProgress((prevProgress) =>
+          prevProgress >= 100 ? 100 : prevProgress + 1
+        );
       }, 1000);
     }
     return () => clearInterval(timer);
@@ -135,7 +139,7 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
       }
 
       if (!queryPrompt || queryPrompt.trim() === "") {
-        toast.error("Query prompt is required!");
+        toast.error("Visualization Instructions are required!");
         return;
       }
 
@@ -197,7 +201,7 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
     }
 
     if (!queryPrompt || queryPrompt.trim() === "") {
-      toast.error("Query prompt is required!");
+      toast.error("Visualization Instructions are required!");
       return;
     }
 
@@ -311,7 +315,7 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
 
           <div className="relative mb-4">
             <Typography variant="h6" color="blue-gray" className="mb-1">
-              Chart Preferences
+              Chart Preferences (Optional)
             </Typography>
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {Object.keys(componentNames).map((component) => (
@@ -334,6 +338,35 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
               ))}
             </Box>
           </div>
+
+          {info && (
+            <div className="absolute z-10 p-4 bg-white border rounded-lg shadow-2xl w-[39rem]">
+              <Typography variant="h6" color="blue-gray" className="mb-3">
+                Visualization Details
+              </Typography>
+              <Typography color="gray">
+                For optimal results, it is recommended to indicate the type of
+                chart desired as well as the specific data for comparison. When
+                defining specific conditions,{" "}
+                <span className="text-red-500 font-bold">
+                  always use precise values in conditions
+                </span>
+                . For example, if the condition is "injury," do not substitute
+                with synonyms or related terms like "injured" or "torn
+                hamstring."
+                <br />
+                <br />
+                Ensure that the conditions match exactly what is recorded in the
+                dataset to avoid discrepancies in the analysis. It is also
+                important to clarify the metrics used to define vague terms. For
+                instance, an ideal specification could highlight the top players
+                based on the number of gold medals they have won.
+              </Typography>
+              <Button variant="filled" onClick={handleInfo} className="mt-5">
+                Close
+              </Button>
+            </div>
+          )}
 
           <div className="flex items-center mb-2">
             <Typography variant="h6" color="blue-gray" className="mr-2">
@@ -382,12 +415,11 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
             </div>
           )}
 
-          {isLoading && submitType === 'preview' && (
-            <Box sx={{ width: '100%' }}>
+          {isLoading && submitType === "preview" && (
+            <Box sx={{ width: "100%" }}>
               <LinearProgressWithLabel value={progress} />
             </Box>
           )}
-
 
           <Box className="flex justify-center space-x-5 mb-4">
             <Button color="red" onClick={onClose}>
@@ -468,34 +500,6 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
           pauseOnFocusLoss
           pauseOnHover
         />
-
-        {info && (
-          <div className="absolute z-10 p-4 bg-white border rounded-lg shadow-lg">
-            <Typography variant="h6" color="blue-gray" className="mb-1">
-              Query Details
-            </Typography>
-            <Typography color="gray">
-              For optimal results, it is recommended to indicate the type of
-              chart desired as well as the specific data for comparison. When
-              defining specific conditions,{" "}
-              <span className="text-red-500 font-bold">
-                always use precise values in conditions
-              </span>
-              . For example, if the condition is "injury," do not substitute
-              with synonyms or related terms like "injured" or "torn hamstring."
-              <br />
-              <br />
-              Ensure that the conditions match exactly what is recorded in the
-              dataset to avoid discrepancies in the analysis. It is also
-              important to clarify the metrics used to define vague terms. For
-              instance, an ideal specification could highlight the top players
-              based on the number of gold medals they have won.
-            </Typography>
-            <Button variant="text" onClick={handleInfo}>
-              Close
-            </Button>
-          </div>
-        )}
       </div>
     </div>
   );
