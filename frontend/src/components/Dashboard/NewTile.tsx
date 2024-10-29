@@ -116,12 +116,13 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
       const apiDataToSend =
         saveType === "update"
           ? { ...apiData }
-          : { ...apiData, tile_id: undefined }; // Remove tile_id for new entries
+          : { ...apiData, tile_id: undefined };
 
       await axios({
         method,
         url: endpoint,
-        data: apiDataToSend,
+        //data: apiDataToSend,
+        data: apiData,
         cancelToken: cancelToken.token,
       });
 

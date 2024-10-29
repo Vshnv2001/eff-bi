@@ -33,7 +33,9 @@ When dealing with aggregations:
 3. Use common table expressions to break down complex aggregations into steps
 
 You are allowed to use common table expressions or views if that simplifies the query
-             
+
+For time-sensitive data, avoid hardcoding dates when the query involves the current time. Use `.now()` and adjust dynamically by adding or subtracting time.
+
 THE RESULTS SHOULD ONLY BE IN THE FOLLOWING FORMAT, SO MAKE SURE TO ONLY GIVE TWO OR THREE COLUMNS:
 [[x, y]]
 or 

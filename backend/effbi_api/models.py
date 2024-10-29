@@ -3,13 +3,14 @@ from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 
+
 class User(models.Model):
     id = models.CharField(max_length=255, primary_key=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     organization = models.ForeignKey('Organization', on_delete=models.CASCADE)
-    
+
     class Meta:
         db_table = "users"
         managed = True
@@ -19,13 +20,14 @@ class User(models.Model):
 class Organization(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
-    database_uri = models.CharField(max_length=255, blank=True, null=True, default="")
+    database_uri = models.CharField(
+        max_length=255, blank=True, null=True, default="")
     super_user = ArrayField(
-        models.CharField(max_length=255),  
-        blank=True,                       
+        models.CharField(max_length=255),
+        blank=True,
         default=list
     )
-    
+
     class Meta:
         db_table = "organizations"
         managed = True
@@ -40,24 +42,27 @@ class OrgTables(models.Model):
     column_descriptions = models.JSONField()
     column_types = models.JSONField()
     table_description = models.TextField(default='')
-    
+
     class Meta:
         db_table = "organization_tables"
         managed = True
         app_label = "effbi_api"
 
+
 class Dashboard(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
     description = models.TextField()
-    dash_id = models.IntegerField(editable=False)  # Make dash_id unique and non-editable
+    # Make dash_id unique and non-editable
+    dash_id = models.IntegerField(editable=False)
     organization = models.ForeignKey('Organization', on_delete=models.CASCADE)
     tiles = models.ForeignKey('Tile', on_delete=models.CASCADE, null=True)
     created_by = models.CharField(max_length=100, default='')
 
     def save(self, *args, **kwargs):
         if not self.dash_id:
-            last_dash = Dashboard.objects.filter(organization=self.organization).order_by('-dash_id').first()
+            last_dash = Dashboard.objects.filter(
+                organization=self.organization).order_by('-dash_id').first()
             self.dash_id = last_dash.dash_id + 1 if last_dash else 1
         super().save(*args, **kwargs)
 
@@ -66,10 +71,12 @@ class Dashboard(models.Model):
         managed = True
         app_label = "effbi_api"
 
+
 class Tile(models.Model):
     id = models.AutoField(primary_key=True)
     dash_id = models.IntegerField(default=0)
-    organization = models.ForeignKey('Organization', on_delete=models.CASCADE, default=0)
+    organization = models.ForeignKey(
+        'Organization', on_delete=models.CASCADE, default=0)
     title = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
     sql_query = models.TextField(null=True, blank=True)
@@ -80,7 +87,6 @@ class Tile(models.Model):
         db_table = "tiles"
         managed = True
         app_label = "effbi_api"
-
 
 
 class UserAccessPermissions(models.Model):

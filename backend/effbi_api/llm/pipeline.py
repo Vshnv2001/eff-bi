@@ -10,7 +10,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_id: int):
-    print("response pipeline")
+    print("calling")
     state = State()
     state.question = user_query
     

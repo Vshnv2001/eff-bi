@@ -118,6 +118,27 @@ def get_dashboard_tiles(request: HttpRequest):
     logger.info("data", serializer.data)
     return JsonResponse({'data': serializer.data}, status=200)
 
+
+@api_view(["GET"])
+@verify_session()
+def get_dashboard_tile(request: HttpRequest, id: int):
+    logger.info("get dashboard tile request called")
+    user_id = request.supertokens.get_user_id()
+    dash_id = request.GET.get('dash_id', None)
+    user = get_object_or_404(User, id=user_id)
+    org_id = user.organization.id
+
+    logger.info("dash_id: ", dash_id)
+
+    tile = get_object_or_404(Tile, id=id, dash_id=dash_id, organization=org_id)
+    logger.info("tile found: ", tile)
+
+    serializer = TileSerializer(tile)
+    logger.info("data: ", serializer.data)
+
+    return JsonResponse({'data': serializer.data}, status=200)
+
+
 @api_view(["POST"])
 @verify_session()
 def create_dashboard_tile(request: HttpRequest):
@@ -132,17 +153,24 @@ def create_dashboard_tile(request: HttpRequest):
         org_id = user.organization.id
         db_uri = user.organization.database_uri
 
-        response: State = response_pipeline(request.data.get('description'), db_uri, org_id, user_id)
+        print("before pipeline")
+
+        response: State = response_pipeline(
+            request.data.get('description'), db_uri, org_id, user_id)
         logger.info("Pipeline complete")
 
+        print("after pipeline")
+
         if response.error:
+            print("error_in_response")
             logger.info(response.error)
             return JsonResponse({'error': response.error}, status=status.HTTP_400_BAD_REQUEST)
 
         response_data = request.data.copy()
         response_data['organization'] = org_id
         response_data['sql_query'] = response.sql_query
-        response_data['component'] = response.visualization.get('visualization', '')
+        response_data['component'] = response.visualization.get(
+            'visualization', '')
         response_data['tile_props'] = response.formatted_data
 
         logger.info(response_data)
@@ -152,6 +180,8 @@ def create_dashboard_tile(request: HttpRequest):
         logger.error(e)
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+'''
 @api_view(["POST"])
 @verify_session()
 def save_dashboard_tile(request: HttpRequest):
@@ -170,4 +200,52 @@ def save_dashboard_tile(request: HttpRequest):
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         logger.info(e)
+        return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+'''
+
+
+@api_view(["PUT", "POST"])
+@verify_session()
+def save_dashboard_tile(request: HttpRequest):
+    try:
+        dash_id = request.data.get('dash_id', None)
+        # Tile ID can be provided. If provided, then PUT. If not provided, then POST.
+        tile_id = request.data.get('tile_id', None)
+
+        logger.info(f"Dash ID: {dash_id}, Tile ID: {tile_id}")
+
+        if not dash_id:
+            return JsonResponse({'error': "Dash_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        logger.info(request.data)
+
+        if tile_id:
+            print("tile_id_provided")
+            # If tile_id is provided, try to update the existing tile
+            try:
+                tile = Tile.objects.get(id=tile_id)
+                serializer = TileSerializer(tile, data=request.data)
+                if serializer.is_valid():
+                    serializer.save()
+                    return JsonResponse({'data': serializer.data}, status=status.HTTP_200_OK)
+
+                logger.info(serializer.errors)
+                return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            except Tile.DoesNotExist:
+                return JsonResponse({'error': "Tile not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # If tile_id is not provided, create a new tile
+        serializer = TileSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            print("saved new tile")
+            return JsonResponse({'data': serializer.data}, status=status.HTTP_201_CREATED)
+
+        logger.info(serializer.errors)
+        print("ser_error", serializer.errors)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    except Exception as e:
+        print("errata")
+        logger.error(f"Error saving dashboard tile: {str(e)}")
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
