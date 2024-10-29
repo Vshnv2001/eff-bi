@@ -34,7 +34,6 @@ export default function TableTemplate({
   const columns = data.map((row) => row.label);
   const chartRef = React.useRef<HTMLDivElement | null>(null);
 
-  // Check if all data items have values
   const maxLength = Math.max(...data.map((column) => column.values.length));
   const rows = Array.from({ length: maxLength }, (_, rowIndex) =>
     data.reduce((acc, column) => {
@@ -46,7 +45,6 @@ export default function TableTemplate({
 
   return (
     <Card className="overflow-x-auto w-full">
-      {/* Title and Description */}
       <Typography
         variant="h6"
         style={{ textAlign: "center", marginBottom: 10 }}
