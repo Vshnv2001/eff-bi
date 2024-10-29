@@ -2,8 +2,6 @@ import * as React from "react";
 import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
 import { useTheme } from "@mui/material/styles";
-import IconButton from "@mui/material/IconButton";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import type { ApexOptions } from "apexcharts";
 import { Chart } from "../Chart";
 import Typography from "@mui/material/Typography";

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import ApexCharts from "apexcharts";
 import { Typography } from "@mui/material";
 

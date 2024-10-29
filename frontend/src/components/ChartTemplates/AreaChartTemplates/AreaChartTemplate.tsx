@@ -3,8 +3,6 @@
 import * as React from "react";
 import { useTheme } from "@mui/material/styles";
 import type { SxProps } from "@mui/material/styles";
-import IconButton from "@mui/material/IconButton";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Typography from "@mui/material/Typography";
 import { Chart } from "../Chart";
 import { ApexOptions } from "apexcharts";
@@ -25,17 +23,8 @@ export function AreaChartTemplate({
   title = "Area Chart",
   description = "This area chart shows the trend of data over time.",
 }: AreaChartProps): React.JSX.Element {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartOptions = useChartOptions(labels, chartSeries);
   const chartRef = React.useRef<HTMLDivElement | null>(null);
-
-  const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   // Check if chartSeries or labels are empty
   if (chartSeries.length === 0 || labels.length === 0) {
@@ -80,9 +69,6 @@ export function AreaChartTemplate({
             {description}
           </Typography>
         </Box>
-        <IconButton onClick={handleMenuClick} size="small">
-          <MoreVertIcon />
-        </IconButton>
       </Box>
 
       {/* Chart Display */}
