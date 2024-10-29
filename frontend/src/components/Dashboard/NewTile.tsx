@@ -66,11 +66,8 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
 
           setApiData({
             dash_id: dashboardId,
-            title: tileData.title,
-            description: tileData.description,
-            component: tileData.component,
             tile_props: parsedProps,
-            sql_query: tileData.sql_query,
+            ...tileData,
           });
 
           setIsPreviewGenerated(true);
@@ -109,19 +106,22 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
 
     try {
       cancelToken = axios.CancelToken.source();
-      const endpoint =
-        saveType === "update"
-          ? `${
-              import.meta.env.VITE_BACKEND_URL
-            }/api/dashboard-tile-update/${dash_id}/${tileId}/`
-          : `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile-save/`;
+
+      const endpoint = `${
+        import.meta.env.VITE_BACKEND_URL
+      }/api/dashboard-tile-save/`;
 
       const method = saveType === "update" ? "put" : "post";
+
+      const apiDataToSend =
+        saveType === "update"
+          ? { ...apiData }
+          : { ...apiData, tile_id: undefined }; // Remove tile_id for new entries
 
       await axios({
         method,
         url: endpoint,
-        data: apiData,
+        data: apiDataToSend,
         cancelToken: cancelToken.token,
       });
 
