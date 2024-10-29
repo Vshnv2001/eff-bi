@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Card,
   CardBody,
@@ -20,6 +20,7 @@ import Link from "@mui/material/Link";
 import NewTile from "../components/Dashboard/NewTile";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { ClipboardIcon, CheckIcon, PencilIcon, RefreshCw } from "lucide-react";
+import { DownloadMenu } from "../components/Dashboard/DownloadMenu";
 
 type ComponentKeys = keyof typeof componentMapping;
 
@@ -33,6 +34,10 @@ export default function DashboardPage() {
   const [open, setOpen] = useState<number[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [editingTileId, setEditingTileId] = useState<number | null>(null);
+
+  const chartRefs = useRef<{ [key: number]: React.RefObject<HTMLDivElement> }>(
+    {}
+  );
 
   const handleCopy = async (text: string, index: number) => {
     try {
@@ -74,8 +79,8 @@ export default function DashboardPage() {
       );
 
       if (response.status === 200 && response.data && response.data.data) {
-        setTilesData(prevTiles =>
-          prevTiles.map(tile =>
+        setTilesData((prevTiles) =>
+          prevTiles.map((tile) =>
             tile.id === tileId ? response.data.data : tile
           )
         );
@@ -202,6 +207,10 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         {tilesData.map((tileData, index) => {
+          if (!chartRefs.current[index]) {
+            chartRefs.current[index] = React.createRef<HTMLDivElement>();
+          }
+
           const Component =
             componentMapping[tileData.component as ComponentKeys] || null;
 
@@ -239,9 +248,13 @@ export default function DashboardPage() {
                     >
                       <RefreshCw className="h-4 w-4" />
                     </IconButton>
+                    <DownloadMenu chartRef={chartRefs.current[index]} />
                   </div>
 
-                  <div className="w-full h-[32rem] overflow-auto">
+                  <div
+                    ref={chartRefs.current[index]}
+                    className="w-full h-[32rem] overflow-auto"
+                  >
                     {Component && (
                       <Component {...componentProps} title={tileData.title} />
                     )}
