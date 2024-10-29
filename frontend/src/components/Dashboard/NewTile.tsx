@@ -31,8 +31,8 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
   const [sqlQuery, setSqlQuery] = useState<string>("");
   const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
 
-  // Fetch existing tile data if in edit mode
   useEffect(() => {
     const fetchTileData = async () => {
       if (tileId && !initialDataLoaded) {
@@ -49,13 +49,11 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
 
           const tileData = response.data.data;
 
-          // Set all the form fields with existing data
           setTileName(tileData.title);
           setQueryPrompt(tileData.description);
           setSqlQuery(tileData.sql_query);
           setPreviewComponent(tileData.component);
 
-          // Handle the tile props
           let parsedProps = tileData.tile_props;
           if (typeof tileData.tile_props === "string") {
             try {
@@ -97,6 +95,58 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
     fetchTileData();
   }, [tileId, dashboardId, initialDataLoaded]);
 
+  const handleSave = async (saveType: "update" | "new") => {
+    setIsLoading(true);
+    let cancelToken: CancelTokenSource | undefined;
+    const timeout = setTimeout(() => {
+      if (cancelToken) {
+        const cancelReason = "Request took too long.";
+        cancelToken.cancel(cancelReason);
+        toast.error(cancelReason);
+        setIsLoading(false);
+      }
+    }, 60000);
+
+    try {
+      cancelToken = axios.CancelToken.source();
+      const endpoint =
+        saveType === "update"
+          ? `${
+              import.meta.env.VITE_BACKEND_URL
+            }/api/dashboard-tile-update/${dash_id}/${tileId}/`
+          : `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile-save/`;
+
+      const method = saveType === "update" ? "put" : "post";
+
+      await axios({
+        method,
+        url: endpoint,
+        data: apiData,
+        cancelToken: cancelToken.token,
+      });
+
+      toast.success(
+        saveType === "update"
+          ? "Tile updated successfully!"
+          : "New tile saved successfully!"
+      );
+      clearTimeout(timeout);
+      onClose();
+    } catch (error) {
+      clearTimeout(timeout);
+      if (axios.isAxiosError(error)) {
+        console.error("Error saving tile:", error.response?.data.error);
+        toast.error(error.response?.data.error);
+      } else {
+        console.error("Error saving tile:", error);
+        toast.error("Failed to save tile. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
+      setShowSaveDialog(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -110,20 +160,19 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
       return;
     }
 
-    setIsLoading(true);
-
-    let cancelToken: CancelTokenSource | undefined;
-    const timeout = setTimeout(() => {
-      if (cancelToken) {
-        const cancelReason = "Unable to generate tile. Request took too long.";
-        cancelToken.cancel(cancelReason);
-        toast.error(cancelReason);
-        setIsLoading(false);
-        return;
-      }
-    }, 60000);
-
     if (submitType === "preview") {
+      setIsLoading(true);
+      let cancelToken: CancelTokenSource | undefined;
+      const timeout = setTimeout(() => {
+        if (cancelToken) {
+          const cancelReason =
+            "Unable to generate tile. Request took too long.";
+          cancelToken.cancel(cancelReason);
+          toast.error(cancelReason);
+          setIsLoading(false);
+        }
+      }, 60000);
+
       let description = queryPrompt;
       try {
         let componentNamesString;
@@ -167,41 +216,16 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
           console.error("Error generating preview:", error);
           toast.error("Failed to generate preview. Please try again.");
         }
+      } finally {
+        setIsLoading(false);
       }
     } else if (submitType === "save") {
-      try {
-        cancelToken = axios.CancelToken.source();
-        const endpoint = tileId
-          ? `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tiles/${tileId}/`
-          : `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile-save/`;
-
-        const method = tileId ? "put" : "post";
-
-        await axios({
-          method,
-          url: endpoint,
-          data: apiData,
-          cancelToken: cancelToken.token,
-        });
-
-        toast.success(
-          tileId ? "Tile updated successfully!" : "Tile saved successfully!"
-        );
-        clearTimeout(timeout);
-        onClose();
-      } catch (error) {
-        clearTimeout(timeout);
-        if (axios.isAxiosError(error)) {
-          console.error("Error saving tile:", error.response?.data.error);
-          toast.error(error.response?.data.error);
-        } else {
-          console.error("Error saving tile:", error);
-          toast.error("Failed to save tile. Please try again.");
-        }
+      if (tileId) {
+        setShowSaveDialog(true);
+      } else {
+        handleSave("new");
       }
     }
-
-    setIsLoading(false);
     setSubmitType(null);
   };
 
@@ -223,7 +247,7 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
       onClick={handleBackdropClick}
     >
       <div
-        className="p-6 bg-white rounded-md max-h-[80vh] overflow-y-auto w-full max-w-2xl"
+        className="p-6 bg-white rounded-md max-h-[80vh] overflow-y-auto w-full max-w-2xl relative"
         onClick={(e) => e.stopPropagation()}
       >
         <Typography variant="h4" color="blue-gray" className="mb-4">
@@ -341,10 +365,48 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
               disabled={!isPreviewGenerated || isLoading}
               type="submit"
             >
-              {tileId ? "Update" : "Save"}
+              Save
             </Button>
           </Box>
         </form>
+
+        {/* Save Confirmation Dialog */}
+        {showSaveDialog && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+              <Typography variant="h5" color="blue-gray" className="mb-4">
+                Save Options
+              </Typography>
+              <Typography color="gray" className="mb-6">
+                Would you like to update the existing chart or save as a new
+                chart?
+              </Typography>
+              <div className="flex justify-end space-x-4">
+                <Button
+                  color="gray"
+                  onClick={() => setShowSaveDialog(false)}
+                  disabled={isLoading}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  color="blue"
+                  onClick={() => handleSave("new")}
+                  disabled={isLoading}
+                >
+                  Save as New
+                </Button>
+                <Button
+                  color="green"
+                  onClick={() => handleSave("update")}
+                  disabled={isLoading}
+                >
+                  Update Existing
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <ToastContainer
           className="pt-14"

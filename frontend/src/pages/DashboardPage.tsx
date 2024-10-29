@@ -204,7 +204,7 @@ export default function DashboardPage() {
         {tilesData.map((tileData, index) => {
           const Component =
             componentMapping[tileData.component as ComponentKeys] || null;
-            
+
           let componentProps = tileData.tile_props;
           if (typeof tileData.tile_props === "string") {
             try {
