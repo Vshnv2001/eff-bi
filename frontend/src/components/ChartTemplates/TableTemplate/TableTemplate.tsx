@@ -1,11 +1,5 @@
-import { Card, CardBody } from "@material-tailwind/react";
-
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import IconButton from "@mui/material/IconButton";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import html2canvas from "html2canvas";
 import React from "react";
+import { Card, CardBody } from "@material-tailwind/react";
 import Typography from "@mui/material/Typography";
 
 interface TableData {
@@ -24,73 +18,33 @@ export default function TableTemplate({
   title,
   description,
 }: TableTemplateProps) {
+  if (!data.length) {
+    return (
+      <Card className="overflow-x-auto w-full">
+        <Typography
+          variant="h6"
+          style={{ textAlign: "center", marginBottom: 10 }}
+        >
+          No Data Available
+        </Typography>
+      </Card>
+    );
+  }
+
   const columns = data.map((row) => row.label);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const chartRef = React.useRef<HTMLDivElement | null>(null);
 
-  const rows = data[0].values.map((_, rowIndex) =>
+  const maxLength = Math.max(...data.map((column) => column.values.length));
+  const rows = Array.from({ length: maxLength }, (_, rowIndex) =>
     data.reduce((acc, column) => {
-      acc[column.label] = column.values[rowIndex];
+      acc[column.label] =
+        column.values[rowIndex] !== undefined ? column.values[rowIndex] : "N/A"; // Handle undefined values
       return acc;
     }, {} as Record<string, string | number>)
   );
 
-  const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleDownload = async (format: string) => {
-    const chartElement = document.querySelector(
-      ".apexcharts-canvas"
-    ) as HTMLElement;
-
-    if (!chartElement) return;
-
-    if (format === "SVG") {
-      const svgData = chartElement.querySelector("svg");
-      if (svgData) {
-        const serializer = new XMLSerializer();
-        const svgBlob = new Blob([serializer.serializeToString(svgData)], {
-          type: "image/svg+xml;charset=utf-8",
-        });
-        const url = URL.createObjectURL(svgBlob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "chart.svg";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
-    } else if (format === "PNG" || format === "JPEG" || format === "JPG") {
-      const canvas = await html2canvas(chartElement);
-      canvas.toBlob(
-        (blob: Blob | null) => {
-          if (blob) {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `chart.${format.toLowerCase()}`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-          }
-        },
-        format === "JPEG" ? "image/jpeg" : undefined
-      );
-    }
-
-    handleClose();
-  };
-
   return (
     <Card className="overflow-x-auto w-full">
-      {/* Title and Description */}
       <Typography
         variant="h6"
         style={{ textAlign: "center", marginBottom: 10 }}
@@ -103,71 +57,7 @@ export default function TableTemplate({
       >
         {description}
       </Typography>
-      <div className="flex justify-end">
-        <IconButton onClick={handleMenuClick} size="small">
-          <MoreVertIcon />
-        </IconButton>
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-          PaperProps={{
-            style: {
-              borderRadius: 8,
-              marginTop: 5,
-            },
-          }}
-        >
-          <MenuItem
-            onClick={() => handleDownload("SVG")}
-            sx={{
-              typography: "body2",
-              color: "text.primary",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.08)",
-              },
-            }}
-          >
-            Download as SVG
-          </MenuItem>
-          <MenuItem
-            onClick={() => handleDownload("PNG")}
-            sx={{
-              typography: "body2",
-              color: "text.primary",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.08)",
-              },
-            }}
-          >
-            Download as PNG
-          </MenuItem>
-          <MenuItem
-            onClick={() => handleDownload("JPG")}
-            sx={{
-              typography: "body2",
-              color: "text.primary",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.08)",
-              },
-            }}
-          >
-            Download as JPG
-          </MenuItem>
-          <MenuItem
-            onClick={() => handleDownload("JPEG")}
-            sx={{
-              typography: "body2",
-              color: "text.primary",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.08)",
-              },
-            }}
-          >
-            Download as JPEG
-          </MenuItem>
-        </Menu>
-      </div>
+
       <CardBody ref={chartRef} className="px-5 py-4">
         <div className="overflow-y-auto max-h-96">
           <table className="w-auto min-w-full table-auto text-left">
