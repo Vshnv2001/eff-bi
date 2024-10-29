@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Typography, Button, Spinner } from "@material-tailwind/react";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { Box, Chip } from "@mui/material";
-import LinearProgressWithLabel from "./LinearProgressWithLabel";
 import axios, { CancelTokenSource } from "axios";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { IconButton } from "@material-tailwind/react";
@@ -31,23 +30,112 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
   const [apiData, setApiData] = useState<any>({});
   const [sqlQuery, setSqlQuery] = useState<string>("");
   const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
-  const [progress, setProgress] = useState(0);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
 
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (isLoading && progress < 90) {
-      timer = setInterval(() => {
-        setProgress(prevProgress => (prevProgress >= 100 ? 100 : prevProgress + 1.25));
-      }, 150);
-    } else if (isLoading && progress < 98) {
-      timer = setInterval(() => {
-        setProgress(prevProgress => (prevProgress >= 100 ? 100 : prevProgress + 1));
-      }, 1000);
+  // Helper functions begin
+  const validateForm = () => {
+    if (!tileName || tileName.trim() === "") {
+      toast.error("Tile name is required!");
+      return false;
     }
-    return () => clearInterval(timer);
-  }, [isLoading, progress]);
+
+    if (!queryPrompt || queryPrompt.trim() === "") {
+      toast.error("Query prompt is required!");
+      return false;
+    }
+
+    return true;
+  };
+
+  const getApiDataToSend = (saveType: "update" | "new") => {
+    return saveType === "update"
+      ? {
+          ...apiData,
+          title: tileName,
+          description: queryPrompt,
+          sql_query: sqlQuery,
+          tile_props: previewProps,
+        }
+      : {
+          ...apiData,
+          title: tileName,
+          description: queryPrompt,
+          sql_query: sqlQuery,
+          tile_props: previewProps,
+          id: undefined,
+        };
+  };
+
+  const showSuccessToast = (saveType: "update" | "new") => {
+    toast.success(
+      saveType === "update"
+        ? "Tile updated successfully!"
+        : "New tile saved successfully!"
+    );
+  };
+
+  const handleError = (error: any) => {
+    if (axios.isAxiosError(error)) {
+      console.error("Error:", error.response?.data.error);
+      toast.error(error.response?.data.error);
+    } else {
+      console.error("Error:", error);
+      toast.error("An error occurred. Please try again.");
+    }
+  };
+
+  const generatePreview = async () => {
+    setIsLoading(true);
+    let cancelToken: CancelTokenSource | undefined;
+    const timeout = setTimeout(() => {
+      if (cancelToken) {
+        const cancelReason = "Unable to generate tile. Request took too long.";
+        cancelToken.cancel(cancelReason);
+        toast.error(cancelReason);
+        setIsLoading(false);
+      }
+    }, 60000);
+
+    let description = queryPrompt;
+    try {
+      let componentNamesString;
+      if (selectedTemplates.length > 0) {
+        componentNamesString = selectedTemplates.join(",");
+        description = `${queryPrompt}\n\nTry to generate a chart that is any of the following: ${componentNamesString}.`;
+      }
+      cancelToken = axios.CancelToken.source();
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
+        {
+          dash_id: dashboardId,
+          title: tileName,
+          description: description,
+        },
+        { cancelToken: cancelToken.token }
+      );
+
+      setPreviewComponent(response.data.component);
+      setPreviewProps(response.data.tile_props);
+      setSqlQuery(response.data.sql_query);
+      setIsPreviewGenerated(true);
+      clearTimeout(timeout);
+
+      setApiData({
+        dash_id: dashboardId,
+        title: tileName,
+        description: description,
+        ...response.data,
+      });
+    } catch (error) {
+      clearTimeout(timeout);
+      handleError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  // Helper functions end
 
   useEffect(() => {
     const fetchTileData = async () => {
@@ -89,16 +177,7 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
           setIsPreviewGenerated(true);
           setInitialDataLoaded(true);
         } catch (error) {
-          if (axios.isAxiosError(error)) {
-            console.error(
-              "Error fetching tile data:",
-              error.response?.data.error
-            );
-            toast.error(error.response?.data.error);
-          } else {
-            console.error("Error fetching tile data:", error);
-            toast.error("Failed to fetch tile data");
-          }
+          handleError(error);
         } finally {
           setIsLoading(false);
         }
@@ -126,38 +205,11 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
       const endpoint = `${
         import.meta.env.VITE_BACKEND_URL
       }/api/dashboard-tile-save/`;
-
       const method = saveType === "update" ? "put" : "post";
 
-      if (!tileName || tileName.trim() === "") {
-        toast.error("Tile name is required!");
-        return;
-      }
+      if (!validateForm()) return;
 
-      if (!queryPrompt || queryPrompt.trim() === "") {
-        toast.error("Query prompt is required!");
-        return;
-      }
-
-      const apiDataToSend =
-        saveType === "update"
-          ? {
-              ...apiData,
-              title: tileName,
-              description: queryPrompt,
-              sql_query: sqlQuery,
-              tile_props: previewProps,
-            }
-          : {
-              ...apiData,
-              title: tileName,
-              description: queryPrompt,
-              sql_query: sqlQuery,
-              tile_props: previewProps,
-              id: undefined,
-            };
-
-      console.log("before sending name", apiDataToSend);
+      const apiDataToSend = getApiDataToSend(saveType);
 
       await axios({
         method,
@@ -166,22 +218,12 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
         cancelToken: cancelToken.token,
       });
 
-      toast.success(
-        saveType === "update"
-          ? "Tile updated successfully!"
-          : "New tile saved successfully!"
-      );
+      showSuccessToast(saveType);
       clearTimeout(timeout);
       onClose();
     } catch (error) {
       clearTimeout(timeout);
-      if (axios.isAxiosError(error)) {
-        console.error("Error saving tile:", error.response?.data.error);
-        toast.error(error.response?.data.error);
-      } else {
-        console.error("Error saving tile:", error);
-        toast.error("Failed to save tile. Please try again.");
-      }
+      handleError(error);
     } finally {
       setIsLoading(false);
       setShowSaveDialog(false);
@@ -191,76 +233,10 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!tileName || tileName.trim() === "") {
-      toast.error("Tile name is required!");
-      return;
-    }
-
-    if (!queryPrompt || queryPrompt.trim() === "") {
-      toast.error("Query prompt is required!");
-      return;
-    }
+    if (!validateForm()) return;
 
     if (submitType === "preview") {
-      setProgress(0);
-      setIsLoading(true);
-      let cancelToken: CancelTokenSource | undefined;
-      const timeout = setTimeout(() => {
-        if (cancelToken) {
-          const cancelReason =
-            "Unable to generate tile. Request took too long.";
-          cancelToken.cancel(cancelReason);
-          toast.error(cancelReason);
-          setIsLoading(false);
-        }
-      }, 60000);
-
-      let description = queryPrompt;
-      try {
-        let componentNamesString;
-        if (selectedTemplates.length > 0) {
-          componentNamesString = selectedTemplates.join(",");
-          description = `${queryPrompt}\n\nTry to generate a chart that is any of the following: ${componentNamesString}.`;
-        }
-        cancelToken = axios.CancelToken.source();
-
-        const response = await axios.post(
-          `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
-          {
-            dash_id: dashboardId,
-            title: tileName,
-            description: description,
-          },
-          { cancelToken: cancelToken.token }
-        );
-
-        setPreviewComponent(response.data.component);
-        setPreviewProps(response.data.tile_props);
-        setSqlQuery(response.data.sql_query);
-        setIsPreviewGenerated(true);
-        clearTimeout(timeout);
-
-        setApiData({
-          dash_id: dashboardId,
-          title: tileName,
-          description: description,
-          ...response.data,
-        });
-      } catch (error) {
-        clearTimeout(timeout);
-        if (axios.isAxiosError(error)) {
-          console.error(
-            "Error generating preview:",
-            error.response?.data.error
-          );
-          toast.error(error.response?.data.error);
-        } else {
-          console.error("Error generating preview:", error);
-          toast.error("Failed to generate preview. Please try again.");
-        }
-      } finally {
-        setIsLoading(false);
-      }
+      await generatePreview();
     } else if (submitType === "save") {
       if (tileId) {
         setShowSaveDialog(true);
@@ -382,13 +358,6 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
             </div>
           )}
 
-          {isLoading && submitType === 'preview' && (
-            <Box sx={{ width: '100%' }}>
-              <LinearProgressWithLabel value={progress} />
-            </Box>
-          )}
-
-
           <Box className="flex justify-center space-x-5 mb-4">
             <Button color="red" onClick={onClose}>
               Cancel
@@ -423,16 +392,17 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
         {showSaveDialog && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
-              <Typography variant="h5" color="blue-gray" className="mb-4">
+              <Typography variant="h5" color="blue-gray" className="mb-4 text-center">
                 Save Options
               </Typography>
               <Typography color="gray" className="mb-6">
                 Would you like to update the existing chart or save as a new
                 chart?
               </Typography>
-              <div className="flex justify-end space-x-4">
+
+              <Box className="flex justify-center space-x-5 mb-4">
                 <Button
-                  color="gray"
+                  color="red"
                   onClick={() => setShowSaveDialog(false)}
                   disabled={isLoading}
                 >
@@ -443,16 +413,16 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
                   onClick={() => handleSave("new")}
                   disabled={isLoading}
                 >
-                  Save as New
+                  Save
                 </Button>
                 <Button
                   color="green"
                   onClick={() => handleSave("update")}
                   disabled={isLoading}
                 >
-                  Update Existing
+                  Update
                 </Button>
-              </div>
+              </Box>
             </div>
           </div>
         )}
