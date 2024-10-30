@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Typography, Button, Spinner } from "@material-tailwind/react";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
@@ -13,9 +13,10 @@ type ComponentKeys = keyof typeof componentMapping;
 
 interface NewTileProps {
   onClose: () => void;
+  tileId?: number | null;
 }
 
-export default function NewTile({ onClose }: NewTileProps) {
+export default function NewTile({ onClose, tileId }: NewTileProps) {
   const [tileName, setTileName] = useState("");
   const [queryPrompt, setQueryPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -29,22 +30,63 @@ export default function NewTile({ onClose }: NewTileProps) {
   const [apiData, setApiData] = useState<any>({});
   const [sqlQuery, setSqlQuery] = useState<string>("");
   const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
+  const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  // Helper functions begin
+  const validateForm = () => {
     if (!tileName || tileName.trim() === "") {
       toast.error("Tile name is required!");
-      return;
+      return false;
     }
 
     if (!queryPrompt || queryPrompt.trim() === "") {
-      toast.error("Query prompt is required!");
-      return;
+      toast.error("Visualization Instructions are required!");
+      return false;
     }
 
-    setIsLoading(true);
+    return true;
+  };
 
+  const getApiDataToSend = (saveType: "update" | "new") => {
+    return saveType === "update"
+      ? {
+          ...apiData,
+          title: tileName,
+          description: queryPrompt,
+          sql_query: sqlQuery,
+          tile_props: previewProps,
+        }
+      : {
+          ...apiData,
+          title: tileName,
+          description: queryPrompt,
+          sql_query: sqlQuery,
+          tile_props: previewProps,
+          id: undefined,
+        };
+  };
+
+  const showSuccessToast = (saveType: "update" | "new") => {
+    toast.success(
+      saveType === "update"
+        ? "Tile updated successfully!"
+        : "New tile saved successfully!"
+    );
+  };
+
+  const handleError = (error: any) => {
+    if (axios.isAxiosError(error)) {
+      console.error("Error:", error.response?.data.error);
+      toast.error(error.response?.data.error);
+    } else {
+      console.error("Error:", error);
+      toast.error("An error occurred. Please try again.");
+    }
+  };
+
+  const generatePreview = async () => {
+    setIsLoading(true);
     let cancelToken: CancelTokenSource | undefined;
     const timeout = setTimeout(() => {
       if (cancelToken) {
@@ -52,79 +94,156 @@ export default function NewTile({ onClose }: NewTileProps) {
         cancelToken.cancel(cancelReason);
         toast.error(cancelReason);
         setIsLoading(false);
-        return;
       }
     }, 60000);
 
-    if (submitType === "preview") {
-      let description = queryPrompt;
-      try {
-        let componentNamesString;
-        if (selectedTemplates.length > 0) {
-          componentNamesString = selectedTemplates.join(",");
-          description = `${queryPrompt}\n\nTry to generate a chart that is any of the following: ${componentNamesString}.`;
-        }
-        cancelToken = axios.CancelToken.source();
+    let description = queryPrompt;
+    try {
+      let componentNamesString;
+      if (selectedTemplates.length > 0) {
+        componentNamesString = selectedTemplates.join(",");
+        description = `${queryPrompt}\n\nTry to generate a chart that is any of the following: ${componentNamesString}.`;
+      }
+      cancelToken = axios.CancelToken.source();
 
-        const response = await axios.post(
-          `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
-          {
-            dash_id: dashboardId,
-            title: tileName,
-            description: description,
-          },
-          { cancelToken: cancelToken.token }
-        );
-
-        setPreviewComponent(response.data.component);
-        setPreviewProps(response.data.tile_props);
-        setSqlQuery(response.data.sql_query);
-        setIsPreviewGenerated(true);
-        clearTimeout(timeout);
-
-        setApiData({
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
+        {
           dash_id: dashboardId,
           title: tileName,
           description: description,
-          ...response.data,
-        });
-      } catch (error) {
-        clearTimeout(timeout);
-        if (axios.isAxiosError(error)) {
-          console.error(
-            "Error generating preview:",
-            error.response?.data.error
+        },
+        { cancelToken: cancelToken.token }
+      );
+
+      setPreviewComponent(response.data.component);
+      setPreviewProps(response.data.tile_props);
+      setSqlQuery(response.data.sql_query);
+      setIsPreviewGenerated(true);
+      clearTimeout(timeout);
+
+      setApiData({
+        dash_id: dashboardId,
+        title: tileName,
+        description: description,
+        ...response.data,
+      });
+    } catch (error) {
+      clearTimeout(timeout);
+      handleError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  // Helper functions end
+
+  useEffect(() => {
+    const fetchTileData = async () => {
+      if (tileId && !initialDataLoaded) {
+        setIsLoading(true);
+        try {
+          const response = await axios.get(
+            `${
+              import.meta.env.VITE_BACKEND_URL
+            }/api/dashboard-tiles/${tileId}/`,
+            {
+              params: { dash_id: dashboardId },
+            }
           );
-          toast.error(error.response?.data.error);
-        } else {
-          console.error("Error generating preview:", error);
-          toast.error("Failed to generate preview. Please try again.");
+
+          const tileData = response.data.data;
+
+          setTileName(tileData.title);
+          setQueryPrompt(tileData.description);
+          setSqlQuery(tileData.sql_query);
+          setPreviewComponent(tileData.component);
+
+          let parsedProps = tileData.tile_props;
+          if (typeof tileData.tile_props === "string") {
+            try {
+              parsedProps = JSON.parse(tileData.tile_props);
+            } catch (error) {
+              console.error("Error parsing tile props:", error);
+            }
+          }
+          setPreviewProps(parsedProps);
+
+          setApiData({
+            dash_id: dashboardId,
+            tile_props: parsedProps,
+            ...tileData,
+          });
+
+          setIsPreviewGenerated(true);
+          setInitialDataLoaded(true);
+        } catch (error) {
+          handleError(error);
+        } finally {
+          setIsLoading(false);
         }
       }
+    };
+
+    fetchTileData();
+  }, [tileId, dashboardId, initialDataLoaded]);
+
+  const handleSave = async (saveType: "update" | "new") => {
+    setIsLoading(true);
+    let cancelToken: CancelTokenSource | undefined;
+    const timeout = setTimeout(() => {
+      if (cancelToken) {
+        const cancelReason = "Request took too long.";
+        cancelToken.cancel(cancelReason);
+        toast.error(cancelReason);
+        setIsLoading(false);
+      }
+    }, 60000);
+
+    try {
+      cancelToken = axios.CancelToken.source();
+
+      const endpoint = `${
+        import.meta.env.VITE_BACKEND_URL
+      }/api/dashboard-tile-save/`;
+      const method = saveType === "update" ? "put" : "post";
+
+      if (!validateForm()) return;
+
+      const apiDataToSend = getApiDataToSend(saveType);
+
+      await axios({
+        method,
+        url: endpoint,
+        data: apiDataToSend,
+        cancelToken: cancelToken.token,
+      });
+
+      showSuccessToast(saveType);
+      clearTimeout(timeout);
+      onClose();
+    } catch (error) {
+      clearTimeout(timeout);
+      handleError(error);
+    } finally {
+      setIsLoading(false);
+      setShowSaveDialog(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    if (submitType === "preview") {
+      await generatePreview();
     } else if (submitType === "save") {
-      try {
-        cancelToken = axios.CancelToken.source();
-        await axios.post(
-          `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile-save/`,
-          apiData,
-          { cancelToken: cancelToken.token }
-        );
-        toast.success("KPI saved successfully!");
-        clearTimeout(timeout);
-        onClose();
-      } catch (error) {
-        clearTimeout(timeout);
-        if (axios.isAxiosError(error)) {
-          console.error("Error saving tile:", error.response?.data.error);
-          toast.error(error.response?.data.error);
-        } else {
-          console.error("Error saving tile:", error);
-          toast.error("Failed to save tile. Please try again.");
-        }
+      if (tileId) {
+        setShowSaveDialog(true);
+      } else {
+        handleSave("new");
       }
     }
-
-    setIsLoading(false);
     setSubmitType(null);
   };
 
@@ -146,11 +265,11 @@ export default function NewTile({ onClose }: NewTileProps) {
       onClick={handleBackdropClick}
     >
       <div
-        className="p-6 bg-white rounded-md max-h-[80vh] overflow-y-auto w-full max-w-2xl"
+        className="p-6 bg-white rounded-md max-h-[80vh] overflow-y-auto w-full max-w-2xl relative"
         onClick={(e) => e.stopPropagation()}
       >
         <Typography variant="h4" color="blue-gray" className="mb-4">
-          Create New Tile
+          {tileId ? "Edit Tile" : "Create New Tile"}
         </Typography>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -168,7 +287,7 @@ export default function NewTile({ onClose }: NewTileProps) {
 
           <div className="relative mb-4">
             <Typography variant="h6" color="blue-gray" className="mb-1">
-              Chart Preferences
+              Chart Preferences (Optional)
             </Typography>
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {Object.keys(componentNames).map((component) => (
@@ -191,6 +310,35 @@ export default function NewTile({ onClose }: NewTileProps) {
               ))}
             </Box>
           </div>
+
+          {info && (
+            <div className="absolute z-10 p-4 bg-white border rounded-lg shadow-2xl w-[39rem]">
+              <Typography variant="h6" color="blue-gray" className="mb-3">
+                Visualization Details
+              </Typography>
+              <Typography color="gray">
+                For optimal results, it is recommended to indicate the type of
+                chart desired as well as the specific data for comparison. When
+                defining specific conditions,{" "}
+                <span className="text-red-500 font-bold">
+                  always use precise values in conditions
+                </span>
+                . For example, if the condition is "injury," do not substitute
+                with synonyms or related terms like "injured" or "torn
+                hamstring."
+                <br />
+                <br />
+                Ensure that the conditions match exactly what is recorded in the
+                dataset to avoid discrepancies in the analysis. It is also
+                important to clarify the metrics used to define vague terms. For
+                instance, an ideal specification could highlight the top players
+                based on the number of gold medals they have won.
+              </Typography>
+              <Button variant="filled" onClick={handleInfo} className="mt-5">
+                Close
+              </Button>
+            </div>
+          )}
 
           <div className="flex items-center mb-2">
             <Typography variant="h6" color="blue-gray" className="mr-2">
@@ -215,13 +363,11 @@ export default function NewTile({ onClose }: NewTileProps) {
             />
           </div>
 
-          {/* New textarea for SQL Query */}
           {sqlQuery && (
             <div className="relative mb-4">
               <Typography variant="h6" color="blue-gray" className="mb-1">
                 SQL Query
               </Typography>
-
               <SyntaxHighlighter language="sql" className="w-full rounded-lg">
                 {sqlQuery}
               </SyntaxHighlighter>
@@ -271,6 +417,49 @@ export default function NewTile({ onClose }: NewTileProps) {
           </Box>
         </form>
 
+        {/* Save Confirmation Dialog */}
+        {showSaveDialog && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+              <Typography
+                variant="h5"
+                color="blue-gray"
+                className="mb-4 text-center"
+              >
+                Save Options
+              </Typography>
+              <Typography color="gray" className="mb-6">
+                Would you like to update the existing chart or save as a new
+                chart?
+              </Typography>
+
+              <Box className="flex justify-center space-x-5 mb-4">
+                <Button
+                  color="red"
+                  onClick={() => setShowSaveDialog(false)}
+                  disabled={isLoading}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  color="blue"
+                  onClick={() => handleSave("new")}
+                  disabled={isLoading}
+                >
+                  Save
+                </Button>
+                <Button
+                  color="green"
+                  onClick={() => handleSave("update")}
+                  disabled={isLoading}
+                >
+                  Update
+                </Button>
+              </Box>
+            </div>
+          </div>
+        )}
+
         <ToastContainer
           className="pt-14"
           position="top-right"
@@ -282,34 +471,6 @@ export default function NewTile({ onClose }: NewTileProps) {
           pauseOnFocusLoss
           pauseOnHover
         />
-
-        {info && (
-          <div className="absolute z-10 p-4 bg-white border rounded-lg shadow-lg">
-            <Typography variant="h6" color="blue-gray" className="mb-1">
-              Query Details
-            </Typography>
-            <Typography color="gray">
-              For optimal results, it is recommended to indicate the type of
-              chart desired as well as the specific data for comparison. When
-              defining specific conditions,{" "}
-              <span className="text-red-500 font-bold">
-                always use precise values in conditions
-              </span>
-              . For example, if the condition is "injury," do not substitute
-              with synonyms or related terms like "injured" or "torn hamstring."
-              <br />
-              <br />
-              Ensure that the conditions match exactly what is recorded in the
-              dataset to avoid discrepancies in the analysis. It is also
-              important to clarify the metrics used to define vague terms. For
-              instance, an ideal specification could highlight the top players
-              based on the number of gold medals they have won.
-            </Typography>
-            <Button variant="text" onClick={handleInfo}>
-              Close
-            </Button>
-          </div>
-        )}
       </div>
     </div>
   );
