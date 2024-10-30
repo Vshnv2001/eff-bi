@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Button, Spinner } from "@material-tailwind/react";
+import { Typography } from "@material-tailwind/react";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import axios, { CancelTokenSource } from "axios";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { IconButton } from "@material-tailwind/react";
 import { componentMapping, componentNames } from "../ComponentMapping";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { SaveConfirmationDialog } from "./SaveConfirmationDialog";
-import { ChartPreferences } from "./ChartPreferences";
-import { ActionButtons } from "./ActionButtons";
 import InfoTooltip from "./InfoTooltip";
 import { TileForm } from "./TileForm";
 
@@ -37,7 +32,6 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
 
-  // Helper functions begin
   const validateForm = () => {
     if (!tileName || tileName.trim() === "") {
       toast.error("Tile name is required!");
@@ -89,6 +83,33 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    if (submitType === "preview") {
+      await generatePreview();
+    } else if (submitType === "save") {
+      if (tileId) {
+        setShowSaveDialog(true);
+      } else {
+        handleSave("new");
+      }
+    }
+    setSubmitType(null);
+  };
+
+  const handleInfo = () => {
+    setInfo((prevInfo) => !prevInfo);
+  };
+
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+  };
+
+  const handleCancel = () => setShowSaveDialog(false);
+
   const generatePreview = async () => {
     setIsLoading(true);
     let cancelToken: CancelTokenSource | undefined;
@@ -139,7 +160,6 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
       setIsLoading(false);
     }
   };
-  // Helper functions end
 
   useEffect(() => {
     const fetchTileData = async () => {
@@ -234,33 +254,6 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validateForm()) return;
-
-    if (submitType === "preview") {
-      await generatePreview();
-    } else if (submitType === "save") {
-      if (tileId) {
-        setShowSaveDialog(true);
-      } else {
-        handleSave("new");
-      }
-    }
-    setSubmitType(null);
-  };
-
-  const handleInfo = () => {
-    setInfo((prevInfo) => !prevInfo);
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-  };
-
-  const handleCancel = () => setShowSaveDialog(false);
-
   const PreviewComponent = previewComponent
     ? componentMapping[previewComponent as ComponentKeys]
     : null;
@@ -296,87 +289,6 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
           isPreviewGenerated={isPreviewGenerated}
           handleSubmit={handleSubmit}
         />
-
-        {/*
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="relative mb-4">
-            <Typography variant="h6" color="blue-gray" className="mb-1">
-              Tile Name
-            </Typography>
-            <textarea
-              placeholder="Enter tile name"
-              value={tileName}
-              onChange={(e) => setTileName(e.target.value)}
-              className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
-            />
-          </div>
-
-          <ChartPreferences
-            componentNames={componentNames}
-            selectedTemplates={selectedTemplates}
-            setSelectedTemplates={setSelectedTemplates}
-          />
-
-          <div className="flex items-center mb-2">
-            <Typography variant="h6" color="blue-gray" className="mr-2">
-              Visualization Instructions
-            </Typography>
-            <IconButton
-              variant="text"
-              className="w-5 h-5 p-0"
-              onClick={handleInfo}
-            >
-              <InformationCircleIcon className="h-5 w-5" />
-            </IconButton>
-          </div>
-
-          <div className="relative">
-            <textarea
-              placeholder="Enter query to generate the chart (e.g., 'Show me monthly sales data for the past year')"
-              value={queryPrompt}
-              onChange={(e) => setQueryPrompt(e.target.value)}
-              rows={4}
-              className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
-            />
-          </div>
-
-          {sqlQuery && (
-            <div className="relative mb-4">
-              <Typography variant="h6" color="blue-gray" className="mb-1">
-                SQL Query
-              </Typography>
-              <SyntaxHighlighter
-                language="sql"
-                className="w-full rounded-lg h-full"
-                wrapLines={true}
-                lineProps={{ style: { whiteSpace: "pre-wrap" } }}
-              >
-                {sqlQuery}
-              </SyntaxHighlighter>
-            </div>
-          )}
-
-          {PreviewComponent && previewProps && (
-            <div className="mt-4 border rounded-lg p-4">
-              <Typography variant="h6" color="blue-gray" className="mb-2">
-                Preview
-              </Typography>
-              <PreviewComponent
-                {...previewProps}
-                title={tileName}
-                description={queryPrompt}
-              />
-            </div>
-          )}
-
-          <ActionButtons
-            onClose={onClose}
-            setSubmitType={setSubmitType}
-            isLoading={isLoading}
-            isPreviewGenerated={isPreviewGenerated}
-          />
-        </form>
-        */}
 
         <SaveConfirmationDialog
           show={showSaveDialog}
