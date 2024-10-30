@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Typography, Button, Spinner } from "@material-tailwind/react";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
-import { Box, Chip } from "@mui/material";
 import axios, { CancelTokenSource } from "axios";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { IconButton } from "@material-tailwind/react";
-import { componentMapping, componentNames } from "./ComponentMapping";
+import { componentMapping, componentNames } from "../ComponentMapping";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { SaveConfirmationDialog } from "./SaveConfirmationDialog";
+import { ChartPreferences } from "./ChartPreferences";
+import { ActionButtons } from "./ActionButtons";
+import InfoTooltip from "./InfoToolTip";
 
 type ComponentKeys = keyof typeof componentMapping;
 
@@ -41,7 +44,7 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
     }
 
     if (!queryPrompt || queryPrompt.trim() === "") {
-      toast.error("Visualization Instructions are required!");
+      toast.error("Query prompt is required!");
       return false;
     }
 
@@ -255,6 +258,8 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
     e.stopPropagation();
   };
 
+  const handleCancel = () => setShowSaveDialog(false);
+
   const PreviewComponent = previewComponent
     ? componentMapping[previewComponent as ComponentKeys]
     : null;
@@ -285,60 +290,11 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
             />
           </div>
 
-          <div className="relative mb-4">
-            <Typography variant="h6" color="blue-gray" className="mb-1">
-              Chart Preferences (Optional)
-            </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-              {Object.keys(componentNames).map((component) => (
-                <Chip
-                  key={component}
-                  label={component}
-                  onClick={() => {
-                    setSelectedTemplates((prev) =>
-                      prev.includes(component)
-                        ? prev.filter((item) => item !== component)
-                        : [...prev, component]
-                    );
-                  }}
-                  color={
-                    selectedTemplates.includes(component)
-                      ? "primary"
-                      : "default"
-                  }
-                />
-              ))}
-            </Box>
-          </div>
-
-          {info && (
-            <div className="absolute z-10 p-4 bg-white border rounded-lg shadow-2xl w-[39rem]">
-              <Typography variant="h6" color="blue-gray" className="mb-3">
-                Visualization Details
-              </Typography>
-              <Typography color="gray">
-                For optimal results, it is recommended to indicate the type of
-                chart desired as well as the specific data for comparison. When
-                defining specific conditions,{" "}
-                <span className="text-red-500 font-bold">
-                  always use precise values in conditions
-                </span>
-                . For example, if the condition is "injury," do not substitute
-                with synonyms or related terms like "injured" or "torn
-                hamstring."
-                <br />
-                <br />
-                Ensure that the conditions match exactly what is recorded in the
-                dataset to avoid discrepancies in the analysis. It is also
-                important to clarify the metrics used to define vague terms. For
-                instance, an ideal specification could highlight the top players
-                based on the number of gold medals they have won.
-              </Typography>
-              <Button variant="filled" onClick={handleInfo} className="mt-5">
-                Close
-              </Button>
-            </div>
-          )}
+          <ChartPreferences
+            componentNames={componentNames}
+            selectedTemplates={selectedTemplates}
+            setSelectedTemplates={setSelectedTemplates}
+          />
 
           <div className="flex items-center mb-2">
             <Typography variant="h6" color="blue-gray" className="mr-2">
@@ -368,7 +324,12 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
               <Typography variant="h6" color="blue-gray" className="mb-1">
                 SQL Query
               </Typography>
-              <SyntaxHighlighter language="sql" className="w-full rounded-lg">
+              <SyntaxHighlighter
+                language="sql"
+                className="w-full rounded-lg h-full"
+                wrapLines={true}
+                lineProps={{ style: { whiteSpace: "pre-wrap" } }}
+              >
                 {sqlQuery}
               </SyntaxHighlighter>
             </div>
@@ -387,78 +348,21 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
             </div>
           )}
 
-          <Box className="flex justify-center space-x-5 mb-4">
-            <Button color="red" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button
-              color="blue"
-              onClick={() => setSubmitType("preview")}
-              disabled={isLoading}
-              type="submit"
-            >
-              {isLoading ? (
-                <div className="flex items-center">
-                  <span>Generating...</span>
-                  <Spinner className="h-5 w-5 ml-2 animate-spin" />
-                </div>
-              ) : (
-                "Generate Preview"
-              )}
-            </Button>
-            <Button
-              color="green"
-              onClick={() => setSubmitType("save")}
-              disabled={!isPreviewGenerated || isLoading}
-              type="submit"
-            >
-              Save
-            </Button>
-          </Box>
+          <ActionButtons
+            onClose={onClose}
+            setSubmitType={setSubmitType}
+            isLoading={isLoading}
+            isPreviewGenerated={isPreviewGenerated}
+          />
         </form>
 
-        {/* Save Confirmation Dialog */}
-        {showSaveDialog && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
-              <Typography
-                variant="h5"
-                color="blue-gray"
-                className="mb-4 text-center"
-              >
-                Save Options
-              </Typography>
-              <Typography color="gray" className="mb-6">
-                Would you like to update the existing chart or save as a new
-                chart?
-              </Typography>
-
-              <Box className="flex justify-center space-x-5 mb-4">
-                <Button
-                  color="red"
-                  onClick={() => setShowSaveDialog(false)}
-                  disabled={isLoading}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  color="blue"
-                  onClick={() => handleSave("new")}
-                  disabled={isLoading}
-                >
-                  Save
-                </Button>
-                <Button
-                  color="green"
-                  onClick={() => handleSave("update")}
-                  disabled={isLoading}
-                >
-                  Update
-                </Button>
-              </Box>
-            </div>
-          </div>
-        )}
+        <SaveConfirmationDialog
+          show={showSaveDialog}
+          onCancel={handleCancel}
+          onSave={() => handleSave("new")}
+          onUpdate={() => handleSave("update")}
+          isLoading={isLoading}
+        />
 
         <ToastContainer
           className="pt-14"
@@ -471,6 +375,8 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
           pauseOnFocusLoss
           pauseOnHover
         />
+
+        <InfoTooltip open={info} handler={handleInfo} />
       </div>
     </div>
   );
