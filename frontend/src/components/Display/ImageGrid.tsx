@@ -54,23 +54,11 @@ const ImageGrid: React.FC = () => {
 
   return (
     <section className="flex flex-col items-center mt-20 max-md:mt-10">
-      <div className="flex flex-wrap gap-4 items-start max-md:max-w-full">
-        {images.slice(0, 2).map((image, index) => (
+      <div className="flex flex-nowrap gap-4 items-start max-md:max-w-full">
+        {images.slice(0, 4).map((image, index) => (
           <div
             ref={(el) => (imageRefs.current[index] = el)}
             key={index}
-            className="scale-110 opacity-0 transition-transform duration-300 ease-in-out hover:scale-105"
-          >
-            <ImageItem src={image.src} alt={image.alt} />
-          </div>
-        ))}
-      </div>
-      
-      <div className="flex flex-wrap gap-4 items-start mt-4 max-md:max-w-full">
-        {images.slice(2).map((image, index) => (
-          <div
-            ref={(el) => (imageRefs.current[index + 4] = el)}
-            key={index + 4}
             className="scale-110 opacity-0 transition-transform duration-300 ease-in-out hover:scale-105"
           >
             <ImageItem src={image.src} alt={image.alt} />

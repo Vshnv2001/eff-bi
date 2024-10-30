@@ -17,7 +17,7 @@ import { componentMapping } from "../components/Dashboard/ComponentMapping";
 import { TileProps } from "../components/Dashboard/TileProps";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
-import NewTile from "../components/Dashboard/NewTile";
+import NewTile from "../components/Dashboard/NewTile/NewTile";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { ClipboardIcon, CheckIcon, PencilIcon, RefreshCw } from "lucide-react";
 import { DownloadMenu } from "../components/Dashboard/DownloadMenu";
