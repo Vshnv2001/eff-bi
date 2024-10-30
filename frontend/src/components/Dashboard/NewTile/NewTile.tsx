@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Typography } from "@material-tailwind/react";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
-import axios, { CancelTokenSource } from "axios";
+import axios from "axios";
 import { componentMapping, componentNames } from "../ComponentMapping";
 import { SaveConfirmationDialog } from "./SaveConfirmationDialog";
 import InfoTooltip from "./InfoTooltip";
 import { TileForm } from "./TileForm";
 
 type ComponentKeys = keyof typeof componentMapping;
+type SaveType = "update" | "new";
 
 interface NewTileProps {
   onClose: () => void;
@@ -37,35 +38,25 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
       toast.error("Tile name is required!");
       return false;
     }
-
     if (!queryPrompt || queryPrompt.trim() === "") {
       toast.error("Query prompt is required!");
       return false;
     }
-
     return true;
   };
 
-  const getApiDataToSend = (saveType: "update" | "new") => {
-    return saveType === "update"
-      ? {
-          ...apiData,
-          title: tileName,
-          description: queryPrompt,
-          sql_query: sqlQuery,
-          tile_props: previewProps,
-        }
-      : {
-          ...apiData,
-          title: tileName,
-          description: queryPrompt,
-          sql_query: sqlQuery,
-          tile_props: previewProps,
-          id: undefined,
-        };
+  const getApiDataToSend = (saveType: SaveType) => {
+    const baseData = {
+      ...apiData,
+      title: tileName,
+      description: queryPrompt,
+      sql_query: sqlQuery,
+      tile_props: previewProps,
+    };
+    return saveType === "update" ? baseData : { ...baseData, id: undefined };
   };
 
-  const showSuccessToast = (saveType: "update" | "new") => {
+  const showSuccessToast = (saveType: SaveType) => {
     toast.success(
       saveType === "update"
         ? "Tile updated successfully!"
@@ -83,53 +74,30 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validateForm()) return;
-
-    if (submitType === "preview") {
-      await generatePreview();
-    } else if (submitType === "save") {
-      if (tileId) {
-        setShowSaveDialog(true);
-      } else {
-        handleSave("new");
-      }
-    }
-    setSubmitType(null);
-  };
-
-  const handleInfo = () => {
-    setInfo((prevInfo) => !prevInfo);
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-  };
-
-  const handleCancel = () => setShowSaveDialog(false);
-
-  const generatePreview = async () => {
-    setIsLoading(true);
-    let cancelToken: CancelTokenSource | undefined;
+  const setupCancelToken = (timeoutMessage: string) => {
+    const cancelToken = axios.CancelToken.source();
     const timeout = setTimeout(() => {
       if (cancelToken) {
-        const cancelReason = "Unable to generate tile. Request took too long.";
-        cancelToken.cancel(cancelReason);
-        toast.error(cancelReason);
+        cancelToken.cancel(timeoutMessage);
+        toast.error(timeoutMessage);
         setIsLoading(false);
       }
     }, 60000);
+    return { cancelToken, timeout };
+  };
+
+  const generatePreview = async () => {
+    setIsLoading(true);
+    const { cancelToken, timeout } = setupCancelToken(
+      "Unable to generate tile. Request took too long."
+    );
 
     let description = queryPrompt;
     try {
-      let componentNamesString;
       if (selectedTemplates.length > 0) {
-        componentNamesString = selectedTemplates.join(",");
+        const componentNamesString = selectedTemplates.join(",");
         description = `${queryPrompt}\n\nTry to generate a chart that is any of the following: ${componentNamesString}.`;
       }
-      cancelToken = axios.CancelToken.source();
 
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
@@ -145,8 +113,6 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
       setPreviewProps(response.data.tile_props);
       setSqlQuery(response.data.sql_query);
       setIsPreviewGenerated(true);
-      clearTimeout(timeout);
-
       setApiData({
         dash_id: dashboardId,
         title: tileName,
@@ -154,85 +120,71 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
         ...response.data,
       });
     } catch (error) {
-      clearTimeout(timeout);
       handleError(error);
     } finally {
+      clearTimeout(timeout);
       setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    const fetchTileData = async () => {
-      if (tileId && !initialDataLoaded) {
-        setIsLoading(true);
-        try {
-          const response = await axios.get(
-            `${
-              import.meta.env.VITE_BACKEND_URL
-            }/api/dashboard-tiles/${tileId}/`,
-            {
-              params: { dash_id: dashboardId },
-            }
-          );
+  const processTileData = (tileData: any) => {
+    setTileName(tileData.title);
+    setQueryPrompt(tileData.description);
+    setSqlQuery(tileData.sql_query);
+    setPreviewComponent(tileData.component);
 
-          const tileData = response.data.data;
-
-          setTileName(tileData.title);
-          setQueryPrompt(tileData.description);
-          setSqlQuery(tileData.sql_query);
-          setPreviewComponent(tileData.component);
-
-          let parsedProps = tileData.tile_props;
-          if (typeof tileData.tile_props === "string") {
-            try {
-              parsedProps = JSON.parse(tileData.tile_props);
-            } catch (error) {
-              console.error("Error parsing tile props:", error);
-            }
-          }
-          setPreviewProps(parsedProps);
-
-          setApiData({
-            dash_id: dashboardId,
-            tile_props: parsedProps,
-            ...tileData,
-          });
-
-          setIsPreviewGenerated(true);
-          setInitialDataLoaded(true);
-        } catch (error) {
-          handleError(error);
-        } finally {
-          setIsLoading(false);
-        }
+    let parsedProps = tileData.tile_props;
+    if (typeof tileData.tile_props === "string") {
+      try {
+        parsedProps = JSON.parse(tileData.tile_props);
+      } catch (error) {
+        console.error("Error parsing tile props:", error);
       }
-    };
+    }
+    setPreviewProps(parsedProps);
 
+    setApiData({
+      dash_id: dashboardId,
+      tile_props: parsedProps,
+      ...tileData,
+    });
+
+    setIsPreviewGenerated(true);
+    setInitialDataLoaded(true);
+  };
+
+  const fetchTileData = async () => {
+    if (tileId && !initialDataLoaded) {
+      setIsLoading(true);
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tiles/${tileId}/`,
+          { params: { dash_id: dashboardId } }
+        );
+        processTileData(response.data.data);
+      } catch (error) {
+        handleError(error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  useEffect(() => {
     fetchTileData();
   }, [tileId, dashboardId, initialDataLoaded]);
 
-  const handleSave = async (saveType: "update" | "new") => {
+  const handleSave = async (saveType: SaveType) => {
+    if (!validateForm()) return;
+
     setIsLoading(true);
-    let cancelToken: CancelTokenSource | undefined;
-    const timeout = setTimeout(() => {
-      if (cancelToken) {
-        const cancelReason = "Request took too long.";
-        cancelToken.cancel(cancelReason);
-        toast.error(cancelReason);
-        setIsLoading(false);
-      }
-    }, 60000);
+    const { cancelToken, timeout } = setupCancelToken("Request took too long.");
 
     try {
-      cancelToken = axios.CancelToken.source();
-
       const endpoint = `${
         import.meta.env.VITE_BACKEND_URL
       }/api/dashboard-tile-save/`;
       const method = saveType === "update" ? "put" : "post";
-
-      if (!validateForm()) return;
-
       const apiDataToSend = getApiDataToSend(saveType);
 
       await axios({
@@ -243,16 +195,32 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
       });
 
       showSuccessToast(saveType);
-      clearTimeout(timeout);
       onClose();
     } catch (error) {
-      clearTimeout(timeout);
       handleError(error);
     } finally {
+      clearTimeout(timeout);
       setIsLoading(false);
       setShowSaveDialog(false);
     }
   };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    if (submitType === "preview") {
+      await generatePreview();
+    } else if (submitType === "save") {
+      tileId ? setShowSaveDialog(true) : handleSave("new");
+    }
+    setSubmitType(null);
+  };
+
+  const handleInfo = () => setInfo((prevInfo) => !prevInfo);
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) =>
+    e.stopPropagation();
+  const handleCancel = () => setShowSaveDialog(false);
 
   const PreviewComponent = previewComponent
     ? componentMapping[previewComponent as ComponentKeys]

@@ -1,4 +1,3 @@
-// InfoDialog.tsx
 import React from "react";
 import { Dialog, Button, Typography } from "@material-tailwind/react";
 
