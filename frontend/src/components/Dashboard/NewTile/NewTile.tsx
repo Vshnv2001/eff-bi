@@ -175,25 +175,27 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (isLoading && progress < 90) {
-      timer = setInterval(() => {
-        setProgress((prevProgress) =>
-          prevProgress >= 100 ? 100 : prevProgress + 1.25
-        );
-      }, 150);
-    } else if (isLoading && progress < 98) {
-      timer = setInterval(() => {
-        setProgress((prevProgress) =>
-          prevProgress >= 100 ? 100 : prevProgress + 1
-        );
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [isLoading, progress]);
 
-  useEffect(() => {
+    if (isLoading) {
+      if (progress < 90) {
+        timer = setInterval(() => {
+          setProgress((prevProgress) =>
+            prevProgress >= 100 ? 100 : prevProgress + 1.25
+          );
+        }, 150);
+      } else if (progress < 98) {
+        timer = setInterval(() => {
+          setProgress((prevProgress) =>
+            prevProgress >= 100 ? 100 : prevProgress + 1
+          );
+        }, 1000);
+      }
+    }
+
     fetchTileData();
-  }, [tileId, dashboardId, initialDataLoaded]);
+
+    return () => clearInterval(timer);
+  }, [isLoading, progress, tileId, dashboardId, initialDataLoaded]);
 
   const handleSave = async (saveType: SaveType) => {
     if (!validateForm()) return;
