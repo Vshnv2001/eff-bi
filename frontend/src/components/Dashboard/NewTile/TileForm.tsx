@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Typography, IconButton } from "@material-tailwind/react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { ChartPreferences } from "./ChartPreferences";
 import { ActionButtons } from "./ActionButtons";
+import { toast } from 'react-toastify';
 
 interface TileFormProps {
   tileName: string;
   setTileName: (name: string) => void;
   queryPrompt: string;
   setQueryPrompt: (prompt: string) => void;
-  componentNames: Record<string, string>; 
+  componentNames: Record<string, string>;
   selectedTemplates: string[];
   setSelectedTemplates: React.Dispatch<React.SetStateAction<string[]>>;
   handleInfo: () => void;
@@ -42,6 +43,12 @@ export const TileForm: React.FC<TileFormProps> = ({
   isPreviewGenerated,
   handleSubmit,
 }) => {
+  useEffect(() => {
+    if (!PreviewComponent || !sqlQuery) {
+      toast.info("No data available");
+    }
+  }, [PreviewComponent, sqlQuery]);
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="relative mb-4">
@@ -101,7 +108,7 @@ export const TileForm: React.FC<TileFormProps> = ({
         </div>
       )}
 
-      {PreviewComponent && previewProps && (
+      {PreviewComponent && previewProps ? (
         <div className="mt-4 border rounded-lg p-4">
           <Typography variant="h6" color="blue-gray" className="mb-2">
             Preview
@@ -112,7 +119,7 @@ export const TileForm: React.FC<TileFormProps> = ({
             description={queryPrompt}
           />
         </div>
-      )}
+      ) : null}
 
       <ActionButtons
         onClose={onClose}

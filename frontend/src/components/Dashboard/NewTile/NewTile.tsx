@@ -246,9 +246,10 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
     e.stopPropagation();
   const handleCancel = () => setShowSaveDialog(false);
 
-  const PreviewComponent = previewComponent
-    ? componentMapping[previewComponent as ComponentKeys]
-    : null;
+  const PreviewComponent =
+    previewComponent && componentMapping[previewComponent as ComponentKeys]
+      ? componentMapping[previewComponent as ComponentKeys]
+      : null;
 
   return (
     <div
