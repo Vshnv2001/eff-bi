@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useEffect } from "react";
 import { Typography, IconButton } from "@material-tailwind/react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { ChartPreferences } from "./ChartPreferences";
 import { ActionButtons } from "./ActionButtons";
+import LinearProgressWithLabel from "../LinearProgressWithLabel";
+import { Box } from "@mui/material";
 
 interface TileFormProps {
   tileName: string;
   setTileName: (name: string) => void;
   queryPrompt: string;
   setQueryPrompt: (prompt: string) => void;
-  componentNames: Record<string, string>; 
+  componentNames: Record<string, string>;
   selectedTemplates: string[];
   setSelectedTemplates: React.Dispatch<React.SetStateAction<string[]>>;
   handleInfo: () => void;
@@ -22,6 +24,9 @@ interface TileFormProps {
   isLoading: boolean;
   isPreviewGenerated: boolean;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
+  progress: number;
+  submitType: string | null;
+  setProgress: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const TileForm: React.FC<TileFormProps> = ({
@@ -41,9 +46,34 @@ export const TileForm: React.FC<TileFormProps> = ({
   isLoading,
   isPreviewGenerated,
   handleSubmit,
+  progress,
+  setProgress,
+  submitType,
 }) => {
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (isLoading) {
+      if (progress < 90) {
+        timer = setInterval(() => {
+          setProgress((prevProgress) =>
+            prevProgress >= 100 ? 100 : prevProgress + 1.25
+          );
+        }, 150);
+      } else if (progress < 98) {
+        timer = setInterval(() => {
+          setProgress((prevProgress) =>
+            prevProgress >= 100 ? 100 : prevProgress + 1
+          );
+        }, 1000);
+      }
+    }
+
+    return () => clearInterval(timer);
+  }, [isLoading, progress]);
+
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 pb-3">
       <div className="relative mb-4">
         <Typography variant="h6" color="blue-gray" className="mb-1">
           Tile Name
@@ -66,11 +96,7 @@ export const TileForm: React.FC<TileFormProps> = ({
         <Typography variant="h6" color="blue-gray" className="mr-2">
           Visualization Instructions
         </Typography>
-        <IconButton
-          variant="text"
-          className="w-5 h-5 p-0"
-          onClick={handleInfo}
-        >
+        <IconButton variant="text" className="w-5 h-5 p-0" onClick={handleInfo}>
           <InformationCircleIcon className="h-5 w-5" />
         </IconButton>
       </div>
@@ -112,6 +138,12 @@ export const TileForm: React.FC<TileFormProps> = ({
             description={queryPrompt}
           />
         </div>
+      )}
+
+      {isLoading && submitType === "preview" && (
+        <Box sx={{ width: "100%" }}>
+          <LinearProgressWithLabel value={progress} />
+        </Box>
       )}
 
       <ActionButtons

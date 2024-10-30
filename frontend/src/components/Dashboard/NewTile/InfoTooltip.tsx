@@ -10,8 +10,8 @@ const InfoTooltip: React.FC<InfoDialogProps> = ({ open, handler }) => {
   return (
     <Dialog open={open} handler={handler} size="md">
       <div className="p-4">
-        <Typography variant="h6" color="blue-gray" className="mb-1">
-          Query Details
+        <Typography variant="h6" color="blue-gray" className="mb-3">
+          Visualization Details
         </Typography>
         <Typography color="gray">
           For optimal results, it is recommended to indicate the type of chart
@@ -30,7 +30,7 @@ const InfoTooltip: React.FC<InfoDialogProps> = ({ open, handler }) => {
           ideal specification could highlight the top players based on the
           number of gold medals they have won.
         </Typography>
-        <Button variant="text" onClick={handler} className="mt-4">
+        <Button variant="filled" onClick={handler} className="mt-4">
           Close
         </Button>
       </div>

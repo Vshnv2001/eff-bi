@@ -7,8 +7,6 @@ import { componentMapping, componentNames } from "../ComponentMapping";
 import { SaveConfirmationDialog } from "./SaveConfirmationDialog";
 import InfoTooltip from "./InfoTooltip";
 import { TileForm } from "./TileForm";
-import LinearProgressWithLabel from "../LinearProgressWithLabel";
-import { Box } from "@mui/material";
 
 type ComponentKeys = keyof typeof componentMapping;
 type SaveType = "update" | "new";
@@ -42,7 +40,7 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
       return false;
     }
     if (!queryPrompt || queryPrompt.trim() === "") {
-      toast.error("Query prompt is required!");
+      toast.error("Visualization Instructions are required!");
       return false;
     }
     return true;
@@ -175,27 +173,10 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
-
-    if (isLoading) {
-      if (progress < 90) {
-        timer = setInterval(() => {
-          setProgress((prevProgress) =>
-            prevProgress >= 100 ? 100 : prevProgress + 1.25
-          );
-        }, 150);
-      } else if (progress < 98) {
-        timer = setInterval(() => {
-          setProgress((prevProgress) =>
-            prevProgress >= 100 ? 100 : prevProgress + 1
-          );
-        }, 1000);
-      }
-    }
-
     fetchTileData();
 
     return () => clearInterval(timer);
-  }, [isLoading, progress, tileId, dashboardId, initialDataLoaded]);
+  }, [tileId, dashboardId, initialDataLoaded]);
 
   const handleSave = async (saveType: SaveType) => {
     if (!validateForm()) return;
@@ -257,7 +238,7 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
       onClick={handleBackdropClick}
     >
       <div
-        className="p-6 bg-white rounded-md max-h-[80vh] overflow-y-auto w-full max-w-2xl relative"
+        className="p-6 bg-white rounded-md max-h-[85vh] overflow-y-auto w-full max-w-2xl relative"
         onClick={(e) => e.stopPropagation()}
       >
         <Typography variant="h4" color="blue-gray" className="mb-4">
@@ -281,13 +262,10 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
           isLoading={isLoading}
           isPreviewGenerated={isPreviewGenerated}
           handleSubmit={handleSubmit}
+          submitType={submitType}
+          progress={progress}
+          setProgress={setProgress}
         />
-
-        {isLoading && submitType === "preview" && (
-          <Box sx={{ width: "100%" }}>
-            <LinearProgressWithLabel value={progress} />
-          </Box>
-        )}
 
         <SaveConfirmationDialog
           show={showSaveDialog}
