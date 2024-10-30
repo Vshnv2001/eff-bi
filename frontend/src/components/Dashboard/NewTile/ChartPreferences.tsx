@@ -33,7 +33,9 @@ export const ChartPreferences: React.FC<ChartPreferencesProps> = ({
             key={component}
             label={component}
             onClick={() => handleChipClick(component)}
-            color={selectedTemplates.includes(component) ? "primary" : "default"}
+            color={
+              selectedTemplates.includes(component) ? "primary" : "default"
+            }
           />
         ))}
       </Box>

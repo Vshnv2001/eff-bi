@@ -10,7 +10,8 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { SaveConfirmationDialog } from "./SaveConfirmationDialog";
 import { ChartPreferences } from "./ChartPreferences";
 import { ActionButtons } from "./ActionButtons";
-import InfoTooltip from "./InfoToolTip";
+import InfoTooltip from "./InfoTooltip";
+import { TileForm } from "./TileForm";
 
 type ComponentKeys = keyof typeof componentMapping;
 
@@ -277,6 +278,26 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
           {tileId ? "Edit Tile" : "Create New Tile"}
         </Typography>
 
+        <TileForm
+          tileName={tileName}
+          setTileName={setTileName}
+          queryPrompt={queryPrompt}
+          setQueryPrompt={setQueryPrompt}
+          componentNames={componentNames}
+          selectedTemplates={selectedTemplates}
+          setSelectedTemplates={setSelectedTemplates}
+          handleInfo={handleInfo}
+          sqlQuery={sqlQuery}
+          PreviewComponent={PreviewComponent}
+          previewProps={previewProps}
+          onClose={onClose}
+          setSubmitType={setSubmitType}
+          isLoading={isLoading}
+          isPreviewGenerated={isPreviewGenerated}
+          handleSubmit={handleSubmit}
+        />
+
+        {/*
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="relative mb-4">
             <Typography variant="h6" color="blue-gray" className="mb-1">
@@ -355,6 +376,7 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
             isPreviewGenerated={isPreviewGenerated}
           />
         </form>
+        */}
 
         <SaveConfirmationDialog
           show={showSaveDialog}
