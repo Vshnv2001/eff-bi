@@ -7,6 +7,8 @@ import { componentMapping, componentNames } from "../ComponentMapping";
 import { SaveConfirmationDialog } from "./SaveConfirmationDialog";
 import InfoTooltip from "./InfoTooltip";
 import { TileForm } from "./TileForm";
+import LinearProgressWithLabel from "../LinearProgressWithLabel";
+import { Box } from "@mui/material";
 
 type ComponentKeys = keyof typeof componentMapping;
 type SaveType = "update" | "new";
@@ -32,6 +34,7 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
   const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const validateForm = () => {
     if (!tileName || tileName.trim() === "") {
@@ -171,6 +174,24 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
   };
 
   useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isLoading && progress < 90) {
+      timer = setInterval(() => {
+        setProgress((prevProgress) =>
+          prevProgress >= 100 ? 100 : prevProgress + 1.25
+        );
+      }, 150);
+    } else if (isLoading && progress < 98) {
+      timer = setInterval(() => {
+        setProgress((prevProgress) =>
+          prevProgress >= 100 ? 100 : prevProgress + 1
+        );
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isLoading, progress]);
+
+  useEffect(() => {
     fetchTileData();
   }, [tileId, dashboardId, initialDataLoaded]);
 
@@ -210,6 +231,7 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
     if (!validateForm()) return;
 
     if (submitType === "preview") {
+      setProgress(0);
       await generatePreview();
     } else if (submitType === "save") {
       tileId ? setShowSaveDialog(true) : handleSave("new");
@@ -257,6 +279,12 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
           isPreviewGenerated={isPreviewGenerated}
           handleSubmit={handleSubmit}
         />
+
+        {isLoading && submitType === "preview" && (
+          <Box sx={{ width: "100%" }}>
+            <LinearProgressWithLabel value={progress} />
+          </Box>
+        )}
 
         <SaveConfirmationDialog
           show={showSaveDialog}
