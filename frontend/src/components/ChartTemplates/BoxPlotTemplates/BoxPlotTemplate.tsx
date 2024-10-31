@@ -12,7 +12,6 @@ type BoxPlotTemplateProps = {
   height?: number;
   title?: string;
   description?: string;
-  id: number;
 };
 
 const BoxPlotTemplate: React.FC<BoxPlotTemplateProps> = ({
@@ -20,7 +19,6 @@ const BoxPlotTemplate: React.FC<BoxPlotTemplateProps> = ({
   height = 350,
   title,
   description,
-  id,
 }) => {
 
   useEffect(() => {

@@ -1,8 +1,6 @@
 import React from "react";
 import { Card, CardBody } from "@material-tailwind/react";
 import Typography from "@mui/material/Typography";
-import axios from "axios";
-import { BACKEND_API_URL } from "../../../config/index";
 
 interface TableData {
   label: string;
@@ -13,14 +11,12 @@ interface TableTemplateProps {
   data: TableData[];
   title?: string;
   description?: string;
-  id: number;
 }
 
 export default function TableTemplate({
   data,
   title,
   description,
-  id,
 }: TableTemplateProps) {
   if (!data.length) {
     return (

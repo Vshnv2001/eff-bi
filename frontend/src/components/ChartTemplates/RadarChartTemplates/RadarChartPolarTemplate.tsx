@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import ApexCharts from "apexcharts";
 import { ApexOptions } from "apexcharts";
 import { Typography } from "@mui/material";
@@ -8,7 +8,6 @@ interface PolarChartProps {
   chartWidth?: number;
   title?: string;
   description?: string;
-  id: number;
 }
 
 const PolarChartTemplate: React.FC<PolarChartProps> = ({
@@ -16,13 +15,12 @@ const PolarChartTemplate: React.FC<PolarChartProps> = ({
   chartWidth = 380,
   title,
   description,
-  id,
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const options: ApexOptions = {
-      series: chartSeries,
+      series: series,
       chart: {
         type: "polarArea",
         width: chartWidth,

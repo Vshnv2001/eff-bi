@@ -3,13 +3,11 @@ import { Card, Typography } from "@mui/material";
 interface SingleValueTemplateProps {
   value: number;
   title: string;
-  id: number;
 }
 
 const SingleValueTemplate: React.FC<SingleValueTemplateProps> = ({
   title,
   value,
-  id,
 }) => {
   return (
     <div className="relative mt-30">

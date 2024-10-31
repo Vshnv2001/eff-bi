@@ -8,11 +8,6 @@ import { Chart } from "../Chart";
 import { ApexOptions } from "apexcharts";
 import { generateColors } from "../colorUtils";
 import Stack from "@mui/material/Stack";
-import { useState } from "react";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import axios from "axios";
-import { BACKEND_API_URL } from "../../../config/index";
-import { Spinner } from "@material-tailwind/react";
 
 export interface TrafficProps {
   chartSeries: number[];
@@ -20,7 +15,6 @@ export interface TrafficProps {
   sx?: SxProps;
   title?: string;
   description?: string;
-  id: number;
 }
 
 export function DonutChartTemplate({
@@ -28,28 +22,11 @@ export function DonutChartTemplate({
   labels,
   title,
   description,
-  id,
 }: TrafficProps): React.JSX.Element {
   const [baseColor, setBaseColor] = React.useState<string>("#ff0000");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [currChartSeries, setCurrChartSeries] = useState(chartSeries);
-
-  const handleRefresh = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.post(`${BACKEND_API_URL}/api/refresh-dashboard-tile/`, {
-        tile_id: id,
-      });
-      setCurrChartSeries(response.data.data.tile_props.series);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   const themeColors = generateColors(
-    currChartSeries.length,
+    chartSeries.length,
     "homogeneous",
     baseColor
   ); // Set color theme to homogeneous
@@ -85,7 +62,7 @@ export function DonutChartTemplate({
         <Chart
           height={300}
           options={chartOptions}
-          series={currChartSeries}
+          series={chartSeries}
           type="donut"
           width="100%"
           ref={chartRef}
@@ -95,7 +72,7 @@ export function DonutChartTemplate({
           spacing={2}
           sx={{ alignItems: "center", justifyContent: "center" }}
         >
-          {currChartSeries.map((item, index) => {
+          {chartSeries.map((item, index) => {
             const label = labels[index];
 
             return (
