@@ -92,14 +92,13 @@ viz_props = {
     },
     ChartType.CandlestickTemplate: {
         "data": [
-            {"x": None, "y": [0, 0, 0, 0]},
-            {"x": None, "y": [0, 0, 0, 0]}
+            {"x": "", "y": []},
+
         ],
     },
     ChartType.BoxPlotTemplate: {
         "data": [
-            {"x": None, "y": [0, 0, 0, 0]},
-            {"x": None, "y": [0, 0, 0, 0]}
+            {"x": "", "y": []},
         ],
     },
     ChartType.TableTemplate: {
