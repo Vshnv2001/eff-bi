@@ -46,7 +46,8 @@ class DatabaseManager:
                 cursor.execute(state.sql_query)
                 results = cursor.fetchall()
                 count += 1
-            logger.info("results", results)
+            logger.info("results ")
+            logger.info(results)
             return results
         except Exception as e:
             print("Error executing query: ", str(e))

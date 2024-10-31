@@ -10,6 +10,8 @@ import {
   AccordionHeader,
   AccordionBody,
   IconButton,
+  DialogHeader,
+  DialogBody,
 } from "@material-tailwind/react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -19,8 +21,15 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import NewTile from "../components/Dashboard/NewTile/NewTile";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { ClipboardIcon, CheckIcon, PencilIcon, RefreshCw } from "lucide-react";
+import {
+  ClipboardIcon,
+  CheckIcon,
+  PencilIcon,
+  RefreshCw,
+  Trash2,
+} from "lucide-react";
 import { DownloadMenu } from "../components/Dashboard/DownloadMenu";
+import { ToastContainer, toast } from "react-toastify";
 
 type ComponentKeys = keyof typeof componentMapping;
 
@@ -34,6 +43,11 @@ export default function DashboardPage() {
   const [open, setOpen] = useState<number[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [editingTileId, setEditingTileId] = useState<number | null>(null);
+  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
+    useState(false);
+  const [selectedTile, setSelectedTile] = useState<TileProps | undefined>(
+    undefined
+  );
 
   const chartRefs = useRef<{ [key: number]: React.RefObject<HTMLDivElement> }>(
     {}
@@ -121,6 +135,32 @@ export default function DashboardPage() {
         ? prevOpen.filter((id) => id !== value)
         : [...prevOpen, value]
     );
+  };
+
+  const deleteTile = async (tileId: number | undefined) => {
+    setLoading(true);
+    console.log("delete tile", tileId);
+    try {
+      const response = await axios.delete(
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/api/dashboard-tiles-delete/${tileId}/`
+      );
+
+      if (response.status === 204) {
+        setTilesData((prevTiles) =>
+          prevTiles.filter((tile) => tile.id !== tileId)
+        );
+      }
+      toast.success("Tile deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting tile:", error);
+      toast.error("Unable to delete tile.");
+    } finally {
+      setLoading(false);
+      setIsDeleteConfirmationOpen(false);
+      setSelectedTile(undefined);
+    }
   };
 
   if (error) {
@@ -248,6 +288,17 @@ export default function DashboardPage() {
                     >
                       <RefreshCw className="h-4 w-4" />
                     </IconButton>
+                    <IconButton
+                      variant="text"
+                      color="blue-gray"
+                      className="rounded-full w-8 h-8"
+                      onClick={() => {
+                        setIsDeleteConfirmationOpen(true);
+                        setSelectedTile(tileData);
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </IconButton>
                     <DownloadMenu chartRef={chartRefs.current[index]} />
                   </div>
 
@@ -337,6 +388,63 @@ export default function DashboardPage() {
           tileId={editingTileId}
         />
       </Dialog>
+
+      {/* Delete tile confirmation dialog */}
+      <Dialog
+        open={isDeleteConfirmationOpen}
+        handler={() => {
+          setIsDeleteConfirmationOpen(false);
+        }}
+        size="md"
+      >
+        <DialogHeader>
+          <Typography variant="h5" color="blue-gray">
+            Are you sure you want to delete this tile?
+          </Typography>
+        </DialogHeader>
+        <DialogBody divider className="grid place-items-center gap-4">
+          <Typography
+            variant="h6"
+            className="text-center font-normal text-black"
+          >
+            {`You are deleting ${selectedTile?.title} tile.`}
+          </Typography>
+          <Typography className="text-black">
+            This action is <span className="text-red-500">irreversible</span>.
+            Please proceed with caution.
+          </Typography>
+          <div className="w-full flex justify-center gap-4 mb-4 mt-4">
+            <Button
+              type="submit"
+              color="blue"
+              className="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white"
+              onClick={() => setIsDeleteConfirmationOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              color="red"
+              className="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white"
+              onClick={() => deleteTile(selectedTile?.id)}
+            >
+              Delete
+            </Button>
+          </div>
+        </DialogBody>
+      </Dialog>
+
+      <ToastContainer
+        className="pt-14"
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        pauseOnHover
+      />
     </div>
   );
 }

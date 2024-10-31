@@ -97,7 +97,7 @@ def get_dashboard_name(request: HttpRequest):
     user = get_object_or_404(User, id=user_id)
     org_id = user.organization.id
     dash_id = request.GET.get('dash_id', None)
-    logger.info("dash_id: ", dash_id, "org_id: ", org_id)
+    logger.info("dash_id: " + dash_id + " org_id: " + str(org_id))
     dashboard = get_object_or_404(
         Dashboard, dash_id=dash_id, organization=org_id)
     return JsonResponse({'data': dashboard.title}, status=200)
@@ -111,11 +111,13 @@ def get_dashboard_tiles(request: HttpRequest):
     dash_id = request.GET.get('dash_id', None)
     user = get_object_or_404(User, id=user_id)
     org_id = user.organization.id
-    logger.info("dash_id: ", dash_id)
+    logger.info("dash_id: " + dash_id)
     tiles = Tile.objects.filter(dash_id=dash_id, organization=org_id)
-    logger.info("filtered tiles: ", tiles)
+    logger.info("filtered tiles: ")
+    logger.info(tiles)
     serializer = TileSerializer(tiles, many=True)
-    logger.info("data", serializer.data)
+    logger.info("data:")
+    logger.info(serializer.data)
     return JsonResponse({'data': serializer.data}, status=200)
 
 
@@ -128,15 +130,24 @@ def get_dashboard_tile(request: HttpRequest, id: int):
     user = get_object_or_404(User, id=user_id)
     org_id = user.organization.id
 
-    logger.info("dash_id: ", dash_id)
+    logger.info("dash_id: " + dash_id)
 
     tile = get_object_or_404(Tile, id=id, dash_id=dash_id, organization=org_id)
-    logger.info("tile found: ", tile)
+    logger.info("tile found: ")
+    logger.info(tile)
 
     serializer = TileSerializer(tile)
-    logger.info("data: ", serializer.data)
+    logger.info("data: ")
+    logger.info(serializer.data)
 
     return JsonResponse({'data': serializer.data}, status=200)
+
+@api_view(["DELETE"])
+@verify_session()
+def delete_dashboard_tile(request: HttpRequest, id: int):
+    tile = get_object_or_404(Tile, id=id)
+    tile.delete()
+    return JsonResponse({"message": "Tile deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(["POST"])

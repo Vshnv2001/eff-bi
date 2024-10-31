@@ -203,7 +203,7 @@ class DataFormatter:
         question = self.state.question
         sql_query = self.state.sql_query
         
-        logger.info("chosen visualization: ", visualization)
+        logger.info("chosen visualization: " + visualization)
 
         if visualization == "none":
             raise Exception("We are unable to visualize the data. Please try a different question or provide more information.")
