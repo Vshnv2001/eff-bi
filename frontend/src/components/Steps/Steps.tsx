@@ -17,7 +17,7 @@ const Steps: React.FC = () => {
             <LaptopDisplay
               content={
                 <img
-                  src="/assets/db-permissions.png"
+                  src="/assets/create-tile.jpg"
                   alt="Laptop Display"
                   className="object-contain mt-4 rounded-lg max-w-full"
                 />

@@ -92,14 +92,13 @@ viz_props = {
     },
     ChartType.CandlestickTemplate: {
         "data": [
-            {"x": None, "y": [0, 0, 0, 0]},
-            {"x": None, "y": [0, 0, 0, 0]}
+            {"x": "", "y": []},
+
         ],
     },
     ChartType.BoxPlotTemplate: {
         "data": [
-            {"x": None, "y": [0, 0, 0, 0]},
-            {"x": None, "y": [0, 0, 0, 0]}
+            {"x": "", "y": []},
         ],
     },
     ChartType.TableTemplate: {
@@ -203,7 +202,7 @@ class DataFormatter:
         question = self.state.question
         sql_query = self.state.sql_query
         
-        logger.info("chosen visualization: ", visualization)
+        logger.info("chosen visualization: " + visualization)
 
         if visualization == "none":
             raise Exception("We are unable to visualize the data. Please try a different question or provide more information.")

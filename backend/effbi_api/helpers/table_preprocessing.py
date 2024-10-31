@@ -88,7 +88,7 @@ def get_column_descriptions(table_name, schema_name, db_url):
         cursor = conn.cursor()
 
         # Fetch the first 3 rows of data from the table
-        query = f"SELECT * FROM {schema_name}.{table_name} LIMIT 3;"
+        query = f'''SELECT * FROM "{schema_name}"."{table_name}" LIMIT 3;'''
         cursor.execute(query)
         rows = cursor.fetchall()
 

@@ -3,7 +3,8 @@ import {
   Card,
   CardHeader,
   Typography,
-  CardBody, Spinner,
+  CardBody,
+  Spinner,
 } from "@material-tailwind/react";
 import axios from "axios";
 import { BACKEND_API_URL } from "../config/index";
@@ -17,19 +18,26 @@ interface Table {
   rows: string[][];
 }
 
-interface TableWithDescriptionProps { table: Table; }
-const TableWithDescription: React.FC<TableWithDescriptionProps> = ({ table }) => (
+interface TableWithDescriptionProps {
+  table: Table;
+}
+const TableWithDescription: React.FC<TableWithDescriptionProps> = ({
+  table,
+}) => (
   <>
-    <Typography className="text-xl font-bold">
-      {table.table_name}
-    </Typography>
+    <Typography className="text-xl font-bold">{table.table_name}</Typography>
     {table.table_description && (
       <Typography variant="paragraph" className="mb-4">
         {table.table_description}
       </Typography>
     )}
-    <DataTable columns={table.column_headers.map((header: string) => ({ id: header, label: header }))}
-               data={table.rows} />
+    <DataTable
+      columns={table.column_headers.map((header: string) => ({
+        id: header,
+        label: header,
+      }))}
+      data={table.rows}
+    />
   </>
 );
 
@@ -44,7 +52,9 @@ export default function ViewDataPage() {
       if (!userId) return;
       setLoading(true);
       try {
-        const response = await axios.get(`${BACKEND_API_URL}/api/connection/${userId}`);
+        const response = await axios.get(
+          `${BACKEND_API_URL}/api/connection/${userId}`
+        );
         setData(response.data?.tables);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -57,13 +67,15 @@ export default function ViewDataPage() {
 
   const scrollToTable = (id: string) => {
     const element = document.getElementById(id);
-    element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    element?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   if (loading) {
-    return <div className="fixed inset-0 flex items-center justify-center bg-gray-800 min-h-screen">
-      <Spinner className="h-10 w-10"/>
-    </div>;
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-gray-800 min-h-screen">
+        <Spinner className="h-10 w-10" />
+      </div>
+    );
   }
 
   if (data.length == 0) {
@@ -71,7 +83,8 @@ export default function ViewDataPage() {
       <div className="flex items-center justify-center min-h-screen bg-gray-800 p-10">
         <Card className="w-full max-w-4xl p-10 rounded-xl">
           <div className="text-lg text-center">
-            You do not have access to any tables, request for permissions with your admin.
+            You do not have access to any tables, request for permissions with
+            your admin.
           </div>
         </Card>
       </div>
@@ -80,11 +93,14 @@ export default function ViewDataPage() {
 
   return (
     <div className="flex min-h-screen bg-gray-800 p-10">
-      <div className="w-64 p-4 space-y-4 bg-white fixed rounded-xl overflow-y-auto" style={{ maxHeight: 'calc(100vh - 140px)'}}>
+      <div
+        className="w-64 p-4 space-y-4 bg-white fixed rounded-xl overflow-y-auto "
+        style={{ maxHeight: "calc(100vh - 140px)" }}
+      >
         {data.map((table, index) => (
           <button
             key={index}
-            className="text-left p-2 hover:bg-blue-400 w-full rounded"
+            className="text-left p-2 hover:bg-blue-400 w-full rounded mr-7 overflow-y-auto"
             onClick={() => scrollToTable(`table-${index}`)}
           >
             {table.table_name}
@@ -92,12 +108,24 @@ export default function ViewDataPage() {
         ))}
       </div>
       <div className="flex flex-col items-center justify-center flex-grow overflow-auto pl-80 p-4">
-        <Typography as="h2" color="white" className="mb-6 text-4xl font-bold text-center">
+        <Typography
+          as="h2"
+          color="white"
+          className="mb-6 text-4xl font-bold text-center"
+        >
           View Data
         </Typography>
         {data.map((table, index) => (
-          <Card key={index} id={`table-${index}`} className="w-full max-w-4xl bg-white my-4 rounded-xl p-10 shadow-md">
-            <CardHeader floated={false} shadow={false} className="bg-gray-100 rounded-none">
+          <Card
+            key={index}
+            id={`table-${index}`}
+            className="w-full max-w-4xl bg-white my-4 rounded-xl p-10 shadow-md"
+          >
+            <CardHeader
+              floated={false}
+              shadow={false}
+              className="bg-gray-100 rounded-none"
+            >
               <></>
             </CardHeader>
             <CardBody className="overflow-auto p-0">
