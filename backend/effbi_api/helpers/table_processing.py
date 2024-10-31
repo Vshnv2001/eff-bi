@@ -11,7 +11,7 @@ def get_sample_table_data(table_ids, db_uri):
     data = []
 
     for table in table_ids:
-        query = f"SELECT * FROM {table.table_name} LIMIT 3;"
+        query = f'''SELECT * FROM "{table.table_name}" LIMIT 3;'''
         cursor.execute(query)
         rows = cursor.fetchall()
         # Get column headers
