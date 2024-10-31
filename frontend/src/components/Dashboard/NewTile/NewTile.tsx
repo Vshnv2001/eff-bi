@@ -171,11 +171,25 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
     }
   };
 
+  /*
   useEffect(() => {
     let timer: NodeJS.Timeout;
     fetchTileData();
 
     return () => clearInterval(timer);
+  }, [tileId, dashboardId, initialDataLoaded]);
+  */
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout | null = null;
+
+    fetchTileData();
+
+    return () => {
+      if (timer) {
+        clearInterval(timer);
+      }
+    };
   }, [tileId, dashboardId, initialDataLoaded]);
 
   const handleSave = async (saveType: SaveType) => {
