@@ -38,6 +38,11 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
     xaxis: {
       categories,
     },
+    yaxis: {
+      title: {
+        text: series.length > 0 ? series[0].name : "",
+      },
+    },
   };
 
   return (
@@ -54,7 +59,7 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
         style={{ textAlign: "center", marginBottom: 20 }}
       >
         {description}
-      </Typography>ƒ
+      </Typography>
       <Chart options={options} series={series} type="line" height={400} />
     </div>
   );
