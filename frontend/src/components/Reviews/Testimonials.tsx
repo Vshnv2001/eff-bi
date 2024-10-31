@@ -19,7 +19,7 @@ const testimonials = [
     },
     {
       id: 3,
-      name: "Ritika Joshi",
+      name: "Nadya Lim",
       role: "Generative AI Software Developer at SAP",
       image: "/assets/testimonials/profile-female.jpg",
       review: "“Amazing, I can now manage database queries without writing a single line of code!”",
@@ -59,7 +59,7 @@ const testimonials = [
     },
     {
       id: 8,
-      name: "Chloe Wilson",
+      name: "Chloe Williams",
       role: "Data Visualization Specialist at Tableau",
       image: "/assets/testimonials/female-4.jpg",
       review: "“Eff BI has the tools needed to manage my data projects efficiently, especially for generating impactful visualizations!”",
