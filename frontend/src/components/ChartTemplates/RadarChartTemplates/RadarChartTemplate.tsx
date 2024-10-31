@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import ApexCharts from "apexcharts";
 import { ApexOptions } from "apexcharts";
 import { Typography } from "@mui/material";
@@ -9,7 +9,6 @@ interface RadarChartProps {
   chartHeight?: number;
   title?: string;
   description?: string;
-  id: number;
 }
 
 const RadarChartTemplate: React.FC<RadarChartProps> = ({
@@ -18,7 +17,6 @@ const RadarChartTemplate: React.FC<RadarChartProps> = ({
   chartHeight = 350,
   title,
   description,
-  id,
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
 

@@ -5,18 +5,12 @@ import { useTheme } from "@mui/material/styles";
 import type { ApexOptions } from "apexcharts";
 import { Chart } from "../Chart";
 import Typography from "@mui/material/Typography";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import { useState } from "react";
-import { Spinner } from "@material-tailwind/react";
-import axios from "axios";
-import { BACKEND_API_URL } from "../../../config";
 
 export interface HorizontalBarChartProps {
   chartSeries: { name: string; data: number[] }[];
   categories: string[];
   title: string;
   description: string;
-  id: number;
 }
 
 export function PyramidBarChartTemplate({
@@ -24,7 +18,6 @@ export function PyramidBarChartTemplate({
   categories,
   title,
   description,
-  id,
 }: HorizontalBarChartProps): React.JSX.Element {
   const chartOptions = useChartOptions(categories);
 

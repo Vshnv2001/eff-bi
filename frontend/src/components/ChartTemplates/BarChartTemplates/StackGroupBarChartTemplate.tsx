@@ -5,11 +5,6 @@ import ApexCharts from "apexcharts";
 import type { ApexOptions } from "apexcharts";
 import { SxProps } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
-import { Spinner } from "@material-tailwind/react";
-import axios from "axios";
-import { BACKEND_API_URL } from "../../../config";
-import RefreshIcon from "@mui/icons-material/Refresh";
 
 export interface StackedBarChartProps {
   chartSeries: { name: string; group: string; data: number[] }[];
@@ -17,7 +12,6 @@ export interface StackedBarChartProps {
   title: string;
   description: string;
   sx?: SxProps;
-  id: number;
 }
 
 export function StackedGroupBarChartTemplate({
@@ -25,7 +19,6 @@ export function StackedGroupBarChartTemplate({
   categories,
   title,
   description,
-  id,
 }: StackedBarChartProps): React.JSX.Element {
   const chartOptions = useChartOptions(chartSeries, categories);
 

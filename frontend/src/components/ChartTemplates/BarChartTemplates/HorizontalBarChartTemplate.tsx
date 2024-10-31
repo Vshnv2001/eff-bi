@@ -5,11 +5,6 @@ import { useTheme } from "@mui/material/styles";
 import type { ApexOptions } from "apexcharts";
 import { Chart } from "../Chart";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
-import { Spinner } from "@material-tailwind/react";
-import axios from "axios";
-import { BACKEND_API_URL } from "../../../config";
-import RefreshIcon from "@mui/icons-material/Refresh";
 
 export interface HorizontalBarChartProps {
   chartSeries: { name: string; data: number[] }[];

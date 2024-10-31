@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import ApexCharts from "apexcharts";
 import { ApexOptions } from "apexcharts";
 import { Typography } from "@mui/material";
@@ -9,7 +9,6 @@ interface PieChartTemplateProps {
   chartWidth?: number;
   title: string;
   description: string;
-  id: number;
 }
 
 const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
@@ -18,7 +17,6 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
   chartWidth = 500,
   title,
   description,
-  id,
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
 

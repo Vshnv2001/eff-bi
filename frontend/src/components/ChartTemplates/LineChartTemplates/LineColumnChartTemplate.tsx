@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import ApexCharts from "apexcharts";
 import { ApexOptions } from "apexcharts";
 import { Typography } from "@mui/material";
@@ -11,7 +11,6 @@ interface LineColumnChartProps {
   title: string;
   description?: string;
   labels: string[];
-  id: number;
 }
 
 const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
@@ -22,11 +21,7 @@ const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
   title,
   description,
   labels,
-  id,
 }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [currColumnData, setCurrColumnData] = useState(columnData);
-  const [currLineData, setCurrLineData] = useState(lineData);
   const chartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,12 +30,12 @@ const LineColumnChartTemplate: React.FC<LineColumnChartProps> = ({
         {
           name: columnName,
           type: "column",
-          data: currColumnData,
+          data: columnData,
         },
         {
           name: lineName,
           type: "line",
-          data: currLineData,
+          data: lineData,
         },
       ],
       chart: {

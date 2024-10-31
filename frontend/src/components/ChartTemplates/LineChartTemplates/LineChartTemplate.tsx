@@ -11,7 +11,6 @@ type LineChartTemplateProps = {
   categories: string[];
   title: string;
   description: string;
-  id: number;
 };
 
 const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
@@ -19,7 +18,6 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
   categories,
   title,
   description,
-  id,
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
 

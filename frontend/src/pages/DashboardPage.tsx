@@ -312,7 +312,7 @@ export default function DashboardPage() {
                     className="w-full h-[32rem] overflow-auto"
                   >
                     {Component && (
-                      <Component {...componentProps} title={tileData.title} id={tileData.id} />
+                      <Component {...componentProps} title={tileData.title} />
                     )}
                   </div>
 

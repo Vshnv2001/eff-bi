@@ -11,15 +11,13 @@ interface ScatterChartProps {
   chartHeight?: number;
   title?: string;
   description?: string;
-  id: number;
 }
 
 const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
   series,
   chartHeight = 350,
   title,
-  description,
-  id,
+  description
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
 
