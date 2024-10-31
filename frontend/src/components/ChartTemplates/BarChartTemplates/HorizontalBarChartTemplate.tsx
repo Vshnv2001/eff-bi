@@ -45,7 +45,7 @@ export function HorizontalBarChartTemplate({
       </Typography>
 
       <div style={{ marginTop: 30 }}>
-        {currChartSeries.length === 0 ? (
+        {chartSeries.length === 0 ? (
           <Typography
             variant="body2"
             style={{ textAlign: "center", margin: "20px 0" }}
@@ -56,7 +56,7 @@ export function HorizontalBarChartTemplate({
           <Chart
             height={350}
             options={chartOptions}
-            series={currChartSeries}
+            series={chartSeries}
             type="bar"
             width="100%"
           />
