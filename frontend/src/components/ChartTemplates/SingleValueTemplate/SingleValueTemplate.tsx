@@ -22,7 +22,7 @@ const SingleValueTemplate: React.FC<SingleValueTemplateProps> = ({
         style={{ boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", padding: 20 }}
       >
         <Typography variant="h1" className="text-center mt-4">
-          {tileData}
+          {value}
         </Typography>
       </Card>
     </div>

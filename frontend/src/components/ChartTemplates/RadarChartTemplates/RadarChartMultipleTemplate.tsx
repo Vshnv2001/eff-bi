@@ -24,7 +24,7 @@ const RadarChartMultipleTemplate: React.FC<RadarChartProps> = ({
 
   useEffect(() => {
     const options: ApexOptions = {
-      series: chartSeries,
+      series: series,
       chart: {
         height: chartHeight,
         type: "radar",

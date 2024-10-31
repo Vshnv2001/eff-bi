@@ -33,7 +33,7 @@ const CandlestickTemplate: React.FC<CandlestickChartProps> = ({
     const options = {
       series: [
         {
-          data: currData,
+          data: data,
         },
       ],
       chart: {

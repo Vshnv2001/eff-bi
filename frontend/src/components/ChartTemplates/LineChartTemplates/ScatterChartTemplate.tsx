@@ -21,13 +21,11 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
   description,
   id,
 }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [currChartSeries, setCurrChartSeries] = useState(series);
   const chartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const options: ApexOptions = {
-      series: currChartSeries,
+      series: series,
       chart: {
         height: chartHeight,
         type: "scatter",

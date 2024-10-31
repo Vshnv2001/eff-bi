@@ -47,9 +47,6 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
     },
   };
 
-  if (isLoading) {
-    return <Spinner />;
-  }
 
   return (
     <div ref={chartRef}>

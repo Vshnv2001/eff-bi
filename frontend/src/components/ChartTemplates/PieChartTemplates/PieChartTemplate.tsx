@@ -23,12 +23,12 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
   const chartRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const fontSize = chartSeries.length > 10 ? "12px" : "14px";
+    const fontSize = series.length > 10 ? "12px" : "14px";
 
-    console.log("series", chartSeries);
+    console.log("series", series);
     console.log("labels", labels);
 
-    if (chartSeries.length === 0 || labels.length === 0) {
+    if (series.length === 0 || labels.length === 0) {
       return;
     }
 
@@ -42,13 +42,13 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
     };
 
     const options: ApexOptions = {
-      series: chartSeries,
+      series: series,
       chart: {
         width: "100%",
         type: "pie",
       },
       labels: labels,
-      colors: generateColors(chartSeries.length),
+      colors: generateColors(series.length),
       responsive: [
         {
           breakpoint: 480,
@@ -65,7 +65,7 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
         fontSize: fontSize,
         floating: false,
         formatter: function (seriesName, opts) {
-          return seriesName + ` - ${chartSeries[opts.seriesIndex].toFixed(1)}`;
+          return seriesName + ` - ${series[opts.seriesIndex].toFixed(1)}`;
         },
       },
       tooltip: {
@@ -99,7 +99,7 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
         {description}
       </Typography>
 
-      {chartSeries.length === 0 || labels.length === 0 ? (
+      {series.length === 0 || labels.length === 0 ? (
         <Typography
           variant="body2"
           style={{ textAlign: "center", marginTop: 20, color: "red" }}

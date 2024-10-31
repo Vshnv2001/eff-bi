@@ -28,7 +28,7 @@ const BoxPlotTemplate: React.FC<BoxPlotTemplateProps> = ({
       series: [
         {
           type: "boxPlot",
-          data: currData,
+          data: data,
         },
       ],
       chart: {
