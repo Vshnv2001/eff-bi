@@ -200,19 +200,20 @@ class DataFormatter:
             - The type of visualization that was chosen and its props that we will use in the frontend
             - The user's question
             
-            You need to format the data for the visualization.
+            You need to format the data for the visualization. You will be given the visualization props that we will use in the frontend. Adhere to that only.
             
             Available chart types (in Javascript) Make sure to use the exact names ONLY:
             BarChartTemplate, HorizontalBarChartTemplate, PieChartTemplate, LineChartTemplate, AreaChartTemplate, DonutChartTemplate,
             PyramidBarChartTemplate, RadarChartTemplate, RadarChartPolarTemplate, ScatterChartTemplate, CandlestickTemplate, BoxPlotTemplate, TableTemplate
 
+            Output format:
+            {visualization_props}
             '''),
             ("human", '''
             SQL query: {sql_query}
             Query results: {results}
             Type of visualization: {visualization}
             User's question: {question}
-            Visualization props format: {visualization_props}
 
             Format the data for the visualization:
             '''),
@@ -220,8 +221,8 @@ class DataFormatter:
 
         logger.info("invoking llm_manager")
         try:
-            response = self.llm_manager.invoke(prompt, sql_query=sql_query, results=results,
-                                               visualization=visualization, question=question, visualization_props=visualization_props)
+            response = self.llm_manager.invoke(prompt, visualization_props=visualization_props, sql_query=sql_query, results=results,
+                                               visualization=visualization, question=question)
         except Exception as e:
             logger.info("Error invoking llm_manager: ", e)
             raise e
@@ -231,3 +232,5 @@ class DataFormatter:
         self.state.formatted_data = JsonOutputParser().parse(response)
 
         return {"formatted_data_for_visualization": self.state.formatted_data}
+    
+        
