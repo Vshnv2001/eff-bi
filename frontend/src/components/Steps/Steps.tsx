@@ -18,8 +18,8 @@ const Steps: React.FC = () => {
               content={
                 <img
                   src="/assets/create-tile.jpg"
-                  alt="Laptop Display"
-                  className="object-contain mt-4 rounded-lg max-w-full"
+                  alt="Laptop Display 1"
+                  className="object-contain rounded-lg max-w-full scale-y-110"
                 />
               }
               label="Macbook Pro"
@@ -41,8 +41,8 @@ const Steps: React.FC = () => {
               content={
                 <img
                   src="/assets/db-permissions.png"
-                  alt="Laptop Display"
-                  className="object-contain mt-4 rounded-lg max-w-full"
+                  alt="Laptop Display 2"
+                  className="object-contain rounded-lg max-w-full"
                 />
               }
               label="Macbook Pro"
