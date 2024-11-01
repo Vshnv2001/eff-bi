@@ -30,7 +30,8 @@ When dealing with aggregations:
 2. Group by all relevant dimensions first if counting distinct occurrences
 3. Use common table expressions to break down complex aggregations into steps
 
-You are allowed to use common table expressions or views if that simplifies the query
+You are allowed to use common table expressions or views if that simplifies the query.
+Important: Whenever possible, sort the results by the x-axis.
              
 THE RESULTS SHOULD ONLY BE IN THE FOLLOWING FORMAT, SO MAKE SURE TO ONLY GIVE TWO OR THREE COLUMNS:
 [[x, y]]
