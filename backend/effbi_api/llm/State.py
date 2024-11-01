@@ -3,6 +3,7 @@ class State:
         self.uuid = ""
         self.question = ""
         self.accessible_table_names = []
+        self.total_tables = []
         self.parsed_question = {}
         self.database_schema = {}
         self.is_relevant = False

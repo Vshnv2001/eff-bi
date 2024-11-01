@@ -1,3 +1,4 @@
+from .ErrorMsgGenerator import ErrorMsgGenerator
 from .SQLValidator import SQLValidator
 from .DatabaseManager import DatabaseManager
 from .SQLAgent import SQLAgent
@@ -10,52 +11,53 @@ import logging
 logger = logging.getLogger(__name__)
 
 def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_id: int):
-    print("response pipeline")
     state = State()
     state.question = user_query
     
     accessible_table_names = get_accessible_table_names(user_id)
-    logger.info("ACCESSIBLE TABLE NAMES: ", accessible_table_names)
+    state.accessible_table_names = accessible_table_names
+    logger.info("ACCESSIBLE TABLE NAMES: " + str(accessible_table_names))
     
     # Get the database schema
     db_manager = DatabaseManager(db_uri, organization_id)
-    database_schema = db_manager.get_schema(accessible_table_names)
+    database_schema = db_manager.get_schema()
     
     state.database_schema = database_schema
-    
+        
     # Prune the database schema to identify relevant tables and columns
     pruner = PrunerAgent()
     parsed_question = pruner.prune(state)
     
-    logger.info(parsed_question)
-    
     state.parsed_question = parsed_question
+    
+    # logger.info("PARSED QUESTION: " + str(state.parsed_question))
 
     if not state.parsed_question['is_relevant']:
-        state.error = "We do not have the necessary data to answer this question. Either check your database tables and ensure you have the correct permissions, or rephrase your question."
+        error_msg_generator = ErrorMsgGenerator()
+        error_msg = error_msg_generator.generate_error_msg(state)
+        if error_msg.get('error_type') == "INSUFFICIENT_PERMISSIONS":
+            state.error = "You do not have permissions to answer this question. Please contact your administrator for access."
+        else:
+            state.error = "Your organization does not have access to the necessary data to answer this question. Please contact your administrator to ensure the necessary tables are added to your database."
         return state
 
     # Pass the pruned schema to the SQL agent to generate a SQL query
     sql_agent = SQLAgent(db_manager)
     sql_query = sql_agent.generate_sql(state)
+    
+    logger.info("SQL QUERY: " + str(sql_query))
 
     if sql_query["sql_query"] == "NOT_RELEVANT":
-        state.error = "We do not have the necessary data to answer this question. Either check your database tables and ensure you have the correct permissions, or rephrase your question."
+        error_msg_generator = ErrorMsgGenerator()
+        error_msg = error_msg_generator.generate_error_msg(state)
+        if error_msg.get('error_type') == "INSUFFICIENT_PERMISSIONS":
+            state.error = "You do not have permissions to answer this question. Please contact your administrator for access."
+        else:
+            state.error = "Your organization does not have access to the necessary data to answer this question. Please contact your administrator to ensure the necessary tables are added to your database."
         return state
     
-    logger.info(type(sql_query))
-
-    print("sql_query", sql_query)
-    
-    logger.info("SQL QUERY: ", sql_query)
     
     state.sql_query = sql_query.get('sql_query', '')
-    
-    # validate_and_fix_sql = sql_agent.validate_and_fix_sql(state)
-    
-    # logger.info("VALIDATE AND FIX SQL: ", validate_and_fix_sql)
-    
-    # state.sql_query = validate_and_fix_sql.get('corrected_query', '')
     
     sql_validator = SQLValidator()
     
@@ -67,15 +69,15 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     # Format the results
     formatter = DataFormatter(state)
     visualization_choice = formatter.choose_visualization()
-    logger.info("VISUALIZATION CHOICE: ", visualization_choice)
+    logger.info("VISUALIZATION CHOICE: " + str(visualization_choice))
     state.visualization = visualization_choice
     try:
         formatted_data = formatter.format_data_for_visualization()
     except Exception as e:
-        logger.info("Error formatting data for visualization: ", e)
+        logger.info("Error formatting data for visualization: " + str(e))
         state.error = "We are unable to visualize the data. Please try a different question or provide more information."
         return state
     
-    logger.info("FORMATTED DATA: ", formatted_data)
+    logger.info("FORMATTED DATA: " + str(formatted_data))
 
     return state

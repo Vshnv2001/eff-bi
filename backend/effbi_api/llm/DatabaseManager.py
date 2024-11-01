@@ -1,6 +1,6 @@
 import requests
 import psycopg2
-from typing import List, Any
+from typing import List, Any, Optional
 
 from .SQLValidator import SQLValidator
 
@@ -18,11 +18,22 @@ class DatabaseManager:
         self.db_uri = db_uri
         self.organization_id = organization_id
         
-    def get_schema(self, accessible_table_names: List[str]) -> dict:
+    def get_all_tables(self) -> List[str]:
+        """Retrieve all tables in the database."""
+        try:
+            org_tables = OrgTables.objects.filter(organization_id=self.organization_id)
+            return [table.table_name for table in org_tables]
+        except OrgTables.DoesNotExist:
+            raise Exception(f"Database schema not found for organization {self.organization_id}")
+        
+    def get_schema(self, accessible_table_names: Optional[List[str]] = None) -> dict:
         """Retrieve the database schema."""
         try:
             # Fetch all OrgTables rows where organization_id matches
-            org_tables = OrgTables.objects.filter(organization_id=self.organization_id, table_name__in=accessible_table_names)
+            if accessible_table_names is None:
+                org_tables = OrgTables.objects.filter(organization_id=self.organization_id)
+            else:
+                org_tables = OrgTables.objects.filter(organization_id=self.organization_id, table_name__in=accessible_table_names)
             # Convert the queryset to JSON
             org_tables_json = serializers.serialize('json', org_tables)
             # logger.info(org_tables_json)
