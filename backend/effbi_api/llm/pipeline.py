@@ -20,7 +20,7 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     
     # Get the database schema
     db_manager = DatabaseManager(db_uri, organization_id)
-    database_schema = db_manager.get_schema()
+    database_schema = db_manager.get_schema(accessible_table_names)
     
     state.database_schema = database_schema
         
@@ -38,7 +38,7 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
         if error_msg.get('error_type') == "INSUFFICIENT_PERMISSIONS":
             state.error = "You do not have permissions to answer this question. Please contact your administrator for access."
         else:
-            state.error = "Your organization does not have access to the necessary data to answer this question. Please contact your administrator to ensure the necessary tables are added to your database."
+            state.error = "Your organization database does not have necessary data to answer this question. Please contact your administrator to ensure the necessary tables are added to your database."
         return state
 
     # Pass the pruned schema to the SQL agent to generate a SQL query
@@ -48,12 +48,7 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     logger.info("SQL QUERY: " + str(sql_query))
 
     if sql_query["sql_query"] == "NOT_RELEVANT":
-        error_msg_generator = ErrorMsgGenerator()
-        error_msg = error_msg_generator.generate_error_msg(state)
-        if error_msg.get('error_type') == "INSUFFICIENT_PERMISSIONS":
-            state.error = "You do not have permissions to answer this question. Please contact your administrator for access."
-        else:
-            state.error = "Your organization does not have access to the necessary data to answer this question. Please contact your administrator to ensure the necessary tables are added to your database."
+        state.error = "Your question is not relevant to the data in your database. Please modify your question or update your database."
         return state
     
     
