@@ -45,6 +45,7 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
     },
   };
 
+
   return (
     <div ref={chartRef}>
       {/* Title and Description */}

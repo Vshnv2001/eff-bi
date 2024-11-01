@@ -1,7 +1,7 @@
 from .helpers.table_processing import get_sample_table_data
 from django.http import JsonResponse, HttpRequest
 from .llm.State import State
-from .llm.pipeline import response_pipeline
+from .llm.pipeline import refresh_dashboard_tile_pipeline, response_pipeline
 from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
 from supertokens_python.recipe.multitenancy.syncio import list_all_tenants
@@ -257,3 +257,31 @@ def save_dashboard_tile(request: HttpRequest):
         print("errata")
         logger.error(f"Error saving dashboard tile: {str(e)}")
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    
+@api_view(["POST"])
+@verify_session()
+def refresh_dashboard_tile(request: HttpRequest):
+    tile_id = request.data.get('tile_id', None)
+    logger.info(tile_id)
+    tile = get_object_or_404(Tile, id=tile_id)
+    logger.info(tile)
+    chart_type = tile.component
+    sql_query = tile.sql_query
+    db_uri = tile.organization.database_uri
+    user_id = request.supertokens.get_user_id()
+    state = State()
+    state.sql_query = sql_query
+    state.visualization = {"visualization": chart_type}
+    state.question = tile.description
+    try:
+        response: State = refresh_dashboard_tile_pipeline(state, db_uri, tile.organization.id)
+        logger.info(response)
+        updated_tile = Tile.objects.get(id=tile_id)
+        updated_tile.tile_props = response.formatted_data['formatted_data_for_visualization']
+        updated_tile.save()
+        serializer = TileSerializer(updated_tile)
+        return JsonResponse({'data': serializer.data}, status=200)
+    except Exception as e:
+        logger.info(e)
+        return JsonResponse({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

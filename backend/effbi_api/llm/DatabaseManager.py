@@ -30,7 +30,7 @@ class DatabaseManager:
         except OrgTables.DoesNotExist:
             raise Exception(f"Database schema not found for organization {self.organization_id}")
 
-    def execute_query(self, state: State, sql_agent: SQLAgent, sql_validator: SQLValidator, num_tries:int = 0) -> List[Any]:
+    def execute_query(self, state: State, sql_validator: SQLValidator, num_tries:int = 0) -> List[Any]:
         """Execute SQL query on the remote database and return results."""
         try:
             conn = psycopg2.connect(self.db_uri)
@@ -58,4 +58,4 @@ class DatabaseManager:
                 validated_sql_query = sql_validator.validate_and_fix_sql(state, str(e))
                 print("Validated SQL Query: ", validated_sql_query)
                 state.sql_query = validated_sql_query.get('sql_query', state.sql_query)
-                return self.execute_query(state, sql_agent, sql_validator, num_tries + 1)
+                return self.execute_query(state, sql_validator, num_tries + 1)

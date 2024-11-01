@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import ApexCharts from "apexcharts";
 import Typography from "@mui/material/Typography";
-
+  
 type CandlestickData = {
   x: Date | number;
   y: [number, number, number, number];
