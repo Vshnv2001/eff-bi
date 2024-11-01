@@ -5,17 +5,10 @@ import Display from "../components/Display/Display";
 import Reviews from "../components/Reviews/Reviews";
 import Chat from "../components/Footer/Chat";
 import ContactUs from "../components/Footer/ContactUs";
-import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 const LandingPage = () => {
-  const sessionContext = useSessionContext();
-
-  if (sessionContext.loading === true) {
-    return null;
-  }
-
   return (
-    <div>
+    <>
       <Hero />
       <AboutUs />
       <Steps />
@@ -23,7 +16,7 @@ const LandingPage = () => {
       <Reviews />
       <Chat />
       <ContactUs />
-    </div>
+    </>
   );
 };
 
