@@ -17,7 +17,7 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
   series,
   chartHeight = 350,
   title,
-  description,
+  description
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
 

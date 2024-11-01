@@ -84,7 +84,12 @@ export default function DashboardPage() {
 
   const refreshTile = async (tileId: number) => {
     setLoading(true);
+
     try {
+      // Refresh tile
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/refresh-dashboard-tile/`, {
+        tile_id: tileId,
+      });
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tiles/${tileId}/`,
         {

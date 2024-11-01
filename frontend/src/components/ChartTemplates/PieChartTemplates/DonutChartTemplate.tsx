@@ -24,6 +24,7 @@ export function DonutChartTemplate({
   description,
 }: TrafficProps): React.JSX.Element {
   const [baseColor, setBaseColor] = React.useState<string>("#ff0000");
+
   const themeColors = generateColors(
     chartSeries.length,
     "homogeneous",

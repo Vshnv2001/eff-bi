@@ -11,13 +11,14 @@ export interface HorizontalBarChartProps {
   categories: string[];
   title: string;
   description: string;
+  id: number;
 }
 
 export function HorizontalBarChartTemplate({
-  chartSeries,
-  categories,
-  title,
-  description,
+  chartSeries = [],
+  categories = [],
+  title = "",
+  description = ""
 }: HorizontalBarChartProps): React.JSX.Element {
   const xAxisLabel = chartSeries.length > 0 ? chartSeries[0].name : "Value";
   const chartOptions = useChartOptions(categories, xAxisLabel);
