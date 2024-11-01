@@ -14,6 +14,7 @@ Set is_relevant to false under the following conditions:
 1. There is not enough information to answer the question.
 2. The question is not relevant to any of the accessible tables.
 3. An important column has a foreign key to a table that is not accessible.
+4. You think the user is asking a malicious question. (example can be asking for the password of a user, asking to join tons of tables, etc.)
 
 Your response should be in the following JSON format:
 {{
