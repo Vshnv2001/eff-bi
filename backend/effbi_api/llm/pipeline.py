@@ -9,8 +9,11 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def response_pipeline(state: State, db_uri: str, organization_id: int, user_id: int):
-    print("response pipeline")        
+def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_id: int):
+    print("response pipeline")
+    state = State()
+    state.question = user_query
+     
     accessible_table_names = get_accessible_table_names(user_id)
     logger.info("ACCESSIBLE TABLE NAMES: ", accessible_table_names)
     
