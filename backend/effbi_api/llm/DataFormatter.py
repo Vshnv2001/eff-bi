@@ -3,7 +3,7 @@ from langchain_core.output_parsers import JsonOutputParser
 from .LLMManager import LLMManager
 from .State import State
 from enum import Enum
-import logging 
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -15,9 +15,7 @@ class ChartType(Enum):
     HorizontalBarChartTemplate = "HorizontalBarChartTemplate"
     PieChartTemplate = "PieChartTemplate"
     DonutChartTemplate = "DonutChartTemplate"
-    StackedGroupBarChartTemplate = "StackedGroupBarChartTemplate"
     PyramidBarChartTemplate = "PyramidBarChartTemplate"
-    LineColumnChartTemplate = "LineColumnChartTemplate"
     RadarChartTemplate = "RadarChartTemplate"
     RadarChartPolarTemplate = "RadarChartPolarTemplate"
     ScatterChartTemplate = "ScatterChartTemplate"
@@ -25,6 +23,8 @@ class ChartType(Enum):
     BoxPlotTemplate = "BoxPlotTemplate"
     TableTemplate = "TableTemplate"
     SingleValueTemplate = "SingleValueTemplate"
+
+
 viz_props = {
     ChartType.AreaChartTemplate: {
         "chartSeries": [
@@ -56,25 +56,11 @@ viz_props = {
         "chartSeries": [],
         "labels": []
     },
-    ChartType.StackedGroupBarChartTemplate: {
-        "chartSeries": [
-            {"name": "", "group": "", "data": []}
-        ],
-        "categories": []
-    },
     ChartType.PyramidBarChartTemplate: {
         "chartSeries": [
             {"name": "", "data": []}
         ],
         "categories": []
-    },
-    ChartType.LineColumnChartTemplate: {
-        "columnData": [],
-        "lineData": [],
-        "columnName": "",
-        "lineName": "",
-        "chartTitle": "",
-        "labels": [],
     },
     ChartType.RadarChartTemplate: {
         "series": [
@@ -111,8 +97,6 @@ viz_props = {
         "value": "0",
         "title": "",
     },
-
-
 }
 
 
@@ -141,9 +125,7 @@ class DataFormatter:
                 - LineChartTemplate: Best for showing trends and distributions over time. Best used when both x-axis and y-axis are continuous.
                 - AreaChartTemplate: Suitable for showing trends over time while emphasizing the magnitude of values.
                 - DonutChartTemplate: A variation of the PieChart, useful for showing proportions, but allows for more data visualization in the center of the chart.
-                - StackedGroupBarChartTemplate: Best for comparing multiple categories simultaneously while also showing the composition of each category.
                 - PyramidBarChartTemplate: Useful for visualizing distributions or hierarchies, especially in population pyramids or scenarios where one side represents one group and the other side another group.
-                - LineColumnChartTemplate: A combination chart type, best for showing two types of data where one is better visualized with lines (e.g., trends) and the other with columns (e.g., discrete categories).
                 - RadarChartTemplate: Ideal for comparing multiple variables against each other in a circular layout, showing the strengths and weaknesses of each variable.
                 - RadarChartPolarTemplate: Similar to a RadarChart, but with a polar grid for emphasizing categories with values on a continuous scale.
                 - ScatterChartTemplate: Best for showing relationships between two variables and identifying correlations, trends, or outliers.
@@ -160,16 +142,14 @@ class DataFormatter:
             3. Trends Over Time: (e.g., "What is the trend in the number of active users over the past year?" - Line Chart)
             4. Proportions: (e.g., "What is the market share of the products?" - Pie or Donut Chart)
             5. Emphasizing Total Values Over Time: (e.g., "What is the trend in monthly sales?" - Area Chart)
-            6. Multiple Data Comparisons: (e.g., "What are the revenue, profit, and expense comparisons over the last year?" - LineColumnChartTemplate)
-            7. Distributions and Outliers: (e.g., "What is the salary distribution across departments?" - BoxPlotTemplate)
-            8. Categorical Data Comparisons: (e.g., "How do different product categories perform in sales?" - BarChartTemplate)
-            9. Time Series Comparisons: (e.g., "Compare the sales trends of multiple products over the last year." - HorizontalBarChartTemplate)
-            10. Relationships Between Variables: (e.g., "Is there a correlation between advertising spend and sales?" - ScatterChartTemplate)
-            11. Variable Comparisons Across Categories: (e.g., "How does each department's performance compare across various metrics?" - RadarChartTemplate)
-            12. Market Trends in Financial Data: (e.g., "What is the historical price movement of a stock?" - CandlestickTemplate)
-            13. Proportions in Multiple Groups: (e.g., "What is the contribution of different products to total sales?" - StackedGroupBarChartTemplate)
-            14. Demographic Distributions: (e.g., "What is the age distribution of customers?" - PyramidBarChartTemplate)
-            15. Single Value: (e.g., "What is the total revenue?" - SingleValueTemplate)
+            6. Distributions and Outliers: (e.g., "What is the salary distribution across departments?" - BoxPlotTemplate)
+            7. Categorical Data Comparisons: (e.g., "How do different product categories perform in sales?" - BarChartTemplate)
+            8. Time Series Comparisons: (e.g., "Compare the sales trends of multiple products over the last year." - HorizontalBarChartTemplate)
+            9. Relationships Between Variables: (e.g., "Is there a correlation between advertising spend and sales?" - ScatterChartTemplate)
+            10. Variable Comparisons Across Categories: (e.g., "How does each department's performance compare across various metrics?" - RadarChartTemplate)
+            11. Market Trends in Financial Data: (e.g., "What is the historical price movement of a stock?" - CandlestickTemplate)
+            12. Demographic Distributions: (e.g., "What is the age distribution of customers?" - PyramidBarChartTemplate)
+            13. Single Value: (e.g., "What is the total revenue?" - SingleValueTemplate)
 
             If a specific chart type is requested, utilize the corresponding template for that chart.
             For example, use PieChartTemplate for pie charts, BarChartTemplate for bar charts, and so on.
@@ -201,14 +181,15 @@ class DataFormatter:
         results = self.state.results
         question = self.state.question
         sql_query = self.state.sql_query
-        
+
         logger.info("chosen visualization: " + visualization)
 
         if visualization == "none":
-            raise Exception("We are unable to visualize the data. Please try a different question or provide more information.")
+            raise Exception(
+                "We are unable to visualize the data. Please try a different question or provide more information.")
 
         visualization_props = viz_props[ChartType(visualization)]
-        
+
         logger.info("visualization_props: ", visualization_props)
         prompt = ChatPromptTemplate.from_messages([
             ("system", '''
@@ -222,8 +203,8 @@ class DataFormatter:
             You need to format the data for the visualization.
             
             Available chart types (in Javascript) Make sure to use the exact names ONLY:
-            BarChartTemplate, HorizontalBarChartTemplate, PieChartTemplate, LineChartTemplate, AreaChartTemplate, DonutChartTemplate, StackedGroupBarChartTemplate,
-            PyramidBarChartTemplate, LineColumnChartTemplate, RadarChartTemplate, RadarChartPolarTemplate, ScatterChartTemplate, CandlestickTemplate, BoxPlotTemplate, TableTemplate
+            BarChartTemplate, HorizontalBarChartTemplate, PieChartTemplate, LineChartTemplate, AreaChartTemplate, DonutChartTemplate,
+            PyramidBarChartTemplate, RadarChartTemplate, RadarChartPolarTemplate, ScatterChartTemplate, CandlestickTemplate, BoxPlotTemplate, TableTemplate
 
             '''),
             ("human", '''
@@ -236,7 +217,7 @@ class DataFormatter:
             Format the data for the visualization:
             '''),
         ])
-        
+
         logger.info("invoking llm_manager")
         try:
             response = self.llm_manager.invoke(prompt, sql_query=sql_query, results=results,
@@ -244,9 +225,9 @@ class DataFormatter:
         except Exception as e:
             logger.info("Error invoking llm_manager: ", e)
             raise e
-        
+
         logger.info("response: ", response)
-        
+
         self.state.formatted_data = JsonOutputParser().parse(response)
 
         return {"formatted_data_for_visualization": self.state.formatted_data}
