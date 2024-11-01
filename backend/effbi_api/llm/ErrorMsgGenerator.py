@@ -3,6 +3,9 @@ from langchain_core.output_parsers import JsonOutputParser
 
 from .State import State
 from .LLMManager import LLMManager
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ErrorMsgGenerator:
     def __init__(self):
@@ -12,6 +15,8 @@ class ErrorMsgGenerator:
         user_query = state.question
         accessible_table_names = state.accessible_table_names
         total_tables = state.total_tables
+        logger.info("ACCESSIBLE TABLE NAMES: " + str(accessible_table_names))
+        logger.info("TOTAL TABLES: " + str(total_tables))
         prompt = ChatPromptTemplate.from_messages([
             ("system", """You are a helpful assistant that generates error messages for dashboard tiles.
              Given a user query, a list of tables that the user has access to, and the total list of tables in the database,

@@ -1,3 +1,4 @@
+from ..models import OrgTables
 from .ErrorMsgGenerator import ErrorMsgGenerator
 from .SQLValidator import SQLValidator
 from .DatabaseManager import DatabaseManager
@@ -18,6 +19,8 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     state.accessible_table_names = accessible_table_names
     logger.info("ACCESSIBLE TABLE NAMES: " + str(accessible_table_names))
     
+    state.total_tables = [table.table_name for table in OrgTables.objects.filter(organization_id=organization_id)]
+    
     # Get the database schema
     db_manager = DatabaseManager(db_uri, organization_id)
     database_schema = db_manager.get_schema(accessible_table_names)
@@ -35,6 +38,7 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     if not state.parsed_question['is_relevant']:
         error_msg_generator = ErrorMsgGenerator()
         error_msg = error_msg_generator.generate_error_msg(state)
+        logger.info("ERROR MSG: " + str(error_msg))
         if error_msg.get('error_type') == "INSUFFICIENT_PERMISSIONS":
             state.error = "You do not have permissions to answer this question. Please contact your administrator for access."
         else:
