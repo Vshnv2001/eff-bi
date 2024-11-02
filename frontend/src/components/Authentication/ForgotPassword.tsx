@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { sendPasswordResetEmail } from "supertokens-web-js/recipe/emailpassword";
 import { Link } from "react-router-dom";
+import {Spinner} from "@material-tailwind/react";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -56,7 +57,11 @@ const ForgotPassword = () => {
         {successMessage && !loading && (
           <div className="mb-4 p-2 text-green-700">{successMessage}</div>
         )}
-        {loading && <div className="mb-4 p-2 text-blue-700">Loading...</div>}
+        {loading && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <Spinner className="h-10 w-10" />
+          </div>
+        )}
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
