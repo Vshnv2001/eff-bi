@@ -146,6 +146,11 @@ export default function DashboardPage() {
     );
   };
 
+  const handleTileSaved = (message: string) => {
+    console.log("Toast Message:", message);
+    toast.success(message);
+  };
+
   const deleteTile = async (tileId: number | undefined) => {
     setLoading(true);
     console.log("delete tile", tileId);
@@ -422,6 +427,7 @@ export default function DashboardPage() {
             fetchTiles();
           }}
           tileId={editingTileId}
+          onSaveSuccess={handleTileSaved}
         />
       </Dialog>
 
