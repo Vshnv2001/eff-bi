@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Typography } from "@material-tailwind/react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { componentMapping, componentNames } from "../ComponentMapping";
@@ -13,10 +13,11 @@ type SaveType = "update" | "new";
 
 interface NewTileProps {
   onClose: () => void;
+  onSaveSuccess: (message: string) => void;
   tileId?: number | null;
 }
 
-export default function NewTile({ onClose, tileId }: NewTileProps) {
+export default function NewTile({ onClose, onSaveSuccess, tileId }: NewTileProps) {
   const [tileName, setTileName] = useState("");
   const [queryPrompt, setQueryPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -58,11 +59,11 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
   };
 
   const showSuccessToast = (saveType: SaveType) => {
-    toast.success(
+    const message =
       saveType === "update"
         ? "Tile updated successfully!"
-        : "New tile saved successfully!"
-    );
+        : "New tile saved successfully!";
+    onSaveSuccess(message);
   };
 
   const handleError = (error: any) => {
@@ -287,18 +288,6 @@ export default function NewTile({ onClose, tileId }: NewTileProps) {
           onSave={() => handleSave("new")}
           onUpdate={() => handleSave("update")}
           isLoading={isLoading}
-        />
-
-        <ToastContainer
-          className="pt-14"
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          pauseOnHover
         />
 
         <InfoTooltip open={info} handler={handleInfo} />
