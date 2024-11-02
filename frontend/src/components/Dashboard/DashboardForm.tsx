@@ -59,6 +59,9 @@ export default function DashboardForm({
       <Typography color="blue-gray" className="text-xl mb-4 font-bold">
         Create New Dashboard
       </Typography>
+      <Typography color="blue-gray" className="text-m mb-2">
+        Dashboards are a collection of tiles to help you organize your data visualisations.
+      </Typography>
       <div className="space-y-4">
         <div className="w-full">
           <Textarea
