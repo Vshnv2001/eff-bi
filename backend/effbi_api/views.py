@@ -143,7 +143,7 @@ def get_dashboard_tile(request: HttpRequest, id: int):
     return JsonResponse({'data': serializer.data}, status=200)
 
 @api_view(["DELETE"])
-@verify_session()
+# @verify_session()
 def delete_dashboard_tile(request: HttpRequest, id: int):
     tile = get_object_or_404(Tile, id=id)
     tile.delete()
