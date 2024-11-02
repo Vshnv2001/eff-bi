@@ -28,7 +28,8 @@ export default function NotificationDialog({
           Database URI Missing!
         </Typography>
         <Typography className="text-center font-normal">
-          Please configure your database settings by visiting the settings page.
+        The Database URI is required for EFF BI to connect to your database. <br/>
+          Please configure your database settings by visiting the settings page or check with your organization's administrator.
         </Typography>
         <Box className="w-full flex justify-center gap-4 mb-4 mt-4">
           <Button
