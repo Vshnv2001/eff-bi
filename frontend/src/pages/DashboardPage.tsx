@@ -12,6 +12,7 @@ import {
   IconButton,
   DialogHeader,
   DialogBody,
+  Tooltip,
 } from "@material-tailwind/react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -87,9 +88,12 @@ export default function DashboardPage() {
 
     try {
       // Refresh tile
-      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/refresh-dashboard-tile/`, {
-        tile_id: tileId,
-      });
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/refresh-dashboard-tile/`,
+        {
+          tile_id: tileId,
+        }
+      );
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tiles/${tileId}/`,
         {
@@ -274,36 +278,63 @@ export default function DashboardPage() {
               <Card className="bg-white shadow rounded-lg w-full h-[45rem] overflow-auto">
                 <CardBody className="flex flex-col">
                   <div className="flex justify-end gap-2 mb-4">
-                    <IconButton
-                      variant="text"
-                      color="blue-gray"
-                      className="rounded-full w-8 h-8"
-                      onClick={() => {
-                        setEditingTileId(tileData.id);
-                        setIsNewTileDialogOpen(true);
+                    <Tooltip
+                      content="Edit"
+                      placement="top"
+                      animate={{
+                        mount: { scale: 1, y: 0 },
+                        unmount: { scale: 0, y: 25 },
                       }}
                     >
-                      <PencilIcon className="h-4 w-4" />
-                    </IconButton>
-                    <IconButton
-                      variant="text"
-                      color="blue-gray"
-                      className="rounded-full w-8 h-8"
-                      onClick={() => refreshTile(tileData.id)}
-                    >
-                      <RefreshCw className="h-4 w-4" />
-                    </IconButton>
-                    <IconButton
-                      variant="text"
-                      color="blue-gray"
-                      className="rounded-full w-8 h-8"
-                      onClick={() => {
-                        setIsDeleteConfirmationOpen(true);
-                        setSelectedTile(tileData);
+                      <IconButton
+                        variant="text"
+                        color="blue-gray"
+                        className="rounded-full w-8 h-8"
+                        onClick={() => {
+                          setEditingTileId(tileData.id);
+                          setIsNewTileDialogOpen(true);
+                        }}
+                      >
+                        <PencilIcon className="h-4 w-4" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip
+                      content="Refresh a tile. This replaces the current tile's data."
+                      placement="top"
+                      animate={{
+                        mount: { scale: 1, y: 0 },
+                        unmount: { scale: 0, y: 25 },
                       }}
                     >
-                      <Trash2 className="h-4 w-4" />
-                    </IconButton>
+                      <IconButton
+                        variant="text"
+                        color="blue-gray"
+                        className="rounded-full w-8 h-8"
+                        onClick={() => refreshTile(tileData.id)}
+                      >
+                        <RefreshCw className="h-4 w-4" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip
+                      content="Delete"
+                      placement="top"
+                      animate={{
+                        mount: { scale: 1, y: 0 },
+                        unmount: { scale: 0, y: 25 },
+                      }}
+                    >
+                      <IconButton
+                        variant="text"
+                        color="blue-gray"
+                        className="rounded-full w-8 h-8"
+                        onClick={() => {
+                          setIsDeleteConfirmationOpen(true);
+                          setSelectedTile(tileData);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </IconButton>
+                    </Tooltip>
                     <DownloadMenu chartRef={chartRefs.current[index]} />
                   </div>
 
