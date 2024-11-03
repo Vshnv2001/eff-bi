@@ -9,7 +9,7 @@ import {
   Textarea,
   Button,
 } from "@material-tailwind/react";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";

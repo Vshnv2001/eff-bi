@@ -30,7 +30,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { DownloadMenu } from "../components/Dashboard/DownloadMenu";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 type ComponentKeys = keyof typeof componentMapping;
 
