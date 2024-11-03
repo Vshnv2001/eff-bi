@@ -42,7 +42,7 @@ const SaveUserData: React.FC = () => {
 
         if (createResponse.ok) {
           const createData = await createResponse.json();
-          // console.log("User created:", createData);
+          console.log("User created:", createData);
 
           setUserId(userId);
           setIsSaved(true);

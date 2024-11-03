@@ -75,7 +75,7 @@ const FileUpload: React.FC = () => {
           complete: () => {
             setLoading(false);
             if (data.length > 100) setShowAlert(true);
-            // console.log(showAlert);
+            console.log(showAlert);
           },
           error: () => {
             setError("Error parsing CSV file.");
@@ -95,7 +95,7 @@ const FileUpload: React.FC = () => {
     try {
       setUploading(true);
       const response = await axios.post("/api/upload", { data });
-      // console.log("Data successfully uploaded:", response.data);
+      console.log("Data successfully uploaded:", response.data);
       setUploading(false);
     } catch (error) {
       console.error("Error uploading data:", error);
