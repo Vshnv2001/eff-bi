@@ -16,8 +16,8 @@ interface BasicTableProps {
 
 
 export default function BasicTable({ columns, data }: BasicTableProps) {
-  console.log(columns);
-  console.log(data);
+  // console.log(columns);
+  // console.log(data);
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">

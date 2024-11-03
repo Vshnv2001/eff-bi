@@ -25,7 +25,7 @@ const Footer: React.FC = () => {
         "Pk0uFk7AKHTesOhnN"
       )
       .then((response: EmailJSResponseStatus) => {
-        console.log("Success!", response.status, response.text);
+        // console.log("Success!", response.status, response.text);
         setName("");
         setEmail("");
         setMessage("");

@@ -29,7 +29,7 @@ const SaveUserData: React.FC = () => {
         is_super_admin: location.state.isSuperAdmin,
       };
 
-      console.log("form data", formData);
+      // console.log("form data", formData);
 
       try {
         const createResponse = await fetch(`${BACKEND_API_URL}/api/users/`, {
@@ -42,7 +42,7 @@ const SaveUserData: React.FC = () => {
 
         if (createResponse.ok) {
           const createData = await createResponse.json();
-          console.log("User created:", createData);
+          // console.log("User created:", createData);
 
           setUserId(userId);
           setIsSaved(true);

@@ -32,7 +32,7 @@ const FetchUserData: React.FC = () => {
 
         if (response.ok) {
           const userData = await response.json();
-          console.log("User data fetched:", userData);
+          // console.log("User data fetched:", userData);
 
           setUserId(userId);
           setFirstName(userData.first_name);

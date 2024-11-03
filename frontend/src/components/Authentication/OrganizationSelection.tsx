@@ -94,7 +94,7 @@ const OrganizationSelection: React.FC<OrganizationSelectionProps> = ({
 
       if (response.ok) {
         const data = await response.json();
-        console.log("json response", data);
+        // console.log("json response", data);
 
         setOrganizationId(data.organization.id);
         onSubmit({ ...orgData, id: data.organization.id, action: step });

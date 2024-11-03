@@ -149,13 +149,13 @@ export default function DashboardPage() {
   };
 
   const handleTileSaved = (message: string) => {
-    console.log("Toast Message:", message);
+    // console.log("Toast Message:", message);
     toast.success(message);
   };
 
   const deleteTile = async (tileId: number | undefined) => {
     setLoading(true);
-    console.log("delete tile", tileId);
+    // console.log("delete tile", tileId);
     try {
       const response = await axios.delete(
         `${
