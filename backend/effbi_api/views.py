@@ -147,7 +147,7 @@ def get_dashboard_tile(request: HttpRequest, id: int):
 def delete_dashboard_tile(request: HttpRequest, id: int):
     tile = get_object_or_404(Tile, id=id)
     tile.delete()
-    return JsonResponse(status=status.HTTP_204_NO_CONTENT)
+    return JsonResponse({"message": "Tile deleted successfully"}, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])

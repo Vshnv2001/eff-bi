@@ -163,7 +163,7 @@ export default function DashboardPage() {
         }/api/dashboard-tiles-delete/${tileId}/`
       );
 
-      if (response.status === 204) {
+      if (response.status === 200) {
         setTilesData((prevTiles) =>
           prevTiles.filter((tile) => tile.id !== tileId)
         );
