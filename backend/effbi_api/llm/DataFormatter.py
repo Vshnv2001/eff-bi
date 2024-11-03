@@ -15,9 +15,7 @@ class ChartType(Enum):
     HorizontalBarChartTemplate = "HorizontalBarChartTemplate"
     PieChartTemplate = "PieChartTemplate"
     DonutChartTemplate = "DonutChartTemplate"
-    PyramidBarChartTemplate = "PyramidBarChartTemplate"
     RadarChartTemplate = "RadarChartTemplate"
-    RadarChartPolarTemplate = "RadarChartPolarTemplate"
     ScatterChartTemplate = "ScatterChartTemplate"
     CandlestickTemplate = "CandlestickTemplate"
     BoxPlotTemplate = "BoxPlotTemplate"
@@ -56,20 +54,11 @@ viz_props = {
         "chartSeries": [],
         "labels": []
     },
-    ChartType.PyramidBarChartTemplate: {
-        "chartSeries": [
-            {"name": "", "data": []}
-        ],
-        "categories": []
-    },
     ChartType.RadarChartTemplate: {
         "series": [
             {"name": "", "data": []}
         ],
         "categories": [],
-    },
-    ChartType.RadarChartPolarTemplate: {
-        "series": [],
     },
     ChartType.ScatterChartTemplate: {
         "series": [
@@ -125,9 +114,7 @@ class DataFormatter:
                 - LineChartTemplate: Best for showing trends and distributions over time. Best used when both x-axis and y-axis are continuous.
                 - AreaChartTemplate: Suitable for showing trends over time while emphasizing the magnitude of values.
                 - DonutChartTemplate: A variation of the PieChart, useful for showing proportions, but allows for more data visualization in the center of the chart.
-                - PyramidBarChartTemplate: Useful for visualizing distributions or hierarchies, especially in population pyramids or scenarios where one side represents one group and the other side another group.
                 - RadarChartTemplate: Ideal for comparing multiple variables against each other in a circular layout, showing the strengths and weaknesses of each variable.
-                - RadarChartPolarTemplate: Similar to a RadarChart, but with a polar grid for emphasizing categories with values on a continuous scale.
                 - ScatterChartTemplate: Best for showing relationships between two variables and identifying correlations, trends, or outliers.
                 - CandlestickTemplate: Commonly used in financial data to show price movements, particularly for stocks, over time. It emphasizes opening, closing, high, and low prices.
                 - BoxPlotTemplate: Best for showing the distribution of data based on five summary statistics: minimum, first quartile, median, third quartile, and maximum.
@@ -148,7 +135,6 @@ class DataFormatter:
             9. Relationships Between Variables: (e.g., "Is there a correlation between advertising spend and sales?" - ScatterChartTemplate)
             10. Variable Comparisons Across Categories: (e.g., "How does each department's performance compare across various metrics?" - RadarChartTemplate)
             11. Market Trends in Financial Data: (e.g., "What is the historical price movement of a stock?" - CandlestickTemplate)
-            12. Demographic Distributions: (e.g., "What is the age distribution of customers?" - PyramidBarChartTemplate)
             13. Single Value: (e.g., "What is the total revenue?" - SingleValueTemplate)
 
             If a specific chart type is requested, utilize the corresponding template for that chart.
@@ -204,7 +190,7 @@ class DataFormatter:
             
             Available chart types (in Javascript) Make sure to use the exact names ONLY:
             BarChartTemplate, HorizontalBarChartTemplate, PieChartTemplate, LineChartTemplate, AreaChartTemplate, DonutChartTemplate,
-            PyramidBarChartTemplate, RadarChartTemplate, RadarChartPolarTemplate, ScatterChartTemplate, CandlestickTemplate, BoxPlotTemplate, TableTemplate
+            RadarChartTemplate, ScatterChartTemplate, CandlestickTemplate, BoxPlotTemplate, TableTemplate
             '''),
             ("human", '''
             SQL query: {sql_query}
