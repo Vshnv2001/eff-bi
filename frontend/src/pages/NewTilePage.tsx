@@ -39,7 +39,7 @@ export default function NewTile() {
       description: tileDescription,
     });
 
-    // console.log(response.data);
+    console.log(response.data);
 
     // Reset form fields
     setTileName("");
