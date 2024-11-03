@@ -109,7 +109,7 @@ export default function DBSettingsPage() {
       db_type: "postgres",
     };
 
-    // console.log(reqBody);
+    // // console.log(reqBody);
 
     try {
       setIsLoading(true);
@@ -141,7 +141,7 @@ export default function DBSettingsPage() {
       toast.error("Database URI is required!");
       return;
     }
-    console.log("refresh!");
+    // console.log("refresh!");
 
     const reqBody = {
       org_id: Number(organizationId),
@@ -150,9 +150,9 @@ export default function DBSettingsPage() {
 
     try {
       setIsLoading(true);
-      // console.log(organizationId);
-      // console.log(reqBody);
-      // console.log(userId);
+      // // console.log(organizationId);
+      // // console.log(reqBody);
+      // // console.log(userId);
       const response = await axios.post(
         `${BACKEND_API_URL}/api/connection/refresh/`,
         reqBody

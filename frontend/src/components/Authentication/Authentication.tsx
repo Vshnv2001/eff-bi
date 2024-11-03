@@ -96,7 +96,7 @@ const Authentication = () => {
       }
     } catch (err) {
       setErrorMessage("Oops! Something went wrong.");
-      console.log("err", err);
+      // console.log("err", err);
       setInputError({ email: true, password: true });
     } finally {
       setIsLoading(false);
@@ -129,7 +129,7 @@ const Authentication = () => {
         setErrorMessage("Email password combination is incorrect.");
         setInputError({ email: true, password: true });
       } else if (response.status == "OK") {
-        console.log("response", response);
+        // console.log("response", response);
         const userId = response.user.id;
         await fetchUserData(userId);
         setErrorMessage("");
@@ -155,7 +155,7 @@ const Authentication = () => {
 
       if (response.ok) {
         const userData = await response.json();
-        console.log("User data fetched:", userData);
+        // console.log("User data fetched:", userData);
 
         setUserId(userId);
         setFirstName(userData.first_name);

@@ -86,10 +86,10 @@ const TablePermissionsPage = () => {
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        console.log(JSON.stringify(error.response.data));
+        // console.log(JSON.stringify(error.response.data));
         toast.error("Your organization does not have this user");
       } else {
-        console.log("An unexpected error occurred", error);
+        // console.log("An unexpected error occurred", error);
         toast.error("Error while giving permissions");
       }
     }
@@ -116,10 +116,10 @@ const TablePermissionsPage = () => {
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        console.log(JSON.stringify(error.response.data));
+        // console.log(JSON.stringify(error.response.data));
         toast.error("User does not have Admin permission for this table");
       } else {
-        console.log(error);
+        // console.log(error);
         toast.error("Error while removing permissions:");
       }
     }
@@ -141,7 +141,7 @@ const TablePermissionsPage = () => {
       const response = await axios.get(
         `${BACKEND_API_URL}/api/user-access-permissions/table/${table_id}`
       );
-      // console.log(response.data.data);
+      // // console.log(response.data.data);
       setAllUsers(response.data.data);
     } catch (error) {
       console.error("Error fetching table users:", error);

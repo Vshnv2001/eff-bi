@@ -63,7 +63,7 @@ export default function UserProfilePage() {
         const response = await axios.get(
           `${BACKEND_API_URL}/api/users/${userId}`
         );
-        // console.log(response.data.user);
+        // // console.log(response.data.user);
         setUserInfo(response.data.user);
       } catch (error) {
         console.error("Error fetching permissions:", error);
