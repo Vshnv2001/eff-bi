@@ -16,7 +16,7 @@ import {
 import axios from "axios";
 import { BACKEND_API_URL } from "../config/index";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 type UserPermissions = {
   user_email: string;
@@ -335,18 +335,6 @@ const TablePermissionsPage = () => {
           </Button>
         </DialogFooter>
       </Dialog>
-
-      <ToastContainer
-        className="pt-14 z-[99999]"
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        pauseOnHover
-      />
     </div>
   );
 };

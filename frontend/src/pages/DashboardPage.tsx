@@ -30,7 +30,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { DownloadMenu } from "../components/Dashboard/DownloadMenu";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 type ComponentKeys = keyof typeof componentMapping;
 
@@ -475,18 +475,6 @@ export default function DashboardPage() {
           </div>
         </DialogBody>
       </Dialog>
-
-      <ToastContainer
-        className="pt-14"
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        pauseOnHover
-      />
     </div>
   );
 }

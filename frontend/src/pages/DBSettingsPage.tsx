@@ -13,7 +13,7 @@ import axios from "axios";
 import { useAuth } from "../components/Authentication/AuthenticationContext";
 import { BACKEND_API_URL } from "../config/index";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const databases = [
   {
@@ -308,17 +308,6 @@ export default function DBSettingsPage() {
           )}
         </div>
       </div>
-      <ToastContainer
-        className="pt-14"
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        pauseOnHover
-      />
     </ThemeProvider>
   );
 }

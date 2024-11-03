@@ -1,7 +1,7 @@
 import { Typography, Textarea, Button } from "@material-tailwind/react";
 import { useState } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { Box } from "@mui/material";
 
 interface DashboardFormProps {
@@ -124,7 +124,6 @@ export default function DashboardForm({
           </Button>
         </Box>
       </div>
-      <ToastContainer />
     </div>
   );
 }
