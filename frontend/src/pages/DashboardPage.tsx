@@ -107,10 +107,12 @@ export default function DashboardPage() {
             tile.id === tileId ? response.data.data : tile
           )
         );
+        toast.success("Refreshed successfully!");
       }
     } catch (error) {
       console.error("Error refreshing tile:", error);
-      setError("Failed to refresh tile");
+      // setError("Failed to refresh tile");
+      toast.success("Unable to refreshed tile");
     } finally {
       setLoading(false);
     }
@@ -169,7 +171,7 @@ export default function DashboardPage() {
       toast.success("Tile deleted successfully!");
     } catch (error) {
       console.error("Error deleting tile:", error);
-      toast.error("Unable to delete tile.");
+      toast.error("Unable to delete tile");
     } finally {
       setLoading(false);
       setIsDeleteConfirmationOpen(false);
