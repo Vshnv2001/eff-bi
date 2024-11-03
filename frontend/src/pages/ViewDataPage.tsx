@@ -72,7 +72,7 @@ export default function ViewDataPage() {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-gray-800 min-h-screen">
+      <div className="fixed inset-0 flex items-center justify-center bg-gray-900 min-h-screen">
         <Spinner className="h-10 w-10" />
       </div>
     );
@@ -80,7 +80,7 @@ export default function ViewDataPage() {
 
   if (data.length == 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-800 p-10">
+      <div className="flex items-center justify-center min-h-screen bg-gray-900 p-10">
         <Card className="w-full max-w-4xl p-10 rounded-xl">
           <div className="text-lg text-center">
             You do not have access to any tables, request for permissions with
@@ -92,7 +92,7 @@ export default function ViewDataPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-800 p-10">
+    <div className="flex min-h-screen bg-gray-900 p-10">
       <div
         className="w-64 p-4 space-y-4 bg-white fixed rounded-xl overflow-y-auto "
         style={{ maxHeight: "calc(100vh - 140px)" }}

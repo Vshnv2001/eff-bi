@@ -128,7 +128,7 @@ const FaqPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-800 p-8">
+    <div className="min-h-screen bg-gray-900 p-8">
       <div className="flex flex-col items-center justify-between mb-8 relative">
         <div className="absolute inset-x-0 text-center">
           <Typography color="white" className="text-3xl font-bold">

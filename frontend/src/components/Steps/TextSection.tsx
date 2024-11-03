@@ -9,7 +9,7 @@ const TextSection: React.FC<TextSectionProps> = ({ title, description }) => {
       <h2 className="text-white z-10 mt-0 text-4xl font-medium leading-none text-slate-900 max-md:mr-0 max-md:max-w-full">
         {title}
       </h2>
-      <p className="text-white z-10 mt-4 text-base leading-7 text-slate-900 max-md:mr-2.5 max-md:max-w-full">
+      <p className="text-white z-10 mt-4 text-base leading-7 text-slate-900 max-md:mr-2.5 max-md:max-w-full font-normal">
         {description}
       </p>
     </section>

@@ -85,7 +85,7 @@ export default function DashboardsPage() {
   };
 
   return (
-    <div className={`min-h-screen bg-gray-800 p-8 ${open ? "opacity-60" : ""}`}>
+    <div className={`min-h-screen bg-gray-900 p-8 ${open ? "opacity-60" : ""}`}>
       {isLoading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <Spinner className="h-10 w-10" />
