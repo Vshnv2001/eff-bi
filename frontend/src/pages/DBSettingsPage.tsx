@@ -308,17 +308,6 @@ export default function DBSettingsPage() {
           )}
         </div>
       </div>
-      <ToastContainer
-        className="pt-14"
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        pauseOnHover
-      />
     </ThemeProvider>
   );
 }

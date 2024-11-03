@@ -335,18 +335,6 @@ const TablePermissionsPage = () => {
           </Button>
         </DialogFooter>
       </Dialog>
-
-      <ToastContainer
-        className="pt-14 z-[99999]"
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        pauseOnHover
-      />
     </div>
   );
 };
