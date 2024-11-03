@@ -5,9 +5,9 @@ const Reviews = forwardRef<HTMLDivElement, {}>((_, ref) => {
   return (
     <section className="py-12 bg-[#f0f2fe]" id="reviews">
       <div ref={ref} className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-black text-slate-500 text-center mt-10">
-          What Our Users Say
-        </h2>
+        <h1 className="text-6xl text-center leading-[80px] text-neutral-800 max-md:max-w-full max-md:text-4xl max-md:leading-[55px] overflow-hidden whitespace-nowrap font-black">
+          Reviews
+        </h1>
         <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((testimonial) => (
             <div
