@@ -46,7 +46,7 @@ const Footer: React.FC = () => {
           <h2 className="text-white text-4xl font-black text-slate-500 text-center mb-6">
             Contact Us
           </h2>
-          <p className="mb-6 text-lg">We'd love to hear from you!</p>
+          <p className="mb-6 text-lg font-normal">We'd love to hear from you!</p>
           <form onSubmit={sendEmail}>
             <input
               type="text"

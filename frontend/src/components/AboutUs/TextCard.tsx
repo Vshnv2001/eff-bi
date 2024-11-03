@@ -14,7 +14,7 @@ const TextCard: React.FC<TextCardProps> = ({ icon, title, description }) => {
           alt=""
           className="object-contain shrink-0 my-auto w-5 aspect-square"
         />
-        <h2 className="flex-auto">{title}</h2>
+        <h2 className="flex-auto font-semibold">{title}</h2>
       </div>
       <p className="mt-2 text-base leading-6">
         {description}

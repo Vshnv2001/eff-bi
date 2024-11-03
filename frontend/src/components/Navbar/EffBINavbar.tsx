@@ -71,7 +71,7 @@ export default function EffBINavbar() {
 
   return (
     <Navbar
-      className={`fixed top-0 z-50 max-w-full px-6 py-3 bg-gray-800 rounded-none transition-transform duration-300 ${
+      className={`fixed top-0 z-50 max-w-full px-6 py-3 bg-gray-700 rounded-none transition-transform duration-300 ${
         isVisible ? "translate-y-0" : "-translate-y-full"
       }`}
     >
@@ -115,21 +115,21 @@ export default function EffBINavbar() {
                     Settings
                   </Button>
                 </MenuHandler>
-                <MenuList className="bg-gray-800">
+                <MenuList className="bg-gray-700">
                   <MenuItem
-                    className="flex items-center text-white gap-2 p-3 bg-gray-800 border-none"
+                    className="flex items-center text-white gap-2 p-3 bg-gray-700 border-none"
                     onClick={() => navigate("/settings/database")}
                   >
                     Database Settings
                   </MenuItem>
                   <MenuItem
-                    className="flex items-center text-white gap-2 p-3 bg-gray-800 border-none"
+                    className="flex items-center text-white gap-2 p-3 bg-gray-700 border-none"
                     onClick={() => navigate("/settings/access-permissions")}
                   >
                     Table Permissions
                   </MenuItem>
                   <MenuItem
-                    className="flex items-center text-white gap-2 p-3 bg-gray-800 border-none"
+                    className="flex items-center text-white gap-2 p-3 bg-gray-700 border-none"
                     onClick={() => navigate("/profile")}
                   >
                     User Profile

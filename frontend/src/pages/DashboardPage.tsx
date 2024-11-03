@@ -187,7 +187,7 @@ export default function DashboardPage() {
 
   return (
     <div
-      className={`min-h-screen bg-gray-800 p-8 ${
+      className={`min-h-screen bg-gray-900 p-8 ${
         isNewTileDialogOpen ? "opacity-60" : ""
       }`}
     >
