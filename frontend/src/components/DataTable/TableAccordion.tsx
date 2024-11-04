@@ -75,7 +75,7 @@ const TableAccordion: React.FC = () => {
             onClick={() => handleOpen(index)}
             className="flex items-center justify-between w-full p-4 cursor-pointer transition-colors hover:bg-blue-gray-50/50"
           >
-            <Typography variant="h6" className="text-sm flex-grow">
+            <Typography variant="h6" className="text-sm flex-grow truncate">
               {table.table_name}
             </Typography>
             <div
