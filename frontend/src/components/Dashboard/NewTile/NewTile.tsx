@@ -17,7 +17,11 @@ interface NewTileProps {
   tileId?: number | null;
 }
 
-export default function NewTile({ onClose, onSaveSuccess, tileId }: NewTileProps) {
+export default function NewTile({
+  onClose,
+  onSaveSuccess,
+  tileId,
+}: NewTileProps) {
   const [tileName, setTileName] = useState("");
   const [queryPrompt, setQueryPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -69,7 +73,9 @@ export default function NewTile({ onClose, onSaveSuccess, tileId }: NewTileProps
   const handleError = (error: any) => {
     if (axios.isAxiosError(error)) {
       console.error("Error:", error.response?.data.error);
-      toast.error(error.response?.data.error);
+      toast.error(error.response?.data.error, {
+        autoClose: 10000,
+      });
     } else {
       console.error("Error:", error);
       toast.error("An error occurred. Please try again.");
