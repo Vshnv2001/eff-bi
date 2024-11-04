@@ -7,6 +7,7 @@ import { componentMapping, componentNames } from "../ComponentMapping";
 import { SaveConfirmationDialog } from "./SaveConfirmationDialog";
 import InfoTooltip from "./InfoTooltip";
 import { TileForm } from "./TileForm";
+import TableAccordion from "../../DataTable/TableAccordion";
 
 type ComponentKeys = keyof typeof componentMapping;
 type SaveType = "update" | "new";
@@ -259,44 +260,52 @@ export default function NewTile({
       onClick={handleBackdropClick}
     >
       <div
-        className="p-6 bg-white rounded-md max-h-[85vh] overflow-y-auto w-full max-w-2xl relative"
+        className="p-6 bg-white rounded-md max-h-[85vh] overflow-y-auto w-full max-w-4xl relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <Typography variant="h4" color="blue-gray" className="mb-4">
+        <Typography variant="h4" color="blue-gray" className="mb-4 text-center">
           {tileId ? "Edit Tile" : "Create New Tile"}
         </Typography>
 
-        <TileForm
-          tileName={tileName}
-          setTileName={setTileName}
-          queryPrompt={queryPrompt}
-          setQueryPrompt={setQueryPrompt}
-          componentNames={componentNames}
-          selectedTemplates={selectedTemplates}
-          setSelectedTemplates={setSelectedTemplates}
-          handleInfo={handleInfo}
-          sqlQuery={sqlQuery}
-          PreviewComponent={PreviewComponent}
-          previewProps={previewProps}
-          onClose={onClose}
-          setSubmitType={setSubmitType}
-          isLoading={isLoading}
-          isPreviewGenerated={isPreviewGenerated}
-          handleSubmit={handleSubmit}
-          submitType={submitType}
-          progress={progress}
-          setProgress={setProgress}
-        />
+        <div className="flex space-x-6">
+          {" "}
+          <div className="w-1/3 max-h-[75vh] overflow-y-auto border-r pr-4">
+            <TableAccordion />
+          </div>
+          <div className="w-2/3">
+            <TileForm
+              tileName={tileName}
+              setTileName={setTileName}
+              queryPrompt={queryPrompt}
+              setQueryPrompt={setQueryPrompt}
+              componentNames={componentNames}
+              selectedTemplates={selectedTemplates}
+              setSelectedTemplates={setSelectedTemplates}
+              handleInfo={handleInfo}
+              sqlQuery={sqlQuery}
+              PreviewComponent={PreviewComponent}
+              previewProps={previewProps}
+              onClose={onClose}
+              setSubmitType={setSubmitType}
+              isLoading={isLoading}
+              isPreviewGenerated={isPreviewGenerated}
+              handleSubmit={handleSubmit}
+              submitType={submitType}
+              progress={progress}
+              setProgress={setProgress}
+            />
 
-        <SaveConfirmationDialog
-          show={showSaveDialog}
-          onCancel={handleCancel}
-          onSave={() => handleSave("new")}
-          onUpdate={() => handleSave("update")}
-          isLoading={isLoading}
-        />
+            <SaveConfirmationDialog
+              show={showSaveDialog}
+              onCancel={handleCancel}
+              onSave={() => handleSave("new")}
+              onUpdate={() => handleSave("update")}
+              isLoading={isLoading}
+            />
 
-        <InfoTooltip open={info} handler={handleInfo} />
+            <InfoTooltip open={info} handler={handleInfo} />
+          </div>
+        </div>
       </div>
     </div>
   );
