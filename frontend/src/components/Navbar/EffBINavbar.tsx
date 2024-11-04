@@ -7,10 +7,10 @@ import {
   MenuItem,
 } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
-import { signOut } from "supertokens-auth-react/recipe/session";
 import { Link } from "react-router-dom";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { useState, useEffect } from "react";
+import UserDropdown from "./UserDropdown";
 
 const useScrollDirection = () => {
   const [scrollDirection, setScrollDirection] = useState("up");
@@ -64,14 +64,9 @@ export default function EffBINavbar() {
   const isUserLoggedIn =
     sessionContext.loading || sessionContext.doesSessionExist;
 
-  async function logoutClicked() {
-    await signOut();
-    navigate("/auth");
-  }
-
   return (
     <Navbar
-      className={`fixed top-0 z-50 max-w-full px-6 py-3 bg-gray-700 rounded-none transition-transform duration-300 ${
+      className={`fixed top-0 z-50 max-w-full px-6 py-3 bg-white rounded-none transition-transform duration-300 ${
         isVisible ? "translate-y-0" : "-translate-y-full"
       }`}
     >
@@ -89,7 +84,7 @@ export default function EffBINavbar() {
               <Button
                 variant="text"
                 size="sm"
-                color="white"
+                color="blue-gray"
                 className="flex items-center gap-2"
                 onClick={() => navigate("/view-data")}
               >
@@ -98,48 +93,25 @@ export default function EffBINavbar() {
               <Button
                 variant="text"
                 size="sm"
-                color="white"
+                color="blue-gray"
                 className="flex items-center gap-2"
                 onClick={() => navigate("/dashboards")}
               >
                 Dashboards
               </Button>
-              <Menu>
-                <MenuHandler>
-                  <Button
-                    variant="text"
-                    size="sm"
-                    color="white"
-                    className="flex items-center gap-2"
-                  >
-                    Settings
-                  </Button>
-                </MenuHandler>
-                <MenuList className="bg-gray-700">
-                  <MenuItem
-                    className="flex items-center text-white gap-2 p-3 bg-gray-700 border-none"
-                    onClick={() => navigate("/settings/database")}
-                  >
-                    Database Settings
-                  </MenuItem>
-                  <MenuItem
-                    className="flex items-center text-white gap-2 p-3 bg-gray-700 border-none"
-                    onClick={() => navigate("/settings/access-permissions")}
-                  >
-                    Table Permissions
-                  </MenuItem>
-                  <MenuItem
-                    className="flex items-center text-white gap-2 p-3 bg-gray-700 border-none"
-                    onClick={() => navigate("/profile")}
-                  >
-                    User Profile
-                  </MenuItem>
-                </MenuList>
-              </Menu>
               <Button
                 variant="text"
                 size="sm"
-                color="white"
+                color="blue-gray"
+                className="flex items-center gap-2"
+                onClick={() => navigate("/access-permissions")}
+              >
+                Permissions
+              </Button>
+              <Button
+                variant="text"
+                size="sm"
+                color="blue-gray"
                 className="flex items-center gap-2"
                 onClick={() => navigate("/faq")}
               >
@@ -151,7 +123,7 @@ export default function EffBINavbar() {
               <Button
                 variant="text"
                 size="sm"
-                color="white"
+                color="blue-gray"
                 className="flex items-center gap-2"
                 onClick={() => {
                   const featuresSection = document.getElementById("features");
@@ -165,7 +137,7 @@ export default function EffBINavbar() {
               <Button
                 variant="text"
                 size="sm"
-                color="white"
+                color="blue-gray"
                 className="flex items-center gap-2"
                 onClick={() => {
                   const featuresSection = document.getElementById("reviews");
@@ -179,7 +151,7 @@ export default function EffBINavbar() {
               <Button
                 variant="text"
                 size="sm"
-                color="white"
+                color="blue-gray"
                 className="flex items-center gap-2"
                 onClick={() => {
                   const featuresSection = document.getElementById("contact");
@@ -194,15 +166,19 @@ export default function EffBINavbar() {
           )}
         </div>
         <div>
-          <Button
-            variant="text"
-            size="sm"
-            color="white"
-            className="flex items-center gap-2"
-            onClick={logoutClicked}
-          >
-            {isUserLoggedIn ? "Logout" : "Login"}
-          </Button>
+          {isUserLoggedIn ? (
+            <UserDropdown />
+          ) : (
+            <Button
+              variant="text"
+              size="sm"
+              color="blue-gray"
+              className="flex items-center gap-2"
+              onClick={() => navigate("/auth")}
+            >
+              Login
+            </Button>
+          )}
         </div>
       </div>
     </Navbar>

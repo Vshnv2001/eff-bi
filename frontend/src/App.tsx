@@ -105,7 +105,7 @@ const router = createBrowserRouter(
         }
       />
       <Route
-        path="/settings/access-permissions"
+        path="/access-permissions"
         element={
           <SessionAuth>
             <DBAccessPermissionsPage />
