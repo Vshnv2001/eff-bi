@@ -75,7 +75,7 @@ export const TileForm: React.FC<TileFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 pb-3">
       <div className="relative mb-4">
-        <Typography variant="h6" color="blue-gray" className="mb-2">
+        <Typography variant="h6" color="blue-gray">
           Tile Name
         </Typography>
         <textarea
@@ -92,23 +92,28 @@ export const TileForm: React.FC<TileFormProps> = ({
         setSelectedTemplates={setSelectedTemplates}
       />
 
-      <div className="flex items-center mb-0">
-        <Typography variant="h6" color="blue-gray" className="mr-2">
-          Visualization Instructions
-        </Typography>
-        <IconButton variant="text" className="w-5 h-5 p-0" onClick={handleInfo}>
-          <InformationCircleIcon className="h-5 w-5" />
-        </IconButton>
-      </div>
-
-      <div className="relative">
-        <textarea
-          placeholder="Enter query to generate the chart (e.g., 'Show me monthly sales data for the past year')"
-          value={queryPrompt}
-          onChange={(e) => setQueryPrompt(e.target.value)}
-          rows={4}
-          className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
-        />
+      <div>
+        <div className="flex items-center">
+          <Typography variant="h6" color="blue-gray" className="mr-2">
+            Visualization Instructions
+          </Typography>
+          <IconButton
+            variant="text"
+            className="w-5 h-5 p-0"
+            onClick={handleInfo}
+          >
+            <InformationCircleIcon className="h-5 w-5" />
+          </IconButton>
+        </div>
+        <div className="relative">
+          <textarea
+            placeholder="Enter query to generate the chart (e.g., 'Show me monthly sales data for the past year')"
+            value={queryPrompt}
+            onChange={(e) => setQueryPrompt(e.target.value)}
+            rows={4}
+            className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
+          />
+        </div>
       </div>
 
       {sqlQuery && (
