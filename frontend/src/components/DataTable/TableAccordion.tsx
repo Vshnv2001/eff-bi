@@ -34,7 +34,9 @@ const TableAccordion: React.FC = () => {
       if (!userId) return;
       setLoading(true);
       try {
-        const response = await axios.get(`${BACKEND_API_URL}/api/connection/${userId}`);
+        const response = await axios.get(
+          `${BACKEND_API_URL}/api/connection/${userId}`
+        );
         setData(response.data?.tables || []);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -71,11 +73,31 @@ const TableAccordion: React.FC = () => {
         >
           <AccordionHeader
             onClick={() => handleOpen(index)}
-            className="transition-colors hover:bg-blue-gray-50/50 p-4"
+            className="flex items-center justify-between w-full p-4 cursor-pointer transition-colors hover:bg-blue-gray-50/50"
           >
-            <Typography variant="h6" className="text-sm">
+            <Typography variant="h6" className="text-sm flex-grow">
               {table.table_name}
             </Typography>
+            <div
+              className={`transform transition-transform duration-300 ${
+                open === index ? "rotate-180" : "rotate-0"
+              }`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 9l6 6 6-6"
+                />
+              </svg>
+            </div>
           </AccordionHeader>
           <AccordionBody className="pt-0">
             {table.table_description && (
