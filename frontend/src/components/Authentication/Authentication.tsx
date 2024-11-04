@@ -208,181 +208,197 @@ const Authentication = () => {
   };
 
   return (
-    <div
-      style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <div className="flex bg-gradient-to-r from-red-100 to-blue-400">
       {isLoading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <Spinner className="h-10 w-10" />
         </div>
       )}
-      <Container
-        component="main"
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Paper
-          elevation={6}
-          sx={{
-            p: 4,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            width: "50%",
-          }}
-        >
+      <div className=" w-5/12 flex items-center justify-center relative">
+        <div className="absolute top-8 left-5">
           <img
             src="/assets/logo-nobg.png"
             alt="EFF BI Logo"
             style={{ width: "128px" }}
           />
+        </div>
 
-          <Box
+        <img
+          src="/assets/signup-pic.png"
+          alt="EFF BI sign up"
+          className="h-[25rem] w-auto"
+        />
+      </div>
+      <div
+        style={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        className="w-7/12"
+      >
+        <Container
+          component="main"
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Paper
+            elevation={6}
             sx={{
-              position: "relative",
-              width: "100%",
-              height: "100%",
+              p: 4,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "50%",
             }}
           >
-            <Slide
-              direction="right"
-              in={!showOrgSelection}
-              mountOnEnter
-              unmountOnExit
+            <Box
+              sx={{
+                position: "relative",
+                width: "100%",
+                height: "100%",
+              }}
             >
-              <Box>
-                <Typography component="h1" variant="h5">
-                  {isSignUp ? "Sign Up" : "Sign In"}
-                </Typography>
-                {errorMessage && (
-                  <Typography color="error" sx={{ mt: 2 }}>
-                    {errorMessage}
-                  </Typography>
-                )}
-                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    autoFocus
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    error={inputError.email}
-                  />
-                  <FormControl
-                    fullWidth
-                    required
-                    variant="outlined"
-                    margin="normal"
-                  >
-                    <InputLabel htmlFor="outlined-adornment-password">
-                      Password
-                    </InputLabel>
-                    <OutlinedInput
-                      id="password"
-                      label="Password"
-                      name="password"
-                      autoComplete="current-password"
-                      type={showPassword ? "text" : "password"}
-                      onChange={(e) => setPassword(e.target.value)}
-                      error={inputError.password}
-                      value={password}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label={
-                              showPassword
-                                ? "hide the password"
-                                : "display the password"
-                            }
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                            onMouseUp={handleMouseUpPassword}
-                            edge="end"
-                          >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                    />
-                  </FormControl>
-                  {isSignUp && (
-                    <>
-                      <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="firstName"
-                        label="First Name"
-                        name="firstName"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                      />
-                      <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="lastName"
-                        label="Last Name"
-                        name="lastName"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                      />
-                    </>
-                  )}
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                  >
+              <Slide
+                direction="right"
+                in={!showOrgSelection}
+                mountOnEnter
+                unmountOnExit
+              >
+                <Box>
+                  <Typography component="h1" variant="h5" className="font-bold">
                     {isSignUp ? "Sign Up" : "Sign In"}
-                  </Button>
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    onClick={() => setIsSignUp(!isSignUp)}
-                    sx={{ mb: 2 }}
-                  >
-                    {isSignUp ? "Switch to Sign In" : "Switch to Sign Up"}
-                  </Button>
-                  <Button
-                    fullWidth
-                    onClick={() => navigate("/auth/forgot-password")}
-                  >
-                    Forgot Password?
-                  </Button>
+                  </Typography>
+                  {errorMessage && (
+                    <Typography color="error" sx={{ mt: 2 }}>
+                      {errorMessage}
+                    </Typography>
+                  )}
+                  <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
+                      autoFocus
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      error={inputError.email}
+                    />
+                    <FormControl
+                      fullWidth
+                      required
+                      variant="outlined"
+                      margin="normal"
+                    >
+                      <InputLabel htmlFor="outlined-adornment-password">
+                        Password
+                      </InputLabel>
+                      <OutlinedInput
+                        id="password"
+                        label="Password"
+                        name="password"
+                        autoComplete="current-password"
+                        type={showPassword ? "text" : "password"}
+                        onChange={(e) => setPassword(e.target.value)}
+                        error={inputError.password}
+                        value={password}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label={
+                                showPassword
+                                  ? "hide the password"
+                                  : "display the password"
+                              }
+                              onClick={handleClickShowPassword}
+                              onMouseDown={handleMouseDownPassword}
+                              onMouseUp={handleMouseUpPassword}
+                              edge="end"
+                            >
+                              {showPassword ? (
+                                <VisibilityOff />
+                              ) : (
+                                <Visibility />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                      />
+                    </FormControl>
+                    {isSignUp && (
+                      <>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="firstName"
+                          label="First Name"
+                          name="firstName"
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                        />
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="lastName"
+                          label="Last Name"
+                          name="lastName"
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                        />
+                      </>
+                    )}
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2 }}
+                    >
+                      {isSignUp ? "Sign Up" : "Sign In"}
+                    </Button>
+                    <Button
+                      fullWidth
+                      variant="outlined"
+                      onClick={() => setIsSignUp(!isSignUp)}
+                      sx={{ mb: 2 }}
+                    >
+                      {isSignUp ? "Switch to Sign In" : "Switch to Sign Up"}
+                    </Button>
+                    <Button
+                      fullWidth
+                      onClick={() => navigate("/auth/forgot-password")}
+                    >
+                      Forgot Password?
+                    </Button>
+                  </Box>
                 </Box>
-              </Box>
-            </Slide>
-            <Slide
-              direction="left"
-              in={showOrgSelection}
-              mountOnEnter
-              unmountOnExit
-            >
-              <Box>
-                <OrganizationSelection
-                  onClose={handleBackToAuth}
-                  onSubmit={handleOrgSubmit}
-                />
-              </Box>
-            </Slide>
-          </Box>
-        </Paper>
-      </Container>
+              </Slide>
+              <Slide
+                direction="left"
+                in={showOrgSelection}
+                mountOnEnter
+                unmountOnExit
+              >
+                <Box>
+                  <OrganizationSelection
+                    onClose={handleBackToAuth}
+                    onSubmit={handleOrgSubmit}
+                  />
+                </Box>
+              </Slide>
+            </Box>
+          </Paper>
+        </Container>
+      </div>
     </div>
   );
 };
