@@ -39,6 +39,12 @@ or
 
 [[label, x, y]].
 
+Postgres is case-sensitive. Please make sure to add double quotes around the column names, table names, and schema names.
+
+If a question involves searching for a string, always use the lower() function to search for strings and always compare with lower case values, like:
+SELECT * from "company" WHERE lower("name") IN ('apple', 'google');
+This is a STRICT requirement.
+
 If there are more than 10 rows, only give the first 10 rows. This is a STRICT requirement.
              
 For questions like "plot a distribution of the fares for men and women", count the frequency of each fare and plot it. The x axis should be the fare and the y axis should be the count of people who paid that fare.
