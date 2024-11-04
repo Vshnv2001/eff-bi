@@ -34,8 +34,9 @@ import { toast } from "react-toastify";
 
 type ComponentKeys = keyof typeof componentMapping;
 
-export default function DashboardPage() {
-  const { dashboardId } = useParams();
+export default function DashboardPage({ pathname }: { pathname: string }) {
+  //const { dashboardId } = useParams();
+  const dashboardId = parseInt(pathname.replace('/', ''), 10);
   const [tilesData, setTilesData] = useState<TileProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -65,6 +66,7 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
+    console.log("use effect")
     fetchTiles();
     fetchDashboardName();
   }, []);

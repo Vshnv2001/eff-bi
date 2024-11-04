@@ -80,6 +80,7 @@ const router = createBrowserRouter(
           </SessionAuth>
         }
       />
+      {/*
       <Route
         path="/dashboards/:dashboardId"
         element={
@@ -88,6 +89,7 @@ const router = createBrowserRouter(
           </SessionAuth>
         }
       />
+      */}
       <Route
         path="/dashboards/:dashboardId/tiles/new"
         element={
