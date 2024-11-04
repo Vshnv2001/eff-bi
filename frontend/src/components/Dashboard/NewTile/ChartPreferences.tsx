@@ -22,8 +22,8 @@ export const ChartPreferences: React.FC<ChartPreferencesProps> = ({
   };
 
   return (
-    <div className="relative mb-4">
-      <Typography variant="h6" color="blue-gray" className="mb-1">
+    <div className="relative mb-1">
+      <Typography variant="h6" color="blue-gray" className="mb-4">
         Chart Preferences (Optional)
       </Typography>
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>

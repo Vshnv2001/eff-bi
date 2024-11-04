@@ -420,7 +420,7 @@ export default function DashboardPage() {
           setIsNewTileDialogOpen(false);
           setEditingTileId(null);
         }}
-        size="md"
+        size="xl"
       >
         <NewTile
           onClose={() => {

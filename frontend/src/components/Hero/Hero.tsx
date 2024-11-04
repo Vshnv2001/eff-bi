@@ -1,11 +1,19 @@
 import { useState, useEffect } from "react";
 import Header from "./Header";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 const Hero: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
+  const [arrowOpacity, setArrowOpacity] = useState(1);
 
   const handleScroll = () => {
     setScrollY(window.scrollY);
+    
+    if (window.scrollY > 0) {
+      setArrowOpacity(0);
+    } else {
+      setArrowOpacity(1);
+    }
   };
 
   useEffect(() => {
@@ -37,6 +45,13 @@ const Hero: React.FC = () => {
           backgroundColor: `rgba(0, 0, 0, ${opacity})`,
         }}
       ></div>
+
+      <div
+        className={`absolute bottom-20 left-1/2 transform -translate-x-1/2 transition-opacity duration-500 ease-in-out`}
+        style={{ opacity: arrowOpacity }}
+      >
+        <ChevronDownIcon className="w-10 h-10 text-black animate-bounce" />
+      </div>
     </main>
   );
 };

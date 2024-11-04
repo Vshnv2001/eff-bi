@@ -75,7 +75,7 @@ export const TileForm: React.FC<TileFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 pb-3">
       <div className="relative mb-4">
-        <Typography variant="h6" color="blue-gray" className="mb-1">
+        <Typography variant="h6" color="blue-gray" className="mb-2">
           Tile Name
         </Typography>
         <textarea
@@ -92,7 +92,7 @@ export const TileForm: React.FC<TileFormProps> = ({
         setSelectedTemplates={setSelectedTemplates}
       />
 
-      <div className="flex items-center mb-2">
+      <div className="flex items-center mb-0">
         <Typography variant="h6" color="blue-gray" className="mr-2">
           Visualization Instructions
         </Typography>
