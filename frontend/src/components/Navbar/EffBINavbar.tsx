@@ -1,10 +1,6 @@
 import {
   Navbar,
-  Button,
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
+  Button
 } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -88,7 +84,7 @@ export default function EffBINavbar() {
                 className="flex items-center gap-2"
                 onClick={() => navigate("/view-data")}
               >
-                View Data
+                Data
               </Button>
               <Button
                 variant="text"
@@ -115,7 +111,7 @@ export default function EffBINavbar() {
                 className="flex items-center gap-2"
                 onClick={() => navigate("/faq")}
               >
-                FAQ
+                Docs
               </Button>
             </div>
           ) : (

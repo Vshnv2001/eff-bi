@@ -5,14 +5,12 @@ import {
   Typography,
   CardBody,
   Spinner,
-  Select,
-  Option,
   Input,
 } from "@material-tailwind/react";
 import axios from "axios";
 import { BACKEND_API_URL } from "../config/index";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
-import { CameraIcon, UserCircleIcon } from "lucide-react";
+import { UserCircleIcon } from "lucide-react";
 
 type User = {
   email: string;
@@ -22,33 +20,7 @@ type User = {
   id: string;
 };
 
-type TableRowProps = {
-  identifier: string;
-  data: string | number;
-};
 
-const TableRow: React.FC<TableRowProps> = ({ identifier, data }) => {
-  return (
-    <tr className="hover:bg-blue-gray-50/50">
-      <td className="p-4 text-center border-b border-blue-gray-50">
-        <div className="flex items-center gap-3 justify-center">
-          <div className="flex flex-col">
-            <Typography variant="h6" color="blue-gray" className="font-normal">
-              {identifier}
-            </Typography>
-          </div>
-        </div>
-      </td>
-      <td className="p-4 text-center border-b border-blue-gray-50">
-        <div className="flex justify-center">
-          <Typography variant="h6" color="blue-gray" className="font-bold">
-            {data}
-          </Typography>
-        </div>
-      </td>
-    </tr>
-  );
-};
 
 export default function UserProfilePage() {
   const [userInfo, setUserInfo] = useState<User>();
