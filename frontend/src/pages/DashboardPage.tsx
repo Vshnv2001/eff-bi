@@ -232,7 +232,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
 
       <div className="flex items-center justify-between mb-8 relative mt-4">
         <div className="absolute inset-x-0 text-center">
-          <Typography color="white" className="text-3xl font-bold">
+          <Typography color="gray" className="text-3xl font-bold">
             {dashboardName}
           </Typography>
         </div>

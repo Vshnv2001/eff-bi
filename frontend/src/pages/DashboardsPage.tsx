@@ -20,7 +20,7 @@ const demoTheme = createTheme({
 });
 
 export default function DashboardsPage() {
-  const [dashboardDescription, setDashboardDescription] = useState("");
+  //const [dashboardDescription, setDashboardDescription] = useState("");
   const [dashboards, setDashboards] = useState<DashboardProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -55,6 +55,14 @@ export default function DashboardsPage() {
       segment: dashboard.dash_id,
       title: dashboard.title,
       icon: <DashboardIcon />,
+      // TODO: Confirm where to put description
+      /*
+      children: [
+        {
+          title: dashboard.description,
+        },
+      ],
+      */
     })),
     { kind: "divider" },
   ];
@@ -127,6 +135,7 @@ export default function DashboardsPage() {
         setDbUri(response.data.database_uri);
         setIsDialogOpen(!response.data.database_uri);
         setIsDisabledField(!!response.data.database_uri);
+        console.log(dbUri, isDisabledField);
       } else {
         console.error("Failed to fetch db settings:", response);
       }
@@ -184,5 +193,5 @@ export default function DashboardsPage() {
         navigateToSettings={navigateToSettings}
       />
     </AppProvider>
-  )
+  );
 }
