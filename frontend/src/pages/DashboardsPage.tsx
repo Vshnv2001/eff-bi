@@ -72,16 +72,13 @@ export default function DashboardsPage() {
       icon: <DashboardIcon />,
     })),
     { kind: "divider" },
-    { kind: "header", title: "Analytics" },
-    { segment: "reports", title: "Reports", icon: <BarChartIcon /> },
-    { segment: "integrations", title: "Integrations", icon: <LayersIcon /> },
   ];
 
   function DashboardPageContent({ pathname }: { pathname: string }) {
     return <DashboardPage pathname={pathname} />;
   }
 
-  function SidebarFooter({ mini }: SidebarFooterProps) {
+  function SidebarFooter() {
     const [open, setOpen] = useState(false);
     const [dashboardName, setDashboardName] = useState("");
     const [dashboardDescription, setDashboardDescription] = useState("");
@@ -102,21 +99,11 @@ export default function DashboardsPage() {
     };
 
     return (
-      <div>
-        <Typography
-          variant="caption"
-          sx={{ m: 1, whiteSpace: "nowrap", overflow: "hidden" }}
-        >
-          {mini
-            ? "© MUI"
-            : `© ${new Date().getFullYear()} Made with love by MUI`}
-        </Typography>
-
+      <div style={{ paddingBottom: "16px" }}>
         <Button
           variant="text"
           size="sm"
-          color="white"
-          className="flex items-center gap-2 justify-center font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
+          className="text-black flex items-center h-[5vh] w-full gap-2 justify-start font-bold hover:bg-gray-300 hover:text-black z-10"
           onClick={handleOpen}
         >
           <svg
@@ -125,7 +112,7 @@ export default function DashboardsPage() {
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            style={{ height: 20, width: 20 }} // Adjust size as needed
+            className="h-5 w-5"
           >
             <path
               strokeLinecap="round"
@@ -187,7 +174,6 @@ export default function DashboardsPage() {
         slots={{
           sidebarFooter: SidebarFooter,
         }}
-        disableCollapsibleSidebar={true}
         sx={{ height: "calc(100vh - 60px)" }}
       >
         <DashboardPageContent pathname={router.pathname} />
