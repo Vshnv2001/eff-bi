@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../../components/Authentication/AuthenticationContext";
+import { useState, useEffect } from "react";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import axios from "axios";
 import { BACKEND_API_URL } from "../../config/index";
@@ -10,7 +9,6 @@ import { Spinner } from "@material-tailwind/react";
 export default function DataPage() {
   const [dbUri, setDbUri] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const { organizationId } = useAuth();
   const sessionContext = useSessionContext();
   const userId = sessionContext.loading ? null : sessionContext.userId;
 
@@ -47,13 +45,7 @@ export default function DataPage() {
   // If the user has not set up a database URI, show the DBSettingsPage
   // If the user has set up a database URI, show the ViewDataPage
   if (!dbUri) {
-    return (
-      <DBSettingsPage
-        setDbUri={setDbUri}
-        userId={userId}
-        organizationId={organizationId}
-      />
-    );
+    return <DBSettingsPage/>;
   } else {
     return <ViewDataPage />;
   }

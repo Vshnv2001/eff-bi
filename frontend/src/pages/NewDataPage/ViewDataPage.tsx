@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {Button, Card, Spinner, Tooltip} from "@material-tailwind/react";
 import axios from "axios";
 import { BACKEND_API_URL } from "../../config/index";
@@ -94,7 +94,7 @@ export default function ViewDataPage() {
           content={
             <div className="w-80">
               <Typography
-                variant="small"
+                variant="body2"
                 color="white"
                 className="font-medium opacity-80"
               >
@@ -164,10 +164,10 @@ export default function ViewDataPage() {
   if (tables.length == 0) {
     return (
       <div className="flex items-center justify-center min-h-screen bg p-10">
-        <Card className="w-full max-w-4xl p-10 rounded-xl">
+        <Card className="w-full max-w-4xl p-10 rounded-xl" color="blue-gray">
           <div className="text-lg text-center text-black">
             You do not have access to any tables, request for permissions with
-            your admin.
+            your administrator.
           </div>
         </Card>
       </div>

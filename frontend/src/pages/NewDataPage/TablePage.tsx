@@ -5,7 +5,19 @@ import {Alert} from "@mui/material";
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import Stack from "@mui/material/Stack";
 
-const TablePage: React.FC = ({table}: {table: Table}) => {
+
+interface Table {
+  table_name: string;
+  table_description?: string;
+  column_headers: string[];
+  rows: string[][];
+}
+
+interface TablePageProps {
+  table: Table;
+}
+
+const TablePage: React.FC<TablePageProps> = ({table}: {table: Table}) => {
     if (!table) {
         return (
             <div className="flex justify-center items-center h-screen">
@@ -45,13 +57,6 @@ const TablePage: React.FC = ({table}: {table: Table}) => {
         </div>
     );
 };
-
-interface Table {
-  table_name: string;
-  table_description?: string;
-  column_headers: string[];
-  rows: string[][];
-}
 
 
 export default TablePage;
