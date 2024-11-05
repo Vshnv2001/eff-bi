@@ -5,7 +5,7 @@ import { Typography } from "@material-tailwind/react";
 
 const Reviews = forwardRef<HTMLDivElement, {}>((_, ref) => {
   return (
-    <section className="py-12 bg-[#f0f2fe]" id="reviews">
+    <section className="py-12" id="reviews">
       <div ref={ref} className="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <FadeIn>
           <Typography variant="h1" className="text-center">

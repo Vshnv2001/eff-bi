@@ -175,7 +175,7 @@ const TablePermissionsPage = () => {
               Add Users
             </button>
             <button
-              onClick={() => navigate("/settings/access-permissions")}
+              onClick={() => navigate("/access-permissions")}
               className="bg-gray-500 text-white p-2 pl-5 pr-5 rounded-md hover:bg-gray-400"
             >
               Back to all tables
