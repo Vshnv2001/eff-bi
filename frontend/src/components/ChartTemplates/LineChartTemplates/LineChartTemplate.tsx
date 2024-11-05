@@ -39,11 +39,17 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
     },
     xaxis: {
       categories,
+      labels: {
+        show: false,
+      },
     },
     yaxis: {
       title: {
         text: series.length > 0 ? series[0].name : "",
       },
+    },
+    legend: {
+      show: false,
     },
   };
 
