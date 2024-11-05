@@ -31,7 +31,7 @@ export default function DashboardsPage() {
   const sessionContext = useSessionContext();
   const userId = sessionContext.loading ? null : sessionContext.userId;
   const navigate = useNavigate();
-  const router = useDemoRouter("/dashboards");
+  const router = useDemoRouter("/1");
 
   useEffect(() => {
     fetchDashboards();
@@ -195,8 +195,10 @@ export default function DashboardsPage() {
           sidebarFooter: SidebarFooter,
         }}
         sx={{ height: "calc(100vh - 60px)" }}
-      >
+      > 
+        
         {dashboards.length > 0 || isLoading ? (
+          
           <DashboardPageContent pathname={router.pathname} />
         ) : (
           <div className="col-span-1 md:col-span-2 lg:col-span-3">
