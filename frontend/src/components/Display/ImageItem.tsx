@@ -1,4 +1,4 @@
-import { Card, Box } from '@mui/material';
+import { Card, Box } from "@mui/material";
 
 interface ImageItemProps {
   src: string;
@@ -12,7 +12,7 @@ const ImageItem: React.FC<ImageItemProps> = ({ src, alt }) => {
         sx={{
           boxShadow: 3,
           borderRadius: 2,
-          overflow: 'hidden',
+          overflow: "hidden",
         }}
       >
         <Box
@@ -21,9 +21,14 @@ const ImageItem: React.FC<ImageItemProps> = ({ src, alt }) => {
           src={src}
           alt={alt}
           sx={{
-            objectFit: 'contain',
-            width: '100%',
-            aspectRatio: '1.1',
+            objectFit: "contain",
+            width: "100%",
+            aspectRatio: "1.1",
+            transform: "scale(0.9)",
+            transition: "transform 0.3s ease-in-out",
+            "&:hover": {
+              transform: "scale(1)",
+            },
           }}
         />
       </Card>

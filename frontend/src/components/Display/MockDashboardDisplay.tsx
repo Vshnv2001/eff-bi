@@ -30,7 +30,7 @@ const MockDashboardDisplay: React.FC = () => {
             dashboards to always have the latest data.
           </Typography>
           <div className="flex space-x-4 mt-6">
-            <Button className="flex items-center bg-red-400 text-black">
+            <Button className="flex items-center bg-red-400 bg-opacity-60 text-black">
               Read the docs
               <ArticleIcon className="ml-2" />
             </Button>

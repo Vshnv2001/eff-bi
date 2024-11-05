@@ -17,7 +17,7 @@ const Flyer: React.FC = () => {
           higher-level tasks when necessary.
         </Typography>
         <div className="flex space-x-4 mt-6">
-          <Button color="blue" className="flex items-center">
+          <Button color="blue" className="flex items-center bg-opacity-80">
             Read the docs
             <ArticleIcon className="ml-2" />
           </Button>

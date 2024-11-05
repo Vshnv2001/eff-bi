@@ -14,7 +14,7 @@ const Header: React.FC = () => {
         <p className="mt-6 text-2xl text-center text-neutral-800 text-opacity-80 max-md:max-w-full font-normal">
           Eff BI securely connects to popular databases with read-only access,
           ensuring data protection while enabling teams to generate insightful
-          charts directly from existing tables and data.
+          charts directly from existing tables and data, including OLAP databases.
         </p>
       </FadeIn>
     </header>
