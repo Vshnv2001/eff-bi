@@ -72,43 +72,7 @@ export default function DashboardsPage() {
   ];
 
   function DemoPageContent({ pathname }: { pathname: string }) {
-    useEffect(() => {
-      console.log("use effect");
-      fetchTiles();
-    }, []);
-    
-    const fetchTiles = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tiles/`,
-          {
-            params: { dash_id: parseInt(pathname.replace("/", ""), 10) },
-          }
-        );
-
-        if (response.status === 200 && response.data && response.data.data) {
-          console.log("success");
-        }
-      } catch {}
-    };
-
-    return (
-      <Box
-        sx={{
-          py: 4,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          textAlign: "center",
-        }}
-      >
-        <Typography>Dashboard content for {pathname}</Typography>
-
-        <Typography>
-          Dashboard content for {parseInt(pathname.replace("/", ""), 10)}
-        </Typography>
-      </Box>
-    );
+    return <DashboardPage pathname={pathname} />;
   }
 
   const fetchDbSettings = async () => {
