@@ -53,10 +53,11 @@ export function DonutChartTemplate({
     legend: {
       position: "right",
       fontSize: fontSize,
-      floating: false,
+      floating: true,
       formatter: function (seriesName, opts) {
-        return seriesName + ` - ${chartSeries[opts.seriesIndex].toFixed(1)}%`;
+        return seriesName + ` - ${chartSeries[opts.seriesIndex].toFixed(1)}`;
       },
+      show: false,
     },
     tooltip: {
       enabled: true,
@@ -94,6 +95,7 @@ export function DonutChartTemplate({
           series={chartSeries}
           type="donut"
           width="100%"
+          height="100%"
         />
       )}
       <Divider />

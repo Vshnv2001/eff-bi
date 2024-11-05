@@ -40,11 +40,11 @@ export function PieChartTemplate({
     colors: generateColors(series.length),
     responsive: [
       {
-        breakpoint: 480,
+        breakpoint: 380,
         options: {
           chart: { width: chartWidth },
           legend: {
-            height: 500,
+            height: 200,
           },
         },
       },
@@ -52,10 +52,11 @@ export function PieChartTemplate({
     legend: {
       position: "right",
       fontSize: fontSize,
-      floating: false,
+      floating: true,
       formatter: function (seriesName, opts) {
         return seriesName + ` - ${series[opts.seriesIndex].toFixed(1)}`;
       },
+      show: false,
     },
     tooltip: {
       enabled: true,
@@ -91,7 +92,7 @@ export function PieChartTemplate({
           Query returned empty result, so no visualization needed.
         </Typography>
       ) : (
-        <Chart options={chartOptions} series={series} type="pie" width="100%" />
+        <Chart options={chartOptions} series={series} type="pie" width="100%" height="100%" />
       )}
       <Divider />
     </div>
