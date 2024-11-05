@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Typography } from "@material-tailwind/react";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
+//import { useParams } from "react-router-dom";
 import axios from "axios";
 import { componentMapping, componentNames } from "../ComponentMapping";
 import { SaveConfirmationDialog } from "./SaveConfirmationDialog";
@@ -16,18 +16,20 @@ interface NewTileProps {
   onClose: () => void;
   onSaveSuccess: (message: string) => void;
   tileId?: number | null;
+  dashboardId?: number | null;
 }
 
 export default function NewTile({
   onClose,
   onSaveSuccess,
   tileId,
+  dashboardId
 }: NewTileProps) {
   const [tileName, setTileName] = useState("");
   const [queryPrompt, setQueryPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [info, setInfo] = useState(false);
-  const { dashboardId } = useParams();
+  //const { dashboardId } = useParams();
 
   const [previewComponent, setPreviewComponent] = useState<string | null>(null);
   const [previewProps, setPreviewProps] = useState<any>(null);

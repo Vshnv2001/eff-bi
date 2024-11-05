@@ -3,6 +3,8 @@
 import * as React from "react";
 import { useTheme } from "@mui/material/styles";
 import type { ApexOptions } from "apexcharts";
+import CardContent from "@mui/material/CardContent";
+import Divider from "@mui/material/Divider";
 import { Chart } from "../Chart";
 import Typography from "@mui/material/Typography";
 
@@ -18,27 +20,28 @@ export function HorizontalBarChartTemplate({
   chartSeries = [],
   categories = [],
   title = "",
-  description = ""
+  description = "",
 }: HorizontalBarChartProps): React.JSX.Element {
   const xAxisLabel = chartSeries.length > 0 ? chartSeries[0].name : "Value";
   const chartOptions = useChartOptions(categories, xAxisLabel);
 
   return (
-    <div style={{ position: "relative", textAlign: "center" }}>
+    <div style={{ position: "relative", marginTop: 0 }}>
+      {/* Title and Description */}
       <Typography
         variant="h6"
-        style={{ textAlign: "center", marginBottom: 10 }}
+        style={{ textAlign: "center", marginBottom: -30 }}
       >
         {title}
       </Typography>
       <Typography
         variant="body2"
-        style={{ textAlign: "center", marginBottom: 20 }}
+        style={{ textAlign: "center", marginBottom: 0 }}
       >
         {description}
       </Typography>
 
-      <div style={{ marginTop: 30 }}>
+      <CardContent>
         {chartSeries.length === 0 ? (
           <Typography
             variant="body2"
@@ -48,14 +51,16 @@ export function HorizontalBarChartTemplate({
           </Typography>
         ) : (
           <Chart
-            height={350}
+            height={200}
             options={chartOptions}
             series={chartSeries}
             type="bar"
             width="100%"
+            style={{ marginBottom: -30 }}
           />
         )}
-      </div>
+      </CardContent>
+      <Divider />
     </div>
   );
 }
@@ -100,12 +105,15 @@ function useChartOptions(
       categories: categories,
       axisBorder: { color: theme.palette.divider, show: true },
       axisTicks: { color: theme.palette.divider, show: true },
-      labels: { offsetY: 5, style: { colors: theme.palette.text.secondary } },
+      labels: { offsetY: 0, style: { colors: theme.palette.text.secondary } },
       title: { text: xAxisLabel, style: { color: theme.palette.text.primary } },
     },
     yaxis: {
       labels: {
         style: { colors: theme.palette.text.secondary },
+        formatter: (value: any) => {
+          return typeof value === "number" ? value.toFixed(2) : value;
+        },
       },
     },
   };

@@ -6,6 +6,19 @@
   display: none !important;
 }
 
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
 @keyframes shake {
   0% {
     transform: translate(1px, 0);

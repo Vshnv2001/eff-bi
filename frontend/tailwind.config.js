@@ -10,6 +10,9 @@ module.exports = withMT({
   ],
   theme: {
     extend: {
+      spacing: {
+        '2.4': '0.5rem',
+      },
       colors: {
         gray: {
           custom: 'rgb(243, 244, 247)',

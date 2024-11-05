@@ -5,7 +5,7 @@ const Header: React.FC = () => {
   const [animateVisualisations, setAnimateVisualisations] = useState(false);
   const [animateDescription, setAnimateDescription] = useState(false);
   const [animateButton, setAnimateButton] = useState(false);
-  
+
   useEffect(() => {
     setTimeout(() => {
       setAnimateEffortless(true);
@@ -60,14 +60,15 @@ const Header: React.FC = () => {
                 }`}
               >
                 Experience no-code data visualization.
+                <br />
+                It's fast, free and always up-to-date.
               </span>
             </p>
             <div
               className={`mt-6 transform transition-opacity duration-1000 ease-in-out ${
                 animateButton ? "opacity-100" : "opacity-0"
               }`}
-            >
-            </div>
+            ></div>
           </div>
         </div>
       </div>

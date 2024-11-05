@@ -154,7 +154,7 @@ const TablePermissionsPage = () => {
   }, []);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-900 p-10">
+    <div className="flex items-center justify-center min-h-screen p-10">
       <Card className="w-full max-w-4xl p-10 rounded-xl">
         <CardHeader floated={false} shadow={false} className="rounded-none">
           <div className="mb-8 flex items-center justify-between gap-8">
@@ -175,7 +175,7 @@ const TablePermissionsPage = () => {
               Add Users
             </button>
             <button
-              onClick={() => navigate("/settings/access-permissions")}
+              onClick={() => navigate("/access-permissions")}
               className="bg-gray-500 text-white p-2 pl-5 pr-5 rounded-md hover:bg-gray-400"
             >
               Back to all tables
