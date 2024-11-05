@@ -225,6 +225,8 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
             <Pagination
               count={totalPages}
               page={page}
+              variant="outlined"
+              color="primary"
               onChange={handlePageChange}
               size="small"
               siblingCount={0}
