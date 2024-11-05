@@ -15,7 +15,6 @@ const LandingPage = () => {
       <div className="text-center mt-20">
         <Typography
           variant="h2"
-          sx={{ fontWeight: "bold" }}
           className="text-center"
         >
           Generate charts with plain English
