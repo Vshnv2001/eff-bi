@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import ApexCharts from "apexcharts";
+import React from "react";
+import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { Typography } from "@mui/material";
 
@@ -19,40 +19,29 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
   title,
   description
 }) => {
-  const chartRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const options: ApexOptions = {
-      series: series,
-      chart: {
-        height: chartHeight,
-        type: "scatter",
-        zoom: {
-          enabled: true,
-          type: "xy",
-        },
-        toolbar: { show: false },
+  const options: ApexOptions = {
+    series: series,
+    chart: {
+      height: chartHeight,
+      type: "scatter",
+      zoom: {
+        enabled: true,
+        type: "xy",
       },
-      xaxis: {
-        tickAmount: 10,
-        labels: {
-          formatter: function (val) {
-            return parseFloat(val as any).toFixed(1);
-          },
+      toolbar: { show: false },
+    },
+    xaxis: {
+      tickAmount: 10,
+      labels: {
+        formatter: function (val) {
+          return parseFloat(val as any).toFixed(1);
         },
       },
-      yaxis: {
-        tickAmount: 7,
-      },
-    };
-
-    const chart = new ApexCharts(chartRef.current, options);
-    chart.render();
-
-    return () => {
-      chart.destroy();
-    };
-  }, [series, chartHeight]);
+    },
+    yaxis: {
+      tickAmount: 7,
+    },
+  };
 
   return (
     <div>
@@ -70,7 +59,7 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
         {description}
       </Typography>
 
-      <div ref={chartRef} id="scatter-chart" />
+      <Chart options={options} series={series} type="scatter" height="100%" width="100%" />
     </div>
   );
 };

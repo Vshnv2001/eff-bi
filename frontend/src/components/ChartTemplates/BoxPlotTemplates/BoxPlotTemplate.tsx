@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
-import ApexCharts from "apexcharts";
+import { Chart } from "../Chart";
 import { Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import type { ApexOptions } from "apexcharts";
 
 type BoxPlotData = {
   x: string;
@@ -20,43 +21,11 @@ const BoxPlotTemplate: React.FC<BoxPlotTemplateProps> = ({
   title,
   description,
 }) => {
-
-  useEffect(() => {
-    const options = {
-      series: [
-        {
-          type: "boxPlot",
-          data: data,
-        },
-      ],
-      chart: {
-        type: "boxPlot",
-        height: height,
-        toolbar: { show: false },
-      },
-      plotOptions: {
-        boxPlot: {
-          colors: {
-            upper: "#5C4742",
-            lower: "#A5978B",
-          },
-        },
-      },
-    };
-
-    const chart = new ApexCharts(
-      document.querySelector("#boxplot-chart"),
-      options
-    );
-    chart.render();
-
-    return () => {
-      chart.destroy();
-    };
-  }, [data, height]);
+  const chartOptions = useChartOptions(height);
 
   return (
     <div>
+      {/* Title and Description */}
       <Typography
         variant="h6"
         style={{ textAlign: "center", marginBottom: 10 }}
@@ -70,9 +39,63 @@ const BoxPlotTemplate: React.FC<BoxPlotTemplateProps> = ({
         {description}
       </Typography>
 
-      <div id="boxplot-chart" />
+      <div>
+        {data.length === 0 ? (
+          <Typography
+            variant="body1"
+            style={{ textAlign: "center", color: "gray" }}
+          >
+            No data available for visualization.
+          </Typography>
+        ) : (
+          <Chart
+            height={height}
+            options={chartOptions}
+            series={[{ type: "boxPlot", data }]}
+            type="boxPlot"
+            width="100%"
+          />
+        )}
+      </div>
     </div>
   );
 };
+
+function useChartOptions(height: number): ApexOptions {
+  const theme = useTheme();
+  
+  return {
+    chart: {
+      type: "boxPlot",
+      height: height,
+      toolbar: { show: false },
+    },
+    plotOptions: {
+      boxPlot: {
+        colors: {
+          upper: "#5C4742",
+          lower: "#A5978B",
+        },
+      },
+    },
+    grid: {
+      borderColor: theme.palette.divider,
+      strokeDashArray: 2,
+      xaxis: { lines: { show: false } },
+      yaxis: { lines: { show: true } },
+    },
+    xaxis: {
+      title: {
+        text: "Categories",
+        style: { color: theme.palette.text.primary },
+      },
+    },
+    yaxis: {
+      labels: {
+        style: { colors: theme.palette.text.secondary },
+      },
+    },
+  };
+}
 
 export default BoxPlotTemplate;

@@ -61,7 +61,7 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
       >
         {description}
       </Typography>
-      <Chart options={options} series={series} type="line" height={400} />
+      <Chart options={options} series={series} type="line" height="100%" width="100%" />
     </div>
   );
 };

@@ -1,7 +1,9 @@
-import React, { useEffect, useRef } from "react";
-import ApexCharts from "apexcharts";
-import Typography from "@mui/material/Typography";
-  
+import React from "react";
+import { Chart } from "../Chart";
+import { Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import type { ApexOptions } from "apexcharts";
+
 type CandlestickData = {
   x: Date | number;
   y: [number, number, number, number];
@@ -20,39 +22,7 @@ const CandlestickTemplate: React.FC<CandlestickChartProps> = ({
   description,
   height = 350,
 }) => {
-  const chartRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const options = {
-      series: [
-        {
-          data: data,
-        },
-      ],
-      chart: {
-        type: "candlestick",
-        height: height,
-        toolbar: { show: false },
-      },
-      title: {
-        text: title,
-        align: "left",
-      },
-      xaxis: {
-        type: "datetime",
-      },
-      yaxis: {
-        tooltip: {
-          enabled: true,
-        },
-      },
-    };
-
-    const chart = new ApexCharts(chartRef.current, options);
-    chart.render();
-
-    return () => chart.destroy();
-  }, [data, title, height]);
+  const chartOptions = useChartOptions(height);
 
   return (
     <div>
@@ -70,9 +40,56 @@ const CandlestickTemplate: React.FC<CandlestickChartProps> = ({
         {description}
       </Typography>
 
-      <div ref={chartRef}></div>
+      <div>
+        {data.length === 0 ? (
+          <Typography
+            variant="body1"
+            style={{ textAlign: "center", color: "gray" }}
+          >
+            No data available for visualization.
+          </Typography>
+        ) : (
+          <Chart
+            height={height}
+            options={chartOptions}
+            series={[{ data }]}
+            type="candlestick"
+            width="100%"
+          />
+        )}
+      </div>
     </div>
   );
 };
+
+function useChartOptions(height: number): ApexOptions {
+  const theme = useTheme();
+
+  return {
+    chart: {
+      type: "candlestick",
+      height: height,
+      toolbar: { show: false },
+    },
+    title: {
+      text: "",
+      align: "left",
+    },
+    xaxis: {
+      type: "datetime",
+    },
+    yaxis: {
+      tooltip: {
+        enabled: true,
+      },
+    },
+    grid: {
+      borderColor: theme.palette.divider,
+      strokeDashArray: 2,
+      xaxis: { lines: { show: true } },
+      yaxis: { lines: { show: true } },
+    },
+  };
+}
 
 export default CandlestickTemplate;
