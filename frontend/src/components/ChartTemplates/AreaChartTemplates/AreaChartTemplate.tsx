@@ -7,6 +7,8 @@ import Typography from "@mui/material/Typography";
 import { Chart } from "../Chart";
 import { ApexOptions } from "apexcharts";
 import Box from "@mui/material/Box";
+import CardContent from "@mui/material/CardContent";
+import Divider from "@mui/material/Divider";
 
 export interface AreaChartProps {
   chartSeries: { name: string; data: number[] }[];
@@ -24,9 +26,7 @@ export function AreaChartTemplate({
   description = "This area chart shows the trend of data over time.",
 }: AreaChartProps): React.JSX.Element {
   const chartOptions = useChartOptions(labels, chartSeries);
-  const chartRef = React.useRef<HTMLDivElement | null>(null);
 
-  // Check if chartSeries or labels are empty
   if (chartSeries.length === 0 || labels.length === 0) {
     return (
       <Box
@@ -47,40 +47,39 @@ export function AreaChartTemplate({
 
   return (
     <Box sx={{ border: "1px solid #ccc", borderRadius: 2, p: 2, ...sx }}>
-      {/* Title and Download Menu */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
+      {/* Title and Description */}
+      <Typography
+        variant="h6"
+        style={{ textAlign: "center", marginBottom: 10 }}
       >
-        <Box>
-          <Typography
-            variant="h6"
-            style={{ textAlign: "center", marginBottom: 10 }}
-          >
-            {title}
-          </Typography>
-          <Typography
-            variant="body2"
-            style={{ textAlign: "center", marginBottom: 20 }}
-          >
-            {description}
-          </Typography>
-        </Box>
-      </Box>
-
+        {title}
+      </Typography>
+      <Typography
+        variant="body2"
+        style={{ textAlign: "center", marginBottom: 20 }}
+      >
+        {description}
+      </Typography>
       {/* Chart Display */}
-      <div ref={chartRef} style={{ marginTop: 16 }}>
-        <Chart
-          height={400}
-          options={chartOptions}
-          series={chartSeries}
-          type="area"
-          width="100%"
-        />
-      </div>
+      <CardContent>
+        {chartSeries.length === 0 ? (
+          <Typography
+            variant="body1"
+            style={{ textAlign: "center", color: "gray", marginTop: 0 }}
+          >
+            Query returned empty result, so no visualization needed.
+          </Typography>
+        ) : (
+          <Chart
+            height={200}
+            options={chartOptions}
+            series={chartSeries}
+            type="area"
+            width="100%"
+          />
+        )}
+      </CardContent>
+      <Divider />
     </Box>
   );
 }

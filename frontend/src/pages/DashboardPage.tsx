@@ -28,12 +28,15 @@ import {
 } from "lucide-react";
 import { DownloadMenu } from "../components/Dashboard/DownloadMenu";
 import { toast } from "react-toastify";
+import { Pagination } from "@mui/material";
 
 type ComponentKeys = keyof typeof componentMapping;
 
 export default function DashboardPage({ pathname }: { pathname: string }) {
-  //const { dashboardId } = useParams();
   const dashboardId = parseInt(pathname.replace("/", ""), 10);
+  const tilesPerPage = 6;
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [tilesData, setTilesData] = useState<TileProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,6 +50,15 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
   const [selectedTile, setSelectedTile] = useState<TileProps | undefined>(
     undefined
   );
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    console.log(event);
+    setPage(value);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const chartRefs = useRef<{ [key: number]: React.RefObject<HTMLDivElement> }>(
     {}
@@ -63,10 +75,14 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
   };
 
   useEffect(() => {
-    console.log("use effect");
     fetchTiles();
     fetchDashboardName();
   }, []);
+
+  // Update total pages whenever tilesData changes
+  useEffect(() => {
+    setTotalPages(Math.ceil(tilesData.length / tilesPerPage));
+  }, [tilesData, tilesPerPage]);
 
   const fetchDashboardName = async () => {
     try {
@@ -86,7 +102,6 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
     setLoading(true);
 
     try {
-      // Refresh tile
       await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/refresh-dashboard-tile/`,
         {
@@ -110,8 +125,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
       }
     } catch (error) {
       console.error("Error refreshing tile:", error);
-      // setError("Failed to refresh tile");
-      toast.success("Unable to refreshed tile");
+      toast.error("Unable to refresh tile");
     } finally {
       setLoading(false);
     }
@@ -148,18 +162,14 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
   };
 
   const handleTileSaved = (message: string) => {
-    // console.log("Toast Message:", message);
     toast.success(message);
   };
 
   const deleteTile = async (tileId: number | undefined) => {
     setLoading(true);
-    // console.log("delete tile", tileId);
     try {
       const response = await axios.delete(
-        `${
-          import.meta.env.VITE_BACKEND_URL
-        }/api/dashboard-tiles-delete/${tileId}/`
+        `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tiles-delete/${tileId}/`
       );
 
       if (response.status === 200) {
@@ -186,6 +196,11 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
     );
   }
 
+  // Calculate current page tiles
+  const startIndex = (page - 1) * tilesPerPage;
+  const endIndex = startIndex + tilesPerPage;
+  const currentTiles = tilesData.slice(startIndex, endIndex);
+
   return (
     <div
       className={`min-h-screen p-8 ${isNewTileDialogOpen ? "opacity-60" : ""}`}
@@ -196,37 +211,6 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
         </div>
       )}
 
-      {/*
-      <Breadcrumbs
-        aria-label="breadcrumb"
-        style={{ color: "white", fontSize: "16px" }}
-      >
-        <Link
-          underline="hover"
-          color="inherit"
-          href="/"
-          style={{ color: "#fff" }}
-        >
-          Home
-        </Link>
-        <Link
-          underline="hover"
-          href="/dashboards"
-          color="inherit"
-          style={{ color: "#fff" }}
-        >
-          Dashboards
-        </Link>
-        <Link
-          underline="hover"
-          color="text.primary"
-          style={{ color: "#4995ec" }}
-        >
-          {dashboardName}
-        </Link>
-      </Breadcrumbs>
-      */}
-
       <div className="flex items-center justify-between mb-8 relative mt-4">
         <div className="absolute inset-x-0 text-center">
           <Typography color="gray" className="text-3xl font-bold">
@@ -235,35 +219,54 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
         </div>
         <div className="flex-1" />
 
-        <Button
-          variant="text"
-          size="sm"
-          color="white"
-          className="flex items-center gap-2 justify-center font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
-          onClick={() => setIsNewTileDialogOpen(true)}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="h-5 w-5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
+        {/* Centered Pagination and Create Tile Button */}
+        {totalPages > 0 && (
+          <div className="flex items-center gap-4">
+            <Pagination
+              count={totalPages}
+              page={page}
+              variant="outlined"
+              color="primary"
+              onChange={handlePageChange}
+              size="small"
+              siblingCount={0}
+              boundaryCount={1}
+              showFirstButton
+              showLastButton
             />
-          </svg>
-          Create Tile
-        </Button>
+
+            <Button
+              variant="text"
+              size="sm"
+              color="white"
+              className="flex items-center gap-2 justify-center font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
+              onClick={() => setIsNewTileDialogOpen(true)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="h-5 w-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+              Create Tile
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-3 grid-rows-2 gap-6">
-        {tilesData.map((tileData, index) => {
-          if (!chartRefs.current[index]) {
-            chartRefs.current[index] = React.createRef<HTMLDivElement>();
+        {currentTiles.map((tileData, index) => {
+          const actualIndex = startIndex + index;
+          if (!chartRefs.current[actualIndex]) {
+            chartRefs.current[actualIndex] = React.createRef<HTMLDivElement>();
           }
 
           const Component =
@@ -341,11 +344,11 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
                         <Trash2 className="h-4 w-4" />
                       </IconButton>
                     </Tooltip>
-                    <DownloadMenu chartRef={chartRefs.current[index]} />
+                    <DownloadMenu chartRef={chartRefs.current[actualIndex]} />
                   </div>
 
                   <div
-                    ref={chartRefs.current[index]}
+                    ref={chartRefs.current[actualIndex]}
                     className="w-full overflow-auto"
                   >
                     {Component && (
@@ -354,43 +357,47 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
                   </div>
 
                   <Accordion
-                    open={open.includes(index)}
-                    icon={<Icon isOpen={open.includes(index)} />}
+                    open={open.includes(actualIndex)}
+                    icon={<Icon isOpen={open.includes(actualIndex)} />}
                   >
                     <AccordionHeader
                       className="text-sm"
-                      onClick={() => handleOpen(index)}
+                      onClick={() => handleOpen(actualIndex)}
                     >
                       User Query
                     </AccordionHeader>
                     <AccordionBody>
-                      <Typography className="text-sm">{tileData.description}</Typography>
+                      <Typography className="text-sm">
+                        {tileData.description}
+                      </Typography>
                     </AccordionBody>
                   </Accordion>
 
                   <Accordion
-                    open={open.includes(index + tilesData.length)}
+                    open={open.includes(actualIndex + tilesData.length)}
                     icon={
-                      <Icon isOpen={open.includes(index + tilesData.length)} />
+                      <Icon
+                        isOpen={open.includes(actualIndex + tilesData.length)}
+                      />
                     }
                   >
                     <AccordionHeader
-                      onClick={() => handleOpen(index + tilesData.length)}
+                      onClick={() => handleOpen(actualIndex + tilesData.length)}
                       className="text-sm"
                     >
                       SQL Query
                     </AccordionHeader>
                     <AccordionBody>
                       <div className="relative">
-                        {open.includes(index + tilesData.length) && (
+                        {open.includes(actualIndex + tilesData.length) && (
                           <button
                             onClick={() =>
-                              handleCopy(tileData.sql_query, index)
+                              handleCopy(tileData.sql_query, actualIndex)
                             }
                             className="absolute top-2 right-2 p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
                             title="Copy SQL"
                           >
-                            {copiedIndex === index ? (
+                            {copiedIndex === actualIndex ? (
                               <CheckIcon className="h-4 w-4 text-green-500" />
                             ) : (
                               <ClipboardIcon className="h-4 w-4 text-gray-500" />
