@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {Button, Card, Spinner} from "@material-tailwind/react";
+import {Button, Card, Spinner, Tooltip} from "@material-tailwind/react";
 import axios from "axios";
 import { BACKEND_API_URL } from "../../config/index";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
@@ -11,6 +11,7 @@ import {createTheme} from "@mui/material/styles";
 import TablePage from "./TablePage.tsx";
 import {toast} from "react-toastify";
 import {useAuth} from "../../components/Authentication/AuthenticationContext.tsx";
+import {Typography} from "@mui/material";
 
 interface Table {
   table_name: string;
@@ -80,18 +81,45 @@ export default function ViewDataPage() {
   };
   function SidebarFooter() {
     return (
-        <div style={{ padding: "10px" }}>
-        <Button
-          variant="text"
-          size="large"
-          onClick={handleRefresh}
-          fullWidth={true}
-          color="blue"
+      <div
+        style={{
+          padding: "10px",
+          position: "sticky",
+          bottom: 0,
+          zIndex: 1,
+        }}
+      >
+        <Tooltip
+          content={
+            <div className="w-80">
+              <Typography
+                variant="small"
+                color="white"
+                className="font-medium opacity-80"
+              >
+                Refresh is used when you have updates in your original database
+                and want Eff BI to update our snapshot of your data
+              </Typography>
+            </div>
+          }
+          placement="top"
+          animate={{
+            mount: { scale: 1, y: 0 },
+            unmount: { scale: 0, y: 25 },
+          }}
+          className="z-[999990]"
         >
-          Refresh Data
-        </Button>
-
-        </div>
+          <Button
+            variant="filled"
+            size="lg"
+            onClick={handleRefresh}
+            fullWidth={true}
+            color="blue"
+          >
+            Refresh Data
+          </Button>
+        </Tooltip>
+      </div>
     );
   }
 
@@ -99,6 +127,9 @@ export default function ViewDataPage() {
     // filter function to get Data based on pathname
     pathname = pathname.replace("/", "");
     const table = tables.find((table) => table.table_name === pathname);
+    if (!table) {
+      return <TablePage table={tables[0]}/>
+    }
     return <TablePage table={table}/>
   }
 
@@ -141,8 +172,6 @@ export default function ViewDataPage() {
       </div>
     );
   }
-
-
   return (
     <AppProvider
       navigation={NAVIGATION}
