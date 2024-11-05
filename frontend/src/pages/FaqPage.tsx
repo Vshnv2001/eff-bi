@@ -128,15 +128,15 @@ const FaqPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 p-8">
+    <div className="min-h-screen p-8">
       <div className="flex flex-col items-center justify-between mb-8 relative">
         <div className="absolute inset-x-0 text-center">
-          <Typography color="white" className="text-3xl font-bold">
+          <Typography color="white" className="text-3xl font-bold text-black">
             Getting Started
           </Typography>
         </div>
         <div className="w-[55rem] m-20 text-center">
-          <Typography color="white" className="text-xl">
+          <Typography color="white" className="text-xl text-black">
             Welcome to Eff BI 👋, Your all-in-one tool for data management and
             visualization! <br />
             Let's guide you through the initial setup and key features to
@@ -152,12 +152,12 @@ const FaqPage = () => {
                 icon={<Icon id={idx} open={openTips}/>}
               >
                 <AccordionHeader
-                  className="text-white hover:text-blue-400"
+                  className="text-white hover:text-blue-400 text-black"
                   onClick={() => handleOpenTips(idx)}
                 >
                   {tip.topic}
                 </AccordionHeader>
-                <AccordionBody className="text-white text-lg">
+                <AccordionBody className="text-white text-lg text-black">
                   {tip.answer}
                 </AccordionBody>
               </Accordion>
@@ -165,7 +165,7 @@ const FaqPage = () => {
           })}
         </div>
         <div className="w-[55rem] mt-20 text-center">
-          <Typography color="white" className="text-3xl font-bold">
+          <Typography color="white" className="text-3xl font-bold text-black">
             Frequently Asked Questions
           </Typography>
         </div>
@@ -178,7 +178,7 @@ const FaqPage = () => {
                 icon={<Icon id={idx} open={openFaqs}/>}
               >
                 <AccordionHeader
-                  className="text-white hover:text-blue-400"
+                  className="text-white hover:text-blue-400 text-black"
                   onClick={() => handleOpenFaqs(idx)}
                 >
                   {faq.question}
