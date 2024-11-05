@@ -59,7 +59,7 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
         {description}
       </Typography>
 
-      <Chart options={options} series={series} type="scatter" height="100%" width="100%" />
+      <Chart options={options} series={series} type="scatter" height={250} width="100%" />
     </div>
   );
 };

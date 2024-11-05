@@ -39,11 +39,17 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
     },
     xaxis: {
       categories,
+      labels: {
+        show: false,
+      },
     },
     yaxis: {
       title: {
         text: series.length > 0 ? series[0].name : "",
       },
+    },
+    legend: {
+      show: false,
     },
   };
 
@@ -77,7 +83,7 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
             options={options}
             series={series}
             type="line"
-            height="100%"
+            height={250}
             width="100%"
           />
         )}
