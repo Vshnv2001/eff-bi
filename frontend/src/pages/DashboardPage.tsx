@@ -45,15 +45,24 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
   const [open, setOpen] = useState<number[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [editingTileId, setEditingTileId] = useState<number | null>(null);
-  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
-  const [selectedTile, setSelectedTile] = useState<TileProps | undefined>(undefined);
+  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
+    useState(false);
+  const [selectedTile, setSelectedTile] = useState<TileProps | undefined>(
+    undefined
+  );
 
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    console.log(event);
     setPage(value);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const chartRefs = useRef<{ [key: number]: React.RefObject<HTMLDivElement> }>({});
+  const chartRefs = useRef<{ [key: number]: React.RefObject<HTMLDivElement> }>(
+    {}
+  );
 
   const handleCopy = async (text: string, index: number) => {
     try {
@@ -66,7 +75,6 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
   };
 
   useEffect(() => {
-    console.log("use effect");
     fetchTiles();
     fetchDashboardName();
   }, []);
@@ -194,7 +202,9 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
   const currentTiles = tilesData.slice(startIndex, endIndex);
 
   return (
-    <div className={`min-h-screen p-8 ${isNewTileDialogOpen ? "opacity-60" : ""}`}>
+    <div
+      className={`min-h-screen p-8 ${isNewTileDialogOpen ? "opacity-60" : ""}`}
+    >
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <Spinner className="h-10 w-10" />
@@ -209,29 +219,45 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
         </div>
         <div className="flex-1" />
 
-        <Button
-          variant="text"
-          size="sm"
-          color="white"
-          className="flex items-center gap-2 justify-center font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
-          onClick={() => setIsNewTileDialogOpen(true)}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="h-5 w-5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
+        {/* Centered Pagination and Create Tile Button */}
+        {totalPages > 0 && (
+          <div className="flex items-center gap-4">
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+              size="small"
+              siblingCount={0}
+              boundaryCount={1}
+              showFirstButton
+              showLastButton
             />
-          </svg>
-          Create Tile
-        </Button>
+
+            <Button
+              variant="text"
+              size="sm"
+              color="white"
+              className="flex items-center gap-2 justify-center font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
+              onClick={() => setIsNewTileDialogOpen(true)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="h-5 w-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+              Create Tile
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-3 grid-rows-2 gap-6">
@@ -348,7 +374,9 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
                   <Accordion
                     open={open.includes(actualIndex + tilesData.length)}
                     icon={
-                      <Icon isOpen={open.includes(actualIndex + tilesData.length)} />
+                      <Icon
+                        isOpen={open.includes(actualIndex + tilesData.length)}
+                      />
                     }
                   >
                     <AccordionHeader
@@ -361,7 +389,9 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
                       <div className="relative">
                         {open.includes(actualIndex + tilesData.length) && (
                           <button
-                            onClick={() => handleCopy(tileData.sql_query, actualIndex)}
+                            onClick={() =>
+                              handleCopy(tileData.sql_query, actualIndex)
+                            }
                             className="absolute top-2 right-2 p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
                             title="Copy SQL"
                           >
@@ -387,21 +417,6 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
           );
         })}
       </div>
-
-      {/* Pagination */}
-      {totalPages > 0 && (
-        <div className="flex justify-center mt-8">
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={handlePageChange}
-            color="primary"
-            size="large"
-            showFirstButton
-            showLastButton
-          />
-        </div>
-      )}
 
       <Dialog
         open={isNewTileDialogOpen}
@@ -437,7 +452,10 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
           </Typography>
         </DialogHeader>
         <DialogBody divider className="grid place-items-center gap-4">
-          <Typography variant="h6" className="text-center font-normal text-black">
+          <Typography
+            variant="h6"
+            className="text-center font-normal text-black"
+          >
             {`You are deleting ${selectedTile?.title} tile.`}
           </Typography>
           <Typography className="text-black">
