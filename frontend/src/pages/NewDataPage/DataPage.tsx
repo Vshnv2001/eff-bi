@@ -34,7 +34,7 @@ export default function DataPage() {
       }
     };
     fetchDbSettings();
-  }, [userId]);
+  }, [userId, dbUri]);
 
   if (isLoading) {
     return (
@@ -55,6 +55,6 @@ export default function DataPage() {
       />
     );
   } else {
-    return <ViewDataPage userId={userId} />;
+    return <ViewDataPage />;
   }
 }

@@ -39,7 +39,7 @@ const databases = [
 ];
 
 export default function DBSettingsPage() {
-  const [selectedDb, setSelectedDb] = useState("");
+  const [selectedDb, setSelectedDb] = useState("postgresql");
   const [dbUri, setDbUri] = useState("");
   const [isDisabledField, setIsDisabledField] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -112,6 +112,7 @@ export default function DBSettingsPage() {
       if (response.status === 201) {
         setIsDisabledField(true);
         toast.success("Connection saved successfully!");
+        window.location.reload();
       }
     } catch (error) {
       if ((error as any).response) {
