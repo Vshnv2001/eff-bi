@@ -10,11 +10,11 @@ import { Box } from "@mui/material";
 export default function NotificationDialog({
   open,
   onClose,
-  navigateToSettings,
+  navigateToData,
 }: {
   open: boolean;
   onClose: () => void;
-  navigateToSettings: () => void;
+  navigateToData: () => void;
 }) {
   return (
     <Dialog open={open} handler={onClose} className="max-w-sm mx-auto">
@@ -29,7 +29,7 @@ export default function NotificationDialog({
         </Typography>
         <Typography className="text-center font-normal">
         The Database URI is required for EFF BI to connect to your database. <br/>
-          Please configure your database settings by visiting the settings page or check with your organization's administrator.
+          Please configure your database settings in the Data Page or check with your organization's administrator.
         </Typography>
         <Box className="w-full flex justify-center gap-4 mb-4 mt-4">
           <Button
@@ -44,9 +44,9 @@ export default function NotificationDialog({
             type="submit"
             color="blue"
             className="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white"
-            onClick={navigateToSettings}
+            onClick={navigateToData}
           >
-            Go to Settings
+            Go to Data Page
           </Button>
         </Box>
       </DialogBody>

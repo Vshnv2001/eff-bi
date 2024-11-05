@@ -114,7 +114,7 @@ export default function ViewDataPage() {
             size="lg"
             onClick={handleRefresh}
             fullWidth={true}
-            color="blue"
+            color="blue-gray"
           >
             Refresh Data
           </Button>

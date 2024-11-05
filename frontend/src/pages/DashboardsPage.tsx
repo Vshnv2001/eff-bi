@@ -137,8 +137,8 @@ export default function DashboardsPage() {
     }
   };
 
-  const navigateToSettings = () => {
-    navigate("/settings/database");
+  const navigateToData = () => {
+    navigate("/view-data");
   };
 
   const handleDialogClose = () => {
@@ -177,7 +177,7 @@ export default function DashboardsPage() {
       <NotificationDialog
         open={isDialogOpen}
         onClose={handleDialogClose}
-        navigateToSettings={navigateToSettings}
+        navigateToData={navigateToData}
       />
     </AppProvider>
   );
