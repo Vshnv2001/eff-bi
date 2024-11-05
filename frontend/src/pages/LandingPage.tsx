@@ -13,26 +13,27 @@ import MockDashboardDisplay from "../components/Display/MockDashboardDisplay";
 
 const LandingPage = () => {
   return (
-    <>
+    <div className="bg-gradient-to-r from-red-100 to-blue-400">
       <Hero />
       <FadeIn>
         <div className="text-center mt-20">
-          <Typography variant="h2" className="text-center">
-            Generate charts with plain English
+          <Typography className="text-center flex flex-col">
+            <span className="text-5xl font-bold">Generate charts</span>
+            <span className="text-5xl font-bold">with simple English</span>
           </Typography>
         </div>
       </FadeIn>
       <AboutUs />
       <Marquee />
-      <Flyer />
-      <Steps />
-      <Display />
       <MockDashboardDisplay />
+      <Steps />
+      <Flyer />
+      <Display />
       <Reviews />
       <Chat />
 
       <ContactUs />
-    </>
+    </div>
   );
 };
 

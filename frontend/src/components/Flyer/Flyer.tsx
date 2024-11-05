@@ -1,21 +1,17 @@
 import React from "react";
 import { Button } from "@material-tailwind/react";
 import Typography from "@mui/material/Typography";
-import ArticleIcon from '@mui/icons-material/Article';
+import ArticleIcon from "@mui/icons-material/Article";
 
 const Flyer: React.FC = () => {
   return (
     <div className="flex flex-col md:flex-row items-center justify-center min-h-screen w-full p-8 space-y-6 md:space-y-0 md:space-x-10">
       {/* Left Section with Text */}
       <div className="flex flex-col items-start md:w-1/3">
-        <Typography
-          variant="h4"
-          gutterBottom
-          className="font-bold text-gray-800"
-        >
+        <Typography variant="h4" gutterBottom className="font-bold text-2xl">
           Customise user roles
         </Typography>
-        <Typography variant="body1" className="text-gray-600">
+        <Typography variant="body1" className="text-black">
           Add users to your organization and assign them roles with ease.
           Customize each user's role, and grant admin privileges to manage
           higher-level tasks when necessary.
