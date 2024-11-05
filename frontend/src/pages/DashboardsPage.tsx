@@ -12,6 +12,8 @@ import { AppProvider } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { useDemoRouter } from "@toolpad/core/internal";
 import DashboardPage from "./DashboardPage";
+import SearchIcon from "@mui/icons-material/Search";
+import { IconButton, TextField, InputAdornment, Box } from "@mui/material";
 
 const demoTheme = createTheme({
   cssVariables: { colorSchemeSelector: "data-toolpad-color-scheme" },
@@ -57,11 +59,42 @@ export default function DashboardsPage() {
       title: dashboard.title,
       icon: <DashboardIcon />,
     })),
-    { kind: "divider" as const},
+    { kind: "divider" as const },
   ];
 
   function DashboardPageContent({ pathname }: { pathname: string }) {
     return <DashboardPage pathname={pathname} />;
+  }
+
+  function Search() {
+    return (
+      <Box px={2}>
+        {" "}
+        <TextField
+          label="Search"
+          variant="outlined"
+          size="small"
+          fullWidth
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <IconButton type="button" aria-label="search" size="small">
+                    <SearchIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            },
+          }}
+          sx={{
+            borderRadius: 2,
+            "& .MuiOutlinedInput-root": {
+              borderRadius: 2,
+            },
+          }}
+        />
+      </Box>
+    );
   }
 
   function SidebarFooter() {
@@ -82,6 +115,10 @@ export default function DashboardsPage() {
 
     return (
       <div style={{ paddingBottom: "16px" }}>
+        <div style={{ marginBottom: "16px" }}>
+          <Search />
+        </div>
+
         <Button
           variant="text"
           size="sm"
@@ -146,11 +183,7 @@ export default function DashboardsPage() {
   };
 
   return (
-    <AppProvider
-      navigation={NAVIGATION}
-      router={router}
-      theme={demoTheme}
-    >
+    <AppProvider navigation={NAVIGATION} router={router} theme={demoTheme}>
       {isLoading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <Spinner className="h-10 w-10" />
