@@ -19,7 +19,7 @@ import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ChatbotPage from "./pages/ChatbotPage";
 import FileUpload from "./pages/FileUploadPage";
-import DashboardPage from "./pages/DashboardPage";
+//import DashboardPage from "./pages/DashboardPage";
 import FetchUserData from "./components/Authentication/FetchUserData";
 import SaveUserData from "./components/Authentication/SaveUserData";
 import DBSettingsPage from "./pages/DBSettingsPage";

@@ -14,12 +14,9 @@ import {
   DialogBody,
   Tooltip,
 } from "@material-tailwind/react";
-import { useParams } from "react-router-dom";
 import axios from "axios";
 import { componentMapping } from "../components/Dashboard/ComponentMapping";
 import { TileProps } from "../components/Dashboard/TileProps";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Link from "@mui/material/Link";
 import NewTile from "../components/Dashboard/NewTile/NewTile";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import {

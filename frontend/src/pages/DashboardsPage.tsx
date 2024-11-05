@@ -50,21 +50,14 @@ export default function DashboardsPage() {
   };
 
   const NAVIGATION = [
-    { kind: "header", title: "Dashboards" },
+    { kind: "header" as const, title: "Dashboards" },
     ...dashboards.map((dashboard) => ({
+      kind: "page" as const,
       segment: dashboard.dash_id,
       title: dashboard.title,
       icon: <DashboardIcon />,
-      // TODO: Confirm where to put description
-      /*
-      children: [
-        {
-          title: dashboard.description,
-        },
-      ],
-      */
     })),
-    { kind: "divider" },
+    { kind: "divider" as const},
   ];
 
   function DashboardPageContent({ pathname }: { pathname: string }) {
