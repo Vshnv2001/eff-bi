@@ -111,6 +111,9 @@ function useChartOptions(
     yaxis: {
       labels: {
         style: { colors: theme.palette.text.secondary },
+        formatter: (value: any) => {
+          return typeof value === "number" ? value.toFixed(2) : value;
+        },
       },
     },
   };
