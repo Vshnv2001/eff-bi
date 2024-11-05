@@ -7,19 +7,19 @@ import Chat from "../components/Footer/Chat";
 import ContactUs from "../components/Footer/ContactUs";
 import Marquee from "../components/Marquee/Marquee";
 import { Typography } from "@mui/material";
+import FadeIn from "../components/Animations/FadeIn";
 
 const LandingPage = () => {
   return (
     <>
       <Hero />
-      <div className="text-center mt-20">
-        <Typography
-          variant="h2"
-          className="text-center"
-        >
-          Generate charts with plain English
-        </Typography>
-      </div>
+      <FadeIn>
+        <div className="text-center mt-20">
+          <Typography variant="h2" className="text-center">
+            Generate charts with plain English
+          </Typography>
+        </div>
+      </FadeIn>
       <AboutUs />
       <Marquee />
       <Steps />
