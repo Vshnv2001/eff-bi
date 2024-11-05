@@ -10,6 +10,11 @@ const LandingPage = () => {
   return (
     <>
       <Hero />
+      <div className="text-center">
+        <h1 className="mt-20 text-4xl font-bold text-center mb-4">
+          Type in simple English, and the chart will be generated for you
+        </h1>
+      </div>
       <AboutUs />
       <Steps />
       <Display />
