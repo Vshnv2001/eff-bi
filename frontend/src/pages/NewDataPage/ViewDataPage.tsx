@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Spinner } from "@material-tailwind/react";
+import {Button, Card, Dialog, Spinner} from "@material-tailwind/react";
 import axios from "axios";
 import { BACKEND_API_URL } from "../../config/index";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
@@ -9,6 +9,8 @@ import {AppProvider} from "@toolpad/core/AppProvider";
 import {useDemoRouter} from "@toolpad/core/internal";
 import {createTheme} from "@mui/material/styles";
 import TablePage from "./TablePage.tsx";
+import {toast} from "react-toastify";
+import {useAuth} from "../../components/Authentication/AuthenticationContext.tsx";
 
 interface Table {
   table_name: string;
@@ -28,9 +30,11 @@ const demoTheme = createTheme({
 export default function ViewDataPage() {
   const [tables, setTables] = useState<Table[]>([]);
   const sessionContext = useSessionContext();
+  const { organizationId } = useAuth();
   const userId = sessionContext.loading ? null : sessionContext.userId;
   const [loading, setLoading] = useState(false);
   const router = useDemoRouter("/view-data");
+  const [refreshLoading, setRefreshLoading] = useState(false);
 
   const NAVIGATION = [
     { kind: "header" as const, title: "Tables" },
@@ -42,13 +46,60 @@ export default function ViewDataPage() {
     })),
     { kind: "divider" as const},
   ];
+  const handleRefresh = async () => {
+    const reqBody = {
+      org_id: Number(organizationId),
+      user_id: userId,
+    };
+
+    try {
+      setRefreshLoading(true);
+      // // console.log(organizationId);
+      // // console.log(reqBody);
+      // // console.log(userId);
+      const response = await axios.post(
+        `${BACKEND_API_URL}/api/connection/refresh/`,
+        reqBody
+      );
+
+      if (response.status === 200) {
+        toast.success("Database refreshed successfully!");
+      }
+    } catch (error) {
+      if ((error as any).response) {
+        console.error("Backend error:", (error as any).response.data);
+      } else if ((error as any).request) {
+        console.error("Network error:", (error as any).request);
+      } else {
+        console.error("Error:", (error as any).message);
+      }
+      toast.error("Failed to refresh data");
+    } finally {
+      setRefreshLoading(false);
+    }
+  };
+  function SidebarFooter() {
+    return (
+        <div style={{ padding: "10px" }}>
+        <Button
+          variant="text"
+          size="large"
+          onClick={handleRefresh}
+          fullWidth={true}
+          color="blue"
+        >
+          Refresh Data
+        </Button>
+
+        </div>
+    );
+  }
 
   function DashboardPageContent({ pathname }: { pathname: string }) {
     // filter function to get Data based on pathname
     pathname = pathname.replace("/", "");
     const table = tables.find((table) => table.table_name === pathname);
     return <TablePage table={table}/>
-    // return <DashboardPage pathname={pathname} />;
   }
 
   useEffect(() => {
@@ -98,14 +149,20 @@ export default function ViewDataPage() {
       router={router}
       theme={demoTheme}
     >
+      {refreshLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <Spinner className="h-10 w-10" />
+        </div>
+        )}
+
       <DashboardLayout
         slots={{
-          // sidebarFooter: SidebarFooter,
+          sidebarFooter: SidebarFooter,
         }}
-        sx={{ height: "calc(100vh - 60px)" }}
+        sx={{ height: "calc(100vh - 60px)"}}
       >
         <DashboardPageContent pathname={router.pathname} />
-        </DashboardLayout>
+      </DashboardLayout>
     </AppProvider>
   );
 };

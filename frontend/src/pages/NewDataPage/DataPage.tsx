@@ -38,7 +38,7 @@ export default function DataPage() {
 
   if (isLoading) {
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-300 z-50">
           <Spinner className="h-10 w-10"/>
         </div>
     );
