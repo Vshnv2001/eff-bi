@@ -220,8 +220,8 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
         <div className="flex-1" />
 
         {/* Centered Pagination and Create Tile Button */}
-        {totalPages > 0 && (
-          <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4">
+          {totalPages > 0 && (
             <Pagination
               count={totalPages}
               page={page}
@@ -234,32 +234,31 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
               showFirstButton
               showLastButton
             />
-
-            <Button
-              variant="text"
-              size="sm"
-              color="white"
-              className="flex items-center gap-2 justify-center font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
-              onClick={() => setIsNewTileDialogOpen(true)}
+          )}
+          <Button
+            variant="text"
+            size="sm"
+            color="white"
+            className="flex items-center gap-2 justify-center font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
+            onClick={() => setIsNewTileDialogOpen(true)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="h-5 w-5"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="h-5 w-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15"
-                />
-              </svg>
-              Create Tile
-            </Button>
-          </div>
-        )}
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+            Create Tile
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-3 grid-rows-2 gap-6">
