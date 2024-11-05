@@ -32,6 +32,7 @@ import TablePermissionsPage from "./pages/TablePermissionsPage";
 import ViewDataPage from "./pages/ViewDataPage";
 import FaqPage from "./pages/FaqPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import DataPage from "./pages/NewDataPage/DataPage";
 
 // Initialize SuperTokens
 SuperTokens.init(SuperTokensConfig);
@@ -126,7 +127,7 @@ const router = createBrowserRouter(
         path="/view-data"
         element={
           <SessionAuth>
-            <ViewDataPage />
+            <DataPage />
           </SessionAuth>
         }
       />
