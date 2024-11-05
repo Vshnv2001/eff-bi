@@ -34,7 +34,7 @@ type ComponentKeys = keyof typeof componentMapping;
 
 export default function DashboardPage({ pathname }: { pathname: string }) {
   const dashboardId = parseInt(pathname.replace("/", ""), 10);
-  const tilesPerPage = 6;
+  const tilesPerPage = 4;
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [tilesData, setTilesData] = useState<TileProps[]>([]);
@@ -261,7 +261,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 grid-rows-2 gap-6">
+      <div className="grid grid-cols-2 grid-rows-2 gap-6">
         {currentTiles.map((tileData, index) => {
           const actualIndex = startIndex + index;
           if (!chartRefs.current[actualIndex]) {

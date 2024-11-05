@@ -25,7 +25,7 @@ const Steps: React.FC = () => {
                   className="object-contain rounded-lg max-w-full scale-y-110"
                 />
               }
-              label="Macbook Pro"
+              label=""
             />
             <img
               src="https://cdn.builder.io/api/v1/image/assets/TEMP/42866618a61135ec34a135b5fd2a5e7144ecc8563c8943a30c69a8fafa7aed1a"
@@ -48,7 +48,7 @@ const Steps: React.FC = () => {
                   className="object-contain rounded-lg max-w-full"
                 />
               }
-              label="Macbook Pro"
+              label=""
             />
             <img
               src="https://cdn.builder.io/api/v1/image/assets/TEMP/42866618a61135ec34a135b5fd2a5e7144ecc8563c8943a30c69a8fafa7aed1a"
