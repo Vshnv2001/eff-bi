@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.MuiToolbar-root {
+  display: none !important;
+}
+
 @keyframes shake {
   0% {
     transform: translate(1px, 0);

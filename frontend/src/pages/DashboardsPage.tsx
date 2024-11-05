@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Typography, Button, Spinner, Dialog } from "@material-tailwind/react";
 import DashboardForm from "../components/Dashboard/DashboardForm";
 import DashboardCard from "../components/Dashboard/DashboardCard";
@@ -14,11 +14,17 @@ import { createTheme } from "@mui/material/styles";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { AppProvider } from "@toolpad/core/AppProvider";
-import { DashboardLayout } from "@toolpad/core/DashboardLayout";
+import {
+  DashboardLayout,
+  type SidebarFooterProps,
+} from "@toolpad/core/DashboardLayout";
 import { useDemoRouter } from "@toolpad/core/internal";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 import DashboardPage from "./DashboardPage";
+import { Tooltip } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home"; // Import icons as needed
+import SettingsIcon from "@mui/icons-material/Settings";
 
 const demoTheme = createTheme({
   cssVariables: { colorSchemeSelector: "data-toolpad-color-scheme" },
@@ -59,7 +65,7 @@ export default function DashboardsPage() {
   };
 
   const NAVIGATION = [
-    { kind: "header", title: "Main items" },
+    { kind: "header", title: "Dashboards" },
     ...dashboards.map((dashboard) => ({
       segment: dashboard.dash_id,
       title: dashboard.title,
@@ -71,8 +77,35 @@ export default function DashboardsPage() {
     { segment: "integrations", title: "Integrations", icon: <LayersIcon /> },
   ];
 
-  function DemoPageContent({ pathname }: { pathname: string }) {
+  function DashboardPageContent({ pathname }: { pathname: string }) {
     return <DashboardPage pathname={pathname} />;
+  }
+
+  function SidebarFooter({ mini }: SidebarFooterProps) {
+    return (
+      <Typography
+        variant="caption"
+        sx={{ m: 1, whiteSpace: "nowrap", overflow: "hidden" }}
+      >
+        {mini
+          ? "© MUI"
+          : `© ${new Date().getFullYear()} Made with love by MUI`}
+      </Typography>
+    );
+  }
+
+  function NavbarLinks() {
+    return (
+      <React.Fragment>
+        <Tooltip title="Home" enterDelay={1000}>
+          <Button variant="text">Home</Button>
+        </Tooltip>
+        <Tooltip title="Settings" enterDelay={1000}>
+          <Button variant="text">Settings</Button>
+        </Tooltip>
+        {/* Add more links as needed */}
+      </React.Fragment>
+    );
   }
 
   const fetchDbSettings = async () => {
@@ -111,10 +144,26 @@ export default function DashboardsPage() {
     navigate("/settings/database");
   };
 
+  const branding = {
+    title: "My Custom App Title",
+    logo: "",
+  };
+
   return (
-    <AppProvider navigation={NAVIGATION} router={router} theme={demoTheme}>
-      <DashboardLayout>
-        <DemoPageContent pathname={router.pathname} />
+    <AppProvider
+      branding={branding}
+      navigation={NAVIGATION}
+      router={router}
+      theme={demoTheme}
+    >
+      <DashboardLayout
+        slots={{
+          sidebarFooter: SidebarFooter,
+        }}
+        disableCollapsibleSidebar={true}
+        sx={{ height: "calc(100vh - 60px)" }}
+      >
+        <DashboardPageContent pathname={router.pathname} />
       </DashboardLayout>
     </AppProvider>
   );
