@@ -38,15 +38,6 @@ const databases = [
   },
 ];
 
-const darkTheme = {
-  card: {
-    defaultProps: {
-      shadow: false,
-      className: "border-4 border-blue-gray-800",
-    },
-  },
-};
-
 export default function DBSettingsPage() {
   const [selectedDb, setSelectedDb] = useState("");
   const [dbUri, setDbUri] = useState("");
@@ -176,161 +167,159 @@ export default function DBSettingsPage() {
   };
 
   return (
-    <ThemeProvider value={darkTheme}>
-      <div className="min-h-screen text-gray-100 p-8">
-        {isLoading && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <Spinner className="h-10 w-10" />
-          </div>
-        )}
-        <div className="max-w-4xl mx-auto">
-          <Typography
-            as="h2"
-            color="white"
-            className="mb-6 text-4xl font-bold text-center text-black"
-          >
-            Database Settings
-          </Typography>
-          <Typography color="white" className="mt-1 font-normal text-center text-black">
-            Connect your database to view your data in Eff BI. Enter your database URI below.
-          </Typography>
+    <div className="min-h-screen text-gray-100 p-8">
+      {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+          <Spinner className="h-10 w-10" />
+        </div>
+      )}
+      <div className="max-w-4xl mx-auto">
+        <Typography
+          as="h2"
+          color="white"
+          className="mb-6 text-4xl font-bold text-center text-black"
+        >
+          Database Settings
+        </Typography>
+        <Typography color="white" className="mt-1 font-normal text-center text-black">
+          Connect your database to view your data in Eff BI. Enter your database URI below.
+        </Typography>
+        <Typography
+          as="h3"
+          color="white"
+          className="mb-2 mt-12 text-2xl font-bold text-black"
+        >
+          Database Type
+        </Typography>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {databases.map((db) => (
+            <Card
+              key={db.id}
+              className={`cursor-pointer transition-all duration-300 border border-gray-400 ${
+                selectedDb === db.id
+                  ? "border-blue-500"
+                  : "hover:border-blue-300"
+              } ${db.id !== "postgresql" ? "opacity-50 bg-gray-100 cursor-not-allowed" : ""}`}
+              onClick={() => db.id === "postgresql" && setSelectedDb(db.id)}
+            >
+              <CardBody className="flex items-center justify-between p-4">
+                <div className="flex items-center space-x-4">
+                  <div className="bg-white p-2 rounded">
+                    <img
+                      src={db.logo}
+                      alt={`${db.name} logo`}
+                      className="w-24 h-12 object-contain"
+                    />
+                  </div>
+                  <Typography color="white" className="font-medium text-black">
+                    {db.name}
+                  </Typography>
+                </div>
+                <Radio
+                  disabled={isDisabledField || db.id !== "postgresql"}
+                  crossOrigin={undefined}
+                  name="database"
+                  color="blue"
+                  checked={selectedDb === db.id}
+                  onChange={() => db.id === "postgresql" && setSelectedDb(db.id)}
+                  className="checked:border-blue-500 checked:before:bg-blue-500"
+                />
+              </CardBody>
+            </Card>
+          ))}
+        </div>
+        <div className="mt-10">
           <Typography
             as="h3"
             color="white"
-            className="mb-2 mt-12 text-2xl font-bold text-black"
+            className="mb-2 text-2xl font-bold text-black"
           >
-            Database Type
+            Database URI
           </Typography>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {databases.map((db) => (
-              <Card
-                key={db.id}
-                className={`cursor-pointer transition-all duration-300 ${
-                  selectedDb === db.id
-                    ? "border-blue-500"
-                    : "hover:border-blue-300"
-                } ${db.id !== "postgresql" ? "opacity-50 cursor-not-allowed" : ""}`}
-                onClick={() => db.id === "postgresql" && setSelectedDb(db.id)}
-              >
-                <CardBody className="flex items-center justify-between p-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-white p-2 rounded">
-                      <img
-                        src={db.logo}
-                        alt={`${db.name} logo`}
-                        className="w-24 h-12 object-contain"
-                      />
-                    </div>
-                    <Typography color="white" className="font-medium">
-                      {db.name}
-                    </Typography>
-                  </div>
-                  <Radio
-                    disabled={isDisabledField || db.id !== "postgresql"}
-                    crossOrigin={undefined}
-                    name="database"
-                    color="blue"
-                    checked={selectedDb === db.id}
-                    onChange={() => db.id === "postgresql" && setSelectedDb(db.id)}
-                    className="checked:border-blue-500 checked:before:bg-blue-500"
-                  />
-                </CardBody>
-              </Card>
-            ))}
-          </div>
-          <div className="mt-10">
+          <input
+            disabled={isDisabledField}
+            type="password"
+            placeholder={"postgres://user@localhost/db"}
+            className={`w-full p-2 rounded ${
+              isDisabledField ? "bg-gray-400" : "bg-white"
+            } text-black border border-gray-700 focus:outline-none focus:border-blue-500 focus:border-2`}
+            value={dbUri}
+            onChange={(e) => setDbUri(e.target.value)}
+          />
+        </div>
+        {isDisabledField ? (
+          <>
             <Typography
               as="h3"
               color="white"
-              className="mb-2 text-2xl font-bold text-black"
+              className="mb-2 pt-10 text-2xl font-bold"
             >
-              Database URI
+              Refresh Data
             </Typography>
-            <input
-              disabled={isDisabledField}
-              type="password"
-              placeholder={"postgres://user@localhost/db"}
-              className={`w-full p-2 rounded ${
-                isDisabledField ? "bg-gray-400" : "bg-white"
-              } text-black border border-gray-700 focus:outline-none focus:border-blue-500 focus:border-2`}
-              value={dbUri}
-              onChange={(e) => setDbUri(e.target.value)}
-            />
-          </div>
-          {isDisabledField ? (
-            <>
-              <Typography
-                as="h3"
-                color="white"
-                className="mb-2 pt-10 text-2xl font-bold"
-              >
-                Refresh Data
-              </Typography>
-              <div className="flex">
-                <Tooltip
-                  content={
-                    <div className="w-80">
-                      <Typography
-                        variant="small"
-                        color="white"
-                        className="font-medium opacity-80"
-                      >
-                        Refresh is used when you have updates in your original
-                        database and want Eff BI to update our snapshot of your
-                        data
-                      </Typography>
-                    </div>
-                  }
-                  placement="top"
-                  animate={{
-                    mount: { scale: 1, y: 0 },
-                    unmount: { scale: 0, y: 25 },
-                  }}
-                >
-                  <Button
-                    color="blue"
-                    className={`w-full text-md tracking-widest`}
-                    onClick={handleRefresh}
-                  >
-                    Refresh
-                  </Button>
-                </Tooltip>
-              </div>
-            </>
-          ) : (
-            <div className="flex mt-12">
+            <div className="flex">
               <Tooltip
                 content={
-                    <div className="w-80">
-                      <Typography
-                        variant="small"
-                        color="white"
-                        className="font-medium opacity-80"
-                      >
-                        Eff BI operates with read-only permissions and will not modify your data.
-                        Your connection is secure.
-                      </Typography>
-                    </div>
-                  }
-                  placement="top"
-                  animate={{
-                    mount: { scale: 1, y: 0 },
-                    unmount: { scale: 0, y: 25 },
-                  }}
-                >
+                  <div className="w-80">
+                    <Typography
+                      variant="small"
+                      color="white"
+                      className="font-medium opacity-80"
+                    >
+                      Refresh is used when you have updates in your original
+                      database and want Eff BI to update our snapshot of your
+                      data
+                    </Typography>
+                  </div>
+                }
+                placement="top"
+                animate={{
+                  mount: { scale: 1, y: 0 },
+                  unmount: { scale: 0, y: 25 },
+                }}
+              >
                 <Button
                   color="blue"
                   className={`w-full text-md tracking-widest`}
-                  onClick={handleSave}
-                  disabled={isDisabledField}
+                  onClick={handleRefresh}
                 >
-                  Save
+                  Refresh
                 </Button>
               </Tooltip>
             </div>
-          )}
-        </div>
+          </>
+        ) : (
+          <div className="flex mt-12">
+            <Tooltip
+              content={
+                  <div className="w-80">
+                    <Typography
+                      variant="small"
+                      color="white"
+                      className="font-medium opacity-80"
+                    >
+                      Eff BI operates with read-only permissions and will not modify your data.
+                      Your connection is secure.
+                    </Typography>
+                  </div>
+                }
+                placement="top"
+                animate={{
+                  mount: { scale: 1, y: 0 },
+                  unmount: { scale: 0, y: 25 },
+                }}
+              >
+              <Button
+                color="blue"
+                className={`w-full text-md tracking-widest`}
+                onClick={handleSave}
+                disabled={isDisabledField}
+              >
+                Save
+              </Button>
+            </Tooltip>
+          </div>
+        )}
       </div>
-    </ThemeProvider>
+    </div>
   );
 }
