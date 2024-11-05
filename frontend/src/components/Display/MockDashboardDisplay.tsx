@@ -7,7 +7,7 @@ import FadeIn from "../Animations/FadeIn";
 const MockDashboardDisplay: React.FC = () => {
   return (
     <FadeIn>
-      <div className="flex flex-col md:flex-row items-center justify-center min-h-screen w-full p-8 space-y-6 md:space-y-0 md:space-x-10">
+      <div className="flex flex-col md:flex-row items-center justify-center min-h-screen w-full p-8 pt-32 pb-36 space-y-6 md:space-y-0 md:space-x-10">
         <div className="md:w-2/3">
           <img
             src="/assets/final_dashboard.png"
