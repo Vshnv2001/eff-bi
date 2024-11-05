@@ -156,12 +156,15 @@ export default function ViewDataPage() {
         )}
 
       <DashboardLayout
-        slots={{
-          sidebarFooter: SidebarFooter,
-        }}
-        sx={{ height: "calc(100vh - 60px)", overflow: "auto" }}
+          slots={{
+            sidebarFooter: SidebarFooter,
+          }}
+          sx={{height: "calc(100vh - 60px)", overflow:"auto"}}
       >
-        <DashboardPageContent pathname={router.pathname}/>
+        <div style={{maxWidth: 'calc(100vw - 320px)'}}>
+          <DashboardPageContent pathname={router.pathname}/>
+        </div>
+
       </DashboardLayout>
     </AppProvider>
   );
