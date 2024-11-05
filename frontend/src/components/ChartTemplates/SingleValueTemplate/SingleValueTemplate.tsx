@@ -1,5 +1,6 @@
-import { Card, Typography } from "@mui/material";
+import { Typography, CardContent, Divider } from "@mui/material";
 
+// TODO: FIX HEIGHT
 interface SingleValueTemplateProps {
   value: number;
   title: string;
@@ -10,19 +11,30 @@ const SingleValueTemplate: React.FC<SingleValueTemplateProps> = ({
   value,
 }) => {
   return (
-    <div className="relative mt-30">
-      <Typography variant="h6" className="text-center text-black mb-10">
-        {title}
-      </Typography>
-
-      <Card
-        className="py-5 rounded-lg"
-        style={{ boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", padding: 20 }}
-      >
-        <Typography variant="h1" className="text-center mt-4">
+    <div style={{ position: "relative", marginTop: 0, height:"100%"}}>
+      <CardContent>
+        <Typography
+          variant="h6"
+          style={{
+            textAlign: "center",
+            marginBottom: 0,
+            wordWrap: "break-word",
+          }}
+        >
+          {title}
+        </Typography>
+        <Typography
+          variant="h4"
+          style={{
+            textAlign: "center",
+            marginBottom: 0,
+            wordWrap: "break-word",
+          }}
+        >
           {value}
         </Typography>
-      </Card>
+      </CardContent>
+      <Divider />
     </div>
   );
 };

@@ -48,24 +48,36 @@ export function AreaChartTemplate({
   return (
     <Box sx={{ border: "1px solid #ccc", borderRadius: 2, p: 2, ...sx }}>
       {/* Title and Description */}
-      <Typography variant="h6" style={{ textAlign: "center", marginBottom: 10 }}>
+      <Typography
+        variant="h6"
+        style={{ textAlign: "center", marginBottom: 10 }}
+      >
         {title}
       </Typography>
-      <Typography variant="body2" style={{ textAlign: "center", marginBottom: 20 }}>
+      <Typography
+        variant="body2"
+        style={{ textAlign: "center", marginBottom: 20 }}
+      >
         {description}
       </Typography>
-
       {/* Chart Display */}
       <CardContent>
-        <div style={{ marginTop: 16 }}>
+        {chartSeries.length === 0 ? (
+          <Typography
+            variant="body1"
+            style={{ textAlign: "center", color: "gray", marginTop: 0 }}
+          >
+            Query returned empty result, so no visualization needed.
+          </Typography>
+        ) : (
           <Chart
-            height={400}
+            height={200}
             options={chartOptions}
             series={chartSeries}
             type="area"
             width="100%"
           />
-        </div>
+        )}
       </CardContent>
       <Divider />
     </Box>

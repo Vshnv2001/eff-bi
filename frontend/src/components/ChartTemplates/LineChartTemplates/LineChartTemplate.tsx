@@ -2,6 +2,8 @@ import React, { useRef } from "react";
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { Typography } from "@mui/material";
+import CardContent from "@mui/material/CardContent";
+import Divider from "@mui/material/Divider";
 
 type LineChartTemplateProps = {
   series: {
@@ -45,7 +47,6 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
     },
   };
 
-
   return (
     <div ref={chartRef}>
       {/* Title and Description */}
@@ -61,7 +62,27 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
       >
         {description}
       </Typography>
-      <Chart options={options} series={series} type="line" height="100%" width="100%" />
+
+      {/* Chart Display */}
+      <CardContent>
+        {series.length === 0 ? (
+          <Typography
+            variant="body1"
+            style={{ textAlign: "center", color: "gray", marginTop: 0 }}
+          >
+            Query returned empty result, so no visualization needed.
+          </Typography>
+        ) : (
+          <Chart
+            options={options}
+            series={series}
+            type="line"
+            height="100%"
+            width="100%"
+          />
+        )}
+      </CardContent>
+      <Divider />
     </div>
   );
 };

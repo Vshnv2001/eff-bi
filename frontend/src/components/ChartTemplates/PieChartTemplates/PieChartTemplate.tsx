@@ -4,6 +4,7 @@ import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import { ApexOptions } from "apexcharts";
 import { Chart } from "../Chart";
+import CardContent from "@mui/material/CardContent";
 
 interface PieChartTemplateProps {
   series: number[];
@@ -71,10 +72,7 @@ export function PieChartTemplate({
 
   return (
     <div style={{ position: "relative", marginTop: 0 }}>
-      <Typography
-        variant="h6"
-        style={{ textAlign: "center", marginBottom: 0 }}
-      >
+      <Typography variant="h6" style={{ textAlign: "center", marginBottom: 0 }}>
         {title}
       </Typography>
       <Typography
@@ -84,16 +82,24 @@ export function PieChartTemplate({
         {description}
       </Typography>
 
-      {series.length === 0 ? (
-        <Typography
-          variant="body2"
-          style={{ textAlign: "center", marginTop: 20, color: "red" }}
-        >
-          Query returned empty result, so no visualization needed.
-        </Typography>
-      ) : (
-        <Chart options={chartOptions} series={series} type="pie" width="100%" height="100%" />
-      )}
+      <CardContent>
+        {series.length === 0 ? (
+          <Typography
+            variant="body2"
+            style={{ textAlign: "center", marginTop: 20, color: "red" }}
+          >
+            Query returned empty result, so no visualization needed.
+          </Typography>
+        ) : (
+          <Chart
+            options={chartOptions}
+            series={series}
+            type="pie"
+            width="100%"
+            height="100%"
+          />
+        )}
+      </CardContent>
       <Divider />
     </div>
   );

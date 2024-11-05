@@ -105,7 +105,7 @@ function useChartOptions(
       categories: categories,
       axisBorder: { color: theme.palette.divider, show: true },
       axisTicks: { color: theme.palette.divider, show: true },
-      labels: { offsetY: 5, style: { colors: theme.palette.text.secondary } },
+      labels: { offsetY: 0, style: { colors: theme.palette.text.secondary } },
       title: { text: xAxisLabel, style: { color: theme.palette.text.primary } },
     },
     yaxis: {

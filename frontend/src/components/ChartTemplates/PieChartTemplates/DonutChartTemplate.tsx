@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import { Chart } from "../Chart";
 import { ApexOptions } from "apexcharts";
 import Divider from "@mui/material/Divider";
+import CardContent from "@mui/material/CardContent";
 
 export interface TrafficProps {
   chartSeries: number[];
@@ -82,22 +83,25 @@ export function DonutChartTemplate({
         {description}
       </Typography>
 
-      {chartSeries.length === 0 ? (
-        <Typography
-          variant="body2"
-          style={{ textAlign: "center", marginTop: 20, color: "red" }}
-        >
-          Query returned empty result, so no visualization needed.
-        </Typography>
-      ) : (
-        <Chart
-          options={chartOptions}
-          series={chartSeries}
-          type="donut"
-          width="100%"
-          height="100%"
-        />
-      )}
+      <CardContent>
+        {chartSeries.length === 0 ? (
+          <Typography
+            variant="body2"
+            style={{ textAlign: "center", marginTop: 20, color: "red" }}
+          >
+            Query returned empty result, so no visualization needed.
+          </Typography>
+        ) : (
+          <Chart
+            options={chartOptions}
+            series={chartSeries}
+            type="donut"
+            width="100%"
+            height="100%"
+          />
+        )}
+      </CardContent>
+
       <Divider />
     </div>
   );

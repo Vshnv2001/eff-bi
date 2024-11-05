@@ -32,7 +32,6 @@ import { toast } from "react-toastify";
 type ComponentKeys = keyof typeof componentMapping;
 
 export default function DashboardPage({ pathname }: { pathname: string }) {
-  //const { dashboardId } = useParams();
   const dashboardId = parseInt(pathname.replace("/", ""), 10);
   const [tilesData, setTilesData] = useState<TileProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -195,37 +194,6 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
           <Spinner className="h-10 w-10" />
         </div>
       )}
-
-      {/*
-      <Breadcrumbs
-        aria-label="breadcrumb"
-        style={{ color: "white", fontSize: "16px" }}
-      >
-        <Link
-          underline="hover"
-          color="inherit"
-          href="/"
-          style={{ color: "#fff" }}
-        >
-          Home
-        </Link>
-        <Link
-          underline="hover"
-          href="/dashboards"
-          color="inherit"
-          style={{ color: "#fff" }}
-        >
-          Dashboards
-        </Link>
-        <Link
-          underline="hover"
-          color="text.primary"
-          style={{ color: "#4995ec" }}
-        >
-          {dashboardName}
-        </Link>
-      </Breadcrumbs>
-      */}
 
       <div className="flex items-center justify-between mb-8 relative mt-4">
         <div className="absolute inset-x-0 text-center">
