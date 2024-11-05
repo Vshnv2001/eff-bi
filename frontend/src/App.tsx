@@ -114,7 +114,7 @@ const router = createBrowserRouter(
         }
       />
       <Route
-        path="/data"
+        path="/view-data"
         element={
           <SessionAuth>
             <DataPage />
