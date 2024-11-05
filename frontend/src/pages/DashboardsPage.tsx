@@ -184,5 +184,5 @@ export default function DashboardsPage() {
         navigateToSettings={navigateToSettings}
       />
     </AppProvider>
-  );
+  )
 }
