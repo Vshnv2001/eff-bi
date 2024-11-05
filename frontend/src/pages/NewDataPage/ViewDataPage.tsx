@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {Button, Card, Dialog, Spinner} from "@material-tailwind/react";
+import {Button, Card, Spinner} from "@material-tailwind/react";
 import axios from "axios";
 import { BACKEND_API_URL } from "../../config/index";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
@@ -22,7 +22,7 @@ interface Table {
 
 const demoTheme = createTheme({
   cssVariables: { colorSchemeSelector: "data-toolpad-color-scheme" },
-  colorSchemes: { light: true, dark: true },
+  colorSchemes: { light: true },
   breakpoints: { values: { xs: 0, sm: 600, md: 600, lg: 1200, xl: 1536 } },
 });
 
@@ -159,9 +159,9 @@ export default function ViewDataPage() {
         slots={{
           sidebarFooter: SidebarFooter,
         }}
-        sx={{ height: "calc(100vh - 60px)"}}
+        sx={{ height: "calc(100vh - 60px)", overflow: "auto" }}
       >
-        <DashboardPageContent pathname={router.pathname} />
+        <DashboardPageContent pathname={router.pathname}/>
       </DashboardLayout>
     </AppProvider>
   );

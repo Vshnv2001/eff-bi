@@ -38,12 +38,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function BasicTable({ columns, data }: BasicTableProps) {
+export default function DataTable({ columns, data }: BasicTableProps) {
   // console.log(columns);
   // console.log(data);
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="customized table">
+      <Table sx={{ minWidth: '650px' }} aria-label="customized table" >
         <TableHead>
           <StyledTableRow>
             {columns.map((column) => (
