@@ -22,10 +22,7 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
 
   useEffect(() => {
     const fontSize = series.length > 10 ? "12px" : "14px";
-
-    // console.log("series", series);
-    // console.log("labels", labels);
-
+    
     if (series.length === 0 || labels.length === 0) {
       return;
     }
