@@ -82,29 +82,71 @@ export default function DashboardsPage() {
   }
 
   function SidebarFooter({ mini }: SidebarFooterProps) {
-    return (
-      <Typography
-        variant="caption"
-        sx={{ m: 1, whiteSpace: "nowrap", overflow: "hidden" }}
-      >
-        {mini
-          ? "© MUI"
-          : `© ${new Date().getFullYear()} Made with love by MUI`}
-      </Typography>
-    );
-  }
+    const [open, setOpen] = useState(false);
+    const [dashboardName, setDashboardName] = useState("");
+    const [dashboardDescription, setDashboardDescription] = useState("");
 
-  function NavbarLinks() {
+    const handleDashboardCreated = () => {
+      fetchDashboards();
+      setOpen(false);
+    };
+
+    const handleOpen = () => {
+      setOpen(!open);
+      setDashboardName("");
+      setDashboardDescription("");
+    };
+
+    const handleDialogClose = () => {
+      setIsDialogOpen(false);
+    };
+
     return (
-      <React.Fragment>
-        <Tooltip title="Home" enterDelay={1000}>
-          <Button variant="text">Home</Button>
-        </Tooltip>
-        <Tooltip title="Settings" enterDelay={1000}>
-          <Button variant="text">Settings</Button>
-        </Tooltip>
-        {/* Add more links as needed */}
-      </React.Fragment>
+      <div>
+        <Typography
+          variant="caption"
+          sx={{ m: 1, whiteSpace: "nowrap", overflow: "hidden" }}
+        >
+          {mini
+            ? "© MUI"
+            : `© ${new Date().getFullYear()} Made with love by MUI`}
+        </Typography>
+
+        <Button
+          variant="text"
+          size="sm"
+          color="white"
+          className="flex items-center gap-2 justify-center font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
+          onClick={handleOpen}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            style={{ height: 20, width: 20 }} // Adjust size as needed
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 4.5v15m7.5-7.5h-15"
+            />
+          </svg>
+          Create Dashboard
+        </Button>
+
+        <Dialog open={open} handler={handleOpen} size="md">
+          <DashboardForm
+            dashboardName={dashboardName}
+            setDashboardName={setDashboardName}
+            dashboardDescription={dashboardDescription}
+            setDashboardDescription={setDashboardDescription}
+            onDashboardCreated={handleDashboardCreated}
+            onClose={() => setOpen(false)}
+          />
+        </Dialog>
+      </div>
     );
   }
 
@@ -123,21 +165,6 @@ export default function DashboardsPage() {
     } catch (error) {
       console.error("Error fetching db settings:", error);
     }
-  };
-
-  const handleDashboardCreated = () => {
-    fetchDashboards();
-    setOpen(false);
-  };
-
-  const handleOpen = () => {
-    setOpen(!open);
-    setDashboardName("");
-    setDashboardDescription("");
-  };
-
-  const handleDialogClose = () => {
-    setIsDialogOpen(false);
   };
 
   const navigateToSettings = () => {
