@@ -27,8 +27,8 @@ const Marquee = () => {
         </Typography>
 
         <div className="relative w-full overflow-hidden rounded-xl">
-          <div className="absolute left-0 top-0 z-10 h-full w-20 bg-gradient-to-r from-white/90 to-transparent" />
-          <div className="absolute right-0 top-0 z-10 h-full w-20 bg-gradient-to-l from-white/90 to-transparent" />
+          <div className="absolute left-0 top-0 z-10 h-full w-20 bg-gradient-to-r from-red-100 to-transparent" />
+          <div className="absolute right-0 top-0 z-10 h-full w-20 bg-gradient-to-l from-blue-400 to-transparent" />
 
           <div
             className="flex items-center py-8 overflow-hidden whitespace-nowrap"

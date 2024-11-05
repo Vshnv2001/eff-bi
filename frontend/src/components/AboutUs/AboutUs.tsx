@@ -88,10 +88,10 @@ const AboutUs: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex w-full text-black pt-6">
+    <div className="flex w-full text-black pt-6 bg-gradient-to-r from-red-100 to-blue-400">
       {/* Text Section */}
-      <FadeIn>
-        <div className="w-1/2 p-6">
+      <div className="w-1/2 p-16">
+        <FadeIn>
           {Texts.map((text, index) => (
             <div
               key={index}
@@ -102,8 +102,8 @@ const AboutUs: React.FC = () => {
               <p>{text.content}</p>
             </div>
           ))}
-        </div>
-      </FadeIn>
+        </FadeIn>
+      </div>
 
       {/* Sticky Chart Section */}
       <div className="w-1/2 h-screen sticky top-0 flex items-center justify-center">
@@ -114,6 +114,7 @@ const AboutUs: React.FC = () => {
             flexDirection: "column",
             width: "80%",
             height: "50%",
+            boxShadow: 5,
           }}
         >
           <CardContent

@@ -33,12 +33,12 @@ const Steps: React.FC = () => {
                   <div className="flex flex-col items-center mt-10">
                     <Typography
                       variant="h3"
-                      className="text-gray-800 text-center font-bold"
+                      className="text-black text-center font-bold"
                     >
                       Tailored Charts
                     </Typography>
                     <div className="mt-10">
-                      <Typography variant="body1" className="text-gray-600">
+                      <Typography variant="body1" className="text-black">
                         Our system uses a lightweight NLP engine to process your
                         natural language inputs into SQL queries and
                         visualizations. With advanced parsing, we streamline
