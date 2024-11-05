@@ -5,6 +5,7 @@ import Display from "../components/Display/Display";
 import Reviews from "../components/Reviews/Reviews";
 import Chat from "../components/Footer/Chat";
 import ContactUs from "../components/Footer/ContactUs";
+import Marquee from "../components/Marquee/Marquee";
 
 const LandingPage = () => {
   return (
@@ -16,10 +17,12 @@ const LandingPage = () => {
         </h1>
       </div>
       <AboutUs />
+      
       <Steps />
       <Display />
       <Reviews />
       <Chat />
+      <Marquee />
       <ContactUs />
     </>
   );
