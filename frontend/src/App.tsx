@@ -22,16 +22,15 @@ import FileUpload from "./pages/FileUploadPage";
 //import DashboardPage from "./pages/DashboardPage";
 import FetchUserData from "./components/Authentication/FetchUserData";
 import SaveUserData from "./components/Authentication/SaveUserData";
-import DBSettingsPage from "./pages/DBSettingsPage";
 import OrgSettingsPage from "./pages/OrgSettingsPage";
 import DashboardsPage from "./pages/DashboardsPage";
 import DBAccessPermissionsPage from "./pages/DBAccessPermissionsPage";
 import NewTilePage from "./pages/NewTilePage";
 import ExDashboardPage from "./pages/ExDashboardPage";
 import TablePermissionsPage from "./pages/TablePermissionsPage";
-import ViewDataPage from "./pages/ViewDataPage";
 import FaqPage from "./pages/FaqPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import DataPage from "./pages/NewDataPage/DataPage";
 
 // Initialize SuperTokens
 SuperTokens.init(SuperTokensConfig);
@@ -53,14 +52,6 @@ const router = createBrowserRouter(
         element={
           <SessionAuth>
             <FileUpload />
-          </SessionAuth>
-        }
-      />
-      <Route
-        path="/settings/database"
-        element={
-          <SessionAuth>
-            <DBSettingsPage />
           </SessionAuth>
         }
       />
@@ -126,7 +117,7 @@ const router = createBrowserRouter(
         path="/view-data"
         element={
           <SessionAuth>
-            <ViewDataPage />
+            <DataPage />
           </SessionAuth>
         }
       />

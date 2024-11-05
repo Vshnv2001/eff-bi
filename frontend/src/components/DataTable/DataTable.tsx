@@ -1,4 +1,5 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, tableCellClasses} from '@mui/material';
+import {styled} from "@mui/material/styles";
 
 interface Column {
   id: string;
@@ -15,34 +16,56 @@ interface BasicTableProps {
 }
 
 
-export default function BasicTable({ columns, data }: BasicTableProps) {
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.primary.dark,
+    opacity: 0.8,
+    color: theme.palette.common.white,
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
+
+export default function DataTable({ columns, data }: BasicTableProps) {
   // console.log(columns);
   // console.log(data);
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <TableContainer component={Paper} sx={{boxShadow: 3}}>
+      <Table sx={{ minWidth: '650px' }} aria-label="customized table" >
         <TableHead>
-          <TableRow>
+          <StyledTableRow>
             {columns.map((column) => (
-              <TableCell
+              <StyledTableCell
                 key={column.id}
                 align={column.align}
                 style={{ minWidth: column.minWidth }}
               >
                 {column.label}
-              </TableCell>
+              </StyledTableCell>
             ))}
-          </TableRow>
+          </StyledTableRow>
         </TableHead>
         <TableBody>
           {data.map((row, rowIndex) => (
-              <TableRow key={rowIndex}>
+              <StyledTableRow key={rowIndex}>
                 {columns.map((column, colIndex) => (
-                    <TableCell key={colIndex} align={column.align}>
+                    <StyledTableCell key={colIndex} align={column.align}>
                       {row[colIndex]}
-                    </TableCell>
+                    </StyledTableCell>
                 ))}
-              </TableRow>
+              </StyledTableRow>
           ))}
         </TableBody>
       </Table>

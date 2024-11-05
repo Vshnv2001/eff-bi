@@ -119,7 +119,7 @@ def get_column_descriptions(table_name, schema_name, db_url):
         # Retrieve table descriptions
         input_prompt = (
             f"Given the following table '{table_name}' in schema '{schema_name}' with columns: {col_names},\n"
-            "Generate a SHORT description for the table in at most 100 words in simple text. \n"
+            "Generate a SHORT description for the table with at most 2 sentences in simple text. \n"
             f"Here is a sample of the first 3 rows of data from the table:\n{formatted_data}\n"
         )
         
