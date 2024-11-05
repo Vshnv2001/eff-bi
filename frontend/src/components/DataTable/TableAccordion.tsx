@@ -73,9 +73,16 @@ const TableAccordion: React.FC = () => {
         >
           <AccordionHeader
             onClick={() => handleOpen(index)}
-            className="flex items-center justify-between w-full p-4 cursor-pointer transition-colors hover:bg-blue-gray-50/50"
+            className="flex items-center justify-between w-full p-4 cursor-pointer"
           >
-            <Typography variant="h6" className="text-sm flex-grow truncate">
+            <Typography
+              variant="h6"
+              className={`text-sm flex-grow truncate transition-all duration-200 ${
+                open === index
+                  ? "font-bold text-blue-600"
+                  : "hover:font-bold hover:text-blue-600"
+              }`}
+            >
               {table.table_name}
             </Typography>
             <div
@@ -99,6 +106,7 @@ const TableAccordion: React.FC = () => {
               </svg>
             </div>
           </AccordionHeader>
+
           <AccordionBody className="pt-0">
             {table.table_description && (
               <Typography variant="small" className="text-gray-600 mb-4">
