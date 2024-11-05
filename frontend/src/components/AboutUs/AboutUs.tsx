@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import { Card, CardContent } from "@mui/material";
+import FadeIn from "../Animations/FadeIn";
 
 const Texts = [
   {
@@ -89,18 +90,20 @@ const AboutUs: React.FC = () => {
   return (
     <div className="flex w-full bg-[#fafafb] text-black pt-6">
       {/* Text Section */}
-      <div className="w-1/2 p-6">
-        {Texts.map((text, index) => (
-          <div
-            key={index}
-            ref={(el) => (textRefs.current[index] = el)}
-            className="mb-6 h-[100vh] flex flex-col justify-center"
-          >
-            <h2 className="text-2xl font-bold">{text.title}</h2>
-            <p>{text.content}</p>
-          </div>
-        ))}
-      </div>
+      <FadeIn>
+        <div className="w-1/2 p-6">
+          {Texts.map((text, index) => (
+            <div
+              key={index}
+              ref={(el) => (textRefs.current[index] = el)}
+              className="mb-6 h-[100vh] flex flex-col justify-center"
+            >
+              <h2 className="text-2xl font-bold">{text.title}</h2>
+              <p>{text.content}</p>
+            </div>
+          ))}
+        </div>
+      </FadeIn>
 
       {/* Sticky Chart Section */}
       <div className="w-1/2 h-screen sticky top-0 flex items-center justify-center">
@@ -109,7 +112,7 @@ const AboutUs: React.FC = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            width: "50%",
+            width: "80%",
             height: "50%",
           }}
         >
