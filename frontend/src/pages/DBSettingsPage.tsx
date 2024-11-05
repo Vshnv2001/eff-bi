@@ -177,7 +177,7 @@ export default function DBSettingsPage() {
 
   return (
     <ThemeProvider value={darkTheme}>
-      <div className="min-h-screen bg-gray-900 text-gray-100 p-8">
+      <div className="min-h-screen text-gray-100 p-8">
         {isLoading && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <Spinner className="h-10 w-10" />
