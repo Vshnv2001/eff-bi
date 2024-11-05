@@ -58,13 +58,13 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
       {/* Title and Description */}
       <Typography
         variant="h6"
-        style={{ textAlign: "center", marginBottom: 10 }}
+        style={{ textAlign: "center", marginBottom: 0 }}
       >
         {title}
       </Typography>
       <Typography
         variant="body2"
-        style={{ textAlign: "center", marginBottom: 20 }}
+        style={{ textAlign: "center", marginBottom: -30 }}
       >
         {description}
       </Typography>
@@ -83,7 +83,7 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
             options={options}
             series={series}
             type="line"
-            height={250}
+            height={200}
             width="100%"
           />
         )}
