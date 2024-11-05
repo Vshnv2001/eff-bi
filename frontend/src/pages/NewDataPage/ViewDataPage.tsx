@@ -1,21 +1,13 @@
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardHeader,
-  Typography,
-  CardBody,
-  Spinner,
-} from "@material-tailwind/react";
+import { Card, Spinner } from "@material-tailwind/react";
 import axios from "axios";
 import { BACKEND_API_URL } from "../../config/index";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
-import DataTable from "../../components/DataTable/DataTable";
 import LayersIcon from "@mui/icons-material/Layers";
 import {DashboardLayout} from "@toolpad/core/DashboardLayout";
 import {AppProvider} from "@toolpad/core/AppProvider";
 import {useDemoRouter} from "@toolpad/core/internal";
 import {createTheme} from "@mui/material/styles";
-import DashboardPage from "../DashboardPage.tsx";
 import TablePage from "./TablePage.tsx";
 
 interface Table {
@@ -25,9 +17,6 @@ interface Table {
   rows: string[][];
 }
 
-interface TableWithDescriptionProps {
-  table: Table;
-}
 
 const demoTheme = createTheme({
   cssVariables: { colorSchemeSelector: "data-toolpad-color-scheme" },
@@ -35,25 +24,6 @@ const demoTheme = createTheme({
   breakpoints: { values: { xs: 0, sm: 600, md: 600, lg: 1200, xl: 1536 } },
 });
 
-const TableWithDescription: React.FC<TableWithDescriptionProps> = ({
-  table,
-}) => (
-  <>
-    <Typography className="text-xl font-bold">{table.table_name}</Typography>
-    {table.table_description && (
-      <Typography variant="paragraph" className="mb-4">
-        {table.table_description}
-      </Typography>
-    )}
-    <DataTable
-      columns={table.column_headers.map((header: string) => ({
-        id: header,
-        label: header,
-      }))}
-      data={table.rows}
-    />
-  </>
-);
 
 export default function ViewDataPage() {
   const [tables, setTables] = useState<Table[]>([]);
