@@ -1,19 +1,26 @@
 import { useState, useEffect } from "react";
 import { Typography, Button, Spinner, Dialog } from "@material-tailwind/react";
 import DashboardForm from "../components/Dashboard/DashboardForm";
-import DashboardCard from "../components/Dashboard/DashboardCard";
 import axios from "axios";
 import { DashboardProps } from "../components/Dashboard/DashboardProps";
 import NotificationDialog from "../components/Dashboard/NotificationDialog";
 import { useNavigate } from "react-router-dom";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Link from "@mui/material/Link";
+import { createTheme } from "@mui/material/styles";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import { AppProvider } from "@toolpad/core/AppProvider";
+import { DashboardLayout } from "@toolpad/core/DashboardLayout";
+import { useDemoRouter } from "@toolpad/core/internal";
+import DashboardPage from "./DashboardPage";
+
+const demoTheme = createTheme({
+  cssVariables: { colorSchemeSelector: "data-toolpad-color-scheme" },
+  colorSchemes: { light: true, dark: true },
+  breakpoints: { values: { xs: 0, sm: 600, md: 600, lg: 1200, xl: 1536 } },
+});
 
 export default function DashboardsPage() {
-  const [open, setOpen] = useState(false);
-  const [dashboardName, setDashboardName] = useState("");
-  const [dashboardDescription, setDashboardDescription] = useState("");
+  //const [dashboardDescription, setDashboardDescription] = useState("");
   const [dashboards, setDashboards] = useState<DashboardProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -22,6 +29,7 @@ export default function DashboardsPage() {
   const sessionContext = useSessionContext();
   const userId = sessionContext.loading ? null : sessionContext.userId;
   const navigate = useNavigate();
+  const router = useDemoRouter("/dashboards");
 
   useEffect(() => {
     fetchDashboards();
@@ -41,91 +49,43 @@ export default function DashboardsPage() {
     }
   };
 
-  const fetchDbSettings = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/users/uri/${userId}`
-      );
-      if (response.status === 200) {
-        setDbUri(response.data.database_uri);
-        console.log(dbUri);
-        if (response.data.database_uri === "") {
-          setIsDialogOpen(true);
-        } else {
-          setIsDisabledField(true);
-          console.log(isDisabledField);
-        }
-      } else {
-        console.error("Failed to fetch db settings:", response);
-      }
-    } catch (error) {
-      console.error("Error fetching db settings:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const NAVIGATION = [
+    { kind: "header" as const, title: "Dashboards" },
+    ...dashboards.map((dashboard) => ({
+      kind: "page" as const,
+      segment: dashboard.dash_id,
+      title: dashboard.title,
+      icon: <DashboardIcon />,
+    })),
+    { kind: "divider" as const},
+  ];
 
-  const handleDashboardCreated = () => {
-    fetchDashboards();
-    setOpen(false);
-  };
+  function DashboardPageContent({ pathname }: { pathname: string }) {
+    return <DashboardPage pathname={pathname} />;
+  }
 
-  const handleOpen = () => {
-    setOpen(!open);
-    setDashboardName("");
-    setDashboardDescription("");
-  };
+  function SidebarFooter() {
+    const [open, setOpen] = useState(false);
+    const [dashboardName, setDashboardName] = useState("");
+    const [dashboardDescription, setDashboardDescription] = useState("");
 
-  const handleDialogClose = () => {
-    setIsDialogOpen(false);
-  };
+    const handleDashboardCreated = () => {
+      fetchDashboards();
+      setOpen(false);
+    };
 
-  const navigateToSettings = () => {
-    navigate("/settings/database");
-  };
+    const handleOpen = () => {
+      setOpen(!open);
+      setDashboardName("");
+      setDashboardDescription("");
+    };
 
-  return (
-    <div className={`min-h-screen bg-gray-900 p-8 ${open ? "opacity-60" : ""}`}>
-      {isLoading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <Spinner className="h-10 w-10" />
-        </div>
-      )}
-
-      <Breadcrumbs
-        aria-label="breadcrumb"
-        style={{ color: "white", fontSize: "16px" }}
-      >
-        <Link
-          underline="hover"
-          color="inherit"
-          href="/"
-          style={{ color: "#fff" }}
-        >
-          Home
-        </Link>
-        <Link
-          underline="hover"
-          color="text.primary"
-          style={{ color: "#4995ec" }}
-        >
-          Dashboards
-        </Link>
-      </Breadcrumbs>
-
-      <div className="flex items-center justify-between mb-8 relative mt-4">
-        <div className="absolute inset-x-0 text-center">
-          <Typography color="white" className="text-3xl font-bold">
-            Dashboards
-          </Typography>
-        </div>
-        <div className="flex-1" />
-
+    return (
+      <div style={{ paddingBottom: "16px" }}>
         <Button
           variant="text"
           size="sm"
-          color="white"
-          className="flex items-center gap-2 justify-center font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
+          className="text-black flex items-center h-[5vh] w-full gap-2 justify-start font-bold hover:bg-gray-300 hover:text-black z-10"
           onClick={handleOpen}
         >
           <svg
@@ -144,39 +104,87 @@ export default function DashboardsPage() {
           </svg>
           Create Dashboard
         </Button>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {dashboards.map((dashboard) => (
-          <DashboardCard key={dashboard.dash_id} dashboard={dashboard} />
-        ))}
-        {!dashboards.length && (
+        <Dialog open={open} handler={handleOpen} size="md">
+          <DashboardForm
+            dashboardName={dashboardName}
+            setDashboardName={setDashboardName}
+            dashboardDescription={dashboardDescription}
+            setDashboardDescription={setDashboardDescription}
+            onDashboardCreated={handleDashboardCreated}
+            onClose={() => setOpen(false)}
+          />
+        </Dialog>
+      </div>
+    );
+  }
+
+  const fetchDbSettings = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/uri/${userId}`
+      );
+      if (response.status === 200) {
+        setDbUri(response.data.database_uri);
+        setIsDialogOpen(!response.data.database_uri);
+        setIsDisabledField(!!response.data.database_uri);
+        console.log(dbUri, isDisabledField);
+      } else {
+        console.error("Failed to fetch db settings:", response);
+      }
+    } catch (error) {
+      console.error("Error fetching db settings:", error);
+    }
+  };
+
+  const navigateToSettings = () => {
+    navigate("/settings/database");
+  };
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+  };
+
+  const branding = {
+    title: "My Custom App Title",
+    logo: "",
+  };
+
+  return (
+    <AppProvider
+      branding={branding}
+      navigation={NAVIGATION}
+      router={router}
+      theme={demoTheme}
+    >
+      {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <Spinner className="h-10 w-10" />
+        </div>
+      )}
+
+      <DashboardLayout
+        slots={{
+          sidebarFooter: SidebarFooter,
+        }}
+        sx={{ height: "calc(100vh - 60px)" }}
+      >
+        {dashboards.length > 0 || isLoading ? (
+          <DashboardPageContent pathname={router.pathname} />
+        ) : (
           <div className="col-span-1 md:col-span-2 lg:col-span-3">
-            <Typography color="white" className="text-xl text-center italic">
-              {!isLoading
-                ? "No dashboards found. Create one to get started."
-                : ""}
+            <Typography color="black" className="text-xl text-center italic">
+              No dashboards found. Create one to get started.
             </Typography>
           </div>
         )}
-      </div>
-
-      <Dialog open={open} handler={handleOpen} size="md">
-        <DashboardForm
-          dashboardName={dashboardName}
-          setDashboardName={setDashboardName}
-          dashboardDescription={dashboardDescription}
-          setDashboardDescription={setDashboardDescription}
-          onDashboardCreated={handleDashboardCreated}
-          onClose={() => setOpen(false)}
-        />
-      </Dialog>
+      </DashboardLayout>
 
       <NotificationDialog
         open={isDialogOpen}
         onClose={handleDialogClose}
         navigateToSettings={navigateToSettings}
       />
-    </div>
+    </AppProvider>
   );
 }

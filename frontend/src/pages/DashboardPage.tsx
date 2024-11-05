@@ -14,12 +14,9 @@ import {
   DialogBody,
   Tooltip,
 } from "@material-tailwind/react";
-import { useParams } from "react-router-dom";
 import axios from "axios";
 import { componentMapping } from "../components/Dashboard/ComponentMapping";
 import { TileProps } from "../components/Dashboard/TileProps";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Link from "@mui/material/Link";
 import NewTile from "../components/Dashboard/NewTile/NewTile";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import {
@@ -34,8 +31,9 @@ import { toast } from "react-toastify";
 
 type ComponentKeys = keyof typeof componentMapping;
 
-export default function DashboardPage() {
-  const { dashboardId } = useParams();
+export default function DashboardPage({ pathname }: { pathname: string }) {
+  //const { dashboardId } = useParams();
+  const dashboardId = parseInt(pathname.replace("/", ""), 10);
   const [tilesData, setTilesData] = useState<TileProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -65,6 +63,7 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
+    console.log("use effect");
     fetchTiles();
     fetchDashboardName();
   }, []);
@@ -189,9 +188,7 @@ export default function DashboardPage() {
 
   return (
     <div
-      className={`min-h-screen bg-gray-900 p-8 ${
-        isNewTileDialogOpen ? "opacity-60" : ""
-      }`}
+      className={`min-h-screen p-8 ${isNewTileDialogOpen ? "opacity-60" : ""}`}
     >
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -199,6 +196,7 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {/*
       <Breadcrumbs
         aria-label="breadcrumb"
         style={{ color: "white", fontSize: "16px" }}
@@ -227,10 +225,11 @@ export default function DashboardPage() {
           {dashboardName}
         </Link>
       </Breadcrumbs>
+      */}
 
       <div className="flex items-center justify-between mb-8 relative mt-4">
         <div className="absolute inset-x-0 text-center">
-          <Typography color="white" className="text-3xl font-bold">
+          <Typography color="gray" className="text-3xl font-bold">
             {dashboardName}
           </Typography>
         </div>
@@ -261,7 +260,7 @@ export default function DashboardPage() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-3 grid-rows-2 gap-6">
         {tilesData.map((tileData, index) => {
           if (!chartRefs.current[index]) {
             chartRefs.current[index] = React.createRef<HTMLDivElement>();
@@ -282,7 +281,7 @@ export default function DashboardPage() {
 
           return (
             <div key={tileData.id} className="isolate">
-              <Card className="bg-white shadow rounded-lg w-full h-[45rem] overflow-auto">
+              <Card className="bg-white shadow rounded-lg w-full overflow-auto">
                 <CardBody className="flex flex-col">
                   <div className="flex justify-end gap-2 mb-4">
                     <Tooltip
@@ -347,7 +346,7 @@ export default function DashboardPage() {
 
                   <div
                     ref={chartRefs.current[index]}
-                    className="w-full h-[32rem] overflow-auto"
+                    className="w-full overflow-auto"
                   >
                     {Component && (
                       <Component {...componentProps} title={tileData.title} />
@@ -359,13 +358,13 @@ export default function DashboardPage() {
                     icon={<Icon isOpen={open.includes(index)} />}
                   >
                     <AccordionHeader
-                      className="text-lg"
+                      className="text-sm"
                       onClick={() => handleOpen(index)}
                     >
                       User Query
                     </AccordionHeader>
                     <AccordionBody>
-                      <Typography>{tileData.description}</Typography>
+                      <Typography className="text-sm">{tileData.description}</Typography>
                     </AccordionBody>
                   </Accordion>
 
@@ -377,7 +376,7 @@ export default function DashboardPage() {
                   >
                     <AccordionHeader
                       onClick={() => handleOpen(index + tilesData.length)}
-                      className="text-lg"
+                      className="text-sm"
                     >
                       SQL Query
                     </AccordionHeader>
@@ -400,7 +399,7 @@ export default function DashboardPage() {
                         )}
                         <SyntaxHighlighter
                           language="sql"
-                          className="w-full rounded-lg"
+                          className="w-full rounded-lg text-sm"
                         >
                           {tileData.sql_query}
                         </SyntaxHighlighter>

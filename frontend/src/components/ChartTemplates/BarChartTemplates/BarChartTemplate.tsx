@@ -25,17 +25,17 @@ export function BarChartTemplate({
   const chartOptions = useChartOptions(categories, xAxisLabel, yAxisLabel);
 
   return (
-    <div style={{ position: "relative", marginTop: 30 }}>
+    <div style={{ position: "relative", marginTop: 0 }}>
       {/* Title and Description */}
       <Typography
         variant="h6"
-        style={{ textAlign: "center", marginBottom: 10 }}
+        style={{ textAlign: "center", marginBottom: -30 }}
       >
         {title}
       </Typography>
       <Typography
         variant="body2"
-        style={{ textAlign: "center", marginBottom: 20 }}
+        style={{ textAlign: "center", marginBottom: 0 }}
       >
         {description}
       </Typography>
@@ -44,17 +44,18 @@ export function BarChartTemplate({
         {chartSeries.length === 0 ? (
           <Typography
             variant="body1"
-            style={{ textAlign: "center", color: "gray", marginTop: 20 }}
+            style={{ textAlign: "center", color: "gray", marginTop: 0 }}
           >
             Query returned empty result, so no visualization needed.
           </Typography>
         ) : (
           <Chart
-            height={350}
+            height={200}
             options={chartOptions}
             series={chartSeries}
             type="bar"
             width="100%"
+            style={{ marginBottom: -30 }}
           />
         )}
       </CardContent>
@@ -106,7 +107,7 @@ function useChartOptions(
       axisBorder: { color: theme.palette.divider, show: true },
       axisTicks: { color: theme.palette.divider, show: true },
       categories: categories,
-      labels: { offsetY: 5, style: { colors: theme.palette.text.secondary } },
+      labels: { show: false },
       title: { text: xAxisLabel, style: { color: theme.palette.text.primary } },
     },
     yaxis: {
