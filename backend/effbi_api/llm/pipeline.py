@@ -61,7 +61,12 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     sql_validator = SQLValidator()
     
     # Execute the SQL query and get the results
-    results = db_manager.execute_query(state, sql_validator, 0)
+    try:
+        results = db_manager.execute_query(state, sql_validator, 0)
+    except Exception as e:
+        logger.error("Error executing query: " + str(e))
+        state.error = "We were unable to generate a valid SQL query. Please rephrase your question."
+        return state
     
     state.results = results
     
