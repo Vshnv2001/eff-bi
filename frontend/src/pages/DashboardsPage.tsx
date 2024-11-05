@@ -15,9 +15,9 @@ import DashboardPage from "./DashboardPage";
 import SearchIcon from "@mui/icons-material/Search";
 import { IconButton, TextField, InputAdornment, Box } from "@mui/material";
 
-const demoTheme = createTheme({
+const theme = createTheme({
   cssVariables: { colorSchemeSelector: "data-toolpad-color-scheme" },
-  colorSchemes: { light: true, dark: true },
+  colorSchemes: { light: true },
   breakpoints: { values: { xs: 0, sm: 600, md: 600, lg: 1200, xl: 1536 } },
 });
 
@@ -31,7 +31,7 @@ export default function DashboardsPage() {
   const sessionContext = useSessionContext();
   const userId = sessionContext.loading ? null : sessionContext.userId;
   const navigate = useNavigate();
-  const router = useDemoRouter("/dashboards");
+  const router = useDemoRouter("/1");
 
   useEffect(() => {
     fetchDashboards();
@@ -183,7 +183,7 @@ export default function DashboardsPage() {
   };
 
   return (
-    <AppProvider navigation={NAVIGATION} router={router} theme={demoTheme}>
+    <AppProvider navigation={NAVIGATION} router={router} theme={theme}>
       {isLoading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <Spinner className="h-10 w-10" />
@@ -195,8 +195,10 @@ export default function DashboardsPage() {
           sidebarFooter: SidebarFooter,
         }}
         sx={{ height: "calc(100vh - 60px)" }}
-      >
+      > 
+        
         {dashboards.length > 0 || isLoading ? (
+          
           <DashboardPageContent pathname={router.pathname} />
         ) : (
           <div className="col-span-1 md:col-span-2 lg:col-span-3">
