@@ -85,6 +85,7 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
             type="line"
             height={200}
             width="100%"
+            style={{ marginBottom: -30 }}
           />
         )}
       </CardContent>

@@ -73,6 +73,7 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
             type="scatter"
             height={200}
             width="100%"
+            style={{ marginBottom: -30 }}
           />
         )}
       </CardContent>
