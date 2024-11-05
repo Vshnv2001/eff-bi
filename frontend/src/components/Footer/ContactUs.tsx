@@ -39,7 +39,7 @@ const Footer: React.FC = () => {
 
   return (
     <footer
-      className="text-black h-screen flex flex-col justify-center"
+      className="text-black h-screen flex flex-col justify-center bg-[#fafafb]"
       id="contact"
     >
       <FadeIn>

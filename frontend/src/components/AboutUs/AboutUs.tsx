@@ -88,7 +88,7 @@ const AboutUs: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex w-full bg-[#fafafb] text-black pt-6">
+    <div className="flex w-full text-black pt-6">
       {/* Text Section */}
       <FadeIn>
         <div className="w-1/2 p-6">

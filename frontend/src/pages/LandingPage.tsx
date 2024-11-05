@@ -8,6 +8,8 @@ import ContactUs from "../components/Footer/ContactUs";
 import Marquee from "../components/Marquee/Marquee";
 import { Typography } from "@mui/material";
 import FadeIn from "../components/Animations/FadeIn";
+import Flyer from "../components/Flyer/Flyer";
+import MockDashboardDisplay from "../components/Display/MockDashboardDisplay";
 
 const LandingPage = () => {
   return (
@@ -22,8 +24,10 @@ const LandingPage = () => {
       </FadeIn>
       <AboutUs />
       <Marquee />
+      <Flyer />
       <Steps />
       <Display />
+      <MockDashboardDisplay />
       <Reviews />
       <Chat />
 
