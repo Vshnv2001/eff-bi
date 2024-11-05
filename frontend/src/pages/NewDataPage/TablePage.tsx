@@ -24,13 +24,18 @@ const TablePage: React.FC = ({table}: {table: Table}) => {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center py-10 px-4">
+    <div className="flex flex-col justify-center items-center p-10">
       <Typography className="text-3xl font-bold mb-4">{table.table_name}</Typography>
       {table.table_description && (
-          <Alert severity="info" icon={<AutoAwesomeOutlinedIcon/>} className="w-full mb-4">
+          <Alert severity="info" icon={<AutoAwesomeOutlinedIcon/>} className="w-full mb-4" sx={{
+        borderRadius: 4,
+        width: '100%',
+        mb: 4,
+        boxShadow: 1,
+      }}>
             <Stack spacing={2}>
         <Typography variant="subtitle2" className="font-medium">
-          AI-generated Table Description
+          AI-Generated Table Description
         </Typography>
         <Typography variant="body2" className="text-black">
           {table.table_description}
