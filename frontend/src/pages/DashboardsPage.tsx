@@ -145,14 +145,8 @@ export default function DashboardsPage() {
     setIsDialogOpen(false);
   };
 
-  const branding = {
-    title: "My Custom App Title",
-    logo: "",
-  };
-
   return (
     <AppProvider
-      branding={branding}
       navigation={NAVIGATION}
       router={router}
       theme={demoTheme}
