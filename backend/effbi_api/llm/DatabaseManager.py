@@ -64,7 +64,7 @@ class DatabaseManager:
             print("Error executing query: ", str(e))
             print("Number of tries: ", num_tries)
             if num_tries >= 5:
-                raise Exception(f"Error executing query: {str(e)}")
+                raise Exception(f"We were unable to generate a valid SQL query. Please rephrase your question.")
             else:
                 validated_sql_query = sql_validator.validate_and_fix_sql(state, str(e))
                 print("Validated SQL Query: ", validated_sql_query)
