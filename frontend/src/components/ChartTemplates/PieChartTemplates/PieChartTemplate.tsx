@@ -1,7 +1,9 @@
-import React, { useEffect, useRef } from "react";
-import ApexCharts from "apexcharts";
+import * as React from "react";
+//import CardContent from "@mui/material/CardContent";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
 import { ApexOptions } from "apexcharts";
-import { Typography } from "@mui/material";
+import { Chart } from "../Chart";
 
 interface PieChartTemplateProps {
   series: number[];
@@ -11,93 +13,77 @@ interface PieChartTemplateProps {
   description: string;
 }
 
-const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
+export function PieChartTemplate({
   series,
   labels,
-  chartWidth = 500,
+  chartWidth,
   title,
   description,
-}) => {
-  const chartRef = useRef<HTMLDivElement | null>(null);
+}: PieChartTemplateProps): React.JSX.Element {
+  const fontSize = series.length > 10 ? "12px" : "14px";
 
-  useEffect(() => {
-    const fontSize = series.length > 10 ? "12px" : "14px";
-
-    // console.log("series", series);
-    // console.log("labels", labels);
-
-    if (series.length === 0 || labels.length === 0) {
-      return;
+  const generateColors = (count: number): string[] => {
+    const colors = [];
+    const baseHue = 30;
+    for (let i = 0; i < count; i++) {
+      colors.push(`hsl(${(baseHue + (i * 360) / count) % 360}, 70%, 50%)`);
     }
+    return colors;
+  };
 
-    const generateColors = (count: number) => {
-      const colors = [];
-      const baseHue = 30;
-      for (let i = 0; i < count; i++) {
-        colors.push(`hsl(${(baseHue + (i * 360) / count) % 360}, 70%, 50%)`);
-      }
-      return colors;
-    };
-
-    const options: ApexOptions = {
-      series: series,
-      chart: {
-        width: "100%",
-        type: "pie",
-      },
-      labels: labels,
-      colors: generateColors(series.length),
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: { width: 200 },
-            legend: {
-              height: 200,
-            },
+  const chartOptions: ApexOptions = {
+    chart: {
+      width: "100%",
+      type: "pie",
+    },
+    labels: labels,
+    colors: generateColors(series.length),
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          chart: { width: chartWidth },
+          legend: {
+            height: 500,
           },
         },
-      ],
-      legend: {
-        position: "right",
-        fontSize: fontSize,
-        floating: false,
-        formatter: function (seriesName, opts) {
-          return seriesName + ` - ${series[opts.seriesIndex].toFixed(1)}`;
-        },
       },
-      tooltip: {
-        enabled: true,
-        y: {
-          formatter: (value) => `${value.toFixed(1)}%`,
-        },
+    ],
+    legend: {
+      position: "right",
+      fontSize: fontSize,
+      floating: false,
+      formatter: function (seriesName, opts) {
+        return seriesName + ` - ${series[opts.seriesIndex].toFixed(1)}`;
       },
-    };
-
-    const chart = new ApexCharts(chartRef.current as HTMLElement, options);
-    chart.render();
-
-    return () => {
-      chart.destroy();
-    };
-  }, [series, labels, chartWidth]);
+    },
+    tooltip: {
+      enabled: true,
+      y: {
+        formatter: (value) => `${value.toFixed(1)}%`,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+  };
 
   return (
-    <div style={{ position: "relative", marginTop: 30 }}>
+    <div style={{ position: "relative", marginTop: 0 }}>
       <Typography
         variant="h6"
-        style={{ textAlign: "center", marginBottom: 10 }}
+        style={{ textAlign: "center", marginBottom: 0 }}
       >
         {title}
       </Typography>
       <Typography
         variant="body2"
-        style={{ textAlign: "center", marginBottom: 20 }}
+        style={{ textAlign: "center", marginBottom: 0 }}
       >
         {description}
       </Typography>
 
-      {series.length === 0 || labels.length === 0 ? (
+      {series.length === 0 ? (
         <Typography
           variant="body2"
           style={{ textAlign: "center", marginTop: 20, color: "red" }}
@@ -105,17 +91,11 @@ const PieChartTemplate: React.FC<PieChartTemplateProps> = ({
           Query returned empty result, so no visualization needed.
         </Typography>
       ) : (
-        <div
-          ref={chartRef}
-          style={{
-            maxHeight: "600px",
-            overflowY: "auto",
-            overflowX: "hidden",
-          }}
-        />
+        <Chart options={chartOptions} series={series} type="pie" width="100%" />
       )}
+      <Divider />
     </div>
   );
-};
+}
 
 export default PieChartTemplate;

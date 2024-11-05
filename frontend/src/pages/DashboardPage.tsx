@@ -429,6 +429,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
           }}
           tileId={editingTileId}
           onSaveSuccess={handleTileSaved}
+          dashboardId={dashboardId}
         />
       </Dialog>
 
