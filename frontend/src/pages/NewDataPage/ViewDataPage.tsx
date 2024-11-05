@@ -87,6 +87,7 @@ export default function ViewDataPage() {
           position: "sticky",
           bottom: 0,
           zIndex: 1,
+          backgroundColor: "white",
         }}
       >
         <Tooltip
