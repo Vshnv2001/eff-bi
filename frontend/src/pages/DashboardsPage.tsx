@@ -1,30 +1,17 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Typography, Button, Spinner, Dialog } from "@material-tailwind/react";
 import DashboardForm from "../components/Dashboard/DashboardForm";
-import DashboardCard from "../components/Dashboard/DashboardCard";
 import axios from "axios";
 import { DashboardProps } from "../components/Dashboard/DashboardProps";
 import NotificationDialog from "../components/Dashboard/NotificationDialog";
 import { useNavigate } from "react-router-dom";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Link from "@mui/material/Link";
-import Box from "@mui/material/Box";
 import { createTheme } from "@mui/material/styles";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { AppProvider } from "@toolpad/core/AppProvider";
-import {
-  DashboardLayout,
-  type SidebarFooterProps,
-} from "@toolpad/core/DashboardLayout";
+import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { useDemoRouter } from "@toolpad/core/internal";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import LayersIcon from "@mui/icons-material/Layers";
 import DashboardPage from "./DashboardPage";
-import { Tooltip } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home"; // Import icons as needed
-import SettingsIcon from "@mui/icons-material/Settings";
 
 const demoTheme = createTheme({
   cssVariables: { colorSchemeSelector: "data-toolpad-color-scheme" },
@@ -33,8 +20,6 @@ const demoTheme = createTheme({
 });
 
 export default function DashboardsPage() {
-  const [open, setOpen] = useState(false);
-  const [dashboardName, setDashboardName] = useState("");
   const [dashboardDescription, setDashboardDescription] = useState("");
   const [dashboards, setDashboards] = useState<DashboardProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -92,10 +77,6 @@ export default function DashboardsPage() {
       setOpen(!open);
       setDashboardName("");
       setDashboardDescription("");
-    };
-
-    const handleDialogClose = () => {
-      setIsDialogOpen(false);
     };
 
     return (
@@ -158,6 +139,10 @@ export default function DashboardsPage() {
     navigate("/settings/database");
   };
 
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+  };
+
   const branding = {
     title: "My Custom App Title",
     logo: "",
@@ -170,128 +155,34 @@ export default function DashboardsPage() {
       router={router}
       theme={demoTheme}
     >
+      {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <Spinner className="h-10 w-10" />
+        </div>
+      )}
+
       <DashboardLayout
         slots={{
           sidebarFooter: SidebarFooter,
         }}
         sx={{ height: "calc(100vh - 60px)" }}
       >
-        <DashboardPageContent pathname={router.pathname} />
+        {dashboards.length > 0 || isLoading ? (
+          <DashboardPageContent pathname={router.pathname} />
+        ) : (
+          <div className="col-span-1 md:col-span-2 lg:col-span-3">
+            <Typography color="black" className="text-xl text-center italic">
+              No dashboards found. Create one to get started.
+            </Typography>
+          </div>
+        )}
       </DashboardLayout>
+
+      <NotificationDialog
+        open={isDialogOpen}
+        onClose={handleDialogClose}
+        navigateToSettings={navigateToSettings}
+      />
     </AppProvider>
   );
-}
-
-{
-  /*
- <DashboardPage pathname={router.pathname} />
-  <AppProvider navigation={NAVIGATION} router={router} theme={demoTheme}>
-      <DashboardLayout>
-        <Box
-          className={`min-h-screen bg-gray-900 p-8 ${open ? "opacity-60" : ""}`}
-        >
-          {isLoading && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-              <Spinner className="h-10 w-10" />
-            </div>
-          )}
-
-          <Breadcrumbs
-            aria-label="breadcrumb"
-            style={{ color: "white", fontSize: "16px" }}
-          >
-            <Link
-              underline="hover"
-              color="inherit"
-              href="/"
-              style={{ color: "#fff" }}
-            >
-              Home
-            </Link>
-            <Link
-              underline="hover"
-              color="text.primary"
-              style={{ color: "#4995ec" }}
-            >
-              Dashboards
-            </Link>
-          </Breadcrumbs>
-
-          <div className="flex items-center justify-between mb-8 relative mt-4">
-            <div className="absolute inset-x-0 text-center">
-              <Typography color="white" className="text-3xl font-bold">
-                Dashboards
-              </Typography>
-            </div>
-            <Button
-              variant="text"
-              size="sm"
-              color="white"
-              className="flex items-center gap-2 justify-center font-bold bg-blue-500 hover:bg-blue-600 hover:text-white z-10"
-              onClick={handleOpen}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="h-5 w-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15"
-                />
-              </svg>
-              Create Dashboard
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {dashboards.map((dashboard) => (
-              <DashboardCard key={dashboard.dash_id} dashboard={dashboard} />
-            ))}
-            {!dashboards.length && !isLoading && (
-              <div className="col-span-1 md:col-span-2 lg:col-span-3">
-                <Typography
-                  color="white"
-                  className="text-xl text-center italic"
-                >
-                  No dashboards found. Create one to get started.
-                </Typography>
-              </div>
-            )}
-          </div>
-
-          <Dialog open={open} handler={handleOpen} size="md">
-            <DashboardForm
-              dashboardName={dashboardName}
-              setDashboardName={setDashboardName}
-              dashboardDescription={dashboardDescription}
-              setDashboardDescription={setDashboardDescription}
-              onDashboardCreated={handleDashboardCreated}
-              onClose={() => setOpen(false)}
-            />
-          </Dialog>
-
-          <NotificationDialog
-            open={isDialogOpen}
-            onClose={handleDialogClose}
-            navigateToSettings={navigateToSettings}
-          />
-        </Box>
-        <AppProvider
-          navigation={NAVIGATION}
-          router={router}
-          theme={demoTheme}
-        >
-          <DashboardLayout>
-            <DemoPageContent pathname={`/dashboards/${dashboard.dash_id}`} />
-          </DashboardLayout>
-        </AppProvider>
-      </DashboardLayout>
-    </AppProvider>
-  
-*/
 }
