@@ -21,7 +21,7 @@ export function BarChartTemplate({
   title,
   description,
 }: BarProps): React.JSX.Element {
-  const yAxisLabel = chartSeries[0]?.name || "";
+  const yAxisLabel = "";
   const chartOptions = useChartOptions(categories, xAxisLabel, yAxisLabel);
 
   return (
@@ -107,7 +107,7 @@ function useChartOptions(
       axisBorder: { color: theme.palette.divider, show: true },
       axisTicks: { color: theme.palette.divider, show: true },
       categories: categories,
-      labels: { show: false },
+      labels: { show: true },
       title: { text: xAxisLabel, style: { color: theme.palette.text.primary } },
     },
     yaxis: {
