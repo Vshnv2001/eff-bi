@@ -21,7 +21,7 @@ export function BarChartTemplate({
   title,
   description,
 }: BarProps): React.JSX.Element {
-  const yAxisLabel = "";
+  const yAxisLabel = chartSeries.length === 1 ? chartSeries[0].name : "";
   const chartOptions = useChartOptions(categories, xAxisLabel, yAxisLabel);
 
   return (
