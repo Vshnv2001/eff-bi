@@ -12,8 +12,6 @@ import { AppProvider } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { useDemoRouter } from "@toolpad/core/internal";
 import DashboardPage from "./DashboardPage";
-import SearchIcon from "@mui/icons-material/Search";
-import { IconButton, TextField, InputAdornment, Box } from "@mui/material";
 
 const theme = createTheme({
   cssVariables: { colorSchemeSelector: "data-toolpad-color-scheme" },
@@ -66,37 +64,6 @@ export default function DashboardsPage() {
     return <DashboardPage pathname={pathname} />;
   }
 
-  function Search() {
-    return (
-      <Box px={2}>
-        {" "}
-        <TextField
-          label="Search"
-          variant="outlined"
-          size="small"
-          fullWidth
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <IconButton type="button" aria-label="search" size="small">
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            },
-          }}
-          sx={{
-            borderRadius: 2,
-            "& .MuiOutlinedInput-root": {
-              borderRadius: 2,
-            },
-          }}
-        />
-      </Box>
-    );
-  }
-
   function SidebarFooter() {
     const [open, setOpen] = useState(false);
     const [dashboardName, setDashboardName] = useState("");
@@ -114,19 +81,15 @@ export default function DashboardsPage() {
     };
 
     return (
-      <div style={{ paddingBottom: "16px" }}>
-        <div style={{ marginBottom: "16px" }}>
-          <Search />
-        </div>
-
+      <div>
         <div className="p-[10px]">
           <Button
-            className="text-white flex items-center h-[5vh] w-full gap-2 justify-center font-bold hover:bg-blue-400 z-10"
-            onClick={handleOpen}
             variant="filled"
             size="lg"
+            onClick={handleOpen}
             fullWidth={true}
             color="blue"
+            className="flex items-center justify-center space-x-2"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

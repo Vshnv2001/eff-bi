@@ -267,7 +267,7 @@ export default function DBSettingsPage() {
                     >
                       Refresh is used when you have updates in your original
                       database and want Eff BI to update our snapshot of your
-                      data
+                      entire data
                     </Typography>
                   </div>
                 }

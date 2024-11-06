@@ -48,7 +48,7 @@ const tips = [
     answer:
       "Dashboards are essential for visualizing data interactions and trends! " +
       "Start creating your own by visiting the 'Dashboard' page and clicking the 'Create Dashboard' button. " +
-      "This allows you to assemble a collection of tiles showcase data insights.",
+      "This allows you to assemble a collection of charts showcase data insights.",
   },
   {
     topic: "Creating Chart",
