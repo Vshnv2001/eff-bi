@@ -114,19 +114,19 @@ export default function DashboardsPage() {
     };
 
     return (
-      <div style={{ paddingBottom: "16px" }}>
-        <div style={{ marginBottom: "16px" }}>
+      <div>
+        <div style={{ marginBottom: "4px" }}>
           <Search />
         </div>
 
         <div className="p-[10px]">
           <Button
-            className="text-white flex items-center h-[5vh] w-full gap-2 justify-center font-bold hover:bg-blue-400 z-10"
-            onClick={handleOpen}
             variant="filled"
             size="lg"
+            onClick={handleOpen}
             fullWidth={true}
             color="blue"
+            className="flex items-center justify-center space-x-2"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
