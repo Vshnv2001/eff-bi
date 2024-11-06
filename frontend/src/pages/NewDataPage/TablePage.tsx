@@ -1,10 +1,8 @@
-// TablePage.tsx
 import {Typography} from "@material-tailwind/react";
 import DataTable from "../../components/DataTable/DataTable";
 import {Alert} from "@mui/material";
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import Stack from "@mui/material/Stack";
-
 
 interface Table {
   table_name: string;
