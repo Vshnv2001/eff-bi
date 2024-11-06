@@ -108,7 +108,7 @@ class DataFormatter:
             You are an expert AI assistant that recommends appropriate data visualizations. Based on the user's question, SQL query, and query results, suggest the most suitable type of graph or chart to visualize the data. If no visualization is appropriate, indicate that.
 
             Available chart types and their use cases:
-                - BarChartTemplate: Best for comparing categorical data or showing changes over time when categories are discrete and the number of categories is more than 2.
+                - BarChartTemplate: Best for comparing categorical data or showing changes over time when categories are discrete.
                 - HorizontalBarChartTemplate: Best for comparing categorical data or showing changes over time when the number of categories is small or the disparity between categories is large.
                 - PieChartTemplate: Ideal for showing proportions or percentages within a whole.
                 - LineChartTemplate: Best for showing trends and distributions over time. Best used when both x-axis and y-axis are continuous.
@@ -137,7 +137,7 @@ class DataFormatter:
             11. Market Trends in Financial Data: (e.g., "What is the historical price movement of a stock?" - CandlestickTemplate)
             13. Single Value: (e.g., "What is the total revenue?" - SingleValueTemplate)
 
-            If a specific chart type is requested, utilize the corresponding template for that chart.
+            If a specific chart type is requested, utilize the corresponding template for that chart only if the context is valid.
             For example, use PieChartTemplate for pie charts, BarChartTemplate for bar charts, and so on.
             
             Provide your response in the following format:
