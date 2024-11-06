@@ -119,28 +119,32 @@ export default function DashboardsPage() {
           <Search />
         </div>
 
-        <Button
-          variant="text"
-          size="sm"
-          className="text-black flex items-center h-[5vh] w-full gap-2 justify-start font-bold hover:bg-gray-300 hover:text-black z-10"
-          onClick={handleOpen}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="h-5 w-5"
+        <div className="p-[10px]">
+          <Button
+            className="text-white flex items-center h-[5vh] w-full gap-2 justify-center font-bold hover:bg-blue-400 z-10"
+            onClick={handleOpen}
+            variant="filled"
+            size="lg"
+            fullWidth={true}
+            color="blue"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
-          Create Dashboard
-        </Button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="h-5 w-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+            Create Dashboard
+          </Button>
+        </div>
 
         <Dialog open={open} handler={handleOpen} size="md">
           <DashboardForm
