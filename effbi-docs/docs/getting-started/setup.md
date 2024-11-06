@@ -14,5 +14,4 @@ Provide Read-Only access to the database by copy-pasting the connection string a
 
 You're all set!
 
-If you are not the organization administrator, reach out to your administrator to get the 
-
+If you are not the organization administrator, reach out to your administrator to get the
