@@ -124,8 +124,10 @@ export const TileForm: React.FC<TileFormProps> = ({
           <SyntaxHighlighter
             language="sql"
             className="w-full rounded-lg h-full"
+            lineProps={{
+              style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },
+            }}
             wrapLines={true}
-            lineProps={{ style: { whiteSpace: "pre-wrap" } }}
           >
             {sqlQuery}
           </SyntaxHighlighter>

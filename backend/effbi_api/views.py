@@ -180,7 +180,7 @@ def create_dashboard_tile(request: HttpRequest):
                     # Prepare the final response data
                     response_data = {
                         "organization": org_id,
-                        "sql_query": response_part.sql_query,
+                        #"sql_query": response_part.sql_query,
                         "component": response_part.visualization.get('visualization', ''),
                         "tile_props": response_part.formatted_data,
                     }

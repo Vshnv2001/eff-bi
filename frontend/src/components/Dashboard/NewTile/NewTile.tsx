@@ -164,7 +164,7 @@ export default function NewTile({
       };
 
       // Step 1: Start streaming the SQL query immediately
-      const stream = await generateStreamForSQLQuery(data);
+      const stream = await generateStream(data);
 
       let fullSqlQuery = "";
       let previewData = {}; // Store the rest of the preview data
@@ -172,18 +172,23 @@ export default function NewTile({
         console.log("chunk", chunk);
         // Check if this chunk is part of the SQL query
         if (chunk.sql_query) {
+          console.log("if", chunk)
           fullSqlQuery += chunk.sql_query;
-          setSqlQuery(fullSqlQuery); // Update SQL query progressively
+          //setSqlQuery(fullSqlQuery); // Update SQL query progressively
         } else {
           // Collect the other preview data (component, tile_props, etc.)
-          setPreviewComponent(chunk.component);
-          setPreviewProps(chunk.tile_props);
+          console.log("else", chunk)
+          setSqlQuery(chunk.sql_query);
+          setPreviewComponent(chunk["component"]);
+          console.log("component", previewComponent);
+          setPreviewProps(chunk["tile_props"]);
+          console.log("props", previewProps);
           setIsPreviewGenerated(true);
           setApiData({
             dash_id: dashboardId,
             title: tileName,
             description: description,
-            ...previewData,
+            ...chunk,
           });
         }
       }
@@ -198,7 +203,7 @@ export default function NewTile({
   };
 
   // Function to generate stream for SQL query
-  const generateStreamForSQLQuery = async (
+  const generateStream = async (
     data: any
   ): Promise<AsyncIterable<any>> => {
     const response = await fetch(
@@ -218,6 +223,7 @@ export default function NewTile({
     return getIterableStream(response.body);
   };
 
+  /*
   // Function to handle streaming
   async function* getIterableStream(
     body: ReadableStream<Uint8Array>
@@ -250,6 +256,23 @@ export default function NewTile({
         yield previewData;
         buffer = ""; // Reset the buffer
       }
+    }
+  }
+  */
+
+  async function* getIterableStream(
+    body: ReadableStream<Uint8Array>
+  ): AsyncIterable<string> {
+    const reader = body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) {
+        break;
+      }
+      const decodedChunk = decoder.decode(value, { stream: true });
+      yield decodedChunk;
     }
   }
 
