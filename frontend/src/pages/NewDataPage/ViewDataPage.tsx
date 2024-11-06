@@ -99,7 +99,7 @@ export default function ViewDataPage() {
                 className="font-medium opacity-80"
               >
                 Refresh is used when you have updates in your original database
-                and want Eff BI to update our snapshot of your data
+                and want Eff BI to update our snapshot of entire your data
               </Typography>
             </div>
           }
@@ -115,7 +115,7 @@ export default function ViewDataPage() {
             size="lg"
             onClick={handleRefresh}
             fullWidth={true}
-            color="blue-gray"
+            color="blue"
           >
             Refresh Data
           </Button>
