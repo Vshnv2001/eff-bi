@@ -1,5 +1,6 @@
 import requests
 import psycopg2
+import time
 from typing import List, Any, Optional
 
 from .SQLValidator import SQLValidator
@@ -44,6 +45,7 @@ class DatabaseManager:
     def execute_query(self, state: State, sql_validator: SQLValidator, num_tries:int = 0) -> List[Any]:
         """Execute SQL query on the remote database and return results."""
         try:
+            start_time = time.time()
             conn = psycopg2.connect(self.db_uri)
             cursor = conn.cursor()
             print("state.sql_query", state.sql_query)
@@ -59,6 +61,7 @@ class DatabaseManager:
                 count += 1
             logger.info("results ")
             logger.info(results)
+            print("results", results)
             return results
         except Exception as e:
             print("Error executing query: ", str(e))

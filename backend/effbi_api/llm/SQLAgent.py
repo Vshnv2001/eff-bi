@@ -41,13 +41,30 @@ or
 
 Postgres is case-sensitive. Please make sure to add double quotes around the column names, table names, and schema names.
 
-If a question involves searching for a string, always use the lower() function to search for strings and always compare with lower case values, like:
+If a question involves searching for a string, always use the lower() function to search for strings and always compare with lower case string values, like:
 SELECT * from "company" WHERE lower("name") IN ('apple', 'google');
 This is a STRICT requirement.
 
-If there are more than 10 rows, only give the first 10 rows. This is a STRICT requirement.
-             
-For questions like "plot a distribution of the fares for men and women", count the frequency of each fare and plot it. The x axis should be the fare and the y axis should be the count of people who paid that fare.
+DATA UNIQUENESS REQUIREMENTS:
+1. For any dataset being visualized, enforce STRICT one-to-one mapping:
+   - Each X-axis value must appear EXACTLY ONCE
+   - Each Y-axis value must appear EXACTLY ONCE
+   - No duplicates allowed on either axis
+   - If duplicates exist, keep only the first occurrence
+
+2. Example of INVALID data:
+   x=1, y=100
+   x=1, y=200  (INVALID: duplicate x=1)
+   x=2, y=100  (INVALID: duplicate y=100)
+
+3. Example of VALID data:
+   x=1, y=100
+   x=2, y=200
+   x=3, y=300
+
+4. This uniqueness requirement MUST be enforced BEFORE any other data processing steps and BEFORE returning results.
+
+Only after everything is done then apply limit 10
 
 SKIP ALL ROWS WHERE ANY COLUMN IS NULL or "N/A" or "".
 Just give the query string. Do not format it. Make sure to use the correct spellings of nouns as provided in the unique nouns list. All the table and column names should be enclosed in backticks.

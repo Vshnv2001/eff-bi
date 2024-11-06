@@ -136,7 +136,7 @@ const Authentication = () => {
         //navigate("/auth/fetch");
       }
     } catch (err) {
-      setErrorMessage("Oops! Something went wrong.");
+      setErrorMessage("Something went wrong.");
       setInputError({ email: true, password: true });
     } finally {
       setIsLoading(false);
@@ -165,9 +165,14 @@ const Authentication = () => {
         navigate("/dashboards");
       } else {
         console.error("Error fetching user data:", response.statusText);
+        setInputError({ email: true, password: true });
+        setErrorMessage("Email password combination is incorrect");
+        
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
+      setInputError({ email: true, password: true });
+      setErrorMessage("Email password combination is incorrect");
     } finally {
       setIsLoading(false);
     }
@@ -181,7 +186,7 @@ const Authentication = () => {
         setInputError({ email: true, password: false });
       }
     } catch (err) {
-      setErrorMessage("Oops! Something went wrong.");
+      setErrorMessage("Something went wrong.");
       setInputError({ email: true, password: true });
     }
   };
