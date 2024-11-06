@@ -140,7 +140,7 @@ export const TileForm: React.FC<TileFormProps> = ({
           <PreviewComponent
             {...previewProps}
             title={tileName}
-            description={queryPrompt}
+            // description={queryPrompt}
           />
         </div>
       )}
