@@ -403,7 +403,9 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
                         )}
                         <SyntaxHighlighter
                           language="sql"
-                          className="w-full rounded-lg text-sm"
+                          className="w-full rounded-lg h-full"
+                          wrapLines={true}
+                          lineProps={{ style: { whiteSpace: "pre-wrap" } }}
                         >
                           {tileData.sql_query}
                         </SyntaxHighlighter>

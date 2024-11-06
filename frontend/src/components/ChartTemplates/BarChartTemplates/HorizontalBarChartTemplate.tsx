@@ -73,7 +73,7 @@ function useChartOptions(
 
   const generateColors = (count: number): string[] => {
     const colors = [];
-    const baseHue = 30;
+    const baseHue = 210;
     for (let i = 0; i < count; i++) {
       colors.push(`hsl(${(baseHue + (i * 360) / count) % 360}, 70%, 50%)`);
     }
