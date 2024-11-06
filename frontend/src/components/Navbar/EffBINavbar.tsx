@@ -62,7 +62,7 @@ export default function EffBINavbar() {
 
   return (
     <Navbar
-      className={`fixed top-0 z-50 max-w-full px-6 py-2.4 bg-white rounded-none transition-transform duration-300 ${
+      className={`fixed top-0 z-50 max-w-full px-6 py-2.4 bg-white rounded-none transition-transform duration-200 ${
         isVisible ? "translate-y-0" : "-translate-y-full"
       }`}
     >
