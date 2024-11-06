@@ -195,13 +195,11 @@ export default function DashboardsPage() {
           sidebarFooter: SidebarFooter,
         }}
         sx={{ height: "calc(100vh - 60px)" }}
-      > 
-        
+      >
         {dashboards.length > 0 || isLoading ? (
-          
           <DashboardPageContent pathname={router.pathname} />
         ) : (
-          <div className="col-span-1 md:col-span-2 lg:col-span-3">
+          <div className="h-[100vh] bg-[#fafafb] col-span-1 md:col-span-2 lg:col-span-3 flex justify-center items-center">
             <Typography color="black" className="text-xl text-center italic">
               No dashboards found. Create one to get started.
             </Typography>
