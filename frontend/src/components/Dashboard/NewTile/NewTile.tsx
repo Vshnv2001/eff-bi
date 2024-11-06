@@ -133,6 +133,104 @@ export default function NewTile({
     }
   }
 
+  /*
+      const stream = await generateStream();
+    for await (const chunk of stream) {
+      console.log(chunk);
+    }
+  */
+
+  const generatePreview = async () => {
+    setIsLoading(true);
+
+    const { cancelToken, timeout } = setupCancelToken(
+      "Unable to generate tile. Request took too long."
+    );
+
+    let description = queryPrompt;
+    try {
+      if (selectedTemplates.length > 0) {
+        const componentNamesString = selectedTemplates.join(",");
+        description = `${queryPrompt}\n\nTry to generate a chart that is any of the following: ${componentNamesString}.`;
+      }
+
+      const controller = new AbortController();
+      const signal = controller.signal;
+
+      const data = {
+        dash_id: dashboardId,
+        title: tileName,
+        description: description,
+      };
+
+      // Step 1: Start streaming the SQL query immediately
+      const stream = await generateStreamForSQLQuery(data);
+
+      let fullSqlQuery = "";
+      for await (const chunk of stream) {
+        fullSqlQuery += chunk;
+        setSqlQuery(fullSqlQuery); // Update SQL query progressively
+      }
+
+      // Step 2: Once SQL query is fully streamed, fetch other preview data
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+          signal,
+        }
+      );
+
+      if (response.status !== 200) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const nonStreamedData = await response.json();
+
+      // Step 3: Set the remaining preview data after SQL query
+      setPreviewComponent(nonStreamedData.component);
+      setPreviewProps(nonStreamedData.tile_props);
+      setIsPreviewGenerated(true);
+      setApiData({
+        dash_id: dashboardId,
+        title: tileName,
+        description: description,
+        ...nonStreamedData,
+      });
+    } catch (error) {
+      handleError(error);
+    } finally {
+      clearTimeout(timeout);
+      setIsLoading(false);
+    }
+  };
+
+  // Function to generate stream for SQL query
+  const generateStreamForSQLQuery = async (
+    data: any
+  ): Promise<AsyncIterable<string>> => {
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+
+    if (response.status !== 200) throw new Error(response.status.toString());
+    if (!response.body) throw new Error("Response body does not exist");
+
+    return getIterableStream(response.body);
+  };
+
+  /*
   const generatePreview = async () => {
     setIsLoading(true);
 
@@ -179,6 +277,7 @@ export default function NewTile({
       setIsLoading(false);
     }
   };
+  */
 
   const processTileData = (tileData: any) => {
     setTileName(tileData.title);
