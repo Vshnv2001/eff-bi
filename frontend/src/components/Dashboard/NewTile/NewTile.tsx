@@ -266,7 +266,7 @@ export default function NewTile({
         onClick={(e) => e.stopPropagation()}
       >
         <Typography variant="h4" color="blue-gray" className="mb-4 text-center">
-          {tileId ? "Edit Tile" : "Create New Tile"}
+          {tileId ? "Edit Chart" : "Create New Chart"}
         </Typography>
 
         <div className="flex space-x-6">

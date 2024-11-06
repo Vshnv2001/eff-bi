@@ -25,7 +25,7 @@ const Header: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex items-center w-full h-screen">
+    <div className="bg-[#f0f2fe] flex items-center w-full h-screen">
       <div className="w-full max-w-screen-xl text-white bg-blend-normal min-h-[516px] max-md:max-w-full pl-5 md:pl-5">
         <div className="flex flex-col justify-center h-full">
           <h1 className="text-black text-left w-full text-8xl font-light tracking-tighter leading-none whitespace-nowrap bg-blend-normal max-md:text-4xl overflow-hidden">

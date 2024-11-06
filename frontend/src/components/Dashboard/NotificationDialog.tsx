@@ -6,40 +6,64 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { Box } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
+import SettingsIcon from "@mui/icons-material/Settings";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { toast } from "react-toastify";
 
 export default function NotificationDialog({
   open,
-  onClose,
   navigateToData,
 }: {
   open: boolean;
   onClose: () => void;
   navigateToData: () => void;
 }) {
+  const handleCopyMockData = () => {
+    navigator.clipboard.writeText(
+      "postgres://view_user:testeffbi@pg-effbi-mock-justintanwk2001-6f2d.l.aivencloud.com:18828/defaultdb"
+    );
+    toast.success("Mock data URI successfully copied!");
+  };
+
   return (
-    <Dialog open={open} handler={onClose} className="max-w-sm mx-auto">
-      <DialogHeader>
+    <Dialog
+      open={open}
+      handler={() => {
+        
+      }}
+      className="max-w-sm mx-auto"
+    >
+      <DialogHeader className="flex items-center gap-2">
+        <InfoIcon className="text-blue-500" />
         <Typography variant="h5" color="blue-gray">
-          Database Configuration Needed
+          Welcome to Eff BI 👋
         </Typography>
       </DialogHeader>
       <DialogBody divider className="grid place-items-center gap-4">
-        <Typography color="red" variant="h4">
-          Database URI Missing!
+        <Typography
+          color="blue"
+          variant="h4"
+          className="flex items-center gap-2"
+        >
+          <SettingsIcon className="text-blue-400" />
+          Database Configuration Needed
         </Typography>
         <Typography className="text-center font-normal">
-        The Database URI is required for EFF BI to connect to your database. <br/>
-          Please configure your database settings in the Data Page or check with your organization's administrator.
-        </Typography>
-        <Box className="w-full flex justify-center gap-4 mb-4 mt-4">
+          Head over to the Data Page to connect your database. If you don't have
+          a database URI currently, try out our mock data by clicking:{" "}
           <Button
-            type="submit"
-            color="red"
-            className="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white"
-            onClick={onClose}
+            variant="text"
+            color="blue"
+            className="inline-flex items-center gap-1 text-blue-500 hover:text-blue-700 px-1 py-1"
+            onClick={handleCopyMockData}
           >
-            Close
+            <ContentCopyIcon fontSize="small" />
+            Mock Data
           </Button>
+        </Typography>
+
+        <Box className="w-full flex justify-center gap-4 mb-4 mt-4">
           <Button
             type="submit"
             color="blue"

@@ -50,7 +50,7 @@ export default function NewTile() {
   return (
     <div className="min-h-screen bg-white p-8">
       <Typography variant="h2" color="blue-gray" className="mb-8 text-4xl font-bold">
-        Create New Tile
+        Create New Chart
       </Typography>
       
       <Card className="w-full max-w-[40rem] mx-auto">
@@ -58,7 +58,7 @@ export default function NewTile() {
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             <div>
               <Typography variant="h6" color="blue-gray" className="mb-2">
-                Tile Name
+                Chart Name
               </Typography>
               <Input
                 size="lg"
@@ -71,7 +71,7 @@ export default function NewTile() {
 
             <div>
               <Typography variant="h6" color="blue-gray" className="mb-2">
-                Tile Description
+                Chart Description
               </Typography>
               <Textarea
                 size="lg"
