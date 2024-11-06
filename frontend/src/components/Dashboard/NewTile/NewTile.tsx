@@ -23,7 +23,7 @@ export default function NewTile({
   onClose,
   onSaveSuccess,
   tileId,
-  dashboardId
+  dashboardId,
 }: NewTileProps) {
   const [tileName, setTileName] = useState("");
   const [queryPrompt, setQueryPrompt] = useState("");
@@ -97,8 +97,50 @@ export default function NewTile({
     return { cancelToken, timeout };
   };
 
+  const generateStream = async (): Promise<AsyncIterable<string>> => {
+    const data = {
+      key: "value",
+    };
+
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/api/stream/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    if (response.status !== 200) throw new Error(response.status.toString());
+    if (!response.body) throw new Error("Response body does not exist");
+    return getIterableStream(response.body);
+  };
+
+  async function* getIterableStream(
+    body: ReadableStream<Uint8Array>
+  ): AsyncIterable<string> {
+    const reader = body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) {
+        break;
+      }
+      const decodedChunk = decoder.decode(value, { stream: true });
+      yield decodedChunk;
+    }
+  }
+
   const generatePreview = async () => {
     setIsLoading(true);
+
+    const stream = await generateStream();
+    for await (const chunk of stream) {
+      console.log(chunk);
+    }
+
     const { cancelToken, timeout } = setupCancelToken(
       "Unable to generate tile. Request took too long."
     );
