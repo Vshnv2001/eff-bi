@@ -202,9 +202,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
   const currentTiles = tilesData.slice(startIndex, endIndex);
 
   return (
-    <div
-      className={`min-h-screen p-8 ${isNewTileDialogOpen ? "opacity-60" : ""}`}
-    >
+    <div className={`p-8 ${isNewTileDialogOpen ? "opacity-60" : ""}`}>
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <Spinner className="h-10 w-10" />
@@ -283,7 +281,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
 
           return (
             <div key={tileData.id} className="isolate">
-              <Card className="bg-white shadow rounded-lg w-full overflow-auto">
+              <Card className="bg-white shadow rounded-lg overflow-auto w-full h-[30rem]">
                 <CardBody className="flex flex-col">
                   <div className="flex justify-end gap-2 mb-4">
                     <Tooltip
@@ -307,7 +305,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
                       </IconButton>
                     </Tooltip>
                     <Tooltip
-                      content="Refresh a tile. This replaces the current tile's data."
+                      content="Refresh: This replaces the current tile's data."
                       placement="top"
                       animate={{
                         mount: { scale: 1, y: 0 },
@@ -348,7 +346,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
 
                   <div
                     ref={chartRefs.current[actualIndex]}
-                    className="w-full overflow-auto"
+                    className="w-full overflow-auto h-[17rem]"
                   >
                     {Component && (
                       <Component {...componentProps} title={tileData.title} />

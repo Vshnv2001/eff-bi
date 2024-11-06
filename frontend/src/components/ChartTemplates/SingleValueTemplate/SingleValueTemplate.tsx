@@ -11,7 +11,7 @@ const SingleValueTemplate: React.FC<SingleValueTemplateProps> = ({
   value,
 }) => {
   return (
-    <div style={{ position: "relative", marginTop: 0, height:"100%"}}>
+    <div style={{ position: "relative", marginTop: 0, height: "100%" }}>
       <CardContent>
         <Typography
           variant="h6"
@@ -29,6 +29,7 @@ const SingleValueTemplate: React.FC<SingleValueTemplateProps> = ({
             textAlign: "center",
             marginBottom: 0,
             wordWrap: "break-word",
+            paddingTop: "3rem",
           }}
         >
           {value}
