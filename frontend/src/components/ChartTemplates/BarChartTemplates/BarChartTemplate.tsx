@@ -21,7 +21,7 @@ export function BarChartTemplate({
   title,
   description,
 }: BarProps): React.JSX.Element {
-  const yAxisLabel = "";
+  const yAxisLabel = chartSeries.length === 1 ? chartSeries[0].name : "";
   const chartOptions = useChartOptions(categories, xAxisLabel, yAxisLabel);
 
   return (
@@ -73,16 +73,16 @@ function useChartOptions(
 
   const columnWidth = Math.max(40, 100 / categories.length);
 
-  const generateBlueShades = (count: number): string[] => {
-    const shades: string[] = [];
+  const generateColors = (count: number): string[] => {
+    const colors = [];
+    const baseHue = 210;
     for (let i = 0; i < count; i++) {
-      const lightness = 40 + i * (60 / count);
-      shades.push(`hsl(210, 100%, ${lightness}%)`);
+      colors.push(`hsl(${(baseHue + (i * 360) / count) % 360}, 70%, 50%)`);
     }
-    return shades;
+    return colors;
   };
 
-  const colors = generateBlueShades(categories.length);
+  const colors = generateColors(categories.length);
 
   return {
     chart: {
@@ -107,7 +107,13 @@ function useChartOptions(
       axisBorder: { color: theme.palette.divider, show: true },
       axisTicks: { color: theme.palette.divider, show: true },
       categories: categories,
-      labels: { show: true },
+      labels: {
+        show: true,
+        style: { colors: theme.palette.text.secondary },
+        formatter: (value: any) => {
+          return typeof value === "number" ? value.toFixed(2) : value;
+        },
+      },
       title: { text: xAxisLabel, style: { color: theme.palette.text.primary } },
     },
     yaxis: {

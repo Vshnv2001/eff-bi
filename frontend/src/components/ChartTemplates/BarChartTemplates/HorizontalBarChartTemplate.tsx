@@ -71,16 +71,16 @@ function useChartOptions(
 ): ApexOptions {
   const theme = useTheme();
 
-  const generateBlueShades = (count: number): string[] => {
-    const shades: string[] = [];
+  const generateColors = (count: number): string[] => {
+    const colors = [];
+    const baseHue = 210;
     for (let i = 0; i < count; i++) {
-      const lightness = 40 + i * (60 / count);
-      shades.push(`hsl(210, 100%, ${lightness}%)`);
+      colors.push(`hsl(${(baseHue + (i * 360) / count) % 360}, 70%, 50%)`);
     }
-    return shades;
+    return colors;
   };
 
-  const colors = generateBlueShades(categories.length);
+  const colors = generateColors(categories.length);
 
   return {
     chart: {
