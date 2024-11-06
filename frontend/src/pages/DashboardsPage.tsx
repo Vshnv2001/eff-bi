@@ -66,37 +66,6 @@ export default function DashboardsPage() {
     return <DashboardPage pathname={pathname} />;
   }
 
-  function Search() {
-    return (
-      <Box px={2}>
-        {" "}
-        <TextField
-          label="Search"
-          variant="outlined"
-          size="small"
-          fullWidth
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <IconButton type="button" aria-label="search" size="small">
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            },
-          }}
-          sx={{
-            borderRadius: 2,
-            "& .MuiOutlinedInput-root": {
-              borderRadius: 2,
-            },
-          }}
-        />
-      </Box>
-    );
-  }
-
   function SidebarFooter() {
     const [open, setOpen] = useState(false);
     const [dashboardName, setDashboardName] = useState("");
@@ -115,10 +84,6 @@ export default function DashboardsPage() {
 
     return (
       <div>
-        <div style={{ marginBottom: "4px" }}>
-          <Search />
-        </div>
-
         <div className="p-[10px]">
           <Button
             variant="filled"
