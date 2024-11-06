@@ -12,8 +12,6 @@ import { AppProvider } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { useDemoRouter } from "@toolpad/core/internal";
 import DashboardPage from "./DashboardPage";
-import SearchIcon from "@mui/icons-material/Search";
-import { IconButton, TextField, InputAdornment, Box } from "@mui/material";
 
 const theme = createTheme({
   cssVariables: { colorSchemeSelector: "data-toolpad-color-scheme" },
