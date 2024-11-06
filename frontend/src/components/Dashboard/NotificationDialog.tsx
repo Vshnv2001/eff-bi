@@ -51,7 +51,7 @@ export default function NotificationDialog({
           <Button
             variant="text"
             color="blue"
-            className="inline-flex items-center gap-1 text-blue-500 hover:text-blue-700 px-1 py-0"
+            className="inline-flex items-center gap-1 text-blue-500 hover:text-blue-700 px-1 py-1"
             onClick={handleCopyMockData}
           >
             <ContentCopyIcon fontSize="small" />
