@@ -405,7 +405,8 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
                           language="sql"
                           className="w-full rounded-lg h-full"
                           wrapLines={true}
-                          lineProps={{ style: { whiteSpace: "pre-wrap" } }}
+                          wrapLongLines={true}
+                          lineProps={{ style: {wordBreak: 'break-all', whiteSpace: "pre-wrap" } }}
                         >
                           {tileData.sql_query}
                         </SyntaxHighlighter>
