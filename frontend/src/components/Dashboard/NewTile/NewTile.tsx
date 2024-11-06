@@ -97,6 +97,7 @@ export default function NewTile({
     return { cancelToken, timeout };
   };
 
+  /*
   const generateStream = async (): Promise<AsyncIterable<string>> => {
     const data = {
       key: "value",
@@ -133,7 +134,6 @@ export default function NewTile({
     }
   }
 
-  /*
       const stream = await generateStream();
     for await (const chunk of stream) {
       console.log(chunk);
@@ -167,40 +167,28 @@ export default function NewTile({
       const stream = await generateStreamForSQLQuery(data);
 
       let fullSqlQuery = "";
+      let previewData = {}; // Store the rest of the preview data
       for await (const chunk of stream) {
-        fullSqlQuery += chunk;
-        setSqlQuery(fullSqlQuery); // Update SQL query progressively
-      }
-
-      // Step 2: Once SQL query is fully streamed, fetch other preview data
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-          signal,
+        console.log("chunk", chunk);
+        // Check if this chunk is part of the SQL query
+        if (chunk.sql_query) {
+          fullSqlQuery += chunk.sql_query;
+          setSqlQuery(fullSqlQuery); // Update SQL query progressively
+        } else {
+          // Collect the other preview data (component, tile_props, etc.)
+          setPreviewComponent(chunk.component);
+          setPreviewProps(chunk.tile_props);
+          setIsPreviewGenerated(true);
+          setApiData({
+            dash_id: dashboardId,
+            title: tileName,
+            description: description,
+            ...previewData,
+          });
         }
-      );
-
-      if (response.status !== 200) {
-        throw new Error(`Error: ${response.status}`);
       }
 
-      const nonStreamedData = await response.json();
-
-      // Step 3: Set the remaining preview data after SQL query
-      setPreviewComponent(nonStreamedData.component);
-      setPreviewProps(nonStreamedData.tile_props);
-      setIsPreviewGenerated(true);
-      setApiData({
-        dash_id: dashboardId,
-        title: tileName,
-        description: description,
-        ...nonStreamedData,
-      });
+      // Step 2: Set the remaining preview data after SQL query has been fully streamed
     } catch (error) {
       handleError(error);
     } finally {
@@ -212,7 +200,7 @@ export default function NewTile({
   // Function to generate stream for SQL query
   const generateStreamForSQLQuery = async (
     data: any
-  ): Promise<AsyncIterable<string>> => {
+  ): Promise<AsyncIterable<any>> => {
     const response = await fetch(
       `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
       {
@@ -228,6 +216,58 @@ export default function NewTile({
     if (!response.body) throw new Error("Response body does not exist");
 
     return getIterableStream(response.body);
+  };
+
+  // Function to handle streaming
+  async function* getIterableStream(
+    body: ReadableStream<Uint8Array>
+  ): AsyncIterable<any> {
+    const reader = body.getReader();
+    const decoder = new TextDecoder();
+
+    let buffer = ""; // Temporary buffer to accumulate streamed data
+
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) {
+        break;
+      }
+
+      const decodedChunk = decoder.decode(value, { stream: true });
+      buffer += decodedChunk;
+
+      // If a chunk contains the complete SQL query or preview data, yield it
+      if (buffer.includes("sql_query:")) {
+        // If a SQL query is found, extract it
+        const sqlQuery = extractSqlQuery(buffer); // Write a function to extract SQL query from buffer
+        yield { sql_query: sqlQuery };
+        buffer = buffer.replace(sqlQuery, ""); // Remove SQL query from buffer
+      }
+
+      // If there's any other data, yield it as preview data
+      if (buffer.trim()) {
+        const previewData = extractPreviewData(buffer); // Write a function to extract preview data
+        yield previewData;
+        buffer = ""; // Reset the buffer
+      }
+    }
+  }
+
+  // Helper function to extract SQL query from the buffer
+  const extractSqlQuery = (buffer: string): string => {
+    // Assuming SQL query is in the buffer and is clearly identified (you may need to adjust this logic based on your response format)
+    const sqlQueryMatch = buffer.match(/sql_query:([^\n]*)/);
+    return sqlQueryMatch ? sqlQueryMatch[1] : "";
+  };
+
+  // Helper function to extract preview data from the buffer
+  const extractPreviewData = (buffer: string): any => {
+    // Parse the buffer into JSON and return it (adjust this logic based on your response structure)
+    try {
+      return JSON.parse(buffer);
+    } catch (error) {
+      return {};
+    }
   };
 
   /*
