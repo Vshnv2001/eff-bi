@@ -13,14 +13,12 @@ import { toast } from "react-toastify";
 
 export default function NotificationDialog({
   open,
-  onClose,
   navigateToData,
 }: {
   open: boolean;
   onClose: () => void;
   navigateToData: () => void;
 }) {
-
   const handleCopyMockData = () => {
     navigator.clipboard.writeText(
       "postgres://view_user:testeffbi@pg-effbi-mock-justintanwk2001-6f2d.l.aivencloud.com:18828/defaultdb"
@@ -29,7 +27,13 @@ export default function NotificationDialog({
   };
 
   return (
-    <Dialog open={open} handler={onClose} className="max-w-sm mx-auto">
+    <Dialog
+      open={open}
+      handler={() => {
+        
+      }}
+      className="max-w-sm mx-auto"
+    >
       <DialogHeader className="flex items-center gap-2">
         <InfoIcon className="text-blue-500" />
         <Typography variant="h5" color="blue-gray">
