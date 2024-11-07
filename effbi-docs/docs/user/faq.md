@@ -1,4 +1,7 @@
-## Frequently Asked Questions
+---
+title: Frequently Asked Questions
+description: Frequently Asked Questions
+---
 
 # What does Admin Permissions mean?
 

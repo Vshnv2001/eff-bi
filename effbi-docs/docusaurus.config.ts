@@ -78,6 +78,12 @@ const config: Config = {
           position: "left",
           label: "User",
         },
+        {
+          type: "docSidebar",
+          sidebarId: "developerGuideSidebar",
+          position: "left",
+          label: "Developer",
+        },
         // { to: "/blog", label: "Blog", position: "left" },
         {
           href: "https://github.com/Vshnv2001/eff-bi",

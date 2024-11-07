@@ -1,4 +1,6 @@
 ---
+title: View Data
+description: View Data
 sidebar_position: 1
 ---
 

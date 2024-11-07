@@ -1,4 +1,8 @@
-## Table Permissions
+---
+title: Table Permissions
+description: Table Permissions
+sidebar_position: 2
+---
 
 The Permissions page offers a detailed view of your current access rights. As an administrator of a table, you have the authority to modify access levels, allowing you to manage who can view the table.
 

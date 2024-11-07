@@ -1,4 +1,8 @@
-## Creating Dashboards
+---
+title: Creating Dashboards
+description: Creating Dashboards
+sidebar_position: 3
+---
 
 Dashboards are essential for visualizing data interactions and trends! Start creating your own by visiting the 'Dashboard' page and clicking the 'Create Dashboard' button at the bottom left. This allows you to assemble a collection of tiles showcase data insights.
 
