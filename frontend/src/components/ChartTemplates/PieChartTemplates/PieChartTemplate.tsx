@@ -35,9 +35,15 @@ export function PieChartTemplate({
   const chartOptions: ApexOptions = {
     chart: {
       width: "100%",
+      height: "200%",
       type: "pie",
     },
     labels: labels,
+    plotOptions: {
+      pie: {
+        customScale: 1
+      }
+    },
     colors: generateColors(series.length),
     responsive: [
       {
@@ -53,11 +59,11 @@ export function PieChartTemplate({
     legend: {
       position: "right",
       fontSize: fontSize,
-      floating: true,
+      floating: false,
       formatter: function (seriesName, opts) {
         return seriesName + ` - ${series[opts.seriesIndex].toFixed(1)}`;
       },
-      show: false,
+      show: true,
     },
     tooltip: {
       enabled: true,
@@ -96,7 +102,7 @@ export function PieChartTemplate({
             series={series}
             type="pie"
             width="100%"
-            height="100%"
+            height="150%"
           />
         )}
       </CardContent>
