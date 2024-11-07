@@ -18,8 +18,7 @@ interface BasicTableProps {
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.primary.dark,
-    opacity: 0.8,
+    backgroundColor: "#2196f3",
     color: theme.palette.common.white,
     fontWeight: 'bold',
     fontSize: 16,
