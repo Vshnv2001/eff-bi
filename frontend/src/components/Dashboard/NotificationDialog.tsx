@@ -69,7 +69,7 @@ export default function NotificationDialog({
         <Box className="w-full flex justify-center gap-4 mb-4 mt-4">
           <Button
             type="submit"
-            color="dark-blue"
+            color="blue"
             className="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white"
             onClick={navigateToData}
           >
