@@ -8,16 +8,14 @@ const Flyer: React.FC = () => {
     <div className="flex flex-col md:flex-row items-center justify-center min-h-screen w-full p-8 space-y-6 md:space-y-0 md:space-x-10">
       {/* Left Section with Text */}
       <div className="flex flex-col items-start md:w-1/3">
-        <Typography variant="h4" gutterBottom className="font-bold text-2xl">
-          Customise user roles
+        <Typography variant="h3" gutterBottom className="font-bold text-2xl">
+          User Permissions
         </Typography>
         <Typography variant="body1" className="text-black">
-          Add users to your organization and assign them roles with ease.
-          Customize each user's role, and grant admin privileges to manage
-          higher-level tasks when necessary.
+          Manage user roles and permissions within your organization with ease, ensuring data security and integrity.
         </Typography>
         <div className="flex space-x-4 mt-6">
-          <Button color="blue" className="flex items-center bg-opacity-80">
+          <Button color="white" className="flex items-center bg-opacity-80">
             Read the docs
             <ArticleIcon className="ml-2" />
           </Button>
