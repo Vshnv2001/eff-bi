@@ -100,7 +100,7 @@ def get_dashboard_name(request: HttpRequest):
     logger.info("dash_id: " + dash_id + " org_id: " + str(org_id))
     dashboard = get_object_or_404(
         Dashboard, dash_id=dash_id, organization=org_id)
-    return JsonResponse({'data': dashboard.title}, status=200)
+    return JsonResponse({'data': dashboard.title, 'description': dashboard.description}, status=200)
 
 
 @api_view(["GET"])
