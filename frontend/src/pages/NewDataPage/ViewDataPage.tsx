@@ -12,7 +12,7 @@ import TablePage from "./TablePage.tsx";
 import { toast } from "react-toastify";
 import { useAuth } from "../../components/Authentication/AuthenticationContext.tsx";
 import { Typography } from "@mui/material";
-import LockPersonTwoToneIcon from '@mui/icons-material/LockPersonTwoTone';
+import LockPersonTwoToneIcon from "@mui/icons-material/LockPersonTwoTone";
 
 interface Table {
   table_name: string;
@@ -49,6 +49,7 @@ export default function ViewDataPage() {
     })),
     { kind: "divider" as const },
   ];
+
   const handleRefresh = async () => {
     const reqBody = {
       org_id: Number(organizationId),
@@ -57,15 +58,16 @@ export default function ViewDataPage() {
 
     try {
       setRefreshLoading(true);
-      // // console.log(organizationId);
-      // // console.log(reqBody);
-      // // console.log(userId);
+      // console.log(organizationId);
+      // console.log(reqBody);
+      // console.log(userId);
       const response = await axios.post(
         `${BACKEND_API_URL}/api/connection/refresh/`,
         reqBody
       );
 
       if (response.status === 200) {
+        fetchData();
         toast.success("Database refreshed successfully!");
       }
     } catch (error) {
@@ -136,22 +138,23 @@ export default function ViewDataPage() {
     return <TablePage table={table} />;
   }
 
+  const fetchData = async () => {
+    if (!userId) return;
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `${BACKEND_API_URL}/api/connection/${userId}`
+      );
+      setTables(response.data?.tables);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
-    const fetchData = async () => {
-      if (!userId) return;
-      setLoading(true);
-      try {
-        const response = await axios.get(
-          `${BACKEND_API_URL}/api/connection/${userId}`
-        );
-        setTables(response.data?.tables);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
   }, [userId]);
 
@@ -167,7 +170,7 @@ export default function ViewDataPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg p-100 space-y-5">
         <div className="text-center">
-          <LockPersonTwoToneIcon style={{fontSize: "10rem"}}/>
+          <LockPersonTwoToneIcon style={{ fontSize: "10rem" }} />
         </div>
         <div className="text-xl text-center text-black">
           You do not have access to any tables, request for permissions with
