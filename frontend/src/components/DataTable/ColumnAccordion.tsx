@@ -68,11 +68,11 @@ const ColumnAccordion: React.FC = () => {
   }
 
   return (
-    <div className="h-[500px] overflow-y-auto pr-2">
+    <div className="h-auto overflow-y-auto">
       {data.map((table, tableIndex) => (
         <Accordion
           key={tableIndex}
-          open={openAccordions.includes(tableIndex)} // Check if this accordion is open
+          open={openAccordions.includes(tableIndex)}
           className="mb-2"
         >
           <AccordionHeader
@@ -84,7 +84,7 @@ const ColumnAccordion: React.FC = () => {
             } border-b-0 no-underline`}
           >
             <div className="flex items-center overflow-x-auto flex-grow">
-              <LayersIcon className="mr-2" /> {/* Add LayersIcon here */}
+              <LayersIcon className="mr-2" />
               <Typography
                 variant="h6"
                 className={`text-sm flex-grow truncate whitespace-nowrap`}
@@ -123,6 +123,7 @@ const ColumnAccordion: React.FC = () => {
               </div>
             ))}
           </AccordionBody>
+          <div className="border-t border-gray-300"></div>
         </Accordion>
       ))}
     </div>
