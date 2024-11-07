@@ -97,6 +97,7 @@ export default function NewTile({
     return { cancelToken, timeout };
   };
 
+  /*
   const generatePreview = async () => {
     setIsLoading(true);
     const { cancelToken, timeout } = setupCancelToken(
@@ -137,6 +138,106 @@ export default function NewTile({
       setIsLoading(false);
     }
   };
+  */
+
+  const generatePreview = async () => {
+    setIsLoading(true);
+    const { cancelToken, timeout } = setupCancelToken(
+      "Unable to generate tile. Request took too long."
+    );
+
+    let description = queryPrompt;
+    try {
+      if (selectedTemplates.length > 0) {
+        const componentNamesString = selectedTemplates.join(",");
+        description = `${queryPrompt}\n\nTry to generate a chart that is any of the following: ${componentNamesString}.`;
+      }
+
+      // Stream the data
+      const stream = await generateStream(description);
+
+      // This loops over each chunk and logs it
+      for await (const chunk of stream) {
+        try {
+          const chunkData: ChunkData = JSON.parse(chunk); // Assuming the response is JSON-formatted.
+
+          if (chunkData.sql) {
+            console.log("SQL Query:", chunkData.sql);
+            setSqlQuery(chunkData.sql); // Handle SQL query separately
+          } else {
+            console.log("Other Data:", chunkData); // Handle other data
+            setApiData({
+              ...chunkData
+            });
+            setPreviewComponent(chunkData.component)
+            setPreviewProps(chunkData.tile_props)
+          }
+        } catch (error) {
+          console.error("Error parsing chunk data:", error);
+        }
+      }
+
+      setIsPreviewGenerated(true);
+    } catch (error) {
+      handleError(error);
+    } finally {
+      clearTimeout(timeout);
+      setIsLoading(false);
+    }
+  };
+
+  interface ChunkData {
+    sql_query?: string;
+    [key: string]: any;
+  }
+
+  const generateStream = async (
+    description: string
+  ): Promise<AsyncIterable<string>> => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          dash_id: dashboardId,
+          title: tileName,
+          description: description,
+        }),
+      }
+    );
+
+    // Check if the response is valid
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    if (!response.body) {
+      throw new Error("Response body does not exist");
+    }
+
+    // Return the async iterable stream
+    return getIterableStream(response.body);
+  };
+
+  // Helper function to convert the response body into an async iterable stream
+  async function* getIterableStream(
+    body: ReadableStream<Uint8Array>
+  ): AsyncIterable<string> {
+    const reader = body.getReader(); // Get a reader from the stream
+    const decoder = new TextDecoder(); // Used to decode the Uint8Array chunks into strings
+
+    // Continuously read from the stream
+    while (true) {
+      const { value, done } = await reader.read(); // Read a chunk from the stream
+      if (done) break; // If no more data is available, stop the loop
+      const decodedChunk = decoder.decode(value, { stream: true }); // Decode the chunk
+      yield decodedChunk; // Yield the decoded chunk
+    }
+  }
 
   const processTileData = (tileData: any) => {
     setTileName(tileData.title);
