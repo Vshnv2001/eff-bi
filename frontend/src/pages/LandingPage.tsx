@@ -12,7 +12,6 @@ import Flyer from "../components/Flyer/Flyer";
 import MockDashboardDisplay from "../components/Display/MockDashboardDisplay";
 import {Button} from "@material-tailwind/react";
 import ArticleIcon from "@mui/icons-material/Article";
-import React from "react";
 
 const LandingPage = () => {
   return (
