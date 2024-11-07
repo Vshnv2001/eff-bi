@@ -20,7 +20,7 @@ const MainLayout = () => {
   return (
     <div className="bg-[#fafafb] h-full">
       {shouldShowNavbar && <EffBINavbar />}
-      <div className={`relative ${shouldShowNavbar ? "top-[60px]" : "top-0"}`}>
+      <div className={`bg-[#fafafb] relative ${shouldShowNavbar ? "top-[60px]" : "top-0"}`}>
         <Outlet />
       </div>
     </div>
