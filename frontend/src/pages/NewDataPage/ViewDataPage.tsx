@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button, Card, Spinner, Tooltip } from "@material-tailwind/react";
+import { Button, Spinner, Tooltip } from "@material-tailwind/react";
 import axios from "axios";
 import { BACKEND_API_URL } from "../../config/index";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
@@ -12,6 +12,7 @@ import TablePage from "./TablePage.tsx";
 import { toast } from "react-toastify";
 import { useAuth } from "../../components/Authentication/AuthenticationContext.tsx";
 import { Typography } from "@mui/material";
+import LockPersonTwoToneIcon from '@mui/icons-material/LockPersonTwoTone';
 
 interface Table {
   table_name: string;
@@ -40,7 +41,10 @@ export default function ViewDataPage() {
     ...tables.map((table) => ({
       kind: "page" as const,
       segment: table.table_name,
-      title: table.table_name,
+      title:
+        table.table_name.length > 30
+          ? table.table_name.slice(0, 29) + "..."
+          : table.table_name,
       icon: <LayersIcon />,
     })),
     { kind: "divider" as const },
@@ -161,13 +165,14 @@ export default function ViewDataPage() {
 
   if (tables.length == 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg p-10">
-        <Card className="w-full max-w-4xl p-10 rounded-xl" color="blue">
-          <div className="text-2xl text-center text-black">
-            You do not have access to any tables, request for permissions with
-            your administrator.
-          </div>
-        </Card>
+      <div className="flex flex-col items-center justify-center min-h-screen bg p-100 space-y-5">
+        <div className="text-center">
+          <LockPersonTwoToneIcon style={{fontSize: "10rem"}}/>
+        </div>
+        <div className="text-xl text-center text-black">
+          You do not have access to any tables, request for permissions with
+          your administrator.
+        </div>
       </div>
     );
   }

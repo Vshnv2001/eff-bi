@@ -32,7 +32,7 @@ const TablePage: React.FC<TablePageProps> = ({table}: {table: Table}) => {
             {table.table_description && (
                 <Alert severity="info" icon={<AutoAwesomeOutlinedIcon/>} className="mb-4" sx={{
                     borderRadius: 4,
-                    mb: 4,
+                    width : "100%",
                     boxShadow: 1,
                 }}>
                     <Stack spacing={2}>
