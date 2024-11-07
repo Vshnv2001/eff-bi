@@ -15,7 +15,10 @@ const Flyer: React.FC = () => {
           Manage user roles and permissions within your organization with ease, ensuring data security and integrity.
         </Typography>
         <div className="flex space-x-4 mt-6">
-          <Button color="white" className="flex items-center bg-opacity-80">
+          <Button
+            className="flex items-center bg-white bg-opacity-80 text-black"
+            onClick={() => window.open(import.meta.env.VITE_DOCS_URL, '_blank')}
+          >
             Read the docs
             <ArticleIcon className="ml-2" />
           </Button>

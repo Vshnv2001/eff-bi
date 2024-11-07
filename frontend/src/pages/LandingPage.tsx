@@ -30,7 +30,10 @@ const LandingPage = () => {
                     <span className="text-5xl font-bold pt-1">data visualisations</span>
                     <span className="text-xl pt-5">Generate charts seamlessly using plain and simple English.</span>
                     <div className="flex space-x-4 mt-6">
-                        <Button className="flex items-center bg-white bg-opacity-80 text-black">
+                        <Button
+                            className="flex items-center bg-white bg-opacity-80 text-black"
+                            onClick={() => window.open(import.meta.env.VITE_DOCS_URL, '_blank')}
+                        >
                             Read the docs
                             <ArticleIcon className="ml-2"/>
                         </Button>

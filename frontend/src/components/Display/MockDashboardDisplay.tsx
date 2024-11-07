@@ -28,7 +28,10 @@ const MockDashboardDisplay: React.FC = () => {
             Customise your dashboards with a collection of charts. These are easily saved, edited, and updated, ensuring relevant and updated data.
           </Typography>
           <div className="flex space-x-4 mt-6">
-            <Button className="flex items-center bg-white bg-opacity-80 text-black">
+            <Button
+              className="flex items-center bg-white bg-opacity-80 text-black"
+              onClick={() => window.open(import.meta.env.VITE_DOCS_URL, '_blank')}
+            >
               Read the docs
               <ArticleIcon className="ml-2" />
             </Button>
