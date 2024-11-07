@@ -112,7 +112,7 @@ def get_dashboard_tiles(request: HttpRequest):
     user = get_object_or_404(User, id=user_id)
     org_id = user.organization.id
     logger.info("dash_id: " + dash_id)
-    tiles = Tile.objects.filter(dash_id=dash_id, organization=org_id)
+    tiles = Tile.objects.filter(dash_id=dash_id, organization=org_id).order_by('id')
     logger.info("filtered tiles: ")
     logger.info(tiles)
     serializer = TileSerializer(tiles, many=True)

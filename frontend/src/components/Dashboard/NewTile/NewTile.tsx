@@ -23,7 +23,7 @@ export default function NewTile({
   onClose,
   onSaveSuccess,
   tileId,
-  dashboardId
+  dashboardId,
 }: NewTileProps) {
   const [tileName, setTileName] = useState("");
   const [queryPrompt, setQueryPrompt] = useState("");
@@ -180,15 +180,6 @@ export default function NewTile({
       }
     }
   };
-
-  /*
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    fetchTileData();
-
-    return () => clearInterval(timer);
-  }, [tileId, dashboardId, initialDataLoaded]);
-  */
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;

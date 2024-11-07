@@ -165,6 +165,9 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
 
   const handleTileSaved = (message: string) => {
     toast.success(message);
+    if (message == "New tile saved successfully!") {
+      setPage(totalPages)
+    }
   };
 
   const deleteTile = async (tileId: number | undefined) => {
