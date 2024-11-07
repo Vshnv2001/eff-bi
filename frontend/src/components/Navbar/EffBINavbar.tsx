@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { useState, useEffect } from "react";
 import UserDropdown from "./UserDropdown";
+import ArrowTopRightOnSquareIcon from "@heroicons/react/24/outline/ArrowTopRightOnSquareIcon";
 
 const useScrollDirection = () => {
   const [scrollDirection, setScrollDirection] = useState("up");
@@ -109,9 +110,9 @@ export default function EffBINavbar() {
                 size="sm"
                 color="blue-gray"
                 className="flex items-center gap-2"
-                onClick={() => navigate("/faq")}
+                onClick={() => window.open('https://eff-bi-docs.vercel.app', '_blank')}
               >
-                Docs
+                Docs<ArrowTopRightOnSquareIcon/>
               </Button>
             </div>
           ) : (
@@ -157,6 +158,15 @@ export default function EffBINavbar() {
                 }}
               >
                 Contact
+              </Button>
+              <Button
+                variant="text"
+                size="sm"
+                color="blue-gray"
+                className="flex items-center gap-2"
+                onClick={() => window.open(import.meta.env.VITE_DOCS_URL, '_blank')}
+              >
+                Docs<ArrowTopRightOnSquareIcon className="h-4 w-4" />
               </Button>
             </div>
           )}
