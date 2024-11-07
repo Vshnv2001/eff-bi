@@ -166,7 +166,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
   const handleTileSaved = (message: string) => {
     toast.success(message);
     if (message == "New tile saved successfully!") {
-      setPage(totalPages)
+      setPage(totalPages);
     }
   };
 
@@ -209,7 +209,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
   return (
     <div className={`p-8 ${isNewTileDialogOpen ? "opacity-60" : ""}`}>
       {loading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999999]">
           <Spinner className="h-10 w-10" />
         </div>
       )}
