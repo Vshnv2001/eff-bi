@@ -97,49 +97,6 @@ export default function NewTile({
     return { cancelToken, timeout };
   };
 
-  /*
-  const generateStream = async (): Promise<AsyncIterable<string>> => {
-    const data = {
-      key: "value",
-    };
-
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/stream/`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
-    if (response.status !== 200) throw new Error(response.status.toString());
-    if (!response.body) throw new Error("Response body does not exist");
-    return getIterableStream(response.body);
-  };
-
-  async function* getIterableStream(
-    body: ReadableStream<Uint8Array>
-  ): AsyncIterable<string> {
-    const reader = body.getReader();
-    const decoder = new TextDecoder();
-
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) {
-        break;
-      }
-      const decodedChunk = decoder.decode(value, { stream: true });
-      yield decodedChunk;
-    }
-  }
-
-      const stream = await generateStream();
-    for await (const chunk of stream) {
-      console.log(chunk);
-    }
-  */
-
   const generatePreview = async () => {
     setIsLoading(true);
 
@@ -172,12 +129,12 @@ export default function NewTile({
         console.log("chunk", chunk);
         // Check if this chunk is part of the SQL query
         if (chunk.sql_query) {
-          console.log("if", chunk)
+          console.log("if", chunk);
           fullSqlQuery += chunk.sql_query;
           //setSqlQuery(fullSqlQuery); // Update SQL query progressively
         } else {
           // Collect the other preview data (component, tile_props, etc.)
-          console.log("else", chunk)
+          console.log("else", chunk);
           setSqlQuery(chunk.sql_query);
           setPreviewComponent(chunk["component"]);
           console.log("component", previewComponent);
@@ -203,9 +160,7 @@ export default function NewTile({
   };
 
   // Function to generate stream for SQL query
-  const generateStream = async (
-    data: any
-  ): Promise<AsyncIterable<any>> => {
+  const generateStream = async (data: any): Promise<AsyncIterable<any>> => {
     const response = await fetch(
       `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
       {
@@ -223,8 +178,6 @@ export default function NewTile({
     return getIterableStream(response.body);
   };
 
-  /*
-  // Function to handle streaming
   async function* getIterableStream(
     body: ReadableStream<Uint8Array>
   ): AsyncIterable<any> {
@@ -258,23 +211,6 @@ export default function NewTile({
       }
     }
   }
-  */
-
-  async function* getIterableStream(
-    body: ReadableStream<Uint8Array>
-  ): AsyncIterable<string> {
-    const reader = body.getReader();
-    const decoder = new TextDecoder();
-
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) {
-        break;
-      }
-      const decodedChunk = decoder.decode(value, { stream: true });
-      yield decodedChunk;
-    }
-  }
 
   // Helper function to extract SQL query from the buffer
   const extractSqlQuery = (buffer: string): string => {
@@ -292,55 +228,6 @@ export default function NewTile({
       return {};
     }
   };
-
-  /*
-  const generatePreview = async () => {
-    setIsLoading(true);
-
-    const stream = await generateStream();
-    for await (const chunk of stream) {
-      console.log(chunk);
-    }
-
-    const { cancelToken, timeout } = setupCancelToken(
-      "Unable to generate tile. Request took too long."
-    );
-
-    let description = queryPrompt;
-    try {
-      if (selectedTemplates.length > 0) {
-        const componentNamesString = selectedTemplates.join(",");
-        description = `${queryPrompt}\n\nTry to generate a chart that is any of the following: ${componentNamesString}.`;
-      }
-
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
-        {
-          dash_id: dashboardId,
-          title: tileName,
-          description: description,
-        },
-        { cancelToken: cancelToken.token }
-      );
-
-      setPreviewComponent(response.data.component);
-      setPreviewProps(response.data.tile_props);
-      setSqlQuery(response.data.sql_query);
-      setIsPreviewGenerated(true);
-      setApiData({
-        dash_id: dashboardId,
-        title: tileName,
-        description: description,
-        ...response.data,
-      });
-    } catch (error) {
-      handleError(error);
-    } finally {
-      clearTimeout(timeout);
-      setIsLoading(false);
-    }
-  };
-  */
 
   const processTileData = (tileData: any) => {
     setTileName(tileData.title);
@@ -384,15 +271,6 @@ export default function NewTile({
       }
     }
   };
-
-  /*
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    fetchTileData();
-
-    return () => clearInterval(timer);
-  }, [tileId, dashboardId, initialDataLoaded]);
-  */
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
@@ -516,3 +394,52 @@ export default function NewTile({
     </div>
   );
 }
+
+/*
+  const generatePreview = async () => {
+    setIsLoading(true);
+
+    const stream = await generateStream();
+    for await (const chunk of stream) {
+      console.log(chunk);
+    }
+
+    const { cancelToken, timeout } = setupCancelToken(
+      "Unable to generate tile. Request took too long."
+    );
+
+    let description = queryPrompt;
+    try {
+      if (selectedTemplates.length > 0) {
+        const componentNamesString = selectedTemplates.join(",");
+        description = `${queryPrompt}\n\nTry to generate a chart that is any of the following: ${componentNamesString}.`;
+      }
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
+        {
+          dash_id: dashboardId,
+          title: tileName,
+          description: description,
+        },
+        { cancelToken: cancelToken.token }
+      );
+
+      setPreviewComponent(response.data.component);
+      setPreviewProps(response.data.tile_props);
+      setSqlQuery(response.data.sql_query);
+      setIsPreviewGenerated(true);
+      setApiData({
+        dash_id: dashboardId,
+        title: tileName,
+        description: description,
+        ...response.data,
+      });
+    } catch (error) {
+      handleError(error);
+    } finally {
+      clearTimeout(timeout);
+      setIsLoading(false);
+    }
+  };
+  */
