@@ -40,9 +40,10 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+            "https://github.com/Vshnv2001/eff-bi",
         },
         blog: {
+          path: "/blog",
           showReadingTime: true,
           feedOptions: {
             type: ["rss", "atom"],
@@ -51,7 +52,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+            "https://github.com/Vshnv2001/eff-bi",
           // Useful options to enforce blogging best practices
           onInlineTags: "warn",
           onInlineAuthors: "warn",
@@ -100,17 +101,17 @@ const config: Config = {
           items: [
             {
               label: "User Guide",
-              to: "/docs/setup",
+              to: "/docs/user/getting-started/setup",
             },
           ],
         },
         {
           title: "More",
           items: [
-            {
-              label: "Blog",
-              to: "/blog",
-            },
+            // {
+            //   label: "Blog",
+            //   to: "/blog",
+            // },
             {
               label: "GitHub",
               href: "https://github.com/Vshnv2001/eff-bi",
