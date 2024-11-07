@@ -9,6 +9,7 @@ import {
 import axios from "axios";
 import { BACKEND_API_URL } from "../../config";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
+import LayersIcon from "@mui/icons-material/Layers";
 
 interface Table {
   table_name: string;
@@ -20,23 +21,16 @@ interface Table {
 const ColumnAccordion: React.FC = () => {
   const [data, setData] = useState<Table[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [open, setOpen] = useState<number | null>(null);
+  const [openAccordions, setOpenAccordions] = useState<number[]>([]);
   const sessionContext = useSessionContext();
   const userId = sessionContext.loading ? null : sessionContext.userId;
 
   const handleOpen = (value: number) => {
-    setOpen(open === value ? null : value);
-  };
-
-  const [openColumn, setOpenColumn] = useState<{
-    [key: number]: number | null;
-  }>({});
-
-  const handleColumnOpen = (tableIndex: number, columnIndex: number) => {
-    setOpenColumn((prevState) => ({
-      ...prevState,
-      [tableIndex]: prevState[tableIndex] === columnIndex ? null : columnIndex,
-    }));
+    setOpenAccordions((prev) =>
+      prev.includes(value)
+        ? prev.filter((index) => index !== value)
+        : [...prev, value]
+    );
   };
 
   useEffect(() => {
@@ -78,26 +72,29 @@ const ColumnAccordion: React.FC = () => {
       {data.map((table, tableIndex) => (
         <Accordion
           key={tableIndex}
-          open={open === tableIndex}
+          open={openAccordions.includes(tableIndex)} // Check if this accordion is open
           className="mb-2"
         >
           <AccordionHeader
             onClick={() => handleOpen(tableIndex)}
             className={`flex items-center justify-between w-full p-4 cursor-pointer rounded-lg transition-colors duration-200 ${
-              open === tableIndex ? "bg-blue-100 text-blue-600" : "hover:bg-blue-50"
+              openAccordions.includes(tableIndex)
+                ? "bg-blue-100 text-blue-600"
+                : "hover:bg-blue-50"
             } border-b-0 no-underline`}
           >
-            <Typography
-              variant="h6"
-              className={`text-sm flex-grow truncate ${
-                open === tableIndex ? "font-bold" : "hover:font-bold"
-              }`}
-            >
-              {table.table_name}
-            </Typography>
+            <div className="flex items-center overflow-x-auto flex-grow">
+              <LayersIcon className="mr-2" /> {/* Add LayersIcon here */}
+              <Typography
+                variant="h6"
+                className={`text-sm flex-grow truncate whitespace-nowrap`}
+              >
+                {table.table_name}
+              </Typography>
+            </div>
             <div
               className={`transform transition-transform duration-300 ${
-                open === tableIndex ? "rotate-180" : "rotate-0"
+                openAccordions.includes(tableIndex) ? "rotate-180" : "rotate-0"
               }`}
             >
               <svg
@@ -120,12 +117,8 @@ const ColumnAccordion: React.FC = () => {
           <AccordionBody className="pt-0 pl-2 border-l-2 border-blue-200">
             {table.column_headers.map((column, columnIndex) => (
               <div key={columnIndex} className="mb-2 pl-4">
-                <AccordionHeader
-                  onClick={() => handleColumnOpen(tableIndex, columnIndex)}
-                  className="text-gray-700 text-sm cursor-pointer p-2 transition-colors duration-200 hover:text-blue-600 border-b-0 no-underline"
-                >
-                    {column}
-                  
+                <AccordionHeader className="text-gray-700 text-sm cursor-pointer p-2 transition-colors duration-200 hover:text-blue-600 border-b-0 no-underline">
+                  <div className="flex items-center">{column}</div>
                 </AccordionHeader>
               </div>
             ))}
