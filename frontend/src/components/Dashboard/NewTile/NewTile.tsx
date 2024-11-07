@@ -7,7 +7,7 @@ import { componentMapping, componentNames } from "../ComponentMapping";
 import { SaveConfirmationDialog } from "./SaveConfirmationDialog";
 import InfoTooltip from "./InfoTooltip";
 import { TileForm } from "./TileForm";
-import TableAccordion from "../../DataTable/TableAccordion";
+import ColumnAccordion from "../../DataTable/ColumnAccordion";
 
 type ComponentKeys = keyof typeof componentMapping;
 type SaveType = "update" | "new";
@@ -23,7 +23,7 @@ export default function NewTile({
   onClose,
   onSaveSuccess,
   tileId,
-  dashboardId
+  dashboardId,
 }: NewTileProps) {
   const [tileName, setTileName] = useState("");
   const [queryPrompt, setQueryPrompt] = useState("");
@@ -181,15 +181,6 @@ export default function NewTile({
     }
   };
 
-  /*
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    fetchTileData();
-
-    return () => clearInterval(timer);
-  }, [tileId, dashboardId, initialDataLoaded]);
-  */
-
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
 
@@ -272,7 +263,14 @@ export default function NewTile({
         <div className="flex space-x-6">
           {" "}
           <div className="w-1/3 max-h-[75vh] overflow-y-auto border-r pr-4">
-            <TableAccordion />
+            <Typography
+              variant="h5"
+              color="blue-gray"
+              className="mb-4 text-center"
+            >
+              Table Columns
+            </Typography>
+            <ColumnAccordion />
           </div>
           <div className="w-2/3">
             <TileForm

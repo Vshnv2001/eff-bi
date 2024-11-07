@@ -41,6 +41,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [dashboardName, setDashboardName] = useState<string>("");
+  const [dashboardDescription, setDashboardDescription] = useState<string>("");
   const [isNewTileDialogOpen, setIsNewTileDialogOpen] = useState(false);
   const [open, setOpen] = useState<number[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
@@ -93,6 +94,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
         }
       );
       setDashboardName(response.data.data);
+      setDashboardDescription(response.data.description);
     } catch (error) {
       console.error("Error fetching dashboard name:", error);
     }
@@ -163,6 +165,9 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
 
   const handleTileSaved = (message: string) => {
     toast.success(message);
+    if (message == "New tile saved successfully!") {
+      setPage(totalPages)
+    }
   };
 
   const deleteTile = async (tileId: number | undefined) => {
@@ -210,9 +215,12 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
       )}
 
       <div className="flex items-center justify-between mb-8 relative mt-4">
-        <div className="absolute inset-x-0 text-center">
+        <div className="absolute inset-x-0 text-left">
           <Typography color="gray" className="text-3xl font-bold">
             {dashboardName}
+          </Typography>
+          <Typography color="gray" className="text-xl font-bold">
+            {dashboardDescription}
           </Typography>
         </div>
         <div className="flex-1" />
@@ -406,7 +414,12 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
                           className="w-full rounded-lg h-full"
                           wrapLines={true}
                           wrapLongLines={true}
-                          lineProps={{ style: {wordBreak: 'break-all', whiteSpace: "pre-wrap" } }}
+                          lineProps={{
+                            style: {
+                              wordBreak: "break-all",
+                              whiteSpace: "pre-wrap",
+                            },
+                          }}
                         >
                           {tileData.sql_query}
                         </SyntaxHighlighter>

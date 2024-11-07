@@ -100,7 +100,7 @@ def get_dashboard_name(request: HttpRequest):
     logger.info("dash_id: " + dash_id + " org_id: " + str(org_id))
     dashboard = get_object_or_404(
         Dashboard, dash_id=dash_id, organization=org_id)
-    return JsonResponse({'data': dashboard.title}, status=200)
+    return JsonResponse({'data': dashboard.title, 'description': dashboard.description}, status=200)
 
 
 @api_view(["GET"])
@@ -112,7 +112,7 @@ def get_dashboard_tiles(request: HttpRequest):
     user = get_object_or_404(User, id=user_id)
     org_id = user.organization.id
     logger.info("dash_id: " + dash_id)
-    tiles = Tile.objects.filter(dash_id=dash_id, organization=org_id)
+    tiles = Tile.objects.filter(dash_id=dash_id, organization=org_id).order_by('id')
     logger.info("filtered tiles: ")
     logger.info(tiles)
     serializer = TileSerializer(tiles, many=True)

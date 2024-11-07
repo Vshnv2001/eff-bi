@@ -81,33 +81,39 @@ export default function DashboardsPage() {
     };
 
     return (
-      <div>
-        <div className="p-[10px]">
-          <Button
-            variant="filled"
-            size="lg"
-            onClick={handleOpen}
-            fullWidth={true}
-            color="blue"
-            className="flex items-center justify-center space-x-2"
+      <div
+        style={{
+          padding: "10px",
+          position: "sticky",
+          bottom: 0,
+          zIndex: 1,
+          backgroundColor: "white",
+        }}
+      >
+        <Button
+          variant="filled"
+          size="lg"
+          onClick={handleOpen}
+          fullWidth={true}
+          color="blue"
+          className="flex items-center justify-center space-x-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="h-5 w-5"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="h-5 w-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 4.5v15m7.5-7.5h-15"
-              />
-            </svg>
-            Create Dashboard
-          </Button>
-        </div>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 4.5v15m7.5-7.5h-15"
+            />
+          </svg>
+          Create Dashboard
+        </Button>
 
         <Dialog open={open} handler={handleOpen} size="md">
           <DashboardForm

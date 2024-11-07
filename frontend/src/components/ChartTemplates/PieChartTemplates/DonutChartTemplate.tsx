@@ -39,6 +39,11 @@ export function DonutChartTemplate({
       type: "donut",
     },
     labels: labels,
+    plotOptions: {
+      pie: {
+        customScale: 1,
+      },
+    },
     colors: generateColors(chartSeries.length),
     responsive: [
       {
@@ -46,7 +51,7 @@ export function DonutChartTemplate({
         options: {
           chart: { width: "100%" },
           legend: {
-            height: 500,
+            height: 200,
           },
         },
       },
@@ -54,11 +59,11 @@ export function DonutChartTemplate({
     legend: {
       position: "right",
       fontSize: fontSize,
-      floating: true,
+      floating: false,
       formatter: function (seriesName, opts) {
         return seriesName + ` - ${chartSeries[opts.seriesIndex].toFixed(1)}`;
       },
-      show: false,
+      show: true,
     },
     tooltip: {
       enabled: true,
@@ -97,7 +102,7 @@ export function DonutChartTemplate({
             series={chartSeries}
             type="donut"
             width="100%"
-            height="100%"
+            height="150%"
           />
         )}
       </CardContent>
