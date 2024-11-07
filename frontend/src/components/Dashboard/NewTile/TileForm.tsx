@@ -6,6 +6,7 @@ import { ChartPreferences } from "./ChartPreferences";
 import { ActionButtons } from "./ActionButtons";
 import LinearProgressWithLabel from "../LinearProgressWithLabel";
 import { Box } from "@mui/material";
+import TypewriterEffect from "./TypewriterEffect";
 
 interface TileFormProps {
   tileName: string;
@@ -121,6 +122,7 @@ export const TileForm: React.FC<TileFormProps> = ({
           <Typography variant="h6" color="blue-gray" className="mb-1">
             SQL Query
           </Typography>
+          {/*
           <SyntaxHighlighter
             language="sql"
             className="w-full rounded-lg h-full"
@@ -129,6 +131,8 @@ export const TileForm: React.FC<TileFormProps> = ({
           >
             {sqlQuery}
           </SyntaxHighlighter>
+          */}
+          <TypewriterEffect text={sqlQuery} speed={10} />
         </div>
       )}
 
