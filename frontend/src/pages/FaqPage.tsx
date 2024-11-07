@@ -152,12 +152,12 @@ const FaqPage = () => {
                 icon={<Icon id={idx} open={openTips}/>}
               >
                 <AccordionHeader
-                  className="text-white hover:text-blue-400 text-black"
+                  className="text-black hover:text-blue-400 text-black"
                   onClick={() => handleOpenTips(idx)}
                 >
                   {tip.topic}
                 </AccordionHeader>
-                <AccordionBody className="text-white text-lg text-black">
+                <AccordionBody className="text-black text-lg text-black">
                   {tip.answer}
                 </AccordionBody>
               </Accordion>
@@ -178,12 +178,12 @@ const FaqPage = () => {
                 icon={<Icon id={idx} open={openFaqs}/>}
               >
                 <AccordionHeader
-                  className="text-white hover:text-blue-400 text-black"
+                  className="text-black hover:text-blue-400 text-black"
                   onClick={() => handleOpenFaqs(idx)}
                 >
                   {faq.question}
                 </AccordionHeader>
-                <AccordionBody className="text-white text-lg">
+                <AccordionBody className="text-black text-lg">
                   {faq.answer}
                 </AccordionBody>
               </Accordion>
