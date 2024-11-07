@@ -33,11 +33,11 @@ export const SaveConfirmationDialog: React.FC<SaveConfirmationDialogProps> = ({
           <Button color="red" onClick={onCancel} disabled={isLoading}>
             Cancel
           </Button>
-          <Button color="blue" onClick={onSave} disabled={isLoading}>
-            Save
-          </Button>
-          <Button color="green" onClick={onUpdate} disabled={isLoading}>
+          <Button color="blue" onClick={onUpdate} disabled={isLoading}>
             Update
+          </Button>
+          <Button color="green" onClick={onSave} disabled={isLoading}>
+            Save
           </Button>
         </Box>
       </div>

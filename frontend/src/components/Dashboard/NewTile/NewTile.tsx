@@ -262,7 +262,7 @@ export default function NewTile({
 
         <div className="flex space-x-6">
           {" "}
-          <div className="w-1/3 max-h-[75vh] overflow-y-auto border-r pr-4">
+          <div className="w-1/3 overflow-y-auto border-r pr-4">
             <Typography
               variant="h5"
               color="blue-gray"
