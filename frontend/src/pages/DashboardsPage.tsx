@@ -155,14 +155,16 @@ export default function DashboardsPage() {
     setIsDialogOpen(false);
   };
 
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center w-full h-full bg-black bg-opacity-50 z-50">
+        <Spinner className="h-10 w-10" />
+      </div>
+    );
+  }
+
   return (
     <AppProvider navigation={NAVIGATION} router={router} theme={theme}>
-      {isLoading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <Spinner className="h-10 w-10" />
-        </div>
-      )}
-
       <DashboardLayout
         slots={{
           sidebarFooter: SidebarFooter,
