@@ -40,7 +40,10 @@ export default function ViewDataPage() {
     ...tables.map((table) => ({
       kind: "page" as const,
       segment: table.table_name,
-      title: table.table_name,
+      title:
+        table.table_name.length > 30
+          ? table.table_name.slice(0, 29) + "..."
+          : table.table_name,
       icon: <LayersIcon />,
     })),
     { kind: "divider" as const },
