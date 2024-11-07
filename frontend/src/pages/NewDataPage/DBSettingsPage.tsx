@@ -13,6 +13,8 @@ import { useAuth } from "../../components/Authentication/AuthenticationContext";
 import { BACKEND_API_URL } from "../../config/index";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { toast } from "react-toastify";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import {Alert} from "@mui/material";
 
 const databases = [
   {
@@ -45,6 +47,13 @@ export default function DBSettingsPage() {
   const { organizationId } = useAuth();
   const sessionContext = useSessionContext();
   const userId = sessionContext.loading ? null : sessionContext.userId;
+
+  const handleCopyMockData = () => {
+    navigator.clipboard.writeText(
+      "postgres://view_user:testeffbi@pg-effbi-mock-justintanwk2001-6f2d.l.aivencloud.com:18828/defaultdb"
+    );
+    toast.success("Mock data URI successfully copied!");
+  };
 
   useEffect(() => {
     const fetchDbSettings = async () => {
@@ -236,6 +245,18 @@ export default function DBSettingsPage() {
           >
             Database URI
           </Typography>
+          <Alert severity="info" className="mt-2 mb-2">
+           If you don't currently have a database URI, you may use our mock database URI:{" "}
+            <Button
+              variant="text"
+              color="blue"
+              className="inline-flex items-center gap-1 text-blue-500 hover:text-blue-700 px-1 py-1"
+              onClick={handleCopyMockData}
+            >
+              <ContentCopyIcon fontSize="small" />
+              Mock Data
+            </Button>
+          </Alert>
           <input
             disabled={isDisabledField}
             type="password"
