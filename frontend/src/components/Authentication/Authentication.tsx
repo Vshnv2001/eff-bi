@@ -167,7 +167,6 @@ const Authentication = () => {
         console.error("Error fetching user data:", response.statusText);
         setInputError({ email: true, password: true });
         setErrorMessage("Email password combination is incorrect");
-        
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
