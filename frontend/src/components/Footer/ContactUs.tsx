@@ -3,7 +3,7 @@ import { FaLinkedin, FaEnvelope } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import emailjs, { EmailJSResponseStatus } from "@emailjs/browser";
 import FadeIn from "../Animations/FadeIn";
-import { Typography } from "@material-tailwind/react";
+import { Typography, Button } from "@material-tailwind/react";
 
 const Footer: React.FC = () => {
   const [name, setName] = useState("");
@@ -39,7 +39,7 @@ const Footer: React.FC = () => {
 
   return (
     <footer
-      className="text-black h-screen flex flex-col justify-center bg-[#fafafb]"
+      className="text-black h-screen flex flex-col justify-center bg-gradient-to-r from-red-100 to-blue-400"
       id="contact"
     >
       <FadeIn>
@@ -77,12 +77,13 @@ const Footer: React.FC = () => {
                 onChange={(e) => setMessage(e.target.value)}
                 required
               />
-              <button
-                type="submit"
-                className="w-full bg-dark-blue-custom bg-blue-600 hover:bg-blue-500 text-white py-3 rounded transition duration-300 text-lg"
+              <Button
+                type="button"
+                color="blue"
+                className="normal-case w-full text-white py-3 bg-opacity-80 rounded transition duration-300 text-lg"
               >
                 Send Message
-              </button>
+              </Button>
             </form>
           </div>
           <ul className="flex space-x-8 mb-4">
