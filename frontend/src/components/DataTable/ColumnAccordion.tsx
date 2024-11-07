@@ -53,8 +53,8 @@ const ColumnAccordion: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <Spinner className="h-6 w-6" />
+      <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+        <Spinner className="h-10 w-10" />
       </div>
     );
   }
