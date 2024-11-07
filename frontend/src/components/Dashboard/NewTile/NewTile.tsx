@@ -7,7 +7,7 @@ import { componentMapping, componentNames } from "../ComponentMapping";
 import { SaveConfirmationDialog } from "./SaveConfirmationDialog";
 import InfoTooltip from "./InfoTooltip";
 import { TileForm } from "./TileForm";
-import TableAccordion from "../../DataTable/TableAccordion";
+import ColumnAccordion from "../../DataTable/ColumnAccordion";
 
 type ComponentKeys = keyof typeof componentMapping;
 type SaveType = "update" | "new";
@@ -263,7 +263,7 @@ export default function NewTile({
         <div className="flex space-x-6">
           {" "}
           <div className="w-1/3 max-h-[75vh] overflow-y-auto border-r pr-4">
-            <TableAccordion />
+            <ColumnAccordion />
           </div>
           <div className="w-2/3">
             <TileForm
