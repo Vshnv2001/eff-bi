@@ -1,9 +1,10 @@
 from .LLMManager import LLMManager
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
-import logging 
+import logging
 
 logger = logging.getLogger(__name__)
+
 
 class PrunerAgent:
     def __init__(self, model="gpt-4o"):
@@ -32,16 +33,15 @@ Your response should be in the following JSON format:
 
 The "noun_columns" field should contain only the columns that are relevant to the question and contain nouns or names, for example, the column "Artist name" contains nouns relevant to the question "What are the top selling artists?", but the column "Artist ID" is not relevant because it does not contain a noun. Do not include columns that contain numbers.
 '''),
-            ("human", "===User question:\n{question}\n\n===Database schema:\n{schema}\n\nIdentify relevant tables and columns:")
-        ])  
+            ("human",
+             "===User question:\n{question}\n\n===Database schema:\n{schema}\n\nIdentify relevant tables and columns:")
+        ])
         self.llm_manager = LLMManager(model)
-        
+
     def prune(self, state):
         output_parser = JsonOutputParser()
-        response = self.llm_manager.invoke(self.prompt, question=state.question, schema=state.database_schema)
+        response = self.llm_manager.invoke(
+            self.prompt, question=state.question, schema=state.database_schema)
         logger.info(response)
         output = output_parser.parse(response)
         return output
-    
-    
-    

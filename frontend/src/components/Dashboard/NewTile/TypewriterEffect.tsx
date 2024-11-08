@@ -10,6 +10,13 @@ const TypewriterEffect: React.FC<TypewriterProps> = ({ text, speed }) => {
   const [displayedText, setDisplayedText] = useState<string>("");
   const [index, setIndex] = useState<number>(0);
 
+  // Reset the state whenever the `text` prop changes
+  useEffect(() => {
+    setDisplayedText("");
+    setIndex(0);
+  }, [text]);
+
+  // Typewriter effect logic
   useEffect(() => {
     if (index < text.length) {
       const timeout = setTimeout(() => {
