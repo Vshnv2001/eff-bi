@@ -192,7 +192,7 @@ const TablePermissionsPage = ({
                 Unfortunately, you only have View permission for this table. 
               </Typography>
               <Typography color="gray" className="mt-1 font-normal">
-                Please ask your admin to give you Admin permission if you need to provide access to other users.
+                Please ask any Table Administrator to give you 'Admin' access if you need to provide access to other users.
               </Typography>
             </div>
           </CardHeader>
