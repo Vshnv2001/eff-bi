@@ -23,7 +23,6 @@ interface TileFormProps {
   onClose: () => void;
   setSubmitType: (type: "preview" | "save" | null) => void;
   isLoading: boolean;
-  isGenerating: boolean;
   isPreviewGenerated: boolean;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
   progress: number;

@@ -27,7 +27,6 @@ export default function NewTile({
   const [tileName, setTileName] = useState("");
   const [queryPrompt, setQueryPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
   const [info, setInfo] = useState(false);
 
   const [previewComponent, setPreviewComponent] = useState<string | null>(null);
@@ -131,7 +130,7 @@ export default function NewTile({
   };
 
   const generatePreview = async () => {
-    setIsGenerating(true);
+    setIsLoading(true);
     setSqlQuery("");
     setPreviewComponent(null);
     setPreviewProps(null);
@@ -179,7 +178,7 @@ export default function NewTile({
     } catch (error) {
       handleError(error);
     } finally {
-      setIsGenerating(false);
+      setIsLoading(false);
     }
   };
 
@@ -389,7 +388,6 @@ export default function NewTile({
               onClose={onClose}
               setSubmitType={setSubmitType}
               isLoading={isLoading}
-              isGenerating={isGenerating}
               isPreviewGenerated={isPreviewGenerated}
               handleSubmit={handleSubmit}
               submitType={submitType}
