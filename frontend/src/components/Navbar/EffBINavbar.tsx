@@ -1,7 +1,4 @@
-import {
-  Navbar,
-  Button
-} from "@material-tailwind/react";
+import { Navbar, Button } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
@@ -110,9 +107,15 @@ export default function EffBINavbar() {
                 size="sm"
                 color="blue-gray"
                 className="flex items-center gap-2"
-                onClick={() => window.open('https://eff-bi-docs.vercel.app', '_blank')}
+                onClick={() =>
+                  window.open(
+                    "https://eff-bi-docs.vercel.app/docs/user/getting-started/setup",
+                    "_blank"
+                  )
+                }
               >
-                Docs<ArrowTopRightOnSquareIcon/>
+                Docs
+                <ArrowTopRightOnSquareIcon />
               </Button>
             </div>
           ) : (
@@ -164,9 +167,12 @@ export default function EffBINavbar() {
                 size="sm"
                 color="blue-gray"
                 className="flex items-center gap-2"
-                onClick={() => window.open(import.meta.env.VITE_DOCS_URL, '_blank')}
+                onClick={() =>
+                  window.open(import.meta.env.VITE_DOCS_URL, "_blank")
+                }
               >
-                Docs<ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                Docs
+                <ArrowTopRightOnSquareIcon className="h-4 w-4" />
               </Button>
             </div>
           )}

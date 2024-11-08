@@ -1,16 +1,19 @@
 ---
 title: View Data
 description: View Data
-sidebar_position: 1
+sidebar_position: 2
 ---
 
-## Quick Glance of your Existing Data
+import viewData from '../../../images/view-data.png';
 
-After connecting your database, explore your tables by navigating to the 'Data' tab. Here, you can preview sample data from your accessible tables, providing a quick snapshot of the information.
+## Quick Glance at Your Data
 
-This also includes an AI generated summary of your data, to give you a quick refresher
-of what the data in your tables entail!
+Once you’ve connected your database, you can easily explore your data. Head over to the <strong>Data</strong> tab, where you’ll find previews of sample data from your tables, giving you a quick snapshot of what’s available.
 
-## Refreshing your Data
+<!-- <img src={viewData} width="500"/> -->
 
-At the bottom right of the Data page, you will see a Refresh button. This refresh button is used to take a new snapshot of your data which will allow Eff BI to have access to your latest data. You should refresh in the event that you made some changes to your original database.
+Plus, you’ll see an <strong>AI-generated summary</strong> that gives you an instant refresher on the contents of each table—perfect for getting a clear sense of your data at a glance!
+
+## Keeping Your Data Fresh
+
+Need the latest data? Use the <strong>Refresh</strong> button at the bottom right of the Data page. This updates Eff BI’s snapshot to reflect any recent changes made in your original database, ensuring you always have access to the most current information.

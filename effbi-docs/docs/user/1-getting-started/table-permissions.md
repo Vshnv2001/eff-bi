@@ -1,13 +1,17 @@
 ---
 title: Table Permissions
 description: Table Permissions
-sidebar_position: 2
+sidebar_position: 3
 ---
 
-The Permissions page offers a detailed view of your current access rights. As an administrator of a table, you have the authority to modify access levels, allowing you to manage who can view the table.
+The Permissions page gives you a comprehensive look at who currently has access to your tables. As a table administrator, you have full control over access levels, allowing you to decide who can view or interact with specific data.
 
 ## Managing Permissions
 
-As a table administrator, you have the authority to adjust user access. You can revoke existing permissions with the 'Remove' button or extend access by selecting 'Add Users' and entering your colleagues' email with the respective permission type.
+As an administrator, you can easily manage user access:
 
-If you only have 'view' permissions for that table, you will not be able to give or revoke the permission of others.
+1. <strong>To add new users</strong>: Click <strong>Add Users</strong>, enter their email, and select the permission type they need. Eff BI makes it simple to bring collaborators onboard with the right level of access.
+
+2. <strong>To remove access</strong>: Just click the <strong>Remove</strong> button next to any user you wish to revoke access for, giving you full control over data visibility.
+
+If you have <strong>view-only permissions</strong>, you’ll still be able to see access rights but won’t be able to modify them.
