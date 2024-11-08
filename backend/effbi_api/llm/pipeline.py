@@ -48,7 +48,7 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
             state.error = "Your organization database does not have necessary data to answer this question. Please contact your administrator to ensure the necessary tables are added to your database."
         return state
     
-    yield {"sql_query": state.sql_query}
+    #yield {"sql_query": state.sql_query}
 
     start_time = time.time()
 
