@@ -196,8 +196,10 @@ def create_dashboard_tile(request: HttpRequest):
                     logger.info(f"Response Data: {response_data}")
                     yield json.dumps(response_data) + '\n'
 
-        # Return a StreamingHttpResponse to stream the data progressively
-        return StreamingHttpResponse(stream_sql_queries(), content_type='application/json')
+        response_server = StreamingHttpResponse(stream_sql_queries(), content_type='application/json')
+        response_server['Cache-Control'] = 'no-cache'
+        response_server["X-Accel-Buffering"] = "no"
+        return response_server
 
     except Exception as e:
         logger.error(f"Error: {str(e)}")
