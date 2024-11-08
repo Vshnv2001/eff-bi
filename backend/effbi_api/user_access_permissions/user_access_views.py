@@ -32,8 +32,7 @@ def get_user_permissions_by_table(request, table_id):
         table = get_object_or_404(OrgTables, id=table_id)
         user_id = request.supertokens.get_user_id()
         # logger.info(table)
-        permissions = UserAccessPermissions.objects.select_related('user_id').filter(table_id=table_id).exclude(user_id=user_id)
-        logger.info("PERMISSIONS: " + str(permissions))
+        permissions = UserAccessPermissions.objects.select_related('user_id').filter(table_id=table_id)
         permissions_data = [
             {
                 'user_id': permission.user_id.id,
@@ -47,6 +46,7 @@ def get_user_permissions_by_table(request, table_id):
         filtered_permissions_data = filter_permissions(permissions_data)
         logger.info("FILTERED PERMISSIONS DATA: " + str(filtered_permissions_data))
         if not filtered_permissions_data:
+            logger.info("NO PERMISSIONS FOUND")
             return JsonResponse({'message': 'No permissions found for this table.'}, status=204)
 
         return JsonResponse({'data': filtered_permissions_data})
