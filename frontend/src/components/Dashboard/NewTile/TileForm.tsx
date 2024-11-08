@@ -144,20 +144,18 @@ export const TileForm: React.FC<TileFormProps> = ({
         />
       </div>
 
-      {/* Preview Text with Typewriter Effect */}
-      {submitType === "preview" && (
+      {/* Combined Preview Text and SQL Query with Typewriter Effect */}
+      {(submitType === "preview" || sqlQuery) && (
         <div className="mt-4 mb-4">
-          <TypewriterEffect text={previewText} speed={30} />
-        </div>
-      )}
-
-      {/* SQL Query Typewriter Effect */}
-      {sqlQuery && (
-        <div className="relative mb-4">
           <Typography variant="h6" color="blue-gray" className="mb-1">
-            Generated SQL Query
+            Query Generation Process
           </Typography>
-          <TypewriterEffect text={sqlQuery} speed={10} />
+          <TypewriterEffect
+            previewText={previewText}
+            sqlQuery={sqlQuery}
+            speed={30}
+            showFullText={false}
+          />
         </div>
       )}
 
@@ -167,13 +165,13 @@ export const TileForm: React.FC<TileFormProps> = ({
           <Typography variant="h6" color="blue-gray" className="mb-2">
             Preview
           </Typography>
-          <PreviewComponent {...previewProps} title={tileName} />
+          <PreviewComponent {...previewProps} />
         </div>
       )}
 
       {/* Progress Bar */}
-      {isLoading && submitType === "preview" && (
-        <Box sx={{ width: "100%" }}>
+      {isLoading && (
+        <Box className="mt-4">
           <LinearProgressWithLabel value={progress} />
         </Box>
       )}

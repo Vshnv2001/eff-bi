@@ -2,45 +2,85 @@ import React, { useState, useEffect } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 
 interface TypewriterProps {
-  text: string;
+  previewText?: string;
+  sqlQuery?: string;
   speed: number;
+  showFullText: boolean;
 }
 
-const TypewriterEffect: React.FC<TypewriterProps> = ({ text, speed }) => {
-  const [displayedText, setDisplayedText] = useState<string>("");
-  const [index, setIndex] = useState<number>(0);
+const TypewriterEffect: React.FC<TypewriterProps> = ({
+  previewText = "",
+  sqlQuery = "",
+  speed,
+  showFullText,
+}) => {
+  const [displayedPreview, setDisplayedPreview] = useState("");
+  const [displayedSQL, setDisplayedSQL] = useState("");
+  const [previewIndex, setPreviewIndex] = useState(0);
+  const [sqlIndex, setSqlIndex] = useState(0);
 
-  // Reset the state whenever the `text` prop changes
+  // Reset indices when text changes
   useEffect(() => {
-    setDisplayedText("");
-    setIndex(0);
-  }, [text]);
+    setPreviewIndex(0);
+    setDisplayedPreview("");
+  }, [previewText]);
 
-  // Typewriter effect logic
   useEffect(() => {
-    if (index < text.length) {
+    setSqlIndex(0);
+    setDisplayedSQL("");
+  }, [sqlQuery]);
+
+  // Handle preview text typing effect
+  useEffect(() => {
+    if (!showFullText && previewIndex < previewText.length) {
       const timeout = setTimeout(() => {
-        setDisplayedText((prev) => prev + text[index]);
-        setIndex(index + 1);
+        setDisplayedPreview((prev) => prev + previewText[previewIndex]);
+        setPreviewIndex(previewIndex + 1);
       }, speed);
       return () => clearTimeout(timeout);
     }
-  }, [index, text, speed]);
+  }, [previewIndex, previewText, speed, showFullText]);
+
+  // Handle SQL text typing effect
+  useEffect(() => {
+    if (!showFullText && sqlIndex < sqlQuery.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedSQL((prev) => prev + sqlQuery[sqlIndex]);
+        setSqlIndex(sqlIndex + 1);
+      }, speed);
+      return () => clearTimeout(timeout);
+    }
+  }, [sqlIndex, sqlQuery, speed, showFullText]);
+
+  // Show full text immediately if showFullText is true
+  useEffect(() => {
+    if (showFullText) {
+      setDisplayedPreview(previewText);
+      setDisplayedSQL(sqlQuery);
+    }
+  }, [showFullText, previewText, sqlQuery]);
 
   return (
-    <pre
-      style={{ whiteSpace: "pre-wrap" }}
-      className="font-mono text-sm text-gray-800"
-    >
-      <SyntaxHighlighter
-        language="sql"
-        className="w-full rounded-lg h-full"
-        wrapLines={true}
-        lineProps={{ style: { whiteSpace: "pre-wrap" } }}
-      >
-        {displayedText}
-      </SyntaxHighlighter>
-    </pre>
+    <div className="space-y-2">
+      {/* Preview text without syntax highlighting */}
+      {previewText && (
+        <pre className="font-mono text-sm text-gray-800 whitespace-pre-wrap">
+          {displayedPreview}
+        </pre>
+      )}
+
+      {/* SQL query with syntax highlighting */}
+      {sqlQuery && (
+        <SyntaxHighlighter
+          language="sql"
+          className="w-full rounded-lg"
+          wrapLines={true}
+          lineProps={{ style: { whiteSpace: "pre-wrap" } }}
+        >
+          {displayedSQL}
+        </SyntaxHighlighter>
+      )}
+    </div>
   );
 };
 

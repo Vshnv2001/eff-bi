@@ -47,6 +47,10 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
         else:
             state.error = "Your organization database does not have necessary data to answer this question. Please contact your administrator to ensure the necessary tables are added to your database."
         return state
+    
+    yield {"sql_query": state.sql_query}
+
+    start_time = time.time()
 
     # Pass the pruned schema to the SQL agent to generate a SQL query
     sql_agent = SQLAgent(db_manager)
@@ -62,6 +66,7 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
 
     sql_validator = SQLValidator()
 
+    
     # Execute the SQL query and get the results
     try:
         results = db_manager.execute_query(state, sql_validator, 0)
@@ -70,6 +75,12 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
         state.error = "We were unable to generate a valid SQL query. Please rephrase your question."
         return state
     
+    end_time = time.time()
+    
+    # Calculate the time taken
+    elapsed_time = end_time - start_time
+    print(f"Query executed in {elapsed_time:.4f} seconds")
+
     yield {"sql_query": state.sql_query}
 
     state.results = results
