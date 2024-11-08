@@ -6,6 +6,7 @@ import { ActionButtons } from "./ActionButtons";
 import LinearProgressWithLabel from "../LinearProgressWithLabel";
 import { Box } from "@mui/material";
 import TypewriterEffect from "./TypewriterEffect";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 
 interface TileFormProps {
   tileName: string;
@@ -144,20 +145,32 @@ export const TileForm: React.FC<TileFormProps> = ({
         />
       </div>
 
-      {/* Combined Preview Text and SQL Query with Typewriter Effect */}
-      {(submitType === "preview" || sqlQuery) && (
-        <div className="mt-4 mb-4">
-          <Typography variant="h6" color="blue-gray" className="mb-1">
-            Query Generation Process
-          </Typography>
+      {/* Display Query Generation Process */}
+      <div className="mt-4 mb-4">
+        <Typography variant="h6" color="blue-gray" className="mb-1">
+          Query Generation Process
+        </Typography>
+        {submitType === "preview" ? (
+          // Show typewriter effect for both previewText and sqlQuery
           <TypewriterEffect
             previewText={previewText}
             sqlQuery={sqlQuery}
             speed={30}
             showFullText={false}
           />
-        </div>
-      )}
+        ) : (
+          // Display sqlQuery in its entirety without typewriter effect
+
+          <SyntaxHighlighter
+            language="sql"
+            className="w-full rounded-lg"
+            wrapLines={true}
+            lineProps={{ style: { whiteSpace: "pre-wrap" } }}
+          >
+            {sqlQuery}
+          </SyntaxHighlighter>
+        )}
+      </div>
 
       {/* Preview Component */}
       {PreviewComponent && previewProps && (
