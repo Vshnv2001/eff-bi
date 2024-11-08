@@ -183,6 +183,7 @@ def create_dashboard_tile(request: HttpRequest):
                 # After the pipeline finishes, check if there was an error
                 if response.error:
                     logger.info(f"Error: {response.error}")
+                    print("errata_in_response", response.error)
                     yield json.dumps({'error': response.error}) + '\n'
                 else:
                     # Prepare the final response data

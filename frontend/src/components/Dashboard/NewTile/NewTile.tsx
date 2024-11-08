@@ -152,6 +152,8 @@ export default function NewTile({
         try {
           const chunkData: ChunkData = JSON.parse(chunk);
 
+          console.log("chunk data", chunkData);
+
           if (chunkData.error) {
             handleFetchError(chunkData.error);
           }

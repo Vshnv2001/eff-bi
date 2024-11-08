@@ -52,7 +52,7 @@ class DatabaseManager:
             cursor.execute(state.sql_query)
             results = cursor.fetchall()
             count = 0
-            while len(results) == 0 and count < 5:
+            while len(results) == 0 and count < 2:
                 error = "No Results found. Please modify the query to return results. Perhaps you can relax the filters?"
                 validated_sql_query = sql_validator.validate_and_fix_sql(state, error)
                 state.sql_query = validated_sql_query.get('corrected_query', state.sql_query)
@@ -66,7 +66,7 @@ class DatabaseManager:
         except Exception as e:
             print("Error executing query: ", str(e))
             print("Number of tries: ", num_tries)
-            if num_tries >= 5:
+            if num_tries >= 2:
                 raise Exception(f"We were unable to generate a valid SQL query. Please rephrase your question.")
             else:
                 validated_sql_query = sql_validator.validate_and_fix_sql(state, str(e))

@@ -46,7 +46,9 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
             state.error = "You do not have permissions to answer this question. Please contact your administrator for access."
         else:
             state.error = "Your organization database does not have necessary data to answer this question. Please contact your administrator to ensure the necessary tables are added to your database."
+        print("irrelevant")
         yield {"state": state}
+        return
     
     #yield {"sql_query": state.sql_query}
 
@@ -60,7 +62,10 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
 
     if sql_query["sql_query"] == "NOT_RELEVANT":
         state.error = "Your question is not relevant to the data in your database. Please modify your question or update your database."
+        
+        print("irrelevant2")
         yield {"state": state}
+        return
 
     state.sql_query = sql_query.get('sql_query', '')
 
@@ -73,7 +78,9 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     except Exception as e:
         logger.error("Error executing query: " + str(e))
         state.error = "We were unable to generate a valid SQL query. Please rephrase your question."
+        print("irrelevant3")
         yield {"state": state}
+        return
     
     end_time = time.time()
     
