@@ -76,6 +76,7 @@ def get_user_access_permissions(request, user_id):
     get_object_or_404(User, id=user_id)
     # Query the UserAccessPermissions table and get all instances of the current user's permission
     permissions = UserAccessPermissions.objects.filter(user_id=user_id).select_related('table_id')
+    logger.info("PERMISSIONS: " + str(permissions))
 
     # {OrgTable: permission}
     table_permissions = {}

@@ -92,7 +92,11 @@ export default function DBAccessPermissionsPage() {
   });
 
   if (isLoading) {
-    return <Spinner />;
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-gray-300 bg-opacity-50 z-50">
+        <Spinner className="h-10 w-10" />
+      </div>
+    );
   }
 
   return (
