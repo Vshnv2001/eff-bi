@@ -85,6 +85,12 @@ export default function NewTile({
     }
   };
 
+  const handleFetchError = (error: any) => {
+    toast.error(error, {
+      autoClose: 10000,
+    });
+  };
+
   const setupCancelToken = (timeoutMessage: string) => {
     const cancelToken = axios.CancelToken.source();
     const timeout = setTimeout(() => {
@@ -161,16 +167,20 @@ export default function NewTile({
         try {
           const chunkData: ChunkData = JSON.parse(chunk); // Assuming the response is JSON-formatted.
 
+          if (chunkData.error) {
+            handleFetchError(chunkData.error);
+          }
+
           if (chunkData.sql) {
             console.log("SQL Query:", chunkData.sql);
             setSqlQuery(chunkData.sql); // Handle SQL query separately
           } else {
             console.log("Other Data:", chunkData); // Handle other data
             setApiData({
-              ...chunkData
+              ...chunkData,
             });
-            setPreviewComponent(chunkData.component)
-            setPreviewProps(chunkData.tile_props)
+            setPreviewComponent(chunkData.component);
+            setPreviewProps(chunkData.tile_props);
           }
         } catch (error) {
           console.error("Error parsing chunk data:", error);

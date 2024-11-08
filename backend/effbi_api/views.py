@@ -172,29 +172,28 @@ def create_dashboard_tile(request: HttpRequest):
             'description'), db_uri, org_id, user_id)
 
         def stream_sql_queries():
-            # This will yield the SQL queries as they are produced by the pipeline
+            response = None  # Initialize to keep track of the final state
             for item in pipeline:
                 if "sql_query" in item:
-                    # Stream the SQL query as JSON
                     yield json.dumps({"sql": item["sql_query"]}) + '\n'
-                else:
-                    # Continue processing state
-                    response: State = item["state"]
+                elif "state" in item:
+                    response = item["state"]
 
-            # After the pipeline finishes, return the response with other data
-            if response.error:
-                logger.info(f"Error: {response.error}")
-                yield json.dumps({'error': response.error}) + '\n'
-            else:
-                # Prepare the final response data
-                response_data = request.data.copy()
-                response_data['organization'] = org_id
-                response_data['sql_query'] = response.sql_query
-                response_data['component'] = response.visualization.get(
-                    'visualization', '')
-                response_data['tile_props'] = response.formatted_data
-                logger.info(f"Response Data: {response_data}")
-                yield json.dumps(response_data) + '\n'
+            if response:
+                # After the pipeline finishes, check if there was an error
+                if response.error:
+                    logger.info(f"Error: {response.error}")
+                    yield json.dumps({'error': response.error}) + '\n'
+                else:
+                    # Prepare the final response data
+                    response_data = request.data.copy()
+                    response_data['organization'] = org_id
+                    response_data['sql_query'] = response.sql_query
+                    response_data['component'] = response.visualization.get(
+                        'visualization', '')
+                    response_data['tile_props'] = response.formatted_data
+                    logger.info(f"Response Data: {response_data}")
+                    yield json.dumps(response_data) + '\n'
 
         # Return a StreamingHttpResponse to stream the data progressively
         return StreamingHttpResponse(stream_sql_queries(), content_type='application/json')
