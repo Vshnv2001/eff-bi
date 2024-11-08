@@ -84,12 +84,15 @@ def get_user_access_permissions(request, user_id):
         # Admin permission is the highest level
         if perm.permission == 'Admin' or perm.table_id not in table_permissions:
             table_permissions[perm.table_id] = perm.permission
+    
+    logger.info("TABLE PERMISSIONS: " + str(table_permissions))
 
     data = [{
         'table_name': table.table_name,
         'table_id': table.id,
         'permissions': permission} for table, permission in table_permissions.items()
     ]
+    logger.info("DATA: " + str(data))
     return JsonResponse({'message': 'User permissions:', 'data': data}, status=status.HTTP_200_OK)
 
 
