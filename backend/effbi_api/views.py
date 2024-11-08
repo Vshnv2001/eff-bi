@@ -1,5 +1,5 @@
 from .helpers.table_processing import get_sample_table_data
-from django.http import JsonResponse, HttpRequest
+from django.http import JsonResponse, HttpRequest, StreamingHttpResponse
 from .llm.State import State
 from .llm.pipeline import refresh_dashboard_tile_pipeline, response_pipeline
 from rest_framework.views import APIView
@@ -12,6 +12,7 @@ from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from .serializer import DashboardSerializer, TileSerializer
 import logging
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -112,7 +113,8 @@ def get_dashboard_tiles(request: HttpRequest):
     user = get_object_or_404(User, id=user_id)
     org_id = user.organization.id
     logger.info("dash_id: " + dash_id)
-    tiles = Tile.objects.filter(dash_id=dash_id, organization=org_id).order_by('id')
+    tiles = Tile.objects.filter(
+        dash_id=dash_id, organization=org_id).order_by('id')
     logger.info("filtered tiles: ")
     logger.info(tiles)
     serializer = TileSerializer(tiles, many=True)
@@ -142,6 +144,7 @@ def get_dashboard_tile(request: HttpRequest, id: int):
 
     return JsonResponse({'data': serializer.data}, status=200)
 
+
 @api_view(["DELETE"])
 @verify_session()
 def delete_dashboard_tile(request: HttpRequest, id: int):
@@ -155,7 +158,7 @@ def delete_dashboard_tile(request: HttpRequest, id: int):
 def create_dashboard_tile(request: HttpRequest):
     try:
         dash_id = request.data.get('dash_id')
-        logger.info(dash_id)
+        logger.info(f"Dash ID: {dash_id}")
         if not dash_id:
             return JsonResponse({'error': "Dash_id is required"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -164,26 +167,40 @@ def create_dashboard_tile(request: HttpRequest):
         org_id = user.organization.id
         db_uri = user.organization.database_uri
 
-        response: State = response_pipeline(
-            request.data.get('description'), db_uri, org_id, user_id)
-        logger.info("Pipeline complete")
+        # Pipeline generator
+        pipeline = response_pipeline(request.data.get(
+            'description'), db_uri, org_id, user_id)
 
-        if response.error:
-            logger.info(response.error)
-            return JsonResponse({'error': response.error}, status=status.HTTP_400_BAD_REQUEST)
+        def stream_sql_queries():
+            response = None  # Initialize to keep track of the final state
+            for item in pipeline:
+                if "sql_query" in item:
+                    yield json.dumps({"sql": item["sql_query"]}) + '\n'
+                elif "state" in item:
+                    response = item["state"]
 
-        response_data = request.data.copy()
-        response_data['organization'] = org_id
-        response_data['sql_query'] = response.sql_query
-        response_data['component'] = response.visualization.get(
-            'visualization', '')
-        response_data['tile_props'] = response.formatted_data
+            if response:
+                # After the pipeline finishes, check if there was an error
+                if response.error:
+                    logger.info(f"Error: {response.error}")
+                    print("errata_in_response", response.error)
+                    yield json.dumps({'error': response.error}) + '\n'
+                else:
+                    # Prepare the final response data
+                    response_data = request.data.copy()
+                    response_data['organization'] = org_id
+                    response_data['sql_query'] = response.sql_query
+                    response_data['component'] = response.visualization.get(
+                        'visualization', '')
+                    response_data['tile_props'] = response.formatted_data
+                    logger.info(f"Response Data: {response_data}")
+                    yield json.dumps(response_data) + '\n'
 
-        logger.info(response_data)
-        return JsonResponse(response_data, status=status.HTTP_200_OK)
+        # Return a StreamingHttpResponse to stream the data progressively
+        return StreamingHttpResponse(stream_sql_queries(), content_type='application/json')
 
     except Exception as e:
-        logger.error(e)
+        logger.error(f"Error: {str(e)}")
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -258,7 +275,7 @@ def save_dashboard_tile(request: HttpRequest):
         logger.error(f"Error saving dashboard tile: {str(e)}")
         return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    
+
 @api_view(["POST"])
 @verify_session()
 def refresh_dashboard_tile(request: HttpRequest):
@@ -275,7 +292,8 @@ def refresh_dashboard_tile(request: HttpRequest):
     state.visualization = {"visualization": chart_type}
     state.question = tile.description
     try:
-        response: State = refresh_dashboard_tile_pipeline(state, db_uri, tile.organization.id)
+        response: State = refresh_dashboard_tile_pipeline(
+            state, db_uri, tile.organization.id)
         logger.info(response)
         updated_tile = Tile.objects.get(id=tile_id)
         updated_tile.tile_props = response.formatted_data['formatted_data_for_visualization']
