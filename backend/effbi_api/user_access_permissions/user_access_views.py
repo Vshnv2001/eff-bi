@@ -41,8 +41,10 @@ def get_user_permissions_by_table(request, table_id):
             }
             for permission in permissions
         ]
+        logger.info("TABLE PERMISSIONS DATA: " + str(permissions_data))
 
         filtered_permissions_data = filter_permissions(permissions_data)
+        logger.info("FILTERED PERMISSIONS DATA: " + str(filtered_permissions_data))
         if not filtered_permissions_data:
             return JsonResponse({'message': 'No permissions found for this table.'}, status=204)
 
@@ -76,7 +78,7 @@ def get_user_access_permissions(request, user_id):
     get_object_or_404(User, id=user_id)
     # Query the UserAccessPermissions table and get all instances of the current user's permission
     permissions = UserAccessPermissions.objects.filter(user_id=user_id).select_related('table_id')
-    logger.info("PERMISSIONS: " + str(permissions))
+    # logger.info("PERMISSIONS: " + str(permissions))
 
     # {OrgTable: permission}
     table_permissions = {}
@@ -85,14 +87,14 @@ def get_user_access_permissions(request, user_id):
         if perm.permission == 'Admin' or perm.table_id not in table_permissions:
             table_permissions[perm.table_id] = perm.permission
     
-    logger.info("TABLE PERMISSIONS: " + str(table_permissions))
+    # logger.info("TABLE PERMISSIONS: " + str(table_permissions))
 
     data = [{
         'table_name': table.table_name,
         'table_id': table.id,
         'permissions': permission} for table, permission in table_permissions.items()
     ]
-    logger.info("DATA: " + str(data))
+    # logger.info("DATA: " + str(data))
     return JsonResponse({'message': 'User permissions:', 'data': data}, status=status.HTTP_200_OK)
 
 
