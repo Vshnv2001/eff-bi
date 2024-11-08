@@ -36,6 +36,8 @@ export default function ViewDataPage() {
   const router = useDemoRouter("/view-data");
   const [refreshLoading, setRefreshLoading] = useState(false);
 
+  console.log(router.pathname);
+
   const NAVIGATION = [
     { kind: "header" as const, title: "Tables" },
     ...tables.map((table) => ({
@@ -132,6 +134,7 @@ export default function ViewDataPage() {
     // filter function to get Data based on pathname
     pathname = pathname.replace("/", "");
     const table = tables.find((table) => table.table_name === pathname);
+    console.log(table);
     if (!table) {
       return <TablePage table={tables[0]} />;
     }
