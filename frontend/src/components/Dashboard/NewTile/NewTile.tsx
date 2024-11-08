@@ -148,9 +148,6 @@ export default function NewTile({
 
   const generatePreview = async () => {
     setIsLoading(true);
-    const { cancelToken, timeout } = setupCancelToken(
-      "Unable to generate tile. Request took too long."
-    );
 
     let description = queryPrompt;
     try {
@@ -159,13 +156,11 @@ export default function NewTile({
         description = `${queryPrompt}\n\nTry to generate a chart that is any of the following: ${componentNamesString}.`;
       }
 
-      // Stream the data
       const stream = await generateStream(description);
 
-      // This loops over each chunk and logs it
       for await (const chunk of stream) {
         try {
-          const chunkData: ChunkData = JSON.parse(chunk); // Assuming the response is JSON-formatted.
+          const chunkData: ChunkData = JSON.parse(chunk);
 
           if (chunkData.error) {
             handleFetchError(chunkData.error);
@@ -173,9 +168,9 @@ export default function NewTile({
 
           if (chunkData.sql) {
             console.log("SQL Query:", chunkData.sql);
-            setSqlQuery(chunkData.sql); // Handle SQL query separately
+            setSqlQuery(chunkData.sql);
           } else {
-            console.log("Other Data:", chunkData); // Handle other data
+            console.log("Other Data:", chunkData);
             setApiData({
               ...chunkData,
             });
@@ -191,7 +186,6 @@ export default function NewTile({
     } catch (error) {
       handleError(error);
     } finally {
-      clearTimeout(timeout);
       setIsLoading(false);
     }
   };
@@ -205,47 +199,62 @@ export default function NewTile({
     description: string
   ): Promise<AsyncIterable<string>> => {
     const controller = new AbortController();
-    const signal = controller.signal;
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          dash_id: dashboardId,
-          title: tileName,
-          description: description,
-        }),
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+    }, 60000);
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            dash_id: dashboardId,
+            title: tileName,
+            description: description,
+          }),
+          signal: controller.signal,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    );
+      if (!response.body) {
+        throw new Error("Response body does not exist");
+      }
 
-    // Check if the response is valid
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      return getIterableStream(response.body);
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.name === "AbortError") {
+          handleFetchError("Unable to generate tile. Request took too long.");
+        } else {
+          handleFetchError(`Error: ${error.message}`);
+        }
+      } else {
+        handleFetchError("An unknown error occurred.");
+      }
+      throw error;
+    } finally {
+      clearTimeout(timeoutId);
     }
-    if (!response.body) {
-      throw new Error("Response body does not exist");
-    }
-
-    // Return the async iterable stream
-    return getIterableStream(response.body);
   };
 
-  // Helper function to convert the response body into an async iterable stream
   async function* getIterableStream(
     body: ReadableStream<Uint8Array>
   ): AsyncIterable<string> {
-    const reader = body.getReader(); // Get a reader from the stream
-    const decoder = new TextDecoder(); // Used to decode the Uint8Array chunks into strings
+    const reader = body.getReader();
+    const decoder = new TextDecoder();
 
-    // Continuously read from the stream
     while (true) {
-      const { value, done } = await reader.read(); // Read a chunk from the stream
-      if (done) break; // If no more data is available, stop the loop
-      const decodedChunk = decoder.decode(value, { stream: true }); // Decode the chunk
-      yield decodedChunk; // Yield the decoded chunk
+      const { value, done } = await reader.read();
+      if (done) break;
+      const decodedChunk = decoder.decode(value, { stream: true });
+      yield decodedChunk;
     }
   }
 
