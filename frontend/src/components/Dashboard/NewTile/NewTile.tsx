@@ -156,6 +156,7 @@ export default function NewTile({
 
           if (chunkData.error) {
             handleFetchError(chunkData.error);
+            return
           }
 
           if (chunkData.sql) {

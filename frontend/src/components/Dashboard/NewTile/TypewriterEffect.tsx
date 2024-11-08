@@ -96,20 +96,22 @@ const TypewriterEffect: React.FC<TypewriterProps> = ({
           {displayedPreview}
         </pre>
       )}
-      {isPreviewDone && (
-        <pre className="font-mono text-sm text-gray-800 whitespace-pre-wrap">
-          {displayedMessage}
-        </pre>
-      )}
-      {isMessageDone && sqlQuery && (
-        <SyntaxHighlighter
-          language="sql"
-          className="w-full rounded-lg"
-          wrapLines={true}
-          lineProps={{ style: { whiteSpace: "pre-wrap" } }}
-        >
-          {displayedSQL}
-        </SyntaxHighlighter>
+      {isPreviewDone && sqlQuery && (
+        <>
+          {/* Show message only if sqlQuery is not empty */}
+          <pre className="font-mono text-sm text-gray-800 whitespace-pre-wrap">
+            {displayedMessage}
+          </pre>
+          {/* Show SQL query only if it's not empty */}
+          <SyntaxHighlighter
+            language="sql"
+            className="w-full rounded-lg"
+            wrapLines={true}
+            lineProps={{ style: { whiteSpace: "pre-wrap" } }}
+          >
+            {displayedSQL}
+          </SyntaxHighlighter>
+        </>
       )}
     </div>
   );

@@ -78,7 +78,6 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
     except Exception as e:
         logger.error("Error executing query: " + str(e))
         state.error = "We were unable to generate a valid SQL query. Please rephrase your question."
-        print("irrelevant3")
         yield {"state": state}
         return
     
@@ -104,6 +103,7 @@ def response_pipeline(user_query: str, db_uri: str, organization_id: int, user_i
         logger.info("Error formatting data for visualization: " + str(e))
         state.error = "We are unable to visualize the data. Please try a different question or provide more information."
         yield {"state": state}
+        return
 
     logger.info("FORMATTED DATA: " + str(formatted_data))
 
