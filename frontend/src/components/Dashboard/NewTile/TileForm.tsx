@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography, IconButton } from "@material-tailwind/react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { ChartPreferences } from "./ChartPreferences";
 import { ActionButtons } from "./ActionButtons";
 import LinearProgressWithLabel from "../LinearProgressWithLabel";
@@ -51,6 +50,33 @@ export const TileForm: React.FC<TileFormProps> = ({
   setProgress,
   submitType,
 }) => {
+  const [previewText, setPreviewText] = useState("");
+
+  // Generate random preview text variations
+  const generatePreviewText = () => {
+    const templates = [
+      `To generate the SQL query and corresponding visualization for your prompt: "${queryPrompt}", we will first assess your access rights to the necessary tables and columns.`,
+      `Before we proceed with the visualization for the query: "${queryPrompt}", we need to validate access to the relevant datasets.`,
+      `Verifying access to the tables and columns required to generate the visualization for your provided query prompt: "${queryPrompt}".`,
+      `In order to craft a visualization, we are ensuring you have the correct permissions to access all required tables and data points.`,
+      `Conducting a pre-check to verify that all necessary tables and fields are accessible for the query: "${queryPrompt}".`,
+      `We are confirming access to the essential tables before generating a visualization based on your query prompt: "${queryPrompt}".`,
+      `To ensure a seamless experience, we are currently validating your access to the necessary data for the query prompt: "${queryPrompt}".`,
+      `Before generating the query, we are checking permissions on your dataset to ensure all necessary tables are accessible for the query prompt: "${queryPrompt}".`,
+      `To generate the requested visualization for the query prompt: "${queryPrompt}", we need to confirm that all required data sources are accessible.`,
+      `Performing an access validation check on the tables needed for the query prompt: "${queryPrompt}".`,
+    ];
+
+    return templates[Math.floor(Math.random() * templates.length)];
+  };
+
+  useEffect(() => {
+    if (submitType === "preview") {
+      setPreviewText(generatePreviewText());
+    }
+  }, [submitType, queryPrompt]);
+
+  // Progress bar management
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
@@ -75,6 +101,7 @@ export const TileForm: React.FC<TileFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 pb-3">
+      {/* Tile Name */}
       <div className="relative mb-4">
         <Typography variant="h6" color="blue-gray">
           Tile Name
@@ -87,12 +114,14 @@ export const TileForm: React.FC<TileFormProps> = ({
         />
       </div>
 
+      {/* Chart Preferences */}
       <ChartPreferences
         componentNames={componentNames}
         selectedTemplates={selectedTemplates}
         setSelectedTemplates={setSelectedTemplates}
       />
 
+      {/* Visualization Instructions */}
       <div>
         <div className="flex items-center">
           <Typography variant="h6" color="blue-gray" className="mr-2">
@@ -106,55 +135,50 @@ export const TileForm: React.FC<TileFormProps> = ({
             <InformationCircleIcon className="h-5 w-5" />
           </IconButton>
         </div>
-        <div className="relative">
-          <textarea
-            placeholder="Enter query to generate the chart (e.g., 'Show me monthly sales data for the past year')"
-            value={queryPrompt}
-            onChange={(e) => setQueryPrompt(e.target.value)}
-            rows={4}
-            className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
-          />
-        </div>
+        <textarea
+          placeholder="Enter your query for generating the chart (e.g., 'Display monthly revenue trends over the last year')"
+          value={queryPrompt}
+          onChange={(e) => setQueryPrompt(e.target.value)}
+          rows={4}
+          className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
+        />
       </div>
 
+      {/* Preview Text with Typewriter Effect */}
+      {submitType === "preview" && (
+        <div className="mt-4 mb-4">
+          <TypewriterEffect text={previewText} speed={30} />
+        </div>
+      )}
+
+      {/* SQL Query Typewriter Effect */}
       {sqlQuery && (
         <div className="relative mb-4">
           <Typography variant="h6" color="blue-gray" className="mb-1">
-            SQL Query
+            Generated SQL Query
           </Typography>
-          {/*
-          <SyntaxHighlighter
-            language="sql"
-            className="w-full rounded-lg h-full"
-            wrapLines={true}
-            lineProps={{ style: { whiteSpace: "pre-wrap" } }}
-          >
-            {sqlQuery}
-          </SyntaxHighlighter>
-          */}
           <TypewriterEffect text={sqlQuery} speed={10} />
         </div>
       )}
 
+      {/* Preview Component */}
       {PreviewComponent && previewProps && (
         <div className="mt-4 border rounded-lg p-4">
           <Typography variant="h6" color="blue-gray" className="mb-2">
             Preview
           </Typography>
-          <PreviewComponent
-            {...previewProps}
-            title={tileName}
-            // description={queryPrompt}
-          />
+          <PreviewComponent {...previewProps} title={tileName} />
         </div>
       )}
 
+      {/* Progress Bar */}
       {isLoading && submitType === "preview" && (
         <Box sx={{ width: "100%" }}>
           <LinearProgressWithLabel value={progress} />
         </Box>
       )}
 
+      {/* Action Buttons */}
       <ActionButtons
         onClose={onClose}
         setSubmitType={setSubmitType}
