@@ -182,15 +182,13 @@ const TablePermissionsPage = ({
                 See all users who have permissions for this table
               </Typography>
             </div>
-          </div>
-          <div className="flex justify-end space-x-3">
             <button
               onClick={() => setOpenAddDialog(true)}
               className="bg-blue-500 text-white p-2 pl-5 pr-5 rounded-md hover:bg-blue-400"
             >
               Add Users
             </button>
-            </div>
+          </div>
           </CardHeader>
         )}
         {permissions === "View" && (
