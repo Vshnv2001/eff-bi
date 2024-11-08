@@ -37,10 +37,6 @@ const config: Config = {
       {
         docs: {
           sidebarPath: "./sidebars.ts",
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/Vshnv2001/eff-bi",
         },
         blog: {
           path: "/blog",
@@ -49,10 +45,6 @@ const config: Config = {
             type: ["rss", "atom"],
             xslt: true,
           },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            "https://github.com/Vshnv2001/eff-bi",
           // Useful options to enforce blogging best practices
           onInlineTags: "warn",
           onInlineAuthors: "warn",
@@ -102,6 +94,10 @@ const config: Config = {
             {
               label: "User Guide",
               to: "/docs/user/getting-started/setup",
+            },
+            {
+              label: "Developer Guide",
+              to: "/docs/developer/contribute",
             },
           ],
         },
