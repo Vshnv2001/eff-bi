@@ -15,94 +15,101 @@ const TypewriterEffect: React.FC<TypewriterProps> = ({
   showFullText,
 }) => {
   const [displayedPreview, setDisplayedPreview] = useState("");
+  const [displayedMessage, setDisplayedMessage] = useState("");
   const [displayedSQL, setDisplayedSQL] = useState("");
   const [previewIndex, setPreviewIndex] = useState(0);
+  const [messageIndex, setMessageIndex] = useState(0);
   const [sqlIndex, setSqlIndex] = useState(0);
-  const [messageCompleted, setMessageCompleted] = useState(false);
+  const [isPreviewDone, setIsPreviewDone] = useState(false);
+  const [isMessageDone, setIsMessageDone] = useState(false);
 
-  // Reset indices when text changes
+  const messageText =
+    "You have access to the relevant tables needed for your query. Here is the SQL query generated based on your instructions:";
+
   useEffect(() => {
     setPreviewIndex(0);
     setDisplayedPreview("");
-    setMessageCompleted(false);
+    setIsPreviewDone(false);
   }, [previewText]);
+
+  useEffect(() => {
+    setMessageIndex(0);
+    setDisplayedMessage("");
+    setIsMessageDone(false);
+  }, [messageText]);
 
   useEffect(() => {
     setSqlIndex(0);
     setDisplayedSQL("");
   }, [sqlQuery]);
 
-  // Handle preview text typing effect
+  // Typing effect for preview text
   useEffect(() => {
-    if (showFullText) {
-      setDisplayedPreview(previewText);
-      setMessageCompleted(true);
-      return;
-    }
-
-    if (previewIndex < previewText.length) {
+    if (!showFullText && previewIndex < previewText.length) {
       const timeout = setTimeout(() => {
         setDisplayedPreview((prev) => prev + previewText[previewIndex]);
         setPreviewIndex(previewIndex + 1);
       }, speed);
-
       return () => clearTimeout(timeout);
-    } else {
-      setMessageCompleted(true); // Mark message as completed
+    } else if (previewIndex === previewText.length) {
+      setIsPreviewDone(true);
     }
   }, [previewIndex, previewText, speed, showFullText]);
 
-  // Handle SQL query typing effect
+  // Typing effect for message
   useEffect(() => {
-    if (showFullText) {
-      setDisplayedSQL(sqlQuery);
-      return;
+    if (isPreviewDone && !showFullText && messageIndex < messageText.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedMessage((prev) => prev + messageText[messageIndex]);
+        setMessageIndex(messageIndex + 1);
+      }, speed);
+      return () => clearTimeout(timeout);
+    } else if (messageIndex === messageText.length) {
+      setIsMessageDone(true);
     }
+  }, [isPreviewDone, messageIndex, messageText, speed, showFullText]);
 
-    // Start SQL query typewriting only after the message completes
-    if (messageCompleted && sqlIndex < sqlQuery.length) {
+  // Typing effect for SQL query
+  useEffect(() => {
+    if (isMessageDone && !showFullText && sqlIndex < sqlQuery.length) {
       const timeout = setTimeout(() => {
         setDisplayedSQL((prev) => prev + sqlQuery[sqlIndex]);
         setSqlIndex(sqlIndex + 1);
       }, speed);
-
       return () => clearTimeout(timeout);
     }
-  }, [sqlIndex, sqlQuery, speed, messageCompleted, showFullText]);
+  }, [isMessageDone, sqlIndex, sqlQuery, speed, showFullText]);
 
   // Show full text immediately if showFullText is true
   useEffect(() => {
     if (showFullText) {
       setDisplayedPreview(previewText);
+      setDisplayedMessage(messageText);
       setDisplayedSQL(sqlQuery);
     }
-  }, [showFullText, previewText, sqlQuery]);
+  }, [showFullText, previewText, messageText, sqlQuery]);
 
   return (
     <div className="space-y-4">
-      {/* Typewriting effect for the message */}
       {previewText && (
         <pre className="font-mono text-sm text-gray-800 whitespace-pre-wrap">
           {displayedPreview}
         </pre>
       )}
-
-      {/* Typewriting effect for the SQL query */}
-      {sqlQuery && messageCompleted && (
-        <>
-          <pre className="font-mono text-sm text-gray-800 whitespace-pre-wrap mt-4">
-            You have access to the relevant tables needed for your query. Here
-            is the SQL query generated based on your instructions:
-          </pre>
-          <SyntaxHighlighter
-            language="sql"
-            className="w-full rounded-lg"
-            wrapLines={true}
-            lineProps={{ style: { whiteSpace: "pre-wrap" } }}
-          >
-            {displayedSQL}
-          </SyntaxHighlighter>
-        </>
+      {isPreviewDone && (
+        <pre className="font-mono text-sm text-gray-800 whitespace-pre-wrap">
+          {displayedMessage}
+        </pre>
+      )}
+      {isMessageDone && sqlQuery && (
+        <SyntaxHighlighter
+          language="sql"
+          className="w-full rounded-lg"
+          wrapLines={true}
+          lineProps={{ style: { whiteSpace: "pre-wrap" } }}
+        >
+          {displayedSQL}
+        </SyntaxHighlighter>
       )}
     </div>
   );

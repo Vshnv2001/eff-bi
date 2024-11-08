@@ -18,17 +18,18 @@ interface TileFormProps {
   setSelectedTemplates: React.Dispatch<React.SetStateAction<string[]>>;
   handleInfo: () => void;
   sqlQuery: string;
-  newSqlQuery: string;
   PreviewComponent: React.ComponentType<any> | null;
   previewProps: any;
   onClose: () => void;
   setSubmitType: (type: "preview" | "save" | null) => void;
   isLoading: boolean;
+  isGenerating: boolean;
   isPreviewGenerated: boolean;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
   progress: number;
   submitType: string | null;
   setProgress: React.Dispatch<React.SetStateAction<number>>;
+  previewText: string;
 }
 
 export const TileForm: React.FC<TileFormProps> = ({
@@ -41,7 +42,6 @@ export const TileForm: React.FC<TileFormProps> = ({
   setSelectedTemplates,
   handleInfo,
   sqlQuery,
-  newSqlQuery,
   PreviewComponent,
   previewProps,
   onClose,
@@ -52,32 +52,8 @@ export const TileForm: React.FC<TileFormProps> = ({
   progress,
   setProgress,
   submitType,
+  previewText,
 }) => {
-  const [previewText, setPreviewText] = useState("");
-
-  // Generate random preview text variations
-  const generatePreviewText = () => {
-    const templates = [
-      `To generate the SQL query and corresponding visualization for your prompt: "${queryPrompt}", we will first assess your access rights to the necessary tables and columns.`,
-      `Before we proceed with the visualization for the query: "${queryPrompt}", we need to validate access to the relevant datasets.`,
-      `Verifying access to the tables and columns required to generate the visualization for your provided query prompt: "${queryPrompt}".`,
-      `In order to craft a visualization, we are ensuring you have the correct permissions to access all required tables and data points.`,
-      `Conducting a pre-check to verify that all necessary tables and fields are accessible for the query: "${queryPrompt}".`,
-      `We are confirming access to the essential tables before generating a visualization based on your query prompt: "${queryPrompt}".`,
-      `To ensure a seamless experience, we are currently validating your access to the necessary data for the query prompt: "${queryPrompt}".`,
-      `Before generating the query, we are checking permissions on your dataset to ensure all necessary tables are accessible for the query prompt: "${queryPrompt}".`,
-      `To generate the requested visualization for the query prompt: "${queryPrompt}", we need to confirm that all required data sources are accessible.`,
-      `Performing an access validation check on the tables needed for the query prompt: "${queryPrompt}".`,
-    ];
-
-    return templates[Math.floor(Math.random() * templates.length)];
-  };
-
-  useEffect(() => {
-    if (submitType === "preview") {
-      setPreviewText(generatePreviewText());
-    }
-  }, [submitType, queryPrompt]);
 
   // Progress bar management
   useEffect(() => {
@@ -152,17 +128,17 @@ export const TileForm: React.FC<TileFormProps> = ({
         <Typography variant="h6" color="blue-gray" className="mb-1">
           Query Generation Process
         </Typography>
+
         {submitType === "preview" ? (
           // Show typewriter effect for both previewText and sqlQuery
           <TypewriterEffect
             previewText={previewText}
-            sqlQuery={newSqlQuery}
-            speed={30}
+            sqlQuery={sqlQuery}
+            speed={PreviewComponent && previewProps ? 2 : 20}
             showFullText={false}
           />
         ) : (
           // Display sqlQuery in its entirety without typewriter effect
-
           <SyntaxHighlighter
             language="sql"
             className="w-full rounded-lg"
@@ -172,17 +148,17 @@ export const TileForm: React.FC<TileFormProps> = ({
             {sqlQuery}
           </SyntaxHighlighter>
         )}
-      </div>
 
-      {/* Preview Component */}
-      {PreviewComponent && previewProps && (
-        <div className="mt-4 border rounded-lg p-4">
-          <Typography variant="h6" color="blue-gray" className="mb-2">
-            Preview
-          </Typography>
-          <PreviewComponent {...previewProps} />
-        </div>
-      )}
+        {/* Preview Component */}
+        {PreviewComponent && previewProps && (
+          <div className="mt-4 border rounded-lg p-4">
+            <Typography variant="h6" color="blue-gray" className="mb-2">
+              Preview
+            </Typography>
+            <PreviewComponent {...previewProps} />
+          </div>
+        )}
+      </div>
 
       {/* Progress Bar */}
       {isLoading && (
