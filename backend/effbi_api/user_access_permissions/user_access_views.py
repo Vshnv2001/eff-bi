@@ -33,6 +33,7 @@ def get_user_permissions_by_table(request, table_id):
         user_id = request.supertokens.get_user_id()
         # logger.info(table)
         permissions = UserAccessPermissions.objects.select_related('user_id').filter(table_id=table_id).exclude(user_id=user_id)
+        logger.info("PERMISSIONS: " + str(permissions))
         permissions_data = [
             {
                 'user_id': permission.user_id.id,
