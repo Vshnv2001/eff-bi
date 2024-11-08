@@ -20,7 +20,7 @@ const LandingPage = () => {
         <FadeIn>
             <div className="flex text-center justify-center items-center mt-20">
                 <img
-                    src="../../public/assets/translate.png"
+                    src="/assets/translate.png"
                     alt="Translate Natural Language to Visualisations"
                     className="w-1/2 md:w-1/3 lg:w-1/3"
                 />
