@@ -15,7 +15,6 @@ import {
 } from "@material-tailwind/react";
 import axios from "axios";
 import { BACKEND_API_URL } from "../config/index";
-import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 type UserPermissions = {
@@ -36,13 +35,16 @@ const TABLE_HEAD = ["User", "Permissions", "Actions on Permissions"];
 //   },
 // ];
 
-const TablePermissionsPage = () => {
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const table_name = searchParams.get("table_name");
-  const table_id = searchParams.get("table_id");
-
-  const navigate = useNavigate();
+const TablePermissionsPage = ({
+  table_name,
+  table_id,
+  permissions,
+}: {
+  table_name: string;
+  table_id: number;
+  permissions: string;
+}) => {
+  console.log(table_name, table_id);
 
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [openRemoveDialog, setOpenRemoveDialog] = useState(false);
@@ -153,11 +155,14 @@ const TablePermissionsPage = () => {
     fetchTableUsers();
   }, []);
 
+  console.log(permissions);
+
   return (
-    <div className="flex items-center justify-center min-h-screen p-10">
-      <Card className="w-full max-w-4xl p-10 rounded-xl">
-        <CardHeader floated={false} shadow={false} className="rounded-none">
-          <div className="mb-8 flex items-center justify-between gap-8">
+    <div className="flex justify-center min-h-screen p-10">
+      <Card className="w-full max-w-4xl p-10 rounded-sm">
+        {permissions === "Admin" && (
+          <CardHeader floated={false} shadow={false} className="rounded-none">
+            <div className="mb-8 flex items-center justify-between gap-8">
             <div>
               <Typography variant="h5" color="blue-gray">
                 Table: {table_name}
@@ -174,18 +179,29 @@ const TablePermissionsPage = () => {
             >
               Add Users
             </button>
-            <button
-              onClick={() => navigate("/access-permissions")}
-              className="bg-gray-500 text-white p-2 pl-5 pr-5 rounded-md hover:bg-gray-400"
-            >
-              Back to all tables
-            </button>
-          </div>
-        </CardHeader>
-        <CardBody className="overflow-scroll px-0">
-          <table className="w-full min-w-max table-auto text-left">
-            <thead>
-              <tr>
+            </div>
+          </CardHeader>
+        )}
+        {permissions === "View" && (
+          <CardHeader floated={false} shadow={false} className="rounded-none">
+            <div className="mb-8 flex flex-col items-center justify-between gap-8">
+              <Typography variant="h5" color="blue-gray">
+                Table: {table_name}
+              </Typography>
+              <Typography color="gray" className="mt-1 font-normal">
+                Unfortunately, you only have View permission for this table. 
+              </Typography>
+              <Typography color="gray" className="mt-1 font-normal">
+                Please ask your admin to give you Admin permission if you need to provide access to other users.
+              </Typography>
+            </div>
+          </CardHeader>
+        )}
+        <CardBody className="px-0">
+          {(permissions === "Admin") && (
+            <table className="overflow-x-auto w-full min-w-max text-left">
+              <thead>
+                <tr>
                 {TABLE_HEAD.map((head) => (
                   <th
                     key={head}
@@ -248,7 +264,8 @@ const TablePermissionsPage = () => {
                   );
                 })}
             </tbody>
-          </table>
+            </table>
+          )}
         </CardBody>
       </Card>
 
