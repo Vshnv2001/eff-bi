@@ -95,6 +95,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
       );
       setDashboardName(response.data.data);
       setDashboardDescription(response.data.description);
+      console.log('response', response.data)
     } catch (error) {
       console.error("Error fetching dashboard name:", error);
     }

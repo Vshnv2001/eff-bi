@@ -7,7 +7,7 @@ import FadeIn from "../Animations/FadeIn";
 const MockDashboardDisplay: React.FC = () => {
   return (
     <FadeIn>
-      <div className="flex flex-col md:flex-row items-center justify-center min-h-screen w-full p-8 pt-32 pb-36 space-y-6 md:space-y-0 md:space-x-10">
+      <div id="features" className="flex flex-col md:flex-row items-center justify-center min-h-screen w-full p-8 pt-32 pb-36 space-y-6 md:space-y-0 md:space-x-10">
         <div className="md:w-2/3">
           <img
             src="/assets/final_dashboard.png"
@@ -17,7 +17,7 @@ const MockDashboardDisplay: React.FC = () => {
         </div>
         <div className="flex flex-col items-start md:w-1/3">
           <Typography
-            variant="h4"
+            variant="h3"
             gutterBottom
             className="font-bold text-black"
           >
@@ -25,12 +25,13 @@ const MockDashboardDisplay: React.FC = () => {
           </Typography>
 
           <Typography variant="body1" className="text-black">
-            Add a collection of charts to your dashboard. They will be saved
-            permanently, and you can easily edit, delete, or refresh your
-            dashboards to always have the latest data.
+            Customise your dashboards with a collection of charts. These are easily saved, edited, and updated, ensuring relevant and updated data.
           </Typography>
           <div className="flex space-x-4 mt-6">
-            <Button className="flex items-center bg-red-400 bg-opacity-60 text-black">
+            <Button
+              className="flex items-center bg-white bg-opacity-80 text-black"
+              onClick={() => window.open(import.meta.env.VITE_DOCS_URL, '_blank')}
+            >
               Read the docs
               <ArticleIcon className="ml-2" />
             </Button>

@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { Typography, IconButton } from "@material-tailwind/react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { ChartPreferences } from "./ChartPreferences";
 import { ActionButtons } from "./ActionButtons";
 import LinearProgressWithLabel from "../LinearProgressWithLabel";
 import { Box } from "@mui/material";
+import TypewriterEffect from "./TypewriterEffect";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 
 interface TileFormProps {
   tileName: string;
@@ -27,6 +28,7 @@ interface TileFormProps {
   progress: number;
   submitType: string | null;
   setProgress: React.Dispatch<React.SetStateAction<number>>;
+  previewText: string;
 }
 
 export const TileForm: React.FC<TileFormProps> = ({
@@ -49,7 +51,10 @@ export const TileForm: React.FC<TileFormProps> = ({
   progress,
   setProgress,
   submitType,
+  previewText,
 }) => {
+
+  // Progress bar management
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
@@ -74,6 +79,7 @@ export const TileForm: React.FC<TileFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 pb-3">
+      {/* Tile Name */}
       <div className="relative mb-4">
         <Typography variant="h6" color="blue-gray">
           Tile Name
@@ -86,12 +92,14 @@ export const TileForm: React.FC<TileFormProps> = ({
         />
       </div>
 
+      {/* Chart Preferences */}
       <ChartPreferences
         componentNames={componentNames}
         selectedTemplates={selectedTemplates}
         setSelectedTemplates={setSelectedTemplates}
       />
 
+      {/* Visualization Instructions */}
       <div>
         <div className="flex items-center">
           <Typography variant="h6" color="blue-gray" className="mr-2">
@@ -105,52 +113,60 @@ export const TileForm: React.FC<TileFormProps> = ({
             <InformationCircleIcon className="h-5 w-5" />
           </IconButton>
         </div>
-        <div className="relative">
-          <textarea
-            placeholder="Enter query to generate the chart (e.g., 'Show me monthly sales data for the past year')"
-            value={queryPrompt}
-            onChange={(e) => setQueryPrompt(e.target.value)}
-            rows={4}
-            className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
-          />
-        </div>
+        <textarea
+          placeholder="Enter your query for generating the chart (e.g., 'Display monthly revenue trends over the last year')"
+          value={queryPrompt}
+          onChange={(e) => setQueryPrompt(e.target.value)}
+          rows={4}
+          className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
+        />
       </div>
 
-      {sqlQuery && (
-        <div className="relative mb-4">
-          <Typography variant="h6" color="blue-gray" className="mb-1">
-            SQL Query
-          </Typography>
+      {/* Display Query Generation Process */}
+      <div className="mt-4 mb-4">
+        <Typography variant="h6" color="blue-gray" className="mb-1">
+          Query Generation Process
+        </Typography>
+
+        {submitType === "preview" ? (
+          // Show typewriter effect for both previewText and sqlQuery
+          <TypewriterEffect
+            previewText={previewText}
+            sqlQuery={sqlQuery}
+            speed={PreviewComponent && previewProps ? 2 : 20}
+            showFullText={false}
+          />
+        ) : (
+          // Display sqlQuery in its entirety without typewriter effect
           <SyntaxHighlighter
             language="sql"
-            className="w-full rounded-lg h-full"
+            className="w-full rounded-lg"
             wrapLines={true}
             lineProps={{ style: { whiteSpace: "pre-wrap" } }}
           >
             {sqlQuery}
           </SyntaxHighlighter>
-        </div>
-      )}
+        )}
 
-      {PreviewComponent && previewProps && (
-        <div className="mt-4 border rounded-lg p-4">
-          <Typography variant="h6" color="blue-gray" className="mb-2">
-            Preview
-          </Typography>
-          <PreviewComponent
-            {...previewProps}
-            title={tileName}
-            // description={queryPrompt}
-          />
-        </div>
-      )}
+        {/* Preview Component */}
+        {PreviewComponent && previewProps && (
+          <div className="mt-4 border rounded-lg p-4">
+            <Typography variant="h6" color="blue-gray" className="mb-2">
+              Preview
+            </Typography>
+            <PreviewComponent {...previewProps} />
+          </div>
+        )}
+      </div>
 
-      {isLoading && submitType === "preview" && (
-        <Box sx={{ width: "100%" }}>
+      {/* Progress Bar */}
+      {isLoading && (
+        <Box className="mt-4">
           <LinearProgressWithLabel value={progress} />
         </Box>
       )}
 
+      {/* Action Buttons */}
       <ActionButtons
         onClose={onClose}
         setSubmitType={setSubmitType}
