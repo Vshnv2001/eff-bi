@@ -27,7 +27,6 @@ import DashboardsPage from "./pages/DashboardsPage";
 import DBAccessPermissionsPage from "./pages/DBAccessPermissionsPage";
 import NewTilePage from "./pages/NewTilePage";
 import ExDashboardPage from "./pages/ExDashboardPage";
-import TablePermissionsPage from "./pages/TablePermissionsPage";
 import FaqPage from "./pages/FaqPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import DataPage from "./pages/NewDataPage/DataPage";
@@ -102,14 +101,6 @@ const router = createBrowserRouter(
         element={
           <SessionAuth>
             <DBAccessPermissionsPage />
-          </SessionAuth>
-        }
-      />
-      <Route
-        path="/settings/table-permissions"
-        element={
-          <SessionAuth>
-            <TablePermissionsPage />
           </SessionAuth>
         }
       />
