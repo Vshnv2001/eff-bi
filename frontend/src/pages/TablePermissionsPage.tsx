@@ -16,6 +16,7 @@ import {
 import axios from "axios";
 import { BACKEND_API_URL } from "../config/index";
 import { toast } from "react-toastify";
+import { useSessionContext } from "supertokens-auth-react/recipe/session";
 
 type UserPermissions = {
   user_email: string;
@@ -138,10 +139,19 @@ const TablePermissionsPage = ({
     setRemovePermissionInput("");
   };
 
+  const sessionContext = useSessionContext();
+  if (sessionContext.loading || !sessionContext.userId) {
+    return;
+  }
+  const userId = sessionContext.userId;
+
   const fetchTableUsers = async () => {
     try {
       const response = await axios.get(
         `${BACKEND_API_URL}/api/user-access-permissions/table/${table_id}`
+      );
+      response.data.data = response.data.data.filter(
+        (user: UserPermissions) => user.user_id !== userId
       );
       // // console.log(response.data.data);
       setAllUsers(response.data.data);
