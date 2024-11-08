@@ -18,6 +18,7 @@ interface TileFormProps {
   setSelectedTemplates: React.Dispatch<React.SetStateAction<string[]>>;
   handleInfo: () => void;
   sqlQuery: string;
+  newSqlQuery: string;
   PreviewComponent: React.ComponentType<any> | null;
   previewProps: any;
   onClose: () => void;
@@ -40,6 +41,7 @@ export const TileForm: React.FC<TileFormProps> = ({
   setSelectedTemplates,
   handleInfo,
   sqlQuery,
+  newSqlQuery,
   PreviewComponent,
   previewProps,
   onClose,
@@ -154,7 +156,7 @@ export const TileForm: React.FC<TileFormProps> = ({
           // Show typewriter effect for both previewText and sqlQuery
           <TypewriterEffect
             previewText={previewText}
-            sqlQuery={sqlQuery}
+            sqlQuery={newSqlQuery}
             speed={30}
             showFullText={false}
           />

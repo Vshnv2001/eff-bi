@@ -37,6 +37,7 @@ export default function NewTile({
   const [submitType, setSubmitType] = useState<"preview" | "save" | null>(null);
   const [apiData, setApiData] = useState<any>({});
   const [sqlQuery, setSqlQuery] = useState<string>("");
+  const [newSqlQuery, setNewSqlQuery] = useState<string>("");
   const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
@@ -168,7 +169,7 @@ export default function NewTile({
 
           if (chunkData.sql) {
             console.log("SQL Query:", chunkData.sql);
-            setSqlQuery(chunkData.sql);
+            setNewSqlQuery(chunkData.sql);
           } else {
             console.log("Other Data:", chunkData);
             setApiData({
@@ -403,6 +404,7 @@ export default function NewTile({
               setSelectedTemplates={setSelectedTemplates}
               handleInfo={handleInfo}
               sqlQuery={sqlQuery}
+              newSqlQuery={newSqlQuery}
               PreviewComponent={PreviewComponent}
               previewProps={previewProps}
               onClose={onClose}
