@@ -220,8 +220,8 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
         </div>
       )}
 
-      <div className="flex items-center justify-between mb-8 relative mt-4">
-        <div className="absolute inset-x-0 text-left">
+      <div className="flex items-center justify-between mb-8 mt-4 relative">
+        <div className="max-w-[50vw] text-left overflow-hidden whitespace-normal break-words flex-grow">
           <Typography color="gray" className="text-3xl font-bold">
             {dashboardName}
           </Typography>
@@ -229,10 +229,9 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
             {dashboardDescription}
           </Typography>
         </div>
-        <div className="flex-1" />
 
-        {/* Centered Pagination and Create Tile Button */}
-        <div className="flex items-center gap-4">
+        {/* Ensure the button is always at the right */}
+        <div className="flex items-center gap-4 ml-auto">
           {totalPages > 0 && (
             <Pagination
               count={totalPages}

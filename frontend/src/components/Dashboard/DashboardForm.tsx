@@ -23,7 +23,17 @@ export default function DashboardForm({
 }: DashboardFormProps) {
   const [isLoading, setLoading] = useState(false);
 
+  const titleLimit = 50;
+  const descriptionLimit = 100;
+
+  // Check if character limits are exceeded
+  const isTitleInvalid = dashboardName.length > titleLimit;
+  const isDescriptionInvalid = dashboardDescription.length > descriptionLimit;
+  const isFormInvalid = isTitleInvalid || isDescriptionInvalid;
+
   const handleCreate = async () => {
+    if (isFormInvalid) return;
+
     try {
       setLoading(true);
 
@@ -60,9 +70,11 @@ export default function DashboardForm({
         Create New Dashboard
       </Typography>
       <Typography color="blue-gray" className="text-m mb-2">
-        Dashboards are a collection of charts to help you organize your data visualisations.
+        Dashboards are a collection of charts to help you organize your data
+        visualisations.
       </Typography>
       <div className="space-y-4">
+        {/* Dashboard Name Input */}
         <div className="w-full">
           <Textarea
             label="Dashboard Name"
@@ -71,8 +83,19 @@ export default function DashboardForm({
             onChange={(e) => setDashboardName(e.target.value)}
             value={dashboardName}
             disabled={isLoading}
+            className={isTitleInvalid ? "border-red-500" : ""}
           />
+          <div className="flex justify-between text-sm mt-1">
+            <span className={isTitleInvalid ? "text-red-500" : ""}>
+              {dashboardName.length}/{titleLimit}
+            </span>
+            {isTitleInvalid && (
+              <span className="text-red-500">Title too long!</span>
+            )}
+          </div>
         </div>
+
+        {/* Description Input */}
         <div className="w-full">
           <Textarea
             label="Description (optional)"
@@ -81,9 +104,19 @@ export default function DashboardForm({
             onChange={(e) => setDashboardDescription(e.target.value)}
             value={dashboardDescription}
             disabled={isLoading}
+            className={isDescriptionInvalid ? "border-red-500" : ""}
           />
+          <div className="flex justify-between text-sm mt-1">
+            <span className={isDescriptionInvalid ? "text-red-500" : ""}>
+              {dashboardDescription.length}/{descriptionLimit}
+            </span>
+            {isDescriptionInvalid && (
+              <span className="text-red-500">Description too long!</span>
+            )}
+          </div>
         </div>
 
+        {/* Create and Cancel Buttons */}
         <Box className="flex justify-center space-x-5 mt-4 mb-4">
           <Button color="red" onClick={onClose} disabled={isLoading}>
             Cancel
@@ -92,7 +125,7 @@ export default function DashboardForm({
             className="flex items-center justify-center"
             color="blue"
             onClick={handleCreate}
-            disabled={isLoading}
+            disabled={isLoading || isFormInvalid}
           >
             {isLoading ? (
               <>
