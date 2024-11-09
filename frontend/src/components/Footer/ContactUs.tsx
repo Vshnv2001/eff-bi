@@ -9,8 +9,9 @@ const Footer: React.FC = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
-  const sendEmail = (e: React.FormEvent) => {
+  const sendEmail = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const templateParams = {
@@ -19,22 +20,24 @@ const Footer: React.FC = () => {
       message: message,
     };
 
-    emailjs
-      .send(
+    try {
+      const response: EmailJSResponseStatus = await emailjs.send(
         "service_wj0q7i1",
         "template_qqjabp9",
         templateParams,
         "Pk0uFk7AKHTesOhnN"
-      )
-      .then((response: EmailJSResponseStatus) => {
-        console.log("Success!", response.status, response.text);
-        setName("");
-        setEmail("");
-        setMessage("");
-      })
-      .catch((err: any) => {
-        console.error("Unsuccessful...", err);
-      });
+      );
+      console.log("Success!", response.status, response.text);
+
+      // Reset form fields on success
+      setName("");
+      setEmail("");
+      setMessage("");
+      setStatusMessage("We will get back to you shortly.");
+    } catch (error) {
+      console.error("Error sending email:", error);
+      setStatusMessage("Message did not deliver. Please try again.");
+    }
   };
 
   return (
@@ -77,15 +80,24 @@ const Footer: React.FC = () => {
                 onChange={(e) => setMessage(e.target.value)}
                 required
               />
+
+              {/* Submit Button */}
               <Button
-                type="button"
+                type="submit"
                 color="blue"
                 className="normal-case w-full text-white py-3 bg-opacity-80 rounded transition duration-300 text-lg"
               >
                 Send Message
               </Button>
             </form>
+
+            {/* Display success or error message */}
+            {statusMessage && (
+              <p className="mt-4 text-center text-black-600">{statusMessage}</p>
+            )}
           </div>
+
+          {/* Social Media Links */}
           <ul className="flex space-x-8 mb-4">
             <li>
               <a
@@ -125,6 +137,7 @@ const Footer: React.FC = () => {
               </a>
             </li>
           </ul>
+
           <div className="text-center text-xs mt-4">
             &copy; {new Date().getFullYear()} Eff BI. All rights reserved.
           </div>
