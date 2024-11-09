@@ -76,6 +76,10 @@ export const TileForm: React.FC<TileFormProps> = ({
     return () => clearInterval(timer);
   }, [isLoading, progress]);
 
+  const maxLength = 50;
+
+  const isExceeded = tileName.length > maxLength;
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 pb-3">
       {/* Tile Name */}
@@ -87,8 +91,18 @@ export const TileForm: React.FC<TileFormProps> = ({
           placeholder="Enter tile name"
           value={tileName}
           onChange={(e) => setTileName(e.target.value)}
-          className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
+          className={`border ${isExceeded ? "border-red-500" : "border-gray-400"} focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2`}
         />
+        <div className="flex justify-between mt-2">
+          <Typography color={isExceeded ? "red" : "gray"}>
+            {tileName.length} / {maxLength} characters
+          </Typography>
+          {isExceeded && (
+            <Typography color="red" className="text-sm">
+              Character limit exceeded
+            </Typography>
+          )}
+        </div>
       </div>
 
       {/* Chart Preferences */}
@@ -122,43 +136,41 @@ export const TileForm: React.FC<TileFormProps> = ({
       </div>
 
       {/* Display Output */}
-      {sqlQuery && (
-        <div className="mt-4 mb-4">
-          <Typography variant="h6" color="blue-gray" className="mb-1">
-            Output
-          </Typography>
+      <div className="mt-4 mb-4">
+        <Typography variant="h6" color="blue-gray" className="mb-1">
+          Output
+        </Typography>
 
-          {submitType === "preview" ? (
-            // Show typewriter effect for both previewText and sqlQuery
-            <TypewriterEffect
-              previewText={previewText}
-              sqlQuery={sqlQuery}
-              speed={PreviewComponent && previewProps ? 2 : 20}
-              showFullText={false}
-            />
-          ) : (
-            // Display sqlQuery in its entirety without typewriter effect
-            <SyntaxHighlighter
-              language="sql"
-              className="w-full rounded-lg"
-              wrapLines={true}
-              lineProps={{ style: { whiteSpace: "pre-wrap" } }}
-            >
-              {sqlQuery}
-            </SyntaxHighlighter>
-          )}
+        {submitType === "preview" ? (
+          // Show typewriter effect for both previewText and sqlQuery
+          <TypewriterEffect
+            previewText={previewText}
+            sqlQuery={sqlQuery}
+            speed={PreviewComponent && previewProps ? 2 : 20}
+            showFullText={false}
+          />
+        ) : (
+          // Display sqlQuery in its entirety without typewriter effect
+          <SyntaxHighlighter
+            language="sql"
+            className="w-full rounded-lg"
+            wrapLines={true}
+            lineProps={{ style: { whiteSpace: "pre-wrap" } }}
+          >
+            {sqlQuery}
+          </SyntaxHighlighter>
+        )}
 
-          {/* Preview Component */}
-          {PreviewComponent && previewProps && (
-            <div className="mt-4 border rounded-lg p-4">
-              <Typography variant="h6" color="blue-gray" className="mb-2">
-                Preview
-              </Typography>
-              <PreviewComponent {...previewProps} />
-            </div>
-          )}
-        </div>
-      )}
+        {/* Preview Component */}
+        {PreviewComponent && previewProps && (
+          <div className="mt-4 border rounded-lg p-4">
+            <Typography variant="h6" color="blue-gray" className="mb-2">
+              Preview
+            </Typography>
+            <PreviewComponent {...previewProps} />
+          </div>
+        )}
+      </div>
 
       {/* Progress Bar */}
       {isLoading && (

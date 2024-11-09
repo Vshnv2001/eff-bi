@@ -95,7 +95,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
       );
       setDashboardName(response.data.data);
       setDashboardDescription(response.data.description);
-      console.log('response', response.data)
+      //console.log("response", response.data);
     } catch (error) {
       console.error("Error fetching dashboard name:", error);
     }
@@ -146,6 +146,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
       );
 
       if (response.status === 200 && response.data && response.data.data) {
+        //console.log("set tiles", response.data.data);
         setTilesData(response.data.data);
       }
     } catch (error) {
@@ -168,6 +169,10 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
     toast.success(message);
     if (message == "New tile saved successfully!") {
       setPage(totalPages);
+    }
+
+    if (tilesData.length === 0 || tilesData.length === 1) {
+      setPage(1);
     }
   };
 
@@ -215,8 +220,8 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
         </div>
       )}
 
-      <div className="flex items-center justify-between mb-8 relative mt-4">
-        <div className="absolute inset-x-0 text-left">
+      <div className="flex items-center justify-between mb-8 mt-4 relative">
+        <div className="max-w-[50vw] text-left overflow-hidden whitespace-normal break-words flex-grow">
           <Typography color="gray" className="text-3xl font-bold">
             {dashboardName}
           </Typography>
@@ -224,10 +229,9 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
             {dashboardDescription}
           </Typography>
         </div>
-        <div className="flex-1" />
 
-        {/* Centered Pagination and Create Tile Button */}
-        <div className="flex items-center gap-4">
+        {/* Ensure the button is always at the right */}
+        <div className="flex items-center gap-4 ml-auto">
           {totalPages > 0 && (
             <Pagination
               count={totalPages}

@@ -76,6 +76,11 @@ export default function NewTile({
       toast.error("Visualization Instructions are required!");
       return false;
     }
+
+    if (tileName.length > 50) {
+      toast.error("Tile name has to be less than 50 characters!");
+      return false;
+    }
     return true;
   };
 
