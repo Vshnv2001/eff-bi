@@ -4,7 +4,7 @@ import {
   CardHeader,
   Typography,
   CardBody,
-  Spinner
+  Spinner,
 } from "@material-tailwind/react";
 import axios from "axios";
 import { BACKEND_API_URL } from "../config/index";
@@ -20,8 +20,16 @@ type User = {
   id: string;
 };
 
-const ProfileItem = ({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) => (
-  <div className="flex items-center space-x-4 p-4 bg-white rounded-lg shadow-sm">
+const ProfileItem = ({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) => (
+  <div className="flex items-center space-x-4 p-4 bg-blue-100 rounded-lg shadow-md">
     <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
       {icon}
     </div>
@@ -34,9 +42,7 @@ const ProfileItem = ({ icon, label, value }: { icon: React.ReactNode; label: str
       </Typography>
     </div>
   </div>
-)
-
-
+);
 
 export default function UserProfilePage() {
   const [userInfo, setUserInfo] = useState<User>();
@@ -47,11 +53,11 @@ export default function UserProfilePage() {
 
   useEffect(() => {
     // Disable scrolling
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
 
     // Cleanup function to re-enable scrolling
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, []);
 
@@ -65,8 +71,7 @@ export default function UserProfilePage() {
         const response = await axios.get(
           `${BACKEND_API_URL}/api/users/${userId}`
         );
-        // // console.log(response.data.user);
-        console.log(response.data.user);
+        // console.log(response.data.user);
         setUserInfo(response.data.user);
       } catch (error) {
         console.error("Error fetching permissions:", error);
@@ -102,7 +107,7 @@ export default function UserProfilePage() {
           ) : (
             <div className="space-y-8">
               <div className="flex flex-col items-center gap-4">
-                  <UserCircleIcon className="h-20 w-20 text-blue-500" />
+                <UserCircleIcon className="h-20 w-20 text-blue-500" />
 
                 <Typography variant="h4" color="blue-gray">
                   {userInfo?.first_name} {userInfo?.last_name}
@@ -131,5 +136,5 @@ export default function UserProfilePage() {
         </CardBody>
       </Card>
     </div>
-  )
+  );
 }
