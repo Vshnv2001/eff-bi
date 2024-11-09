@@ -140,6 +140,8 @@ class DataFormatter:
             If a specific chart type is requested, utilize the corresponding template for that chart only if the context is valid.
             For example, use PieChartTemplate for pie charts, BarChartTemplate for bar charts, and so on.
             
+            If there is query results, you MUST recommend a visualization - do not return "None". If you really must, return "TableTemplate".
+            
             Provide your response in the following format:
             Recommended Visualization: [Chart type or "None"]. ONLY use the above given names.
             Reason: [Brief explanation for your recommendation]
