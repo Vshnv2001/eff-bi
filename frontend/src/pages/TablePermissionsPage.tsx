@@ -156,8 +156,8 @@ const TablePermissionsPage = ({
       // // console.log(response.data.data);
       setAllUsers(response.data.data);
     } catch (error) {
-      console.log(error);
-      console.error("Error fetching table users:", error);
+      //console.log(error);
+      //console.error("Error fetching table users:", error);
       toast.error("Error retrieving table users");
     }
   };
