@@ -95,7 +95,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
       );
       setDashboardName(response.data.data);
       setDashboardDescription(response.data.description);
-      console.log('response', response.data)
+      console.log("response", response.data);
     } catch (error) {
       console.error("Error fetching dashboard name:", error);
     }
@@ -146,6 +146,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
       );
 
       if (response.status === 200 && response.data && response.data.data) {
+        console.log("set tiles", response.data.data);
         setTilesData(response.data.data);
       }
     } catch (error) {
@@ -168,6 +169,10 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
     toast.success(message);
     if (message == "New tile saved successfully!") {
       setPage(totalPages);
+    }
+
+    if (tilesData.length === 0 || tilesData.length === 1) {
+      setPage(1);
     }
   };
 
