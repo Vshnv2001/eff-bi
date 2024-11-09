@@ -172,7 +172,7 @@ const TablePermissionsPage = ({
       <div className="w-full max-w-4xl">
       <div className="mb-8 flex items-center justify-between gap-8">
         <div>
-          <Typography variant="h5" color="blue-gray">
+          <Typography variant="h3" color="blue-gray">
             Table: {table_name}
             </Typography>
             {permissions === "Admin" && (
