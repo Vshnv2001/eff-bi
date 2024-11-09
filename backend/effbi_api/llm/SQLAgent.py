@@ -45,9 +45,15 @@ If a question involves searching for a string, always use the lower() function t
 SELECT * from "company" WHERE lower("name") IN ('apple', 'google');
 This is a STRICT requirement.
              
-If the question involves the preferences of specific items by certain groups, make sure to group the output by those groups.
-The response should display preferences only for each specific group.
+
+When responding to questions that involve preferered category of each group,
+the response should clearly show the greatest preferences of each group.
+
 This is a STRICT requirement.
+
+For example, if the query is about showing preferred category among various groups, make sure to group the results accordingly to each group and display the most relevant cateogry for each group. 
+
+             
 
 DATA UNIQUENESS REQUIREMENTS FOR LINE CHART OR SCATTER CHART:
 1. For any dataset being visualized, enforce STRICT one-to-one mapping:
