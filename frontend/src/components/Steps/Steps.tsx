@@ -4,8 +4,11 @@ import FadeIn from "../Animations/FadeIn";
 import { Button, Card, CardBody } from "@material-tailwind/react";
 import Typography from "@mui/material/Typography";
 import ArticleIcon from "@mui/icons-material/Article";
+import { useNavigate } from "react-router-dom";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 const Steps: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <FadeIn>
       <main className="flex flex-col items-center min-h-screen relative">
@@ -58,6 +61,13 @@ const Steps: React.FC = () => {
                       >
                         Read the docs
                         <ArticleIcon className="ml-2" />
+                      </Button>
+                      <Button
+                        className="flex items-center bg-white bg-opacity-80 text-black"
+                        onClick={() => navigate("/auth")}
+                      >
+                        Get Started
+                        < PlayArrowIcon className="ml-2" />
                       </Button>
                     </div>
                   </div>

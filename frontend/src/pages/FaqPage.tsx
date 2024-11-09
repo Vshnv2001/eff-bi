@@ -54,7 +54,7 @@ const tips = [
     topic: "Creating Chart",
     answer:
       "Tiles are where the magic of Eff BI is showcased! " +
-      "Create a new tile by navigating to the 'Dashboard' page and open a dashboard. You may create a dashboard if there are no current dashboards." +
+      "Create a new chart by navigating to the 'Dashboard' page and open a dashboard. You may create a dashboard if there are no current dashboards." +
         "Within the dashboard, select the 'Create Chart.' button." +
       "Enter your data query and our application would produce a dynamic visual representations of the results! ",
   },
@@ -81,9 +81,9 @@ const faqs = [
       "Permissions are applied on the table level, where each user can have no access, view access or admin access to a table. If a user has admin permissions, they would be able to view the data in the table and grant other users view or admin permissions. View permission simply means that the user can only view the data.",
   },
   {
-    question: "Why am I getting no permissions error when creating a tile?",
+    question: "Why am I getting no permissions error when creating a chart?",
     answer:
-      "This means that in your query to create a tile, the query requires information from a table that you do not have access to. Reach out to an admin in your organization to grant you permissions to that table to overcome this issue.",
+      "This means that in your query to create a chart, the query requires information from a table that you do not have access to. Reach out to an admin in your organization to grant you permissions to that table to overcome this issue.",
   },
   {
     question: "Why am I unable to update my database URI?",

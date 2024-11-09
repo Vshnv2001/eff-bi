@@ -82,13 +82,13 @@ export const TileForm: React.FC<TileFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 pb-3">
-      {/* Tile Name */}
+      {/* Chart Name */}
       <div className="relative mb-4">
         <Typography variant="h6" color="blue-gray">
-          Tile Name
+          Chart Name
         </Typography>
         <textarea
-          placeholder="Enter tile name"
+          placeholder="Enter chart name"
           value={tileName}
           onChange={(e) => setTileName(e.target.value)}
           className={`border ${isExceeded ? "border-red-500" : "border-gray-400"} focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2`}

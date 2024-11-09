@@ -69,7 +69,7 @@ export default function NewTile({
 
   const validateForm = () => {
     if (!tileName || tileName.trim() === "") {
-      toast.error("Tile name is required!");
+      toast.error("Chart name is required!");
       return false;
     }
     if (!queryPrompt || queryPrompt.trim() === "") {
@@ -78,7 +78,7 @@ export default function NewTile({
     }
 
     if (tileName.length > 50) {
-      toast.error("Tile name has to be less than 50 characters!");
+      toast.error("Chart name has to be less than 50 characters!");
       return false;
     }
     return true;
@@ -87,8 +87,8 @@ export default function NewTile({
   const showSuccessToast = (saveType: SaveType) => {
     const message =
       saveType === "update"
-        ? "Tile updated successfully!"
-        : "New tile saved successfully!";
+        ? "Chart updated successfully!"
+        : "New chart saved successfully!";
     onSaveSuccess(message);
   };
 
@@ -228,7 +228,7 @@ export default function NewTile({
     } catch (error) {
       if (error instanceof Error) {
         if (error.name === "AbortError") {
-          handleFetchError("Unable to generate tile. Request took too long.");
+          handleFetchError("Unable to generate chart. Request took too long.");
         } else {
           handleFetchError(`Error: ${error.message}`);
         }
@@ -283,7 +283,7 @@ export default function NewTile({
       try {
         parsedProps = JSON.parse(tileData.tile_props);
       } catch (error) {
-        console.error("Error parsing tile props:", error);
+        console.error("Error parsing chart props:", error);
       }
     }
     setPreviewProps(parsedProps);
