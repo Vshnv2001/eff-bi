@@ -8,7 +8,7 @@ const Hero: React.FC = () => {
 
   const handleScroll = () => {
     setScrollY(window.scrollY);
-    
+
     if (window.scrollY > 0) {
       setArrowOpacity(0);
     } else {
@@ -50,7 +50,16 @@ const Hero: React.FC = () => {
         className={`absolute bottom-20 left-1/2 transform -translate-x-1/2 transition-opacity duration-500 ease-in-out`}
         style={{ opacity: arrowOpacity }}
       >
-        <ChevronDownIcon className="w-10 h-10 text-black animate-bounce" />
+        <ChevronDownIcon
+          className="w-10 h-10 text-black animate-bounce"
+          onClick={() => {
+            const featuresSection =
+              document.getElementById("after-hero-section");
+            if (featuresSection) {
+              featuresSection.scrollIntoView({ behavior: "smooth" });
+            }
+          }}
+        />
       </div>
     </main>
   );

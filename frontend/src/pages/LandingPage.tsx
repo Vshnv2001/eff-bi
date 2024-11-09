@@ -21,7 +21,10 @@ const LandingPage = () => {
     <div className="bg-gradient-to-r from-red-100 to-blue-400">
       <Hero />
       <FadeIn>
-        <div className="flex text-center justify-center items-center mt-20">
+        <div
+          className="flex text-center justify-center items-center mt-20"
+          id="after-hero-section"
+        >
           <img
             src="/assets/translate.png"
             alt="Translate Natural Language to Visualisations"
