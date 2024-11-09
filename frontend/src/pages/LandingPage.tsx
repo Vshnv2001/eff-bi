@@ -10,46 +10,54 @@ import { Typography } from "@mui/material";
 import FadeIn from "../components/Animations/FadeIn";
 import Flyer from "../components/Flyer/Flyer";
 import MockDashboardDisplay from "../components/Display/MockDashboardDisplay";
-import {Button} from "@material-tailwind/react";
+import { Button } from "@material-tailwind/react";
 import ArticleIcon from "@mui/icons-material/Article";
 
 const LandingPage = () => {
   return (
     <div className="bg-gradient-to-r from-red-100 to-blue-400">
       <Hero />
-        <FadeIn>
-            <div className="flex text-center justify-center items-center mt-20">
-                <img
-                    src="/assets/translate.png"
-                    alt="Translate Natural Language to Visualisations"
-                    className="w-1/2 md:w-1/3 lg:w-1/3"
-                />
-                <Typography className="flex flex-col items-center mt-4">
-                    <span className="text-5xl font-bold">Translate queries into</span>
-                    <span className="text-5xl font-bold pt-1">data visualisations</span>
-                    <span className="text-xl pt-5">Generate charts seamlessly using plain and simple English.</span>
-                    <div className="flex space-x-4 mt-6">
-                        <Button
-                            className="flex items-center bg-white bg-opacity-80 text-black"
-                            onClick={() => window.open(import.meta.env.VITE_DOCS_URL, '_blank')}
-                        >
-                            Read the docs
-                            <ArticleIcon className="ml-2"/>
-                        </Button>
-                    </div>
-                </Typography>
+      <FadeIn>
+        <div className="flex text-center justify-center items-center mt-20">
+          <img
+            src="/assets/translate.png"
+            alt="Translate Natural Language to Visualisations"
+            className="w-1/2 md:w-1/3 lg:w-1/3"
+          />
+          <Typography className="flex flex-col items-center mt-4">
+            <span className="text-5xl font-bold">Translate queries into</span>
+            <span className="text-5xl font-bold pt-1">data visualisations</span>
+            <span className="text-xl pt-5">
+              Generate charts seamlessly using plain and simple English.
+            </span>
+            <div className="flex space-x-4 mt-6">
+              <Button
+                className="flex items-center bg-white bg-opacity-80 text-black"
+                onClick={() =>
+                  window.open(
+                    import.meta.env.VITE_DOCS_URL +
+                      "/docs/user/getting-started/setup",
+                    "_blank"
+                  )
+                }
+              >
+                Read the docs
+                <ArticleIcon className="ml-2" />
+              </Button>
             </div>
-        </FadeIn>
-        <AboutUs/>
-        <Marquee/>
-        <MockDashboardDisplay/>
-        <Steps/>
-        <Flyer/>
-        <Display/>
-        <Reviews/>
-        <Chat/>
+          </Typography>
+        </div>
+      </FadeIn>
+      <AboutUs />
+      <Marquee />
+      <MockDashboardDisplay />
+      <Steps />
+      <Flyer />
+      <Display />
+      <Reviews />
+      <Chat />
 
-        <ContactUs/>
+      <ContactUs />
     </div>
   );
 };

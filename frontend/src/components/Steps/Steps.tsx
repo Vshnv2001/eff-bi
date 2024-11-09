@@ -1,7 +1,7 @@
 import React from "react";
 import LaptopDisplay from "./LaptopDisplay";
 import FadeIn from "../Animations/FadeIn";
-import {Button, Card, CardBody} from "@material-tailwind/react";
+import { Button, Card, CardBody } from "@material-tailwind/react";
 import Typography from "@mui/material/Typography";
 import ArticleIcon from "@mui/icons-material/Article";
 
@@ -33,25 +33,31 @@ const Steps: React.FC = () => {
                   </div>
                   <div className="flex flex-col items-center mt-10">
                     <Typography
-                        variant="h3"
-                        className="text-black text-center font-bold"
+                      variant="h3"
+                      className="text-black text-center font-bold"
                     >
                       Tailored Charts
                     </Typography>
                     <div className="mt-2">
                       <Typography variant="body1" className="text-black">
-                        Eff BI's lightweight NLP engine processes your
-                        natural language inputs into SQL queries and
-                        visualizations efficiently.
+                        Eff BI's lightweight NLP engine processes your natural
+                        language inputs into SQL queries and visualizations
+                        efficiently.
                       </Typography>
                     </div>
                     <div className="flex space-x-4 mt-6">
                       <Button
                         className="flex items-center bg-white bg-opacity-80 text-black"
-                        onClick={() => window.open(import.meta.env.VITE_DOCS_URL, '_blank')}
+                        onClick={() =>
+                          window.open(
+                            import.meta.env.VITE_DOCS_URL +
+                              "/docs/user/getting-started/dashboards#creating-tiles",
+                            "_blank"
+                          )
+                        }
                       >
                         Read the docs
-                        <ArticleIcon className="ml-2"/>
+                        <ArticleIcon className="ml-2" />
                       </Button>
                     </div>
                   </div>
