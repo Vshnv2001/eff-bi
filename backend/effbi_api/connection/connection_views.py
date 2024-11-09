@@ -38,7 +38,7 @@ def create_connection(request):
         with concurrent.futures.ThreadPoolExecutor() as executor:
             for schema_name, tables in db_data.items():
                 for table_name, table_info in tables.items():
-                    print("TABLE NAME: ", table_name)
+                    # print("TABLE NAME: ", table_name)
                     task = executor.submit(
                         process_table, schema_name, table_name, table_info, uri, organization)
                     tasks.append(task)
