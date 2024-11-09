@@ -4,21 +4,37 @@ import {
   CardHeader,
   Typography,
   CardBody,
-  Spinner,
-  Input,
+  Spinner
 } from "@material-tailwind/react";
 import axios from "axios";
 import { BACKEND_API_URL } from "../config/index";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
-import { UserCircleIcon } from "lucide-react";
+import { Mail, HashIcon, Building2, UserCircleIcon } from "lucide-react";
 
 type User = {
   email: string;
   first_name: string;
   last_name: string;
   organization: number;
+  organization_name: string;
   id: string;
 };
+
+const ProfileItem = ({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) => (
+  <div className="flex items-center space-x-4 p-4 bg-white rounded-lg shadow-sm">
+    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+      {icon}
+    </div>
+    <div className="flex-grow">
+      <Typography variant="small" color="blue-gray" className="font-normal">
+        {label}
+      </Typography>
+      <Typography variant="h6" color="blue-gray" className="font-semibold">
+        {value}
+      </Typography>
+    </div>
+  </div>
+)
 
 
 
@@ -28,6 +44,16 @@ export default function UserProfilePage() {
 
   const sessionContext = useSessionContext();
   const userId = sessionContext.loading ? null : sessionContext.userId;
+
+  useEffect(() => {
+    // Disable scrolling
+    document.body.style.overflow = 'hidden';
+
+    // Cleanup function to re-enable scrolling
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
 
   useEffect(() => {
     if (sessionContext.loading) {
@@ -40,6 +66,7 @@ export default function UserProfilePage() {
           `${BACKEND_API_URL}/api/users/${userId}`
         );
         // // console.log(response.data.user);
+        console.log(response.data.user);
         setUserInfo(response.data.user);
       } catch (error) {
         console.error("Error fetching permissions:", error);
@@ -52,68 +79,52 @@ export default function UserProfilePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-16">
-      <Card className="mx-auto max-w-4xl  shadow-sm p-8">
-        <CardHeader floated={false} shadow={false} className="rounded-none">
-          <Typography variant="h4" color="blue-gray" className="mb-2">
+    <div className="min-h-screen p-4 sm:p-8 md:p-16">
+      <Card className="mx-auto max-w-4xl overflow-hidden">
+        <CardHeader
+          floated={false}
+          shadow={false}
+          color="transparent"
+          className="m-0 rounded-none text-center p-6"
+        >
+          <Typography variant="h3" color="blue-gray" className="font-bold mb-2">
             Your Profile
           </Typography>
           <Typography variant="small" color="gray" className="font-normal">
             Your personal information is stored securely with us.
           </Typography>
         </CardHeader>
-        
-        <CardBody className="px-8 pb-8">
+        <CardBody className="p-6">
           {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <Spinner className="h-8 w-8" />
+            <div className="flex justify-center items-center h-64">
+              <Spinner className="h-12 w-12" color="blue" />
             </div>
           ) : (
             <div className="space-y-8">
-              {/* Profile Photo Section */}
               <div className="flex flex-col items-center gap-4">
-                <div className="relative">
-                  <div className="h-36 w-36 rounded-full bg-blue-gray-50 flex items-center justify-center">
-                    <UserCircleIcon className="h-full w-full text-blue-gray-500" />
-                  </div>
-                </div>
+                  <UserCircleIcon className="h-20 w-20 text-blue-500" />
+
+                <Typography variant="h4" color="blue-gray">
+                  {userInfo?.first_name} {userInfo?.last_name}
+                </Typography>
               </div>
 
-              {/* Form Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Input
-                  label="First Name"
-                  crossOrigin="anonymous"
-                  value={userInfo?.first_name || ""}
-                  className="bg-blue-gray-50/50"
-                  containerProps={{ className: "min-w-[100px]" }}
-                  readOnly
-                />
-                <Input
-                  label="Last Name"
-                  crossOrigin="anonymous"
-                  value={userInfo?.last_name || ""}
-                  className="bg-blue-gray-50/50"
-                  containerProps={{ className: "min-w-[100px]" }}
-                  readOnly
-                />
-                <Input
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-6">
+                <ProfileItem
+                  icon={<Mail className="h-6 w-6" />}
                   label="Email"
-                  crossOrigin="anonymous"
                   value={userInfo?.email || ""}
-                  className="bg-blue-gray-50/50"
-                  containerProps={{ className: "min-w-[100px]" }}
-                  readOnly
                 />
-                <Input
+                <ProfileItem
+                  icon={<HashIcon className="h-6 w-6" />}
                   label="Organization Code"
-                  crossOrigin="anonymous"
                   value={userInfo?.organization?.toString() || ""}
-                  className="bg-blue-gray-50/50"
-                  containerProps={{ className: "min-w-[100px]" }}
-                  readOnly
                 />
-
+                <ProfileItem
+                  icon={<Building2 className="h-6 w-6" />}
+                  label="Organization Name"
+                  value={userInfo?.organization_name || ""}
+                />
               </div>
             </div>
           )}

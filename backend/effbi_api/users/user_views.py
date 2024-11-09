@@ -47,12 +47,15 @@ def user_details(request, user_id):
     try:
         logger.info(user_id)
         user = get_object_or_404(User, id=str(user_id))
-        logger.info("USER: ", user)
+        logger.info("USER: " + str(user))
 
         if request.method == "GET":
             # Return user details
             serializer = UserSerializer(user)
-            return JsonResponse({'message': 'User retrieved successfully', 'user': serializer.data}, status=200)
+            result_dict = serializer.data
+            result_dict['organization_name'] = user.organization.name
+            logger.info("RESULT DICT: " + str(result_dict))
+            return JsonResponse({'message': 'User retrieved successfully', 'user': result_dict}, status=200)
 
         elif request.method == "PATCH":
             # Update user details where necessary
