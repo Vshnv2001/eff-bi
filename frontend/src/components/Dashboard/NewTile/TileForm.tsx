@@ -122,43 +122,41 @@ export const TileForm: React.FC<TileFormProps> = ({
       </div>
 
       {/* Display Output */}
-      {sqlQuery && (
-        <div className="mt-4 mb-4">
-          <Typography variant="h6" color="blue-gray" className="mb-1">
-            Output
-          </Typography>
+      <div className="mt-4 mb-4">
+        <Typography variant="h6" color="blue-gray" className="mb-1">
+          Output
+        </Typography>
 
-          {submitType === "preview" ? (
-            // Show typewriter effect for both previewText and sqlQuery
-            <TypewriterEffect
-              previewText={previewText}
-              sqlQuery={sqlQuery}
-              speed={PreviewComponent && previewProps ? 2 : 20}
-              showFullText={false}
-            />
-          ) : (
-            // Display sqlQuery in its entirety without typewriter effect
-            <SyntaxHighlighter
-              language="sql"
-              className="w-full rounded-lg"
-              wrapLines={true}
-              lineProps={{ style: { whiteSpace: "pre-wrap" } }}
-            >
-              {sqlQuery}
-            </SyntaxHighlighter>
-          )}
+        {submitType === "preview" ? (
+          // Show typewriter effect for both previewText and sqlQuery
+          <TypewriterEffect
+            previewText={previewText}
+            sqlQuery={sqlQuery}
+            speed={PreviewComponent && previewProps ? 2 : 20}
+            showFullText={false}
+          />
+        ) : (
+          // Display sqlQuery in its entirety without typewriter effect
+          <SyntaxHighlighter
+            language="sql"
+            className="w-full rounded-lg"
+            wrapLines={true}
+            lineProps={{ style: { whiteSpace: "pre-wrap" } }}
+          >
+            {sqlQuery}
+          </SyntaxHighlighter>
+        )}
 
-          {/* Preview Component */}
-          {PreviewComponent && previewProps && (
-            <div className="mt-4 border rounded-lg p-4">
-              <Typography variant="h6" color="blue-gray" className="mb-2">
-                Preview
-              </Typography>
-              <PreviewComponent {...previewProps} />
-            </div>
-          )}
-        </div>
-      )}
+        {/* Preview Component */}
+        {PreviewComponent && previewProps && (
+          <div className="mt-4 border rounded-lg p-4">
+            <Typography variant="h6" color="blue-gray" className="mb-2">
+              Preview
+            </Typography>
+            <PreviewComponent {...previewProps} />
+          </div>
+        )}
+      </div>
 
       {/* Progress Bar */}
       {isLoading && (
