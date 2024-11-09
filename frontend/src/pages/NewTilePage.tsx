@@ -62,7 +62,7 @@ export default function NewTile() {
               </Typography>
               <Input
                 size="lg"
-                placeholder="Enter tile name"
+                placeholder="Enter chart name"
                 crossOrigin={undefined}
                 value={tileName}
                 onChange={(e) => setTileName(e.target.value)}
@@ -75,7 +75,7 @@ export default function NewTile() {
               </Typography>
               <Textarea
                 size="lg"
-                placeholder="Enter tile description"
+                placeholder="Enter chart description"
                 value={tileDescription}
                 onChange={(e) => setTileDescription(e.target.value)}
                 rows={4}

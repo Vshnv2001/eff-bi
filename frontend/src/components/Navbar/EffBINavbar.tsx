@@ -1,5 +1,5 @@
 import { Navbar, Button } from "@material-tailwind/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { useState, useEffect } from "react";
@@ -52,6 +52,7 @@ const useScrollDirection = () => {
 
 export default function EffBINavbar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const sessionContext = useSessionContext();
   const isVisible = useScrollDirection();
 
@@ -78,7 +79,7 @@ export default function EffBINavbar() {
               <Button
                 variant="text"
                 size="sm"
-                color="blue-gray"
+                color={location.pathname === "/view-data" ? "black" : "blue-gray"}
                 className="flex items-center gap-2"
                 onClick={() => navigate("/view-data")}
               >
@@ -87,7 +88,7 @@ export default function EffBINavbar() {
               <Button
                 variant="text"
                 size="sm"
-                color="blue-gray"
+                color={location.pathname === "/dashboards" ? "black" : "blue-gray"}
                 className="flex items-center gap-2"
                 onClick={() => navigate("/dashboards")}
               >
@@ -96,7 +97,7 @@ export default function EffBINavbar() {
               <Button
                 variant="text"
                 size="sm"
-                color="blue-gray"
+                color={location.pathname === "/access-permissions" ? "black" : "blue-gray"}
                 className="flex items-center gap-2"
                 onClick={() => navigate("/access-permissions")}
               >
@@ -117,7 +118,6 @@ export default function EffBINavbar() {
                 Docs
                 <OpenInNewIcon
                   fontSize="small"
-                  className="mb-1.5"
                   style={{ fontSize: '1rem' }}
                 />
               </Button>
@@ -178,7 +178,6 @@ export default function EffBINavbar() {
                 Docs
                 <OpenInNewIcon
                   fontSize="small"
-                  className="mb-1.5"
                   style={{ fontSize: '1rem' }}
                 />
               </Button>
