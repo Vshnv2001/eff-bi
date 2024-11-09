@@ -10,6 +10,8 @@ hide_table_of_contents: false
 
 When you input your database URI into Eff BI, a series of processes start working behind the scenes to understand and structure your data for easy analysis and visualization. Let’s dive into each step to see how we achieve this.
 
+<!--truncate-->
+
 ### Step 1: Connecting to Your Database
 
 The first step is connecting to your database using the **psycopg2** package, a powerful tool for establishing and maintaining reliable connections between Python applications and PostgreSQL databases. Psycopg2 allows us to efficiently query data while ensuring seamless data exchange and communication.
