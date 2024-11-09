@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { useState, useEffect } from "react";
 import UserDropdown from "./UserDropdown";
-import ArrowTopRightOnSquareIcon from "@heroicons/react/24/outline/ArrowTopRightOnSquareIcon";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 const useScrollDirection = () => {
   const [scrollDirection, setScrollDirection] = useState("up");
@@ -115,7 +115,11 @@ export default function EffBINavbar() {
                 }
               >
                 Docs
-                <ArrowTopRightOnSquareIcon />
+                <OpenInNewIcon
+                  fontSize="small"
+                  className="mb-1.5"
+                  style={{ fontSize: '1rem' }}
+                />
               </Button>
             </div>
           ) : (
@@ -172,7 +176,11 @@ export default function EffBINavbar() {
                 }
               >
                 Docs
-                <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                <OpenInNewIcon
+                  fontSize="small"
+                  className="mb-1.5"
+                  style={{ fontSize: '1rem' }}
+                />
               </Button>
             </div>
           )}

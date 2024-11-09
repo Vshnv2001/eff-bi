@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import {
   Card,
-  CardHeader,
   Typography,
   CardBody,
   Chip,
@@ -169,46 +168,43 @@ const TablePermissionsPage = ({
   console.log(permissions);
 
   return (
-    <div className="flex justify-center min-h-screen p-10">
-      <Card className="w-full max-w-4xl p-10 rounded-sm">
-        {permissions === "Admin" && (
-          <CardHeader floated={false} shadow={false} className="rounded-none">
-            <div className="mb-8 flex items-center justify-between gap-8">
-            <div>
-              <Typography variant="h5" color="blue-gray">
-                Table: {table_name}
-              </Typography>
+    <div className="flex flex-col items-center min-h-screen p-10">
+      <div className="w-full max-w-4xl">
+      <div className="mb-8 flex items-center justify-between gap-8">
+        <div>
+          <Typography variant="h3" color="blue-gray">
+            Table: {table_name}
+            </Typography>
+            {permissions === "Admin" && (
               <Typography color="gray" className="mt-1 font-normal">
                 See all users who have permissions for this table
-              </Typography>
-            </div>
+            </Typography>
+            )}
+        </div>
+        {permissions === "Admin" && (
+        <div className="flex justify-end space-x-3">
+          <button
+            onClick={() => setOpenAddDialog(true)}
+            className="bg-blue-500 text-white p-2 pl-5 pr-5 rounded-md hover:bg-blue-400"
+          >
+            Add Users
+          </button>
           </div>
-          <div className="flex justify-end space-x-3">
-            <button
-              onClick={() => setOpenAddDialog(true)}
-              className="bg-blue-500 text-white p-2 pl-5 pr-5 rounded-md hover:bg-blue-400"
-            >
-              Add Users
-            </button>
-            </div>
-          </CardHeader>
         )}
+        </div>
+      </div>
+      <Card className="w-full max-w-4xl p-10 rounded-sm">
+        <CardBody className="px-0">
         {permissions === "View" && (
-          <CardHeader floated={false} shadow={false} className="rounded-none">
-            <div className="mb-8 flex flex-col items-center justify-between gap-8">
-              <Typography variant="h5" color="blue-gray">
-                Table: {table_name}
-              </Typography>
-              <Typography color="gray" className="mt-1 font-normal">
-                Unfortunately, you only have View permission for this table. 
-              </Typography>
+          <div className="mb-8 flex flex-col items-center justify-between gap-8">
+            <Typography variant="h5" color="blue-gray">
+              You only have View permission for this table.
+            </Typography>
               <Typography color="gray" className="mt-1 font-normal">
                 Please ask any Table Administrator to give you 'Admin' access if you need to provide access to other users.
               </Typography>
             </div>
-          </CardHeader>
-        )}
-        <CardBody className="px-0">
+          )}
           {(permissions === "Admin") && (
             <table className="overflow-x-auto w-full min-w-max text-left">
               <thead>
