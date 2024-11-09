@@ -45,7 +45,7 @@ If a question involves searching for a string, always use the lower() function t
 SELECT * from "company" WHERE lower("name") IN ('apple', 'google');
 This is a STRICT requirement.
 
-DATA UNIQUENESS REQUIREMENTS:
+DATA UNIQUENESS REQUIREMENTS FOR LINE CHART OR SCATTER CHART:
 1. For any dataset being visualized, enforce STRICT one-to-one mapping:
    - Each X-axis value must appear EXACTLY ONCE
    - Each Y-axis value must appear EXACTLY ONCE
@@ -62,7 +62,7 @@ DATA UNIQUENESS REQUIREMENTS:
    x=2, y=200
    x=3, y=300
 
-4. This uniqueness requirement MUST be enforced BEFORE any other data processing steps and BEFORE returning results.
+4. This uniqueness requirement for line chart or bar chart MUST be enforced BEFORE any other data processing steps and BEFORE returning results.
 
 Only after everything is done then apply limit 10
 
