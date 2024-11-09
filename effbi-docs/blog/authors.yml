@@ -1,0 +1,39 @@
+vaishnav:
+  name: Vaishnav Muralidharan
+  title: Founder @ Effbi
+  url: https://www.linkedin.com/in/vaishnav-m-73a8366a/
+  image_url: https://github.com/Vshnv2001.png
+  page: true
+  socials:
+    linkedin: vaishnavmuralidharan
+    github: Vshnv2001
+
+justin:
+  name: Justin Tan
+  title: Founder @ Effbi
+  url: https://www.linkedin.com/in/tan-wee-kian-justin/
+  image_url: https://github.com/jyztintan.png
+  page: true
+  socials:
+    linkedin: tan-wee-kian-justin
+    github: jyztintan
+
+reyaaz:
+  name: Muhammad Reyaaz
+  title: Founder @ Effbi
+  url: https://www.linkedin.com/in/muhammad-reyaaz/
+  image_url: https://github.com/ARPspoofing.png
+  page: true
+  socials:
+    linkedin: muhammad-reyaaz
+    github: ARPspoofing
+
+bryan:
+  name: Bryan Ho
+  title: Founder @ Effbi
+  url: https://www.linkedin.com/in/bryanhce/
+  image_url: https://github.com/bryanhce.png
+  page: true
+  socials:
+    linkedin: bryanhce
+    github: bryanhce

@@ -39,7 +39,6 @@ const config: Config = {
           sidebarPath: "./sidebars.ts",
         },
         blog: {
-          path: "/blog",
           showReadingTime: true,
           feedOptions: {
             type: ["rss", "atom"],
@@ -77,7 +76,7 @@ const config: Config = {
           position: "left",
           label: "Developer",
         },
-        // { to: "/blog", label: "Blog", position: "left" },
+        { to: "/blog", label: "Blog", position: "left" },
         {
           href: "https://github.com/Vshnv2001/eff-bi",
           label: "GitHub",
@@ -104,10 +103,10 @@ const config: Config = {
         {
           title: "More",
           items: [
-            // {
-            //   label: "Blog",
-            //   to: "/blog",
-            // },
+            {
+              label: "Blog",
+              to: "/blog",
+            },
             {
               label: "GitHub",
               href: "https://github.com/Vshnv2001/eff-bi",
