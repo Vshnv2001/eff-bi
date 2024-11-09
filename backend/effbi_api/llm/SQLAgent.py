@@ -44,6 +44,10 @@ Postgres is case-sensitive. Please make sure to add double quotes around the col
 If a question involves searching for a string, always use the lower() function to search for strings and always compare with lower case string values, like:
 SELECT * from "company" WHERE lower("name") IN ('apple', 'google');
 This is a STRICT requirement.
+             
+If the question involves the preferences of specific items by certain groups, make sure to group the output by those groups.
+The response should display preferences only for each specific group.
+This is a STRICT requirement.
 
 DATA UNIQUENESS REQUIREMENTS FOR LINE CHART OR SCATTER CHART:
 1. For any dataset being visualized, enforce STRICT one-to-one mapping:
