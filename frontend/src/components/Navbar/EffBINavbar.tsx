@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { useState, useEffect } from "react";
 import UserDropdown from "./UserDropdown";
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 const useScrollDirection = () => {
   const [scrollDirection, setScrollDirection] = useState("up");
@@ -79,8 +79,10 @@ export default function EffBINavbar() {
               <Button
                 variant="text"
                 size="sm"
-                color={location.pathname === "/view-data" ? "black" : "blue-gray"}
-                className="flex items-center gap-2"
+                color={
+                  location.pathname === "/view-data" ? "black" : "blue-gray"
+                }
+                className={`flex items-center gap-2 ${location.pathname === "/view-data" ? "bg-blue-gray-50" : ""}`}
                 onClick={() => navigate("/view-data")}
               >
                 Data
@@ -88,8 +90,10 @@ export default function EffBINavbar() {
               <Button
                 variant="text"
                 size="sm"
-                color={location.pathname === "/dashboards" ? "black" : "blue-gray"}
-                className="flex items-center gap-2"
+                color={
+                  location.pathname === "/dashboards" ? "black" : "blue-gray"
+                }
+                className={`flex items-center gap-2 ${location.pathname === "/dashboards" ? "bg-blue-gray-50" : ""}`}
                 onClick={() => navigate("/dashboards")}
               >
                 Dashboards
@@ -97,8 +101,12 @@ export default function EffBINavbar() {
               <Button
                 variant="text"
                 size="sm"
-                color={location.pathname === "/access-permissions" ? "black" : "blue-gray"}
-                className="flex items-center gap-2"
+                color={
+                  location.pathname === "/access-permissions"
+                    ? "black"
+                    : "blue-gray"
+                }
+                className={`flex items-center gap-2 ${location.pathname === "/access-permissions" ? "bg-blue-gray-50" : ""}`}
                 onClick={() => navigate("/access-permissions")}
               >
                 Permissions
@@ -116,10 +124,7 @@ export default function EffBINavbar() {
                 }
               >
                 Docs
-                <OpenInNewIcon
-                  fontSize="small"
-                  style={{ fontSize: '1rem' }}
-                />
+                <OpenInNewIcon fontSize="small" style={{ fontSize: "1rem" }} />
               </Button>
             </div>
           ) : (
@@ -176,10 +181,7 @@ export default function EffBINavbar() {
                 }
               >
                 Docs
-                <OpenInNewIcon
-                  fontSize="small"
-                  style={{ fontSize: '1rem' }}
-                />
+                <OpenInNewIcon fontSize="small" style={{ fontSize: "1rem" }} />
               </Button>
             </div>
           )}
