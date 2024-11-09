@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   signUp,
   signIn,
@@ -220,11 +220,13 @@ const Authentication = () => {
       )}
       <div className=" w-5/12 flex items-center justify-center relative">
         <div className="absolute top-8 left-5">
-          <img
-            src="/assets/logo-nobg.png"
-            alt="EFF BI Logo"
-            style={{ width: "128px" }}
-          />
+          <Link to="/">
+            <img
+              src="/assets/logo-nobg.png"
+              alt="EFF BI Logo"
+              style={{ width: "128px" }}
+            />
+          </Link>
         </div>
 
         <img
