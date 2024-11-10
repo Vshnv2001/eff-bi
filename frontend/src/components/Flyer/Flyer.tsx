@@ -2,8 +2,11 @@ import React from "react";
 import { Button } from "@material-tailwind/react";
 import Typography from "@mui/material/Typography";
 import ArticleIcon from "@mui/icons-material/Article";
+import { useNavigate } from "react-router-dom";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 const Flyer: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col md:flex-row items-center justify-center min-h-screen w-full p-8 space-y-6 md:space-y-0 md:space-x-10">
       {/* Left Section with Text */}
@@ -28,6 +31,13 @@ const Flyer: React.FC = () => {
           >
             Read the docs
             <ArticleIcon className="ml-2" />
+          </Button>
+          <Button
+                className="flex items-center bg-white bg-opacity-80 text-black"
+                onClick={() => navigate("/auth")}
+              >
+                Get Started
+            <PlayArrowIcon className="ml-2" />
           </Button>
         </div>
       </div>

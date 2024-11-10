@@ -127,8 +127,8 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
         toast.success("Refreshed successfully!");
       }
     } catch (error) {
-      console.error("Error refreshing tile:", error);
-      toast.error("Unable to refresh tile");
+      console.error("Error refreshing chart:", error);
+      toast.error("Unable to refresh chart");
     } finally {
       setLoading(false);
     }
@@ -167,7 +167,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
 
   const handleTileSaved = (message: string) => {
     toast.success(message);
-    if (message == "New tile saved successfully!") {
+    if (message == "New chart saved successfully!") {
       setPage(totalPages);
     }
 
@@ -188,10 +188,10 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
           prevTiles.filter((tile) => tile.id !== tileId)
         );
       }
-      toast.success("Tile deleted successfully!");
+      toast.success("Chart deleted successfully!");
     } catch (error) {
-      console.error("Error deleting tile:", error);
-      toast.error("Unable to delete tile");
+      console.error("Error deleting chart:", error);
+      toast.error("Unable to delete chart");
     } finally {
       setLoading(false);
       setIsDeleteConfirmationOpen(false);
@@ -287,7 +287,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
             try {
               componentProps = JSON.parse(tileData.tile_props);
             } catch (error) {
-              console.error("Error parsing tile props", error);
+              console.error("Error parsing chart props", error);
               return null;
             }
           }
@@ -318,7 +318,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
                       </IconButton>
                     </Tooltip>
                     <Tooltip
-                      content="Refresh: This replaces the current tile's data."
+                      content="Refresh: This replaces the current chart's data."
                       placement="top"
                       animate={{
                         mount: { scale: 1, y: 0 },
@@ -468,7 +468,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
       >
         <DialogHeader>
           <Typography variant="h5" color="blue-gray">
-            Are you sure you want to delete this tile?
+            Are you sure you want to delete this chart?
           </Typography>
         </DialogHeader>
         <DialogBody divider className="grid place-items-center gap-4">
@@ -476,7 +476,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
             variant="h6"
             className="text-center font-normal text-black"
           >
-            {`You are deleting ${selectedTile?.title} tile.`}
+            {`You are deleting ${selectedTile?.title} chart.`}
           </Typography>
           <Typography className="text-black">
             This action is <span className="text-red-500">irreversible</span>.
