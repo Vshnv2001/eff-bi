@@ -43,7 +43,7 @@ export default function ViewDataPage() {
     { kind: "header" as const, title: "Tables" },
     ...tables.map((table) => ({
       kind: "page" as const,
-      segment: table.index,
+      segment: table.index.toString(),
       title:
         table.table_name.length > 30
           ? table.table_name.slice(0, 29) + "..."
@@ -133,14 +133,9 @@ export default function ViewDataPage() {
 
   function DashboardPageContent({ pathname }: { pathname: string }) {
     // filter function to get Data based on pathname
-    console.log(pathname);
     const index = parseInt(pathname.replace("/", ""), 10);
-    console.log(index)
     const table = tables.find((table) => table.index === index);
-    if (!table) {
-      return <TablePage table={tables[0]} />;
-    }
-    return <TablePage table={table} />;
+    return <TablePage table={table as Table} />;
   }
 
   const fetchData = async () => {
@@ -150,7 +145,7 @@ export default function ViewDataPage() {
       const response = await axios.get(
         `${BACKEND_API_URL}/api/connection/${userId}`
       );
-      const enumTables = response.data?.tables.map((table, index) => ({
+      const enumTables = response.data?.tables.map((table: any, index: number) => ({
         ...table,
         index: index + 1
       }));

@@ -5,6 +5,7 @@ import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import Stack from "@mui/material/Stack";
 
 interface Table {
+    index: number;
   table_name: string;
   table_description?: string;
   column_headers: string[];
