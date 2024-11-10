@@ -130,11 +130,7 @@ export const TileForm: React.FC<TileFormProps> = ({
       <Accordion open={openAccordions.includes(0)} className="mb-4">
         <AccordionHeader
           onClick={() => handleOpen(0)}
-          className={`flex items-center justify-between w-full pt-4 pb-4 pl-0 cursor-pointer rounded-lg transition-colors duration-200 ${
-            openAccordions.includes(0)
-              ? "bg-blue-100 text-blue-600"
-              : "hover:bg-blue-50"
-          }`}
+          className={`flex items-center justify-between w-full p-0 cursor-pointer rounded-lg duration-200`}
         >
           {/* Accordion Header */}
           <div className="flex items-center overflow-x-auto flex-grow">
@@ -167,7 +163,7 @@ export const TileForm: React.FC<TileFormProps> = ({
         </AccordionHeader>
 
         {/* Accordion Body */}
-        <AccordionBody className="pt-2 pl-4 border-l-2 border-blue-200">
+        <AccordionBody className="pt-2">
           <Typography color="gray">
             For optimal results, it is recommended to indicate the type of chart
             desired as well as the specific data for comparison. When defining
