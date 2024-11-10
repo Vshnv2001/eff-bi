@@ -4,6 +4,7 @@ import {
   AccordionHeader,
   AccordionBody,
   Typography,
+  Chip,
 } from "@material-tailwind/react";
 import { ChartPreferences } from "./ChartPreferences";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
@@ -85,6 +86,12 @@ export const TileForm: React.FC<TileFormProps> = ({
 
   const [openAccordions, setOpenAccordions] = useState<number[]>([]);
 
+  const [templateQueries, _] = useState<string[]>([
+    "Show me the top 5 highest paid jobs in 2022.",
+    "Which location has the highest pay?",
+    "Show a piechart of the top 10 companies with the highest pay.",
+  ]);
+
   // Toggle function to open/close the accordion
   const handleOpen = (index: number) => {
     if (openAccordions.includes(index)) {
@@ -107,13 +114,13 @@ export const TileForm: React.FC<TileFormProps> = ({
           onChange={(e) => setTileName(e.target.value)}
           className={`border ${isExceeded ? "border-red-500" : "border-gray-400"} focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2`}
         />
-        <div className="flex justify-between mt-2">
-          <Typography color={isExceeded ? "red" : "gray"}>
+        <div className="flex justify-between ml-2">
+          <Typography color={isExceeded ? "red" : "gray"} className="text-sm">
             {tileName.length} / {maxLength} characters
           </Typography>
           {isExceeded && (
             <Typography color="red" className="text-sm">
-              Character limit exceeded
+              Character limit exceeded!
             </Typography>
           )}
         </div>
@@ -130,13 +137,13 @@ export const TileForm: React.FC<TileFormProps> = ({
       <Accordion open={openAccordions.includes(0)}>
         <AccordionHeader
           onClick={() => handleOpen(0)}
-          className={`flex items-center justify-between w-full p-0 cursor-pointer rounded-lg duration-200`}
+          className={`flex items-center justify-between w-full p-0 cursor-pointer rounded-lg duration-200 bg-[#E5F6FD] hover:bg-[#d9e9ef]`}
         >
           {/* Accordion Header */}
           <div className="flex items-center overflow-x-auto flex-grow">
             <InformationCircleIcon className="h-5 w-5 mr-1" />
             <Typography variant="h6" color="blue-gray">
-              Visualization Information
+              Visualization Tips
             </Typography>
           </div>
           {/* Accordion Icon */}
@@ -163,7 +170,7 @@ export const TileForm: React.FC<TileFormProps> = ({
         </AccordionHeader>
 
         {/* Accordion Body */}
-        <AccordionBody className="pt-2">
+        <AccordionBody className="pt-2 pl-2">
           <Typography color="gray">
             For optimal results, it is recommended to indicate the type of chart
             desired as well as the specific data for comparison. When defining
@@ -194,6 +201,18 @@ export const TileForm: React.FC<TileFormProps> = ({
           rows={4}
           className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
         />
+      </div>
+      <div className="flex gap-[1.5rem] overflow-x-auto pb-2">
+        {templateQueries.map((template) => {
+          return (
+            <Chip
+              variant="ghost"
+              value={template}
+              className="bg-[#E5F6FD] rounded-full hover:bg-[#d9e9ef]"
+              onClick={() => setQueryPrompt(template)}
+            ></Chip>
+          );
+        })}
       </div>
 
       {/* Display Output */}

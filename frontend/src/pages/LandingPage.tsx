@@ -52,7 +52,7 @@ const LandingPage = () => {
               </Button>
               <Button
                 className="flex items-center bg-white bg-opacity-80 text-black"
-                onClick={() => navigate("/auth")}
+                onClick={() => navigate("/dashboards")}
               >
                 Get Started
                 <PlayArrowIcon className="ml-2" />

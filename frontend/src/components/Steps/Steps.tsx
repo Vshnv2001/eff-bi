@@ -42,7 +42,10 @@ const Steps: React.FC = () => {
                       Tailored Charts
                     </Typography>
                     <div className="mt-2">
-                      <Typography variant="body1" className="text-black">
+                      <Typography
+                        variant="body1"
+                        className="text-black w-[30rem] text-center"
+                      >
                         Eff BI's lightweight NLP engine processes your natural
                         language inputs into SQL queries and visualizations
                         efficiently.
@@ -64,10 +67,10 @@ const Steps: React.FC = () => {
                       </Button>
                       <Button
                         className="flex items-center bg-white bg-opacity-80 text-black"
-                        onClick={() => navigate("/auth")}
+                        onClick={() => navigate("/dashboards")}
                       >
                         Get Started
-                        < PlayArrowIcon className="ml-2" />
+                        <PlayArrowIcon className="ml-2" />
                       </Button>
                     </div>
                   </div>
