@@ -127,7 +127,7 @@ export const TileForm: React.FC<TileFormProps> = ({
       />
 
       {/* Accordion Section */}
-      <Accordion open={openAccordions.includes(0)} className="mb-4">
+      <Accordion open={openAccordions.includes(0)}>
         <AccordionHeader
           onClick={() => handleOpen(0)}
           className={`flex items-center justify-between w-full p-0 cursor-pointer rounded-lg duration-200`}
@@ -172,7 +172,10 @@ export const TileForm: React.FC<TileFormProps> = ({
               always use precise values in conditions
             </span>
             . For example, if the condition is "injury," do not substitute with
-            synonyms or related terms like "injured" or "torn hamstring."
+            synonyms or related terms like "injured" or "torn hamstring."&nbsp;
+            <span className="text-blue-500 font-bold">
+              For faster results, the output is limited to 10 items.
+            </span>
           </Typography>
         </AccordionBody>
       </Accordion>
