@@ -127,7 +127,7 @@ export const TileForm: React.FC<TileFormProps> = ({
           </IconButton>
         </div>
         <textarea
-          placeholder="Enter your query for generating the chart (e.g., 'Display monthly revenue trends over the last year')"
+          placeholder="Enter your query for generating the chart (e.g., 'Show me the percentage of riders who exit and did not exit the race in a pie chart')"
           value={queryPrompt}
           onChange={(e) => setQueryPrompt(e.target.value)}
           rows={4}
