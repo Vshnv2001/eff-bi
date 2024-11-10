@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { componentMapping, componentNames } from "../ComponentMapping";
 import { SaveConfirmationDialog } from "./SaveConfirmationDialog";
-import InfoTooltip from "./InfoTooltip";
 import { TileForm } from "./TileForm";
 import ColumnAccordion from "../../DataTable/ColumnAccordion";
 
@@ -27,7 +26,6 @@ export default function NewTile({
   const [tileName, setTileName] = useState("");
   const [queryPrompt, setQueryPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [info, setInfo] = useState(false);
 
   const [previewComponent, setPreviewComponent] = useState<string | null>(null);
   const [previewProps, setPreviewProps] = useState<any>(null);
@@ -342,7 +340,6 @@ export default function NewTile({
     //setSubmitType(null);
   };
 
-  const handleInfo = () => setInfo((prevInfo) => !prevInfo);
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) =>
     e.stopPropagation();
   const handleCancel = () => setShowSaveDialog(false);
@@ -386,7 +383,6 @@ export default function NewTile({
               componentNames={componentNames}
               selectedTemplates={selectedTemplates}
               setSelectedTemplates={setSelectedTemplates}
-              handleInfo={handleInfo}
               sqlQuery={sqlQuery}
               PreviewComponent={PreviewComponent}
               previewProps={previewProps}
@@ -408,54 +404,9 @@ export default function NewTile({
               onUpdate={() => handleSave("update")}
               isLoading={isLoading}
             />
-
-            <InfoTooltip open={info} handler={handleInfo} />
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-/*
-  const generatePreview = async () => {
-    setIsLoading(true);
-    const { cancelToken, timeout } = setupCancelToken(
-      "Unable to generate tile. Request took too long."
-    );
-
-    let description = queryPrompt;
-    try {
-      if (selectedTemplates.length > 0) {
-        const componentNamesString = selectedTemplates.join(",");
-        description = `${queryPrompt}\n\nTry to generate a chart that is any of the following: ${componentNamesString}.`;
-      }
-
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/dashboard-tile/`,
-        {
-          dash_id: dashboardId,
-          title: tileName,
-          description: description,
-        },
-        { cancelToken: cancelToken.token }
-      );
-
-      setPreviewComponent(response.data.component);
-      setPreviewProps(response.data.tile_props);
-      setSqlQuery(response.data.sql_query);
-      setIsPreviewGenerated(true);
-      setApiData({
-        dash_id: dashboardId,
-        title: tileName,
-        description: description,
-        ...response.data,
-      });
-    } catch (error) {
-      handleError(error);
-    } finally {
-      clearTimeout(timeout);
-      setIsLoading(false);
-    }
-  };
-  */
