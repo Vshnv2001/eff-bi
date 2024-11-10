@@ -1,7 +1,7 @@
 ---
 title: Refreshing your Database
 description: Check out how we refresh your database in Eff BI
-slug: HRefreshing your Database
+slug: Refreshing your Database
 authors: [justin]
 hide_table_of_contents: false
 ---
@@ -21,10 +21,6 @@ When refreshing the database, Eff BI performs a series of checks to identify cha
 We mark every table in the database into 3 categories:
 
 ### 1. New Table Added
-
-When Eff BI detects new tables in your database, it immediately begins the process of integrating these tables into your organizational data model. 
-This process is similar to the process described in the [How Eff BI Snapshots your Database](https://eff-bi-docs.vercel.app/blog/How%20Eff%20BI%20Snapshots%20your%20Database) blog post.
-Essentially, we pre-process the new table and add it as a table under the respective organisation, also granting relevant access to all current Super Admins of the organisation.
 
 When Eff BI detects new tables in your database, it immediately begins the process of integrating these tables into your organizational data model. This integration process is similar to the initial snapshot procedure we described in our previous blog post on [How Eff BI Snapshots your Database](https://eff-bi-docs.vercel.app/blog/How%20Eff%20BI%20Snapshots%20your%20Database).
 

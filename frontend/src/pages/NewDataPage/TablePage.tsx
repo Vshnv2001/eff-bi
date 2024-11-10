@@ -57,7 +57,7 @@ const TablePage: React.FC<TablePageProps> = ({table}: {table: Table}) => {
             <Alert variant="outlined" icon={<PriorityHighIcon/>} severity="warning" className="m-4" sx={{
                     width : "100%",
                 }}>
-                Only the first 100 rows are displayed.
+                This is a sample display, showing up to a maximum of the first 100 rows.
             </Alert>
         </div>
     );

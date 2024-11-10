@@ -119,7 +119,7 @@ export default function DBSettingsPage() {
         <div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-500 bg-opacity-80 z-50">
           <Spinner className="h-10 w-10" />
           <Typography color="black" className="ml-2 pt-2">
-            Connecting to your database...
+            Analyzing your database...
           </Typography>
         </div>
       )}
