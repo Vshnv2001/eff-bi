@@ -205,12 +205,13 @@ export const TileForm: React.FC<TileFormProps> = ({
       <div className="flex gap-[1.5rem] overflow-x-auto pb-2">
         {templateQueries.map((template) => {
           return (
-            <Chip
-              variant="ghost"
-              value={template}
-              className="bg-[#E5F6FD] rounded-full hover:bg-[#d9e9ef]"
-              onClick={() => setQueryPrompt(template)}
-            ></Chip>
+            <div onClick={() => setQueryPrompt(template)}>
+              <Chip
+                variant="ghost"
+                value={template}
+                className="bg-[#E5F6FD] rounded-full hover:bg-[#d9e9ef]"
+              ></Chip>
+            </div>
           );
         })}
       </div>
