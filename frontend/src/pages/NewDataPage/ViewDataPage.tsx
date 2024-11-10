@@ -185,7 +185,7 @@ export default function ViewDataPage() {
   return (
     <AppProvider navigation={NAVIGATION} router={router} theme={demoTheme}>
       {refreshLoading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999990]">
           <Spinner className="h-10 w-10" />
         </div>
       )}
