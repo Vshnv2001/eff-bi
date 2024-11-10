@@ -33,10 +33,10 @@ const Flyer: React.FC = () => {
             <ArticleIcon className="ml-2" />
           </Button>
           <Button
-                className="flex items-center bg-white bg-opacity-80 text-black"
-                onClick={() => navigate("/auth")}
-              >
-                Get Started
+            className="flex items-center bg-white bg-opacity-80 text-black"
+            onClick={() => navigate("/access-permissions")}
+          >
+            Get Started
             <PlayArrowIcon className="ml-2" />
           </Button>
         </div>

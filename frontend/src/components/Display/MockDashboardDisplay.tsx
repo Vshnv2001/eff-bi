@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import ArticleIcon from "@mui/icons-material/Article";
 import FadeIn from "../Animations/FadeIn";
 import { useNavigate } from "react-router-dom";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";  
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 const MockDashboardDisplay: React.FC = () => {
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ const MockDashboardDisplay: React.FC = () => {
             </Button>
             <Button
               className="flex items-center bg-white bg-opacity-80 text-black"
-              onClick={() => navigate("/auth")}
+              onClick={() => navigate("/dashboards")}
             >
               Get Started
               <PlayArrowIcon className="ml-2" />
