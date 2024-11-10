@@ -147,7 +147,7 @@ export const TileForm: React.FC<TileFormProps> = ({
             previewText={previewText}
             sqlQuery={sqlQuery}
             speed={PreviewComponent && previewProps ? 2 : 20}
-            showFullText={false}
+            showFullText={PreviewComponent && previewProps ? true: false}
           />
         ) : (
           // Display sqlQuery in its entirety without typewriter effect
