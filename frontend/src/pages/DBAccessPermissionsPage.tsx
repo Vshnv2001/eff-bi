@@ -5,7 +5,7 @@ import {
 import axios from "axios";
 import { BACKEND_API_URL } from "../config/index";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
-import { LayersIcon} from "lucide-react";
+import LayersIcon from "@mui/icons-material/Layers";
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { createTheme } from "@mui/material/styles";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
@@ -13,6 +13,7 @@ import { useDemoRouter } from "@toolpad/core/internal";
 import TablePermissionsPage from "./TablePermissionsPage";
 
 type PermissionData = {
+  index : number;
   table_name: string;
   table_id: number;
   permissions: string;
@@ -23,15 +24,15 @@ export default function DBAccessPermissionsPage() {
     PermissionData[]
   >([]);
   const [isLoading, setIsLoading] = useState(true);
-  const router = useDemoRouter("/access-permissions");
+  const router = useDemoRouter("/1");
   const sessionContext = useSessionContext();
   const userId = sessionContext.loading ? null : sessionContext.userId;
 
   const NAVIGATION = [
     { kind: "header" as const, title: "Tables" },
-    ...allPermissions.map(({ table_name }) => ({
+    ...allPermissions.map(({ table_name, index }) => ({
       kind: "page" as const,
-      segment: table_name,
+      segment: index.toString(),
       title: table_name.length > 30 ? table_name.slice(0, 29) + "..." : table_name,
       icon: <LayersIcon />
     })),
@@ -40,8 +41,8 @@ export default function DBAccessPermissionsPage() {
 
   function DashboardPageContent({ pathname }: { pathname: string }) {
     // filter function to get Data based on pathname
-    pathname = pathname.replace("/", "");
-    const permission = allPermissions.find((permission) => permission.table_name === pathname);
+    const index = parseInt(pathname.replace("/", ""), 10);
+    const permission = allPermissions.find((permission) => permission.index === index);
     if (allPermissions.length === 0) {
       return <div>No permission found</div>;
     }
@@ -56,7 +57,7 @@ export default function DBAccessPermissionsPage() {
     }
     return (
       <TablePermissionsPage
-        table_name={pathname}
+        table_name={permission.table_name}
         table_id={permission.table_id}
         permissions={permission.permissions}
       />
@@ -74,7 +75,11 @@ export default function DBAccessPermissionsPage() {
           `${BACKEND_API_URL}/api/user-access-permissions/${userId}`
         );
         // // console.log(response.data.data);
-        setAllPermissions(response.data.data);
+        const enumPermissions = response.data.data.map((permission: any, index: number) => ({
+          ...permission,
+          index: index + 1,
+        }));
+        setAllPermissions(enumPermissions);
       } catch (error) {
         console.error("Error fetching permissions:", error);
       } finally {

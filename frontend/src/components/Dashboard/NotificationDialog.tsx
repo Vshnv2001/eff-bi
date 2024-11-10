@@ -49,7 +49,7 @@ export default function NotificationDialog({
           <SettingsIcon className="text-blue-400" />
           Database Configuration Needed
         </Typography>
-        <Typography className="text-center font-normal">
+        <Typography className="text-center font-normal" color="black">
           Connect your database in the Data Page to get started with Eff BI.
           <Alert severity="info" className="text-left mt-4">
            If you don't currently have a database URI, you may use our mock database URI:{" "}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Card,
   CardBody,
@@ -43,7 +43,7 @@ export default function DBSettingsPage() {
   const [selectedDb, setSelectedDb] = useState("postgresql");
   const [dbUri, setDbUri] = useState("");
   const [isDisabledField, setIsDisabledField] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingDB, setIsLoadingDB] = useState(false);
   const { organizationId } = useAuth();
   const sessionContext = useSessionContext();
   const userId = sessionContext.loading ? null : sessionContext.userId;
@@ -54,29 +54,6 @@ export default function DBSettingsPage() {
     );
     toast.success("Mock data URI successfully copied!");
   };
-
-  useEffect(() => {
-    const fetchDbSettings = async () => {
-      try {
-        const response = await axios.get(
-          `${BACKEND_API_URL}/api/users/uri/${userId}`
-        );
-        if (response.status === 200) {
-          setDbUri(response.data.database_uri);
-          if (response.data.database_uri !== "") {
-            setIsDisabledField(true);
-          }
-        } else {
-          console.error("Failed to fetch db settings:", response);
-        }
-      } catch (error) {
-        console.error("Error fetching db settings:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchDbSettings();
-  }, []);
 
   const handleSave = async () => {
     if (isDisabledField) {
@@ -111,7 +88,7 @@ export default function DBSettingsPage() {
     // // console.log(reqBody);
 
     try {
-      setIsLoading(true);
+      setIsLoadingDB(true);
       const response = await axios.post(
         `${BACKEND_API_URL}/api/connection/`,
         reqBody
@@ -120,7 +97,7 @@ export default function DBSettingsPage() {
       if (response.status === 201) {
         setIsDisabledField(true);
         toast.success("Connection saved successfully!");
-        window.location.reload();
+        window.location.reload(); // refresh page to reflect changes
       }
     } catch (error) {
       if ((error as any).response) {
@@ -132,54 +109,18 @@ export default function DBSettingsPage() {
       }
       toast.error("Failed to save connection");
     } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleRefresh = async () => {
-    if (!dbUri) {
-      toast.error("Database URI is required!");
-      return;
-    }
-    // console.log("refresh!");
-
-    const reqBody = {
-      org_id: Number(organizationId),
-      user_id: userId,
-    };
-
-    try {
-      setIsLoading(true);
-      // // console.log(organizationId);
-      // // console.log(reqBody);
-      // // console.log(userId);
-      const response = await axios.post(
-        `${BACKEND_API_URL}/api/connection/refresh/`,
-        reqBody
-      );
-
-      if (response.status === 200) {
-        toast.success("Database refreshed successfully!");
-      }
-    } catch (error) {
-      if ((error as any).response) {
-        console.error("Backend error:", (error as any).response.data);
-      } else if ((error as any).request) {
-        console.error("Network error:", (error as any).request);
-      } else {
-        console.error("Error:", (error as any).message);
-      }
-      toast.error("Failed to refresh data");
-    } finally {
-      setIsLoading(false);
+      setIsLoadingDB(false);
     }
   };
 
   return (
     <div className="min-h-screen text-gray-100 p-8">
-      {isLoading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
+      {isLoadingDB && (
+        <div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-500 bg-opacity-80 z-50">
           <Spinner className="h-10 w-10" />
+          <Typography color="black" className="ml-2 pt-2">
+            Analyzing your database...
+          </Typography>
         </div>
       )}
       <div className="max-w-4xl mx-auto">
@@ -259,7 +200,7 @@ export default function DBSettingsPage() {
           </Alert>
           <input
             disabled={isDisabledField}
-            type="password"
+            type="text"
             placeholder={"postgres://user@localhost/db"}
             className={`w-full p-2 rounded ${
               isDisabledField ? "bg-gray-400" : "bg-white"
@@ -268,48 +209,7 @@ export default function DBSettingsPage() {
             onChange={(e) => setDbUri(e.target.value)}
           />
         </div>
-        {isDisabledField ? (
-          <>
-            <Typography
-              as="h3"
-              color="white"
-              className="mb-2 pt-10 text-2xl font-bold"
-            >
-              Refresh Data
-            </Typography>
-            <div className="flex">
-              <Tooltip
-                content={
-                  <div className="w-80">
-                    <Typography
-                      variant="small"
-                      color="white"
-                      className="font-medium opacity-80"
-                    >
-                      Refresh is used when you have updates in your original
-                      database and want Eff BI to update our snapshot of your
-                      entire data
-                    </Typography>
-                  </div>
-                }
-                placement="top"
-                animate={{
-                  mount: { scale: 1, y: 0 },
-                  unmount: { scale: 0, y: 25 },
-                }}
-              >
-                <Button
-                  color="blue"
-                  className={`w-full text-md tracking-widest`}
-                  onClick={handleRefresh}
-                >
-                  Refresh
-                </Button>
-              </Tooltip>
-            </div>
-          </>
-        ) : (
-          <div className="flex mt-12">
+        <div className="flex mt-12">
             <Tooltip
               content={
                   <div className="w-80">
@@ -339,7 +239,7 @@ export default function DBSettingsPage() {
               </Button>
             </Tooltip>
           </div>
-        )}
+        )
       </div>
     </div>
   );

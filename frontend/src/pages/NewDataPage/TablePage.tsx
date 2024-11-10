@@ -3,8 +3,10 @@ import DataTable from "../../components/DataTable/DataTable";
 import {Alert} from "@mui/material";
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import Stack from "@mui/material/Stack";
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 
 interface Table {
+    index: number;
   table_name: string;
   table_description?: string;
   column_headers: string[];
@@ -52,6 +54,11 @@ const TablePage: React.FC<TablePageProps> = ({table}: {table: Table}) => {
                 }))}
                 data={table.rows}
             />
+            <Alert variant="outlined" icon={<PriorityHighIcon/>} severity="warning" className="m-4" sx={{
+                    width : "100%",
+                }}>
+                This is a sample display, showing up to a maximum of the first 100 rows.
+            </Alert>
         </div>
     );
 };
