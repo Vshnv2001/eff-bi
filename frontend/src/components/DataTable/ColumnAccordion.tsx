@@ -73,7 +73,7 @@ const ColumnAccordion: React.FC = () => {
         <Accordion
           key={tableIndex}
           open={openAccordions.includes(tableIndex)}
-          className="mb-2"
+          className="mb-0"
         >
           <AccordionHeader
             onClick={() => handleOpen(tableIndex)}
@@ -114,7 +114,7 @@ const ColumnAccordion: React.FC = () => {
             </div>
           </AccordionHeader>
 
-          <AccordionBody className="pt-0 pl-2 border-l-2 border-blue-200">
+          <AccordionBody className="py-0 pt-0 pl-2 border-l-2 border-blue-200">
             {table.column_headers.map((column, columnIndex) => (
               <div key={columnIndex} className="mb-2 pl-4">
                 <AccordionHeader className="text-gray-700 text-sm cursor-pointer p-2 transition-colors duration-200 hover:text-blue-600 border-b-0 no-underline">
