@@ -15,6 +15,7 @@ import { Typography } from "@mui/material";
 import LockPersonTwoToneIcon from "@mui/icons-material/LockPersonTwoTone";
 
 interface Table {
+  index: number;
   table_name: string;
   table_description?: string;
   column_headers: string[];
@@ -33,7 +34,7 @@ export default function ViewDataPage() {
   const { organizationId } = useAuth();
   const userId = sessionContext.loading ? null : sessionContext.userId;
   const [loading, setLoading] = useState(false);
-  const router = useDemoRouter("/view-data");
+  const router = useDemoRouter("/1");
   const [refreshLoading, setRefreshLoading] = useState(false);
 
   //console.log(router.pathname);
@@ -42,7 +43,7 @@ export default function ViewDataPage() {
     { kind: "header" as const, title: "Tables" },
     ...tables.map((table) => ({
       kind: "page" as const,
-      segment: table.table_name,
+      segment: table.index,
       title:
         table.table_name.length > 30
           ? table.table_name.slice(0, 29) + "..."
@@ -132,9 +133,10 @@ export default function ViewDataPage() {
 
   function DashboardPageContent({ pathname }: { pathname: string }) {
     // filter function to get Data based on pathname
-    pathname = pathname.replace("/", "");
-    const table = tables.find((table) => table.table_name === pathname);
-    //console.log(table);
+    console.log(pathname);
+    const index = parseInt(pathname.replace("/", ""), 10);
+    console.log(index)
+    const table = tables.find((table) => table.index === index);
     if (!table) {
       return <TablePage table={tables[0]} />;
     }
@@ -148,7 +150,11 @@ export default function ViewDataPage() {
       const response = await axios.get(
         `${BACKEND_API_URL}/api/connection/${userId}`
       );
-      setTables(response.data?.tables);
+      const enumTables = response.data?.tables.map((table, index) => ({
+        ...table,
+        index: index + 1
+      }));
+      setTables(enumTables);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
