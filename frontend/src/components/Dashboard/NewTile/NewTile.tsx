@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { componentMapping, componentNames } from "../ComponentMapping";
 import { SaveConfirmationDialog } from "./SaveConfirmationDialog";
-import InfoTooltip from "./InfoTooltip";
 import { TileForm } from "./TileForm";
 import ColumnAccordion from "../../DataTable/ColumnAccordion";
 
@@ -27,7 +26,6 @@ export default function NewTile({
   const [tileName, setTileName] = useState("");
   const [queryPrompt, setQueryPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [info, setInfo] = useState(false);
 
   const [previewComponent, setPreviewComponent] = useState<string | null>(null);
   const [previewProps, setPreviewProps] = useState<any>(null);
@@ -342,7 +340,6 @@ export default function NewTile({
     //setSubmitType(null);
   };
 
-  const handleInfo = () => setInfo((prevInfo) => !prevInfo);
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) =>
     e.stopPropagation();
   const handleCancel = () => setShowSaveDialog(false);
@@ -386,7 +383,6 @@ export default function NewTile({
               componentNames={componentNames}
               selectedTemplates={selectedTemplates}
               setSelectedTemplates={setSelectedTemplates}
-              handleInfo={handleInfo}
               sqlQuery={sqlQuery}
               PreviewComponent={PreviewComponent}
               previewProps={previewProps}
@@ -408,8 +404,6 @@ export default function NewTile({
               onUpdate={() => handleSave("update")}
               isLoading={isLoading}
             />
-
-            <InfoTooltip open={info} handler={handleInfo} />
           </div>
         </div>
       </div>
