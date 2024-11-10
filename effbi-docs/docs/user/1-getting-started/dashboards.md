@@ -20,19 +20,19 @@ Dashboards in Eff BI bring your data to life, helping you visualize interactions
 
 4. Click on <strong>Create Dashboard</strong>.
 
-This will set up a customizable space where you can add Tiles. Tiles are what we call individual charts or visual elements that display your data insights.
+This will set up a customizable space where you can add Charts. Charts is a blanket term we use to refer to individual graphs, tables or visual elements that display your data insights.
 
-## Creating Tiles
+## Creating Charts
 
-Tiles are the building blocks of your dashboard. They display data as charts, graphs, or other visuals, giving you a powerful way to see and interpret your data.
+Charts are the building blocks of your dashboard. They display data as graphs or other visuals, giving you a powerful way to see and interpret your data.
 
  <img src={createTile} width="500"/>
 
 1. <strong>Open an existing dashboard from the Dashboards page</strong>, or create a new one if you don’t have any dashboards yet.
 
-2. Inside your dashboard, click <strong>Create Chart</strong> to add a new tile.
+2. Inside your dashboard, click <strong>Create Chart</strong> to add a new Chart.
 
-3. <strong>Name Your Tile</strong> and optionally choose your chart type—pick the visualization that best tells your data’s story.
+3. <strong>Name Your Chart</strong> and optionally choose your chart type to pick the visualization that best tells your data’s story.
 
 4. <strong>Add Visualization Instructions</strong>: Simply type in your insights request in natural language, Eff BI will take it from there and generate your visual!
 
