@@ -164,15 +164,18 @@ export default function ViewDataPage() {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-gray-300 bg-opacity-50 z-50">
+      <div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-300 bg-opacity-50 z-50">
         <Spinner className="h-10 w-10" />
+        <div className="text-xl text-center text-black pt-3">
+          Loading your data...
+        </div>
       </div>
     );
   }
 
   if (tables.length == 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg p-100 space-y-5">
+        <div className="flex flex-col items-center justify-center min-h-screen bg p-100 space-y-5">
         <div className="text-center">
           <LockPersonTwoToneIcon style={{ fontSize: "10rem" }} />
         </div>
@@ -186,15 +189,18 @@ export default function ViewDataPage() {
   return (
     <AppProvider navigation={NAVIGATION} router={router} theme={demoTheme}>
       {refreshLoading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[999990]">
-          <Spinner className="h-10 w-10" />
-        </div>
+          <div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-500 bg-opacity-80 z-[999990]">
+            <Spinner className="h-10 w-10"/>
+            <div className="text-xl text-center text-black pt-3">
+              Refreshing your data...
+            </div>
+          </div>
       )}
 
       <DashboardLayout
-        slots={{
-          sidebarFooter: SidebarFooter,
-        }}
+          slots={{
+            sidebarFooter: SidebarFooter,
+          }}
         sx={{ height: "calc(100vh - 60px)", overflow: "auto" }}
       >
         <div style={{ maxWidth: "calc(100vw - 320px)" }}>
