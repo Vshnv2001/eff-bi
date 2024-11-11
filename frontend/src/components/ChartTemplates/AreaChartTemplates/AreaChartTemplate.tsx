@@ -71,7 +71,7 @@ export function AreaChartTemplate({
           </Typography>
         ) : (
           <Chart
-            height={200}
+            height="100%"
             options={chartOptions}
             series={chartSeries}
             type="area"
