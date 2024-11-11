@@ -359,10 +359,14 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
 
                   <div
                     ref={chartRefs.current[actualIndex]}
-                    className="w-full overflow-auto h-[17rem]"
+                    className="w-full h-[17rem] overflow-auto"
                   >
                     {Component && (
-                      <Component {...componentProps} title={tileData.title} />
+                      <Component
+                        className="w-full h-full"
+                        {...componentProps}
+                        title={tileData.title}
+                      />
                     )}
                   </div>
 
