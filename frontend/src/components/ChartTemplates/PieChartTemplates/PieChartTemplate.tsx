@@ -1,5 +1,4 @@
 import * as React from "react";
-//import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import { ApexOptions } from "apexcharts";
@@ -9,7 +8,6 @@ import CardContent from "@mui/material/CardContent";
 interface PieChartTemplateProps {
   series: number[];
   labels: string[];
-  chartWidth?: number;
   title: string;
   description: string;
 }
@@ -17,7 +15,6 @@ interface PieChartTemplateProps {
 export function PieChartTemplate({
   series,
   labels,
-  chartWidth,
   title,
   description,
 }: PieChartTemplateProps): React.JSX.Element {
@@ -34,35 +31,22 @@ export function PieChartTemplate({
 
   const chartOptions: ApexOptions = {
     chart: {
-      width: "100%",
-      height: "200%",
       type: "pie",
+      height: "100%", // Ensure it takes up the full height of the parent
+      sparkline: {
+        enabled: false, // Disable sparkline mode
+      },
     },
     labels: labels,
     plotOptions: {
       pie: {
-        customScale: 1
-      }
+        customScale: 1,
+      },
     },
     colors: generateColors(series.length),
-    responsive: [
-      {
-        breakpoint: 380,
-        options: {
-          chart: { width: chartWidth },
-          legend: {
-            height: 200,
-          },
-        },
-      },
-    ],
     legend: {
       position: "right",
       fontSize: fontSize,
-      floating: false,
-      formatter: function (seriesName, opts) {
-        return seriesName + ` - ${series[opts.seriesIndex].toFixed(1)}`;
-      },
       show: true,
     },
     tooltip: {
@@ -77,18 +61,19 @@ export function PieChartTemplate({
   };
 
   return (
-    <div style={{ position: "relative", marginTop: 0 }}>
-      <Typography variant="h6" style={{ textAlign: "center", marginBottom: 0 }}>
+    <div style={{ width: "100%", height: "100%", position: "relative" }}>
+      <Typography variant="h6" style={{ textAlign: "center", marginBottom: 8 }}>
         {title}
       </Typography>
       <Typography
         variant="body2"
-        style={{ textAlign: "center", marginBottom: 0 }}
+        style={{ textAlign: "center", marginBottom: 16 }}
       >
         {description}
       </Typography>
-
-      <CardContent>
+      <CardContent
+        style={{ width: "100%", height: "calc(100% - 40px)", padding: 0 }}
+      >
         {series.length === 0 ? (
           <Typography
             variant="body2"
@@ -102,7 +87,7 @@ export function PieChartTemplate({
             series={series}
             type="pie"
             width="100%"
-            height="150%"
+            height="100%"
           />
         )}
       </CardContent>
