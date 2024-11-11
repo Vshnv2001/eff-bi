@@ -150,8 +150,6 @@ export default function ViewDataPage() {
         index: index + 1
       }));
       setTables(enumTables);
-
-      console.log("tables", tables)
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
