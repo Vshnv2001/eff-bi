@@ -49,7 +49,7 @@ const BoxPlotTemplate: React.FC<BoxPlotTemplateProps> = ({
           </Typography>
         ) : (
           <Chart
-            height="100%"
+            height={height}
             options={chartOptions}
             series={[{ type: "boxPlot", data }]}
             type="boxPlot"

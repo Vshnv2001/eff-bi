@@ -83,7 +83,7 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
             options={options}
             series={series}
             type="line"
-            height="100%"
+            height={200}
             width="100%"
             style={{ marginBottom: -30 }}
           />
