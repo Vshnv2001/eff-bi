@@ -48,7 +48,7 @@ export function PyramidBarChartTemplate({
           </Typography>
         ) : (
           <Chart
-            height={440}
+            height="200%"
             options={chartOptions}
             series={chartSeries}
             type="bar"

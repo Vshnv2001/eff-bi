@@ -32,9 +32,9 @@ export function PieChartTemplate({
   const chartOptions: ApexOptions = {
     chart: {
       type: "pie",
-      height: "100%", // Ensure it takes up the full height of the parent
+      height: "100%",
       sparkline: {
-        enabled: false, // Disable sparkline mode
+        enabled: false,
       },
     },
     labels: labels,

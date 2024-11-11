@@ -50,7 +50,7 @@ export function StackedGroupBarChartTemplate({
         {description}
       </Typography>
 
-      <div id="stacked-bar-chart" style={{ width: "100%", height: "350px" }} />
+      <div id="stacked-bar-chart" style={{ width: "100%", height: "200%" }} />
     </div>
   );
 }

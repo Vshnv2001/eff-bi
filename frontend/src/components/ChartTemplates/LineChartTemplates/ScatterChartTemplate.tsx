@@ -71,7 +71,7 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
             options={options}
             series={series}
             type="scatter"
-            height={200}
+            height="100%"
             width="100%"
             style={{ marginBottom: -30 }}
           />

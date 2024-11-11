@@ -50,7 +50,7 @@ export function BarChartTemplate({
           </Typography>
         ) : (
           <Chart
-            height={280}
+            height="200%"
             options={chartOptions}
             series={chartSeries}
             type="bar"

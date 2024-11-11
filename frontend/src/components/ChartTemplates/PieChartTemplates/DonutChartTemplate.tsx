@@ -77,7 +77,7 @@ export function DonutChartTemplate({
   };
 
   return (
-    <div style={{ position: "relative", marginTop: 0 }}>
+    <div style={{ width: "100%", height: "100%", position: "relative" }}>
       <Typography variant="h6" style={{ textAlign: "center", marginBottom: 0 }}>
         {title}
       </Typography>
