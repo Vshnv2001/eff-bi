@@ -40,7 +40,7 @@ const AreaChartTemplate: React.FC<AreaChartTemplateProps> = ({
     xaxis: {
       categories,
       labels: {
-        show: false,
+        show: true,
       },
     },
     yaxis: {
