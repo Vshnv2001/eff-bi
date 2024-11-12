@@ -1,7 +1,7 @@
 import { BarChartTemplate } from "../ChartTemplates/BarChartTemplates/BarChartTemplate";
 import { HorizontalBarChartTemplate } from "../ChartTemplates/BarChartTemplates/HorizontalBarChartTemplate";
 import { DonutChartTemplate } from "../ChartTemplates/PieChartTemplates/DonutChartTemplate";
-import { AreaChartTemplate } from "../ChartTemplates/AreaChartTemplates/AreaChartTemplate";
+import AreaChartTemplate from "../ChartTemplates/AreaChartTemplates/AreaChartTemplate";
 import PieChartTemplate from "../ChartTemplates/PieChartTemplates/PieChartTemplate";
 import RadarChartTemplate from "../ChartTemplates/RadarChartTemplates/RadarChartTemplate";
 import ScatterChartTemplate from "../ChartTemplates/LineChartTemplates/ScatterChartTemplate";
