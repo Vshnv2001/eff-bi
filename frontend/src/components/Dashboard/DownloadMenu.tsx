@@ -23,23 +23,41 @@ export function DownloadMenu({ chartRef }: DownloadMenuProps) {
   const handleDownload = async (format: string) => {
     if (!chartRef.current) return;
 
-    if (["PNG", "JPEG", "JPG"].includes(format)) {
-      const canvas = await html2canvas(chartRef.current as HTMLElement);
-      canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `chart.${format.toLowerCase()}`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-          }
-        },
-        format === "JPEG" ? "image/jpeg" : undefined
-      );
+    const element = chartRef.current;
+
+    // Store the original overflow style
+    const originalOverflow = element.style.overflow;
+
+    // Remove overflow to allow full content capture
+    element.style.overflow = "visible";
+
+    // Force a reflow and wait for the next animation frame to apply the changes
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    try {
+      if (["PNG", "JPEG", "JPG"].includes(format)) {
+        const canvas = await html2canvas(element, {
+          scrollY: 0, // Ensure it captures from the top
+        });
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = `chart.${format.toLowerCase()}`;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+            }
+          },
+          format === "JPEG" ? "image/jpeg" : undefined
+        );
+      }
+    } finally {
+      // Restore the original overflow style
+      element.style.overflow = originalOverflow;
     }
 
     handleClose();

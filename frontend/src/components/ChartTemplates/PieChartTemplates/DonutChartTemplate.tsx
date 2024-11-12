@@ -106,8 +106,6 @@ export function DonutChartTemplate({
           />
         )}
       </CardContent>
-
-      <Divider />
     </div>
   );
 }

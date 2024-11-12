@@ -86,7 +86,6 @@ const AreaChartTemplate: React.FC<AreaChartTemplateProps> = ({
           />
         )}
       </CardContent>
-      <Divider />
     </div>
   );
 };

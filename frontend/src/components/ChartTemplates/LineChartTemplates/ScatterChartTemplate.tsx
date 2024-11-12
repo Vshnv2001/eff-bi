@@ -77,7 +77,6 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
           />
         )}
       </CardContent>
-      <Divider />
     </div>
   );
 };

@@ -89,7 +89,6 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
           />
         )}
       </CardContent>
-      <Divider />
     </div>
   );
 };

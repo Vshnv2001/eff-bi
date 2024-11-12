@@ -60,7 +60,6 @@ export function HorizontalBarChartTemplate({
           />
         )}
       </CardContent>
-      <Divider />
     </div>
   );
 }

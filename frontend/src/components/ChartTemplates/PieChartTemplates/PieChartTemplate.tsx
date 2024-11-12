@@ -91,7 +91,6 @@ export function PieChartTemplate({
           />
         )}
       </CardContent>
-      <Divider />
     </div>
   );
 }

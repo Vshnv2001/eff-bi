@@ -35,7 +35,6 @@ const SingleValueTemplate: React.FC<SingleValueTemplateProps> = ({
           {value}
         </Typography>
       </CardContent>
-      <Divider />
     </div>
   );
 };
