@@ -87,9 +87,9 @@ export const TileForm: React.FC<TileFormProps> = ({
   const [openAccordions, setOpenAccordions] = useState<number[]>([]);
 
   const [templateQueries, _] = useState<string[]>([
-    "Show me the top 5 highest paid jobs in 2022.",
-    "Which location has the highest pay?",
-    "Show a piechart of the top 10 companies with the highest pay.",
+    "Show me the top 5 companies with the highest average salary",
+    "Show me a pie chart of distribution of education level",
+    "Show me 5 leetcode questions related to the greedy topic",
   ]);
 
   // Toggle function to open/close the accordion
