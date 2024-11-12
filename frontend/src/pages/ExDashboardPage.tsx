@@ -2,7 +2,7 @@ import { BarChartTemplate } from "../components/ChartTemplates/BarChartTemplates
 import { HorizontalBarChartTemplate } from "../components/ChartTemplates/BarChartTemplates/HorizontalBarChartTemplate";
 import { StackedGroupBarChartTemplate } from "../components/ChartTemplates/BarChartTemplates/StackGroupBarChartTemplate";
 import { DonutChartTemplate } from "../components/ChartTemplates/PieChartTemplates/DonutChartTemplate";
-import { AreaChartTemplate } from "../components/ChartTemplates/AreaChartTemplates/AreaChartTemplate";
+import AreaChartTemplate from "../components/ChartTemplates/AreaChartTemplates/AreaChartTemplate";
 import { PyramidBarChartTemplate } from "../components/ChartTemplates/BarChartTemplates/PyramidBarChartTemplate";
 import LineColumnChartTemplate from "../components/ChartTemplates/LineChartTemplates/LineColumnChartTemplate";
 import PieChartTemplate from "../components/ChartTemplates/PieChartTemplates/PieChartTemplate";
