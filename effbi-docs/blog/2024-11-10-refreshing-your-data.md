@@ -10,6 +10,8 @@ hide_table_of_contents: false
 During the development of Eff BI, we initially captured a snapshot of your database upon first connection via [your input database URI](https://eff-bi-docs.vercel.app/blog/How%20Eff%20BI%20Snapshots%20your%20Database). 
 However, we quickly realized that data is not static— and constantly evolves. In the context of databases, new tables might be added, existing ones might be altered or removed altogether. 
 
+<!--truncate--> 
+
 Recognising this, we saw the critical need for a refresh feature. 
 This functionality ensures that data within Eff BI remains updated and accurate. 
 By capturing changes in the database, users are guaranteed access to the latest data, allowing them to gain meaningful and actionable insights.
