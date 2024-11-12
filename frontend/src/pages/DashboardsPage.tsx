@@ -20,7 +20,6 @@ const theme = createTheme({
 });
 
 export default function DashboardsPage() {
-  //const [dashboardDescription, setDashboardDescription] = useState("");
   const [dashboards, setDashboards] = useState<DashboardProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -36,12 +35,20 @@ export default function DashboardsPage() {
     fetchDbSettings();
   }, []);
 
+  useEffect(() => {
+    // If dashboard length changes, then trigger click on the last dashboard element
+    if (dashboards.length > 0) {
+      click(dashboards.length);
+    }
+  }, [dashboards]);
+
   const fetchDashboards = async () => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/dashboards/`
       );
       setDashboards(response.data.data);
+      console.log("response length", response.data.data.length);
     } catch (error) {
       console.error("Failed to fetch dashboards");
     } finally {
@@ -59,6 +66,19 @@ export default function DashboardsPage() {
     })),
     { kind: "divider" as const },
   ];
+
+  function click(dashboardsLength: number) {
+    const dynamicHref = `/${dashboardsLength}`;
+
+    const tryClick = () => {
+      const anchorElement = document.querySelector(`a[href="${dynamicHref}"]`);
+      if (anchorElement && anchorElement instanceof HTMLAnchorElement) {
+        anchorElement.click();
+      }
+    };
+
+    tryClick();
+  }
 
   function DashboardPageContent({ pathname }: { pathname: string }) {
     return <DashboardPage pathname={pathname} />;

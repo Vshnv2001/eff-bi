@@ -3,8 +3,11 @@ import { Button } from "@material-tailwind/react";
 import Typography from "@mui/material/Typography";
 import ArticleIcon from "@mui/icons-material/Article";
 import FadeIn from "../Animations/FadeIn";
+import { useNavigate } from "react-router-dom";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 const MockDashboardDisplay: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <FadeIn>
       <div
@@ -45,6 +48,13 @@ const MockDashboardDisplay: React.FC = () => {
             >
               Read the docs
               <ArticleIcon className="ml-2" />
+            </Button>
+            <Button
+              className="flex items-center bg-white bg-opacity-80 text-black"
+              onClick={() => navigate("/dashboards")}
+            >
+              Get Started
+              <PlayArrowIcon className="ml-2" />
             </Button>
           </div>
         </div>

@@ -12,13 +12,19 @@ import Flyer from "../components/Flyer/Flyer";
 import MockDashboardDisplay from "../components/Display/MockDashboardDisplay";
 import { Button } from "@material-tailwind/react";
 import ArticleIcon from "@mui/icons-material/Article";
+import { useNavigate } from "react-router-dom";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   return (
     <div className="bg-gradient-to-r from-red-100 to-blue-400">
       <Hero />
       <FadeIn>
-        <div className="flex text-center justify-center items-center mt-20">
+        <div
+          className="flex text-center justify-center items-center mt-20"
+          id="after-hero-section"
+        >
           <img
             src="/assets/translate.png"
             alt="Translate Natural Language to Visualisations"
@@ -43,6 +49,13 @@ const LandingPage = () => {
               >
                 Read the docs
                 <ArticleIcon className="ml-2" />
+              </Button>
+              <Button
+                className="flex items-center bg-white bg-opacity-80 text-black"
+                onClick={() => navigate("/dashboards")}
+              >
+                Get Started
+                <PlayArrowIcon className="ml-2" />
               </Button>
             </div>
           </Typography>

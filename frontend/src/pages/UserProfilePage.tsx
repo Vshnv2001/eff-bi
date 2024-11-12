@@ -81,7 +81,7 @@ export default function UserProfilePage() {
     };
 
     getUserInfo();
-  }, []);
+  }, [[sessionContext.loading, userId]]);
 
   return (
     <div className="min-h-screen p-4 sm:p-8 md:p-16">

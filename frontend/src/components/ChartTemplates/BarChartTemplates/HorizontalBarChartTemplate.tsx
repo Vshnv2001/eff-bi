@@ -51,7 +51,7 @@ export function HorizontalBarChartTemplate({
           </Typography>
         ) : (
           <Chart
-            height={200}
+            height="200%"
             options={chartOptions}
             series={chartSeries}
             type="bar"

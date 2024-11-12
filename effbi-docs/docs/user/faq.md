@@ -5,6 +5,18 @@ description: Frequently Asked Questions
 
 # Frequently Asked Questions
 
+## How can I use my own AI model for the text-to-visualization?
+
+Currently, our hosted application doesn’t support selecting a custom AI model. However, since Eff BI is open source, you can clone our repository and easily configure your own model. We’ve designed the AI model integration in a plug-and-play style using LangChain as a wrapper around the LLM, making it straightforward to swap in your preferred model.
+
+## Due to data privacy issues, I am unable to connect my database URI to Eff BI. Is there a workaround?
+
+Yes, there are a couple of options.
+
+Since Eff BI is an open-source project, you can clone the application directly from our GitHub repository and deploy it in your own environment, allowing you to maintain full control over your data.
+
+Additionally, we’re working on an on-premise hosting option for our hosted application, which will allow you to keep your data within your infrastructure. Stay tuned as this feature is coming soon!
+
 ## What does Admin Permissions mean?
 
 Before we go into Admin permissions, let's talk about permissions. Permissions are applied on the table level, where each user can have no access, view access or admin access to a table.

@@ -28,9 +28,9 @@ const Header: React.FC = () => {
     <div className="bg-[#f0f2fe] flex items-center w-full h-screen">
       <div className="w-full max-w-screen-xl text-white bg-blend-normal min-h-[516px] max-md:max-w-full pl-5 md:pl-5">
         <div className="flex flex-col justify-center h-full">
-          <h1 className="text-black text-left w-full text-8xl font-light tracking-tighter leading-none whitespace-nowrap bg-blend-normal max-md:text-4xl overflow-hidden">
+          <h1 className="text-black text-left w-full text-4xl font-light tracking-tighter leading-none whitespace-nowrap bg-blend-normal md:text-8xl overflow-hidden">
             <span
-              className={`inline-block max-md:text-4xl transform transition-transform duration-1000 ease-in-out delay-150 font-medium ${
+              className={`inline-block md:text-8xl text-4xl transform transition-transform duration-1000 ease-in-out delay-150 font-medium ${
                 animateEffortless
                   ? "translate-y-0 opacity-100"
                   : "translate-y-[100%] opacity-0"
@@ -39,9 +39,9 @@ const Header: React.FC = () => {
               Effortless
             </span>
           </h1>
-          <h1 className="text-black text-left w-full text-8xl font-light tracking-tighter leading-none whitespace-nowrap bg-blend-normal max-md:text-4xl overflow-hidden mt-2">
+          <h1 className="text-black text-left w-full text-4xl font-light tracking-tighter leading-none whitespace-nowrap bg-blend-normal md:text-8xl overflow-hidden mt-2">
             <span
-              className={`inline-block max-md:text-4xl transform transition-transform duration-1000 ease-in-out delay-150 font-medium ${
+              className={`inline-block text-4xl md:text-8xl transform transition-transform duration-1000 ease-in-out delay-150 font-medium ${
                 animateVisualisations
                   ? "translate-y-0 opacity-100"
                   : "translate-y-[100%] opacity-0"

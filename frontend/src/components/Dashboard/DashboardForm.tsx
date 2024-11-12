@@ -85,9 +85,9 @@ export default function DashboardForm({
             disabled={isLoading}
             className={isTitleInvalid ? "border-red-500" : ""}
           />
-          <div className="flex justify-between text-sm mt-1">
-            <span className={isTitleInvalid ? "text-red-500" : ""}>
-              {dashboardName.length}/{titleLimit}
+          <div className="flex justify-between ml-2 text-sm">
+            <span className={`${isTitleInvalid ? "text-red-500" : ""}`}>
+              {dashboardName.length}/{titleLimit} characters
             </span>
             {isTitleInvalid && (
               <span className="text-red-500">Title too long!</span>
@@ -106,9 +106,11 @@ export default function DashboardForm({
             disabled={isLoading}
             className={isDescriptionInvalid ? "border-red-500" : ""}
           />
-          <div className="flex justify-between text-sm mt-1">
-            <span className={isDescriptionInvalid ? "text-red-500" : ""}>
-              {dashboardDescription.length}/{descriptionLimit}
+          <div className="flex justify-between text-sm ml-2">
+            <span
+              className={`${isDescriptionInvalid ? "text-red-500" : ""} text-sm`}
+            >
+              {dashboardDescription.length}/{descriptionLimit} characters
             </span>
             {isDescriptionInvalid && (
               <span className="text-red-500">Description too long!</span>

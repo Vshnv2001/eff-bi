@@ -15,6 +15,7 @@ import { Typography } from "@mui/material";
 import LockPersonTwoToneIcon from "@mui/icons-material/LockPersonTwoTone";
 
 interface Table {
+  index: number;
   table_name: string;
   table_description?: string;
   column_headers: string[];
@@ -33,7 +34,7 @@ export default function ViewDataPage() {
   const { organizationId } = useAuth();
   const userId = sessionContext.loading ? null : sessionContext.userId;
   const [loading, setLoading] = useState(false);
-  const router = useDemoRouter("/view-data");
+  const router = useDemoRouter("/1");
   const [refreshLoading, setRefreshLoading] = useState(false);
 
   //console.log(router.pathname);
@@ -42,7 +43,7 @@ export default function ViewDataPage() {
     { kind: "header" as const, title: "Tables" },
     ...tables.map((table) => ({
       kind: "page" as const,
-      segment: table.table_name,
+      segment: table.index.toString(),
       title:
         table.table_name.length > 30
           ? table.table_name.slice(0, 29) + "..."
@@ -132,13 +133,9 @@ export default function ViewDataPage() {
 
   function DashboardPageContent({ pathname }: { pathname: string }) {
     // filter function to get Data based on pathname
-    pathname = pathname.replace("/", "");
-    const table = tables.find((table) => table.table_name === pathname);
-    //console.log(table);
-    if (!table) {
-      return <TablePage table={tables[0]} />;
-    }
-    return <TablePage table={table} />;
+    const index = parseInt(pathname.replace("/", ""), 10);
+    const table = tables.find((table) => table.index === index);
+    return <TablePage table={table as Table} />;
   }
 
   const fetchData = async () => {
@@ -148,7 +145,11 @@ export default function ViewDataPage() {
       const response = await axios.get(
         `${BACKEND_API_URL}/api/connection/${userId}`
       );
-      setTables(response.data?.tables);
+      const enumTables = response.data?.tables.map((table: any, index: number) => ({
+        ...table,
+        index: index + 1
+      }));
+      setTables(enumTables);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -163,15 +164,18 @@ export default function ViewDataPage() {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-gray-300 bg-opacity-50 z-50">
+      <div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-300 bg-opacity-50 z-50">
         <Spinner className="h-10 w-10" />
+        <div className="text-xl text-center text-black pt-3">
+          Loading your data...
+        </div>
       </div>
     );
   }
 
   if (tables.length == 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg p-100 space-y-5">
+        <div className="flex flex-col items-center justify-center min-h-screen bg p-100 space-y-5">
         <div className="text-center">
           <LockPersonTwoToneIcon style={{ fontSize: "10rem" }} />
         </div>
@@ -185,15 +189,18 @@ export default function ViewDataPage() {
   return (
     <AppProvider navigation={NAVIGATION} router={router} theme={demoTheme}>
       {refreshLoading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <Spinner className="h-10 w-10" />
-        </div>
+          <div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-500 bg-opacity-80 z-[999990]">
+            <Spinner className="h-10 w-10"/>
+            <div className="text-xl text-center text-black pt-3">
+              Refreshing your data...
+            </div>
+          </div>
       )}
 
       <DashboardLayout
-        slots={{
-          sidebarFooter: SidebarFooter,
-        }}
+          slots={{
+            sidebarFooter: SidebarFooter,
+          }}
         sx={{ height: "calc(100vh - 60px)", overflow: "auto" }}
       >
         <div style={{ maxWidth: "calc(100vw - 320px)" }}>

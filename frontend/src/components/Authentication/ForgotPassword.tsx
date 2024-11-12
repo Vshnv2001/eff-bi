@@ -57,11 +57,13 @@ const ForgotPassword = () => {
       {/* Left Image Section */}
       <div className="w-5/12 flex items-center justify-center relative">
         <div className="absolute top-8 left-5">
-          <img
-            src="/assets/logo-nobg.png"
-            alt="EFF BI Logo"
-            style={{ width: "128px" }}
-          />
+          <Link to="/">
+            <img
+              src="/assets/logo-nobg.png"
+              alt="EFF BI Logo"
+              style={{ width: "128px" }}
+            />
+          </Link>
         </div>
         <img
           src="/assets/signup-pic.png"

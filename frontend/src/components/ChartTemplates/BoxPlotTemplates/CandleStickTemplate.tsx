@@ -50,7 +50,7 @@ const CandlestickTemplate: React.FC<CandlestickChartProps> = ({
           </Typography>
         ) : (
           <Chart
-            height={height}
+            height="100%"
             options={chartOptions}
             series={[{ data }]}
             type="candlestick"
