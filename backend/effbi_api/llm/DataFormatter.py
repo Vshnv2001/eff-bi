@@ -25,10 +25,8 @@ class ChartType(Enum):
 
 viz_props = {
     ChartType.AreaChartTemplate: {
-        "chartSeries": [
-            {"name": "", "data": []}
-        ],
-        "labels": []
+        "series": [],
+        "categories": [],
     },
     ChartType.LineChartTemplate: {
         "series": [],
