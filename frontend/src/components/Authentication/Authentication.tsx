@@ -195,7 +195,7 @@ const Authentication = () => {
     setErrorMessage("");
     setInputError({ email: false, password: false });
 
-    console.log("test")
+    // console.log("test")
 
     if (isSignUp) {
       await checkEmail();

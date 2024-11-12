@@ -154,18 +154,18 @@ export default function NewTile({
         try {
           const chunkData: ChunkData = JSON.parse(chunk);
 
-          console.log("chunk data", chunkData);
+          // console.log("chunk data", chunkData);
 
           if (chunkData.error) {
             handleFetchError(chunkData.error);
-            return
+            return;
           }
 
           if (chunkData.sql) {
-            console.log("SQL Query:", chunkData.sql);
+            // console.log("SQL Query:", chunkData.sql);
             setSqlQuery(chunkData.sql);
           } else {
-            console.log("Other Data:", chunkData);
+            // console.log("Other Data:", chunkData);
             setApiData({
               ...chunkData,
             });

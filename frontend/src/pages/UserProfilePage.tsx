@@ -33,7 +33,7 @@ const ProfileItem = ({
     <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
       {icon}
     </div>
-    <div className="flex-grow">
+    <div className="flex-grow overflow-x-auto">
       <Typography variant="small" color="blue-gray" className="font-normal">
         {label}
       </Typography>
