@@ -4,7 +4,6 @@ import * as React from "react";
 import { useTheme } from "@mui/material/styles";
 import type { ApexOptions } from "apexcharts";
 import CardContent from "@mui/material/CardContent";
-import Divider from "@mui/material/Divider";
 import { Chart } from "../Chart";
 import Typography from "@mui/material/Typography";
 
@@ -60,7 +59,6 @@ export function HorizontalBarChartTemplate({
           />
         )}
       </CardContent>
-      <Divider />
     </div>
   );
 }

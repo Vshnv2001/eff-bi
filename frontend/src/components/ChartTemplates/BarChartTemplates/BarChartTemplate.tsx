@@ -1,6 +1,5 @@
 import * as React from "react";
 import CardContent from "@mui/material/CardContent";
-import Divider from "@mui/material/Divider";
 import { useTheme } from "@mui/material/styles";
 import type { ApexOptions } from "apexcharts";
 import { Chart } from "../Chart";
@@ -50,16 +49,15 @@ export function BarChartTemplate({
           </Typography>
         ) : (
           <Chart
-            height="200%"
+            height="250%"
             options={chartOptions}
             series={chartSeries}
             type="bar"
-            width="200%"
-            style={{ marginBottom: -30 }}
+            width="100%"
+            style={{ marginBottom: 0 }}
           />
         )}
       </CardContent>
-      <Divider />
     </div>
   );
 }
@@ -113,13 +111,19 @@ function useChartOptions(
         formatter: (value: any) => {
           if (typeof value === "number") {
             return value.toFixed(2);
-          } else if (typeof value === "string" && value.length > 20) {
-            const words = value.split(" ");
+          } else if (typeof value === "string" && value.length > 25) {
+
+            if (value.length >= 50) {
+              value = value.slice(1);
+            }
+
+            let words = value.split(" ");
+
             const lines: string[] = [];
             let currentLine = "";
 
             for (const word of words) {
-              if (currentLine.length + word.length + 1 > 20) {
+              if (currentLine.length + word.length + 1 > 25) {
                 lines.push(currentLine.trim());
                 currentLine = word;
               } else {

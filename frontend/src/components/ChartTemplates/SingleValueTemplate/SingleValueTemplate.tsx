@@ -1,4 +1,4 @@
-import { Typography, CardContent, Divider } from "@mui/material";
+import { Typography, CardContent } from "@mui/material";
 
 // TODO: FIX HEIGHT
 interface SingleValueTemplateProps {
@@ -11,31 +11,47 @@ const SingleValueTemplate: React.FC<SingleValueTemplateProps> = ({
   value,
 }) => {
   return (
-    <div style={{ position: "relative", marginTop: 0, height: "100%" }}>
+    <div
+      style={{
+        position: "relative",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
       <CardContent>
         <Typography
           variant="h6"
           style={{
-            textAlign: "center",
             marginBottom: 0,
             wordWrap: "break-word",
+            textAlign: "center",
           }}
         >
           {title}
         </Typography>
+      </CardContent>
+
+      <CardContent
+        style={{
+          display: "flex",
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Typography
           variant="h4"
           style={{
-            textAlign: "center",
             marginBottom: 0,
             wordWrap: "break-word",
-            paddingTop: "3rem",
+            textAlign: "center",
           }}
         >
           {value}
         </Typography>
       </CardContent>
-      <Divider />
     </div>
   );
 };

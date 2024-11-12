@@ -3,7 +3,6 @@ import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { Typography } from "@mui/material";
 import CardContent from "@mui/material/CardContent";
-import Divider from "@mui/material/Divider";
 
 type AreaChartTemplateProps = {
   series: {
@@ -82,11 +81,9 @@ const AreaChartTemplate: React.FC<AreaChartTemplateProps> = ({
             type="area"
             height={200}
             width="100%"
-            style={{ marginBottom: -30 }}
           />
         )}
       </CardContent>
-      <Divider />
     </div>
   );
 };

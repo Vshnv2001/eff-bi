@@ -294,17 +294,11 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
 
           return (
             <div key={tileData.id} className="isolate">
-              <Card className="bg-white shadow rounded-lg overflow-auto w-full h-[30rem]">
-                <CardBody className="flex flex-col">
+              <Card className="bg-white shadow rounded-lg overflow-auto w-full h-[30rem] flex flex-col">
+                <CardBody className="flex flex-col flex-grow">
+                  {/* Header Buttons */}
                   <div className="flex justify-end gap-2 mb-4">
-                    <Tooltip
-                      content="Edit"
-                      placement="top"
-                      animate={{
-                        mount: { scale: 1, y: 0 },
-                        unmount: { scale: 0, y: 25 },
-                      }}
-                    >
+                    <Tooltip content="Edit" placement="top">
                       <IconButton
                         variant="text"
                         color="blue-gray"
@@ -317,14 +311,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
                         <PencilIcon className="h-4 w-4" />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip
-                      content="Refresh: This replaces the current chart's data."
-                      placement="top"
-                      animate={{
-                        mount: { scale: 1, y: 0 },
-                        unmount: { scale: 0, y: 25 },
-                      }}
-                    >
+                    <Tooltip content="Refresh" placement="top">
                       <IconButton
                         variant="text"
                         color="blue-gray"
@@ -334,14 +321,7 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
                         <RefreshCw className="h-4 w-4" />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip
-                      content="Delete"
-                      placement="top"
-                      animate={{
-                        mount: { scale: 1, y: 0 },
-                        unmount: { scale: 0, y: 25 },
-                      }}
-                    >
+                    <Tooltip content="Delete" placement="top">
                       <IconButton
                         variant="text"
                         color="blue-gray"
@@ -357,9 +337,10 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
                     <DownloadMenu chartRef={chartRefs.current[actualIndex]} />
                   </div>
 
+                  {/* Chart Content */}
                   <div
                     ref={chartRefs.current[actualIndex]}
-                    className="w-full h-[17rem] overflow-auto"
+                    className="w-full flex-grow"
                   >
                     {Component && (
                       <Component
@@ -370,71 +351,79 @@ export default function DashboardPage({ pathname }: { pathname: string }) {
                     )}
                   </div>
 
-                  <Accordion
-                    open={open.includes(actualIndex)}
-                    icon={<Icon isOpen={open.includes(actualIndex)} />}
-                  >
-                    <AccordionHeader
-                      className="text-sm"
-                      onClick={() => handleOpen(actualIndex)}
+                  {/* Accordions Section */}
+                  <div className="mt-auto">
+                    {/* User Query Accordion */}
+                    <Accordion
+                      open={open.includes(actualIndex)}
+                      icon={<Icon isOpen={open.includes(actualIndex)} />}
+                      className="border-t-0"
                     >
-                      User Query
-                    </AccordionHeader>
-                    <AccordionBody>
-                      <Typography className="text-sm">
-                        {tileData.description}
-                      </Typography>
-                    </AccordionBody>
-                  </Accordion>
+                      <AccordionHeader
+                        className="text-sm"
+                        onClick={() => handleOpen(actualIndex)}
+                      >
+                        User Query
+                      </AccordionHeader>
+                      <AccordionBody>
+                        <Typography className="text-sm">
+                          {tileData.description}
+                        </Typography>
+                      </AccordionBody>
+                    </Accordion>
 
-                  <Accordion
-                    open={open.includes(actualIndex + tilesData.length)}
-                    icon={
-                      <Icon
-                        isOpen={open.includes(actualIndex + tilesData.length)}
-                      />
-                    }
-                  >
-                    <AccordionHeader
-                      onClick={() => handleOpen(actualIndex + tilesData.length)}
-                      className="text-sm"
+                    {/* SQL Query Accordion */}
+                    <Accordion
+                      open={open.includes(actualIndex + tilesData.length)}
+                      icon={
+                        <Icon
+                          isOpen={open.includes(actualIndex + tilesData.length)}
+                        />
+                      }
                     >
-                      SQL Query
-                    </AccordionHeader>
-                    <AccordionBody>
-                      <div className="relative">
-                        {open.includes(actualIndex + tilesData.length) && (
-                          <button
-                            onClick={() =>
-                              handleCopy(tileData.sql_query, actualIndex)
-                            }
-                            className="absolute top-2 right-2 p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
-                            title="Copy SQL"
+                      <AccordionHeader
+                        className="text-sm"
+                        onClick={() =>
+                          handleOpen(actualIndex + tilesData.length)
+                        }
+                      >
+                        SQL Query
+                      </AccordionHeader>
+                      <AccordionBody>
+                        <div className="relative">
+                          {open.includes(actualIndex + tilesData.length) && (
+                            <button
+                              onClick={() =>
+                                handleCopy(tileData.sql_query, actualIndex)
+                              }
+                              className="absolute top-2 right-2 p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                              title="Copy SQL"
+                            >
+                              {copiedIndex === actualIndex ? (
+                                <CheckIcon className="h-4 w-4 text-green-500" />
+                              ) : (
+                                <ClipboardIcon className="h-4 w-4 text-gray-500" />
+                              )}
+                            </button>
+                          )}
+                          <SyntaxHighlighter
+                            language="sql"
+                            className="w-full rounded-lg h-full"
+                            wrapLines
+                            wrapLongLines
+                            lineProps={{
+                              style: {
+                                wordBreak: "break-all",
+                                whiteSpace: "pre-wrap",
+                              },
+                            }}
                           >
-                            {copiedIndex === actualIndex ? (
-                              <CheckIcon className="h-4 w-4 text-green-500" />
-                            ) : (
-                              <ClipboardIcon className="h-4 w-4 text-gray-500" />
-                            )}
-                          </button>
-                        )}
-                        <SyntaxHighlighter
-                          language="sql"
-                          className="w-full rounded-lg h-full"
-                          wrapLines={true}
-                          wrapLongLines={true}
-                          lineProps={{
-                            style: {
-                              wordBreak: "break-all",
-                              whiteSpace: "pre-wrap",
-                            },
-                          }}
-                        >
-                          {tileData.sql_query}
-                        </SyntaxHighlighter>
-                      </div>
-                    </AccordionBody>
-                  </Accordion>
+                            {tileData.sql_query}
+                          </SyntaxHighlighter>
+                        </div>
+                      </AccordionBody>
+                    </Accordion>
+                  </div>
                 </CardBody>
               </Card>
             </div>

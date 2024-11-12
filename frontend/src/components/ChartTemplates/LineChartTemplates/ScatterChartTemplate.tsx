@@ -3,7 +3,6 @@ import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { Typography } from "@mui/material";
 import CardContent from "@mui/material/CardContent";
-import Divider from "@mui/material/Divider";
 
 interface ScatterChartProps {
   series: {
@@ -73,11 +72,9 @@ const ScatterChartTemplate: React.FC<ScatterChartProps> = ({
             type="scatter"
             height={200}
             width="100%"
-            style={{ marginBottom: -30 }}
           />
         )}
       </CardContent>
-      <Divider />
     </div>
   );
 };

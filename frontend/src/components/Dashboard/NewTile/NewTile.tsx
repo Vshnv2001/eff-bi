@@ -160,6 +160,7 @@ export default function NewTile({
           // console.log("chunk data", chunkData);
 
           if (chunkData.error) {
+            setIsPreviewGenerated(false);
             handleFetchError(chunkData.error);
             return;
           }
@@ -176,11 +177,13 @@ export default function NewTile({
             setPreviewProps(chunkData.tile_props);
           }
         } catch (error) {
+          setIsPreviewGenerated(false);
           console.error("Error parsing chunk data:", error);
         }
       }
 
       setIsPreviewGenerated(true);
+      //console.log("preview generated", isPreviewGenerated, previewComponent);
     } catch (error) {
       handleError(error);
     } finally {
@@ -296,6 +299,7 @@ export default function NewTile({
     });
 
     setIsPreviewGenerated(true);
+    //console.log("preview generated", isPreviewGenerated);
     setInitialDataLoaded(true);
   };
 

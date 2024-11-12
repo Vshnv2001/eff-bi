@@ -5,7 +5,6 @@ import { SxProps } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Chart } from "../Chart";
 import { ApexOptions } from "apexcharts";
-import Divider from "@mui/material/Divider";
 import CardContent from "@mui/material/CardContent";
 
 export interface TrafficProps {
@@ -68,7 +67,7 @@ export function DonutChartTemplate({
     tooltip: {
       enabled: true,
       y: {
-        formatter: (value) => `${value.toFixed(1)}%`,
+        formatter: (value) => `${value.toFixed(1)}`,
       },
     },
     dataLabels: {
@@ -106,8 +105,6 @@ export function DonutChartTemplate({
           />
         )}
       </CardContent>
-
-      <Divider />
     </div>
   );
 }
