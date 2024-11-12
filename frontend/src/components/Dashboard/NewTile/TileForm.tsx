@@ -195,7 +195,7 @@ export const TileForm: React.FC<TileFormProps> = ({
           </Typography>
         </div>
         <textarea
-          placeholder="Enter your query for generating the chart (e.g., 'Show me the percentage of riders who exit and did not exit the race in a pie chart')"
+          placeholder="Enter your query for generating the chart. You may use the template queries listed below or create your own."
           value={queryPrompt}
           onChange={(e) => setQueryPrompt(e.target.value)}
           rows={4}
