@@ -183,7 +183,7 @@ export default function NewTile({
       }
 
       setIsPreviewGenerated(true);
-      console.log("preview generated", isPreviewGenerated, previewComponent);
+      //console.log("preview generated", isPreviewGenerated, previewComponent);
     } catch (error) {
       handleError(error);
     } finally {
@@ -299,7 +299,7 @@ export default function NewTile({
     });
 
     setIsPreviewGenerated(true);
-    console.log("preview generated", isPreviewGenerated);
+    //console.log("preview generated", isPreviewGenerated);
     setInitialDataLoaded(true);
   };
 
