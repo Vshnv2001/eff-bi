@@ -39,6 +39,8 @@ export default function NewTile({
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  console.log("tileId", tileId);
+
   // Generate random preview text variations
   const generatePreviewText = () => {
     const templates = [
@@ -129,6 +131,7 @@ export default function NewTile({
       sql_query: sqlQuery,
       tile_props: previewProps,
     };
+
     return saveType === "update" ? baseData : { ...baseData, id: undefined };
   };
 
@@ -307,7 +310,11 @@ export default function NewTile({
         import.meta.env.VITE_BACKEND_URL
       }/api/dashboard-tile-save/`;
       const method = saveType === "update" ? "put" : "post";
-      const apiDataToSend = getApiDataToSend(saveType);
+      let apiDataToSend = getApiDataToSend(saveType);
+
+      if (method === "put") {
+        apiDataToSend.id = tileId;
+      }
 
       await axios({
         method,
