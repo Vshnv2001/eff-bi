@@ -50,7 +50,7 @@ export default function DBSettingsPage() {
 
   const handleCopyMockData = () => {
     navigator.clipboard.writeText(
-      "postgres://view_user:testeffbi@pg-effbi-mock-justintanwk2001-6f2d.l.aivencloud.com:18828/defaultdb"
+      import.meta.env.VITE_MOCK_DATA_URI
     );
     toast.success("Mock data URI successfully copied!");
   };
