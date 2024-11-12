@@ -312,7 +312,9 @@ export default function NewTile({
       const method = saveType === "update" ? "put" : "post";
       let apiDataToSend = getApiDataToSend(saveType);
 
-      apiDataToSend.id = tileId;
+      if (method === "put") {
+        apiDataToSend.id = tileId;
+      }
 
       await axios({
         method,
