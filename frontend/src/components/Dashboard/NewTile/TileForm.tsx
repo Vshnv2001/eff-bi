@@ -244,11 +244,13 @@ export const TileForm: React.FC<TileFormProps> = ({
 
         {/* Preview Component */}
         {PreviewComponent && previewProps && (
-          <div className="mt-4 border rounded-lg p-4">
+          <div className="w-full mt-4 border rounded-lg p-4">
             <Typography variant="h6" color="blue-gray" className="mb-2">
               Preview
             </Typography>
-            <PreviewComponent {...previewProps} />
+            <div className="w-full overflow-x-auto whitespace-nowrap">
+              <PreviewComponent {...previewProps} />
+            </div>
           </div>
         )}
       </div>

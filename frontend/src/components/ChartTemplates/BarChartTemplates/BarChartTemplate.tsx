@@ -54,7 +54,7 @@ export function BarChartTemplate({
             options={chartOptions}
             series={chartSeries}
             type="bar"
-            width="100%"
+            width="200%"
             style={{ marginBottom: -30 }}
           />
         )}
@@ -113,13 +113,13 @@ function useChartOptions(
         formatter: (value: any) => {
           if (typeof value === "number") {
             return value.toFixed(2);
-          } else if (typeof value === "string" && value.length > 15) {
+          } else if (typeof value === "string" && value.length > 20) {
             const words = value.split(" ");
             const lines: string[] = [];
             let currentLine = "";
 
             for (const word of words) {
-              if (currentLine.length + word.length + 1 > 15) {
+              if (currentLine.length + word.length + 1 > 20) {
                 lines.push(currentLine.trim());
                 currentLine = word;
               } else {
