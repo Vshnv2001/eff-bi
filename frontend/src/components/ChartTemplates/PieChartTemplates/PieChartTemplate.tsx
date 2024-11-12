@@ -51,7 +51,7 @@ export function PieChartTemplate({
     tooltip: {
       enabled: true,
       y: {
-        formatter: (value) => `${value.toFixed(1)}%`,
+        formatter: (value) => `${value.toFixed(1)}`,
       },
     },
     dataLabels: {

@@ -111,7 +111,7 @@ export const TileForm: React.FC<TileFormProps> = ({
         <textarea
           placeholder="Enter chart name"
           value={tileName}
-          onChange={(e) => setTileName(e.target.value)}
+          onChange={(e) => setTileName(e.target.value.trimStart())}
           className={`border ${isExceeded ? "border-red-500" : "border-gray-400"} focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2`}
         />
         <div className="flex justify-between ml-2">
@@ -197,7 +197,7 @@ export const TileForm: React.FC<TileFormProps> = ({
         <textarea
           placeholder="Enter your query for generating the chart (e.g., 'Show me the percentage of riders who exit and did not exit the race in a pie chart')"
           value={queryPrompt}
-          onChange={(e) => setQueryPrompt(e.target.value)}
+          onChange={(e) => setQueryPrompt(e.target.value.trimStart())}
           rows={4}
           className="border border-gray-400 focus:border-blue-500 focus:ring-0 w-full min-h-[60px] rounded-md p-2"
         />
