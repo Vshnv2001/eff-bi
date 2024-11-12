@@ -5,7 +5,6 @@ import { SxProps } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Chart } from "../Chart";
 import { ApexOptions } from "apexcharts";
-import Divider from "@mui/material/Divider";
 import CardContent from "@mui/material/CardContent";
 
 export interface TrafficProps {

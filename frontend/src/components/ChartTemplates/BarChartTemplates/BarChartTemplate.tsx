@@ -1,6 +1,5 @@
 import * as React from "react";
 import CardContent from "@mui/material/CardContent";
-import Divider from "@mui/material/Divider";
 import { useTheme } from "@mui/material/styles";
 import type { ApexOptions } from "apexcharts";
 import { Chart } from "../Chart";
