@@ -40,7 +40,7 @@ const LineChartTemplate: React.FC<LineChartTemplateProps> = ({
     xaxis: {
       categories,
       labels: {
-        show: false,
+        show: true,
       },
     },
     yaxis: {
