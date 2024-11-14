@@ -20,7 +20,7 @@ As an administrator, you can easily manage user access:
 :::info
 Before granting table permissions to a user, ensure they have created an account with Eff BI and joined your organization.
 
-To join the organization, simply share your Organization Code with them when the sign up. The Organization Code can be found in the User Profile tab, accessible via the dropdown menu under the User Icon on the top right of the navigation bar.
+To join the organization, simply share your Organization Code with them when they sign up. The Organization Code can be found in the User Profile tab, accessible via the dropdown menu under the User Icon on the top right of the navigation bar.
 :::
 
 2. <strong>To remove access</strong>: Just click the <strong>Remove</strong> button next to any user you wish to revoke access for, giving you full control over data visibility.

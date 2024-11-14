@@ -26,7 +26,8 @@ export const SaveConfirmationDialog: React.FC<SaveConfirmationDialogProps> = ({
           Save Options
         </Typography>
         <Typography color="gray" className="mb-6">
-          Would you like to update the existing chart or save as a new chart?
+          Would you like to update (i.e. replace) the existing chart or save as
+          a new chart?
         </Typography>
 
         <Box className="flex justify-center space-x-5 mb-4">
