@@ -43,7 +43,7 @@ You can update Eff BI's snapshot of your data in the Data page, by clicking on t
 
 :::info
 
-Tables that are delete in your database will also be removed from Eff BI at the Data page, but the tiles referencing that data will still be present in the dashboard. We don't want to delete those tiles for you in case they hold some important insights.
+Tables that are deleted in your database will also be removed from Eff BI in the Data page, but the tiles referencing that data will still be present in the dashboard. We don't want to delete those tiles for you in case they hold some important insights.
 
 You will need to manually delete that tile if you no longer wish to see that data.
 
