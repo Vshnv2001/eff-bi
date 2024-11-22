@@ -7,16 +7,12 @@ Try Eff BI at [https://eff-bi.vercel.app](https://eff-bi.vercel.app).
 
 We are a team of 4 full stack developers currently taking [CS3216](https://cs3216.com) who are passionate about building products that help businesses make data-driven decisions.
 
-- [jyztintan](https://github.com/jyztintan) Justin Tan - Full Stack Developer
-- [ARPspoofing](https://github.com/ARPspoofing) Muhammad Reyaaz - Full Stack Developer 
-- [bryanhce](https://github.com/bryanhce) Bryan Ho - Full Stack Developer
-- [Vshnv2001](https://github.com/Vshnv2001) Vaishnav M - Full Stack Developer
+- [Justin Tan](https://github.com/jyztintan) - Full Stack Developer
+- [Muhammad Reyaaz](https://github.com/ARPspoofing)  - Full Stack Developer 
+- [Bryan Ho](https://github.com/bryanhce) - Full Stack Developer
+- [Vaishnav M](https://github.com/Vshnv2001) - Full Stack Developer
 
 ## Contributing / Local Setup
 
 We're open source and welcome contributions! Check out our [Development Guide](https://eff-bi-docs.vercel.app/docs/developer/contribute) for more information.
 
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
