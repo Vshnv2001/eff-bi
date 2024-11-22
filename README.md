@@ -1,7 +1,7 @@
 # Eff BI
 
 Eff BI is a Full-Stack GenAI Application to replace the long wait for BI developers to get executives the insights they need, powered by LLMs.
-Try Eff BI at [https://eff-bi.vercel.app](https://eff-bi.vercel.app).
+Try Eff BI at [https://eff-bi.vercel.app](https://eff-bi.vercel.app). You can also learn more from our [User Guide](https://eff-bi-docs.vercel.app/docs/user/getting-started/setup).
 
 ## Team
 
