@@ -159,6 +159,7 @@ CORS_ORIGIN_WHITELIST = [
     "https://eff-bi.vercel.app"
 ]
 
+
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
