@@ -154,10 +154,10 @@ init(
     ),
 )
 
-CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000",
-    "https://eff-bi.vercel.app"
-]
+# CORS_ORIGIN_WHITELIST = [
+#     "http://localhost:3000",
+#     "https://eff-bi.vercel.app"
+# ]
 
 CORS_ALLOW_CREDENTIALS = True
 
