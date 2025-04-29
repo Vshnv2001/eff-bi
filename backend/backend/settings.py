@@ -131,7 +131,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -153,12 +153,6 @@ init(
         api_key=os.environ.get('SUPERTOKENS_API_KEY'),
     ),
 )
-
-CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000",
-    "https://eff-bi.vercel.app"
-]
-
 
 CORS_ALLOW_CREDENTIALS = True
 
