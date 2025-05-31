@@ -16,7 +16,6 @@ import json
 
 logger = logging.getLogger(__name__)
 
-
 class SessionInfoAPI(APIView):
     @method_decorator(verify_session())
     def get(self, request, format=None):

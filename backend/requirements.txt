@@ -42,6 +42,7 @@ numpy==1.26.4
 openai==1.51.0
 orjson==3.10.7
 packaging==24.1
+pandas==2.2.3
 phonenumbers==8.12.48
 pkce==1.0.3
 propcache==0.2.0
